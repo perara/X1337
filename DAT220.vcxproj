@@ -81,6 +81,7 @@
     <ClCompile Include="InputController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="player_test.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
