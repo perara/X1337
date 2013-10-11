@@ -1,0 +1,14 @@
+Debug
+Release
+bin
+ipch
+private
+*.suo
+*.ncb
+*.user
+*.old
+*.sdf
+*.opensdf
+*.pptx
+*.xlsx
+*.lnk
