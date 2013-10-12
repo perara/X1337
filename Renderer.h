@@ -1,7 +1,8 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include "World.h"
+#include "Window.h"
 #include "Player.h"
+
 #pragma once
 class Renderer
 {
@@ -10,8 +11,9 @@ public:
 	bool pollEvent(sf::Event& e);
 	void render();
 	sf::RenderWindow window;
-	World& w;
-	Renderer(World& w);
+	Window& w;
+	Player& player;
+	Renderer(Window& w, Player& player);
 	~Renderer(void);
 };
 
