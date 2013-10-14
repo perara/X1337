@@ -1,14 +1,13 @@
-#include <SFML\Graphics.hpp>
 #pragma once
-class Player
+#include "Object.h"
+#include <SFML\Window\Event.hpp>
+
+class Player : public Object
 {
 public:
-	
-	sf::CircleShape playerShape;
-	void setPlayerPosX(float x);
-	void setPlayerPosY(float x);
-	Player(sf::Vector2f loc, int rad);
-	Player(void);
-	~Player(void);
-};
+	Player(){}
+	Player(sf::Vector2f pos, int radius);
+	void inputHandler(sf::RenderWindow &window) ;
 
+
+};

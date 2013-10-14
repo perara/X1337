@@ -1,11 +1,8 @@
 #pragma once
+#include "Scene.h"
 
-#include "Player.h"
+class World: public Scene{
 
-class World{
-public:
-	World(void);
-	~World(void);
-	Player p1;
+
 
 };
