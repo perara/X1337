@@ -8,11 +8,12 @@
 class Scene{
 public:
 	std::vector<Object*> objects;
+	Scene(sf::RenderWindow& window):window(window){}
 
-	virtual void draw(sf::RenderWindow &window);
+	virtual void draw();
 	virtual void process();
-
 	void addObject(Object* object);
 
-
+protected:
+	sf::RenderWindow & window;
 };

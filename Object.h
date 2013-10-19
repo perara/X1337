@@ -5,11 +5,13 @@
 
 class Object{
 public:
-
-	virtual void draw(sf::RenderWindow &window);
+	Object();
+	Object(sf::RenderWindow & window) : window(window){};
+	virtual void draw();
 	virtual void process();
-	virtual void inputHandler(sf::RenderWindow &window) = 0;
+	virtual void inputHandler() = 0;
 
 protected:
 	sf::CircleShape* sprite;
+	sf::RenderWindow & window;
 };

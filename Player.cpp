@@ -1,26 +1,33 @@
 #include "Player.h"
-#include "main.h"
+#include "GameGlobals.h"
 
-Player::Player(sf::Vector2f pos, int radius){
+Player::Player(sf::RenderWindow & window, sf::Vector2f pos, int radius) : Object(window){
 	this->sprite = new sf::CircleShape(radius,30);
 	this->sprite->setPosition(pos);
 }
 
-void Player::inputHandler(sf::RenderWindow &window){
+void Player::process(){
+	this->inputHandler();
+}
+
+
+void Player::inputHandler(){
 	sf::Event event;
 
+
 	if(sf::Mouse::getPosition(window).x > 0 && sf::Mouse::getPosition(window).x < window.getSize().x - (this->sprite->getRadius() * 2)){
-		this->sprite->setPosition(sf::Mouse::getPosition(window).x, this->sprite->getPosition().y);
+		this->sprite->setPosition(
+			sf::Mouse::getPosition(window).x + this->sprite->getRadius(), 
+			this->sprite->getPosition().y + this->sprite->getRadius());
 	}
 
 	if(sf::Mouse::getPosition(window).y > 0 && sf::Mouse::getPosition(window).y < window.getSize().y - (this->sprite->getRadius() * 2)){
-		this->sprite->setPosition(this->sprite->getPosition().x , sf::Mouse::getPosition(window).y);
+		this->sprite->setPosition(
+			this->sprite->getPosition().x, 
+			sf::Mouse::getPosition(window).y);
 	}
 
-	if(sf::Mouse::isButtonPressed)
-	{
 
-	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
 		std::cout << "LOL" << std::endl;
