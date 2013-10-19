@@ -6,6 +6,6 @@ public:
 	GameEngine();
 	void runGame();
 	void gameLoop();
-
+	sf::RenderWindow window;
 
 };

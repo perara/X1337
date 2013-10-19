@@ -7,7 +7,9 @@
 #include "Button.h"
 
 
-GameEngine::GameEngine(){
+GameEngine::GameEngine():
+	window(sf::VideoMode(500, 500), "X1337", sf::Style::Titlebar | sf::Style::Close)
+{
 	// Initial Configuration
 	Config::getInstance().state = Config::getInstance().GAME;		// Set gamestate to Game
 	if (!Config::getInstance().font.loadFromFile("COMICATE.TTF"))
@@ -16,8 +18,6 @@ GameEngine::GameEngine(){
 		system("pause");
 		//return EXIT_FAILURE;
 	}
-
-	sf::RenderWindow window(sf::VideoMode(500,500),"X1337", sf::Style::Titlebar | sf::Style::Close);
 
 	// World 1 (Scene1)
 	World world1 = World(window);
