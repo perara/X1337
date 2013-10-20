@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BulletFactory.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="main.cpp" />
@@ -20,9 +21,11 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BulletFactory.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameGlobals.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />

@@ -2,6 +2,7 @@
 #include <SFML\Graphics\Sprite.hpp>
 #include <SFML\Graphics\CircleShape.hpp>
 #include <SFML\Graphics\RenderWindow.hpp>
+#include <vector>
 
 class Object{
 public:
@@ -9,9 +10,10 @@ public:
 	Object(sf::RenderWindow & window) : window(window){};
 	virtual void draw();
 	virtual void process();
-	virtual void inputHandler() = 0;
+
 
 protected:
 	sf::CircleShape* sprite;
-	sf::RenderWindow & window;
+	sf::RenderWindow& window;
+	std::vector<Object*> objects;
 };
