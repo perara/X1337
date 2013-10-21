@@ -8,7 +8,7 @@
 Bullet::Bullet(sf::RenderWindow& window, int type): Object(window)
 {
 	this->speedX = 20;
-	this->speedY = -1000;
+	this->speedY = -500;
 	this->type = type;
 	this->sprite = new sf::CircleShape(2,30);
 }

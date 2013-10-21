@@ -54,7 +54,7 @@ Bullet* BulletFactory::requestObject(int type){
 	}
 
 	Bullet* b = this->objects[type].front();
-	this->objects[type].pop_back(); // O(0)
+	this->objects[type].pop_front(); // O(0)
 	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[b->type].size());
 	return  b;
 }

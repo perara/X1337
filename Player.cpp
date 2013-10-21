@@ -66,7 +66,7 @@ void Player::inputHandler(){
 
 		if(event.type == sf::Event::MouseMoved){
 			int current_x = sf::Mouse::getPosition(window).x, current_y = sf::Mouse::getPosition(window).y;
-			int elapsed_x = 250 - current_x, elapsed_y = 250 - current_y;
+			int elapsed_x = (window.getSize().x / 2) - current_x, elapsed_y = (window.getSize().y / 2) - current_y;
 
 			if(elapsed_x != 0 || elapsed_y != 0)
 			{
@@ -104,8 +104,7 @@ void Player::inputHandler(){
 					this->sprite->move(0, -elapsed_y);
 				}
 
-				//      std::cout << elapsed_x << "-" << elapsed_y << "----" <<this->sprite->getPosition().x << " - - - " << this->sprite->getPosition().y  <<  std::endl;
-				sf::Mouse::setPosition(sf::Vector2i(250, 250), window);
+				sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window);
 			}
 
 		}
