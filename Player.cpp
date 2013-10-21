@@ -1,23 +1,27 @@
 #include "Player.h"
 #include "GameGlobals.h"
 #include <SFML\System\Clock.hpp>
+#include <functional>
 sf::Clock clk; //TESTING PURPOSES
 
 
 
-Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius) : Object(window){
+Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFactory* bFactory, std::function<void(Object*)> sceneObjCallBack):
+	bFactory(bFactory),
+	sceneObjCallBack(sceneObjCallBack),
+	Object(window)
+{
+
 	this->sprite = new sf::CircleShape(radius,30);
 	this->sprite->setPosition(pos);
 
-	this->bFactory = new BulletFactory(window, 1000);
+
+
 }
 
-void Player::process(){
+bool Player::process(){
 	this->inputHandler();
-	for(auto& obj : this->objects){
-		obj->draw();
-		obj->process();
-	}
+	return true;
 }
 
 
@@ -34,12 +38,11 @@ void Player::inputHandler(){
 	}
 
 
-	
-	if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 200){
-		std::cout  << clk.getElapsedTime().asMilliseconds() << std::endl;
+
+	if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 0){
 		Bullet* b = this->bFactory->requestObject(1);
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y);
-		this->objects.push_back(b);
+		this->sceneObjCallBack(b);
 		clk.restart();
 	}
 
