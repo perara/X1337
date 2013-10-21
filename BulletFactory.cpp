@@ -33,11 +33,13 @@ void BulletFactory::produceObjects(int type,int quantity){
 /// <param name="quantity">Quantity of bullets.</param>
 /// <param name="type">Bullettype</param>
 /// <returns>Returns a vector with the quantity of Bullet* requested</returns>
-std::vector<Bullet*> BulletFactory::requestBatch(int quantity, int type){
-	std::vector<Bullet*>::const_iterator first = this->objects[type].begin() + (this->objects[type].size() - quantity);
-	std::vector<Bullet*>::const_iterator last = this->objects[type].begin() + this->objects[type].size();
-	std::vector<Bullet*> newVec(first, last);
-	return newVec;
+std::list<Bullet*> BulletFactory::requestBatch(int quantity, int type){
+	std::list<Bullet*> retList;
+	int i = 0;
+	for (std::list<Bullet*>::iterator it = this->objects[type].begin(); it != this->objects[type].end() && i < quantity; it++ , i++){
+		retList.push_back(*it);
+	}
+	return retList;
 }
 
 
@@ -51,14 +53,14 @@ Bullet* BulletFactory::requestObject(int type){
 		this->produceObjects(type, this->initQuantity * 0.20); //Increase the size by 20%
 	}
 
-	Bullet* b = this->objects[type].back();
-	this->objects[type].pop_back();
+	Bullet* b = this->objects[type].front();
+	this->objects[type].pop_back(); // O(0)
 	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[b->type].size());
 	return  b;
 }
 
 void BulletFactory::returnObject(Bullet* bullet){
-	this->objects[bullet->type].push_back(bullet);
+	this->objects[bullet->type].push_back(bullet); // O(0)
 	//LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->type].size());
 
 }

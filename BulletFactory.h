@@ -2,6 +2,7 @@
 #include "Bullet.h"
 
 #include <map>
+#include <list>
 
 /// <summary>
 /// This is a factory which produces a set amount of bullets and then serves when requested. This class can also serve multiple bullets in a batch.
@@ -12,13 +13,13 @@ public:
 	BulletFactory(sf::RenderWindow& window, int quantity);
 	
 	void returnObject(Bullet* bullet);
-	std::vector<Bullet*> requestBatch(int quantity, int type);
+	std::list<Bullet*> requestBatch(int quantity, int type);
 	Bullet* requestObject(int type);
 
 protected:
 	void produceObjects(int type, int quantity);
 
-	std::map<int, std::vector<Bullet*>> objects;
+	std::map<int, std::list<Bullet*>> objects;
 	sf::RenderWindow& window;
 	int initQuantity;
 };
