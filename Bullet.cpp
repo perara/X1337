@@ -11,7 +11,7 @@ Bullet::Bullet(sf::RenderWindow& window, int type): Object(window)
 bool Bullet::process(){
 	if(this->sprite->getPosition().y > 0){
 		this->sprite->setPosition(
-			this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds()* (rand() % 2000 + (-2000))),
+			this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds()* speedX),
 			this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO lol
 		return true;
 	}
