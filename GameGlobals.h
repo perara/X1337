@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <SFML\Graphics\Font.hpp>
-#include "BulletFactory.h"
 /*http://stackoverflow.com/questions/270947/can-any-one-provide-me-a-sample-of-singleton-in-c/271104#271104*/
 class Config
 {
@@ -18,6 +17,7 @@ public:
 		OPTIONS, 
 		PAUSE
 	};
+
 	State state;
 	sf::Time elapsedTime;
 	sf::Clock gameClock;

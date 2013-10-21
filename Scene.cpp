@@ -32,7 +32,7 @@ void Scene::process(){
 
 
 void Scene::addObject(Object* object){
-	LOGD("Object#" << object << " | Object Size: " << this->objects.size());
+	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
 
 	//system("pause");
 	this->objects.push_back(object);

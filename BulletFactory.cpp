@@ -27,12 +27,12 @@ Bullet* BulletFactory::requestObject(int type){
 
 	Bullet* b = this->objects[type].back();
 	this->objects[type].pop_back();
-	LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[b->type].size());
+	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[b->type].size());
 	return  b;
 }
 
 void BulletFactory::returnObject(Bullet* bullet){
 	this->objects[bullet->type].push_back(bullet);
-	LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->type].size());
+	//LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->type].size());
 
 }
