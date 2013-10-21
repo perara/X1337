@@ -20,30 +20,24 @@ GameEngine::GameEngine():
 
 }
 
-
-
 void GameEngine::runGame(){
-	
-	// Button btn1 = Button(sf::String("Hello WOrld"), 30, sf::Vector2f(250,250), sf::Vector2f(200,100));
-	// btn1.Draw(window);
-	// btn1.isClicked();
-	while(window.isOpen()){
-		// Clear The window
 
+	while(window.isOpen()){
 		window.clear(sf::Color::Black);
 
-		switch(Config::getInstance().state){
+		switch(Config::getInstance().state)
+		{
 		case Config::GAME:
-			// Process The world
+			// Process Scene
 			this->world.process();
 			Config::getInstance().elapsedTime = Config::getInstance().gameClock.getElapsedTime();
-			// Draw World 1
+			
+			// Draw Scene
 			this->world.draw();
 
 
 			break;
-		case Config::MENU: //Notice how exit button do not work anymore, (This is due to no imput handler in this Scene)
-
+		case Config::MENU: 
 			break;
 		}
 

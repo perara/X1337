@@ -4,6 +4,9 @@
 #include <SFML\Graphics\Text.hpp>
 #include <string>
 
+/// <summary>
+/// A button class for menu //TODO
+/// </summary>
 class Button: public sf::RectangleShape{
 public:
 	Button(sf::String label,int labelSize, sf::Vector2f position, sf::Vector2f size);

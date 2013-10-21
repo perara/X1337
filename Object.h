@@ -6,6 +6,9 @@
 #include <SFML\Graphics\RenderWindow.hpp>
 #include <vector>
 
+/// <summary>
+/// Abstract base class for all objects in the game. A object can for example be a Player, Bullet or a Enemy.
+/// </summary>
 class Object{
 public:
 	Object();

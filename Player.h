@@ -4,9 +4,14 @@
 #include "BulletFactory.h"
 #include <functional>
 
+
+/// <summary>
+/// The player class represents the player
+/// </summary>
 class Player : public Object{
 	std::function<void(Object*)> sceneObjCallBack;
 	BulletFactory* bFactory;
+
 public:
 	Player(){}
 	Player(sf::RenderWindow& window, 

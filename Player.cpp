@@ -6,6 +6,14 @@ sf::Clock clk; //TESTING PURPOSES
 
 
 
+/// <summary>
+/// Initializes a new instance of the <see cref="Player"/> class.
+/// </summary>
+/// <param name="window">The render window.</param>
+/// <param name="pos">The initial startposition of the player</param>
+/// <param name="radius">The radius.</param>
+/// <param name="bFactory">The <see cref=BulletFactory"></param>
+/// <param name="sceneObjCallBack">The scene object call back. This is basicly a function pointer to the corresponding world function "addObject" Reason for passing this is so we can add bullets to the Scene loop</param>
 Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFactory* bFactory, std::function<void(Object*)> sceneObjCallBack):
 	bFactory(bFactory),
 	sceneObjCallBack(sceneObjCallBack),
