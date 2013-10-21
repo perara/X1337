@@ -1,5 +1,5 @@
 #include "World.h"
-
+#include "Enemy.h"
 
 
 World::World(sf::RenderWindow& window): Scene(window){
@@ -10,6 +10,17 @@ World::World(sf::RenderWindow& window): Scene(window){
 	Player* p1 = new Player(
 		window, 
 		sf::Vector2f(100,250), 
+		10, 
+		bFactory,
+		std::bind(&World::addObject, this, std::placeholders::_1)
+		);
+
+	// Add player objects
+	Enemy* e1 = new Enemy(
+		window, 
+		sf::Vector2f(250,50), 
+		sf::Vector2f(250,300), 
+		50,
 		10, 
 		bFactory,
 		std::bind(&World::addObject, this, std::placeholders::_1)

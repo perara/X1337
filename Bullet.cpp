@@ -36,3 +36,4 @@ bool Bullet::process(){
 void Bullet::setPosition(int x, int y){
 	this->sprite->setPosition(x,y);
 }
+

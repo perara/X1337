@@ -1,6 +1,5 @@
 #include "GameEngine.h"
 
-
 int main(){
 	GameEngine *gaym = new GameEngine();
 
@@ -8,4 +7,3 @@ int main(){
 
 	return 0;
 }
-
