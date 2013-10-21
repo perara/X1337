@@ -1,11 +1,13 @@
 #include "GameEngine.h"
 
-
-
 GameEngine::GameEngine():
 	window(sf::VideoMode(500, 500), "X1337", sf::Style::Titlebar | sf::Style::Close),
 	world(window)
 {
+
+	sf::Mouse::setPosition(sf::Vector2i(250, 250), window); // Default mouse location
+	window.setMouseCursorVisible(false);
+
 	// Initial Configuration
 	Config::getInstance().state = Config::getInstance().GAME;		// Set gamestate to Game
 	if (!Config::getInstance().font.loadFromFile("COMICATE.TTF"))

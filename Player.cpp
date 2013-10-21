@@ -4,8 +4,6 @@
 #include <functional>
 sf::Clock clk; //TESTING PURPOSES
 
-
-
 /// <summary>
 /// Initializes a new instance of the <see cref="Player"/> class.
 /// </summary>
@@ -34,43 +32,84 @@ bool Player::process(){
 
 
 void Player::inputHandler(){
-	sf::Event event;
 
-
-	if(sf::Mouse::getPosition(window).x > this->sprite->getRadius() && sf::Mouse::getPosition(window).x < window.getSize().x  - this->sprite->getRadius()){
-		this->sprite->setPosition(sf::Mouse::getPosition(window).x - this->sprite->getRadius(), this->sprite->getPosition().y );
-	}
-
-	if(sf::Mouse::getPosition(window).y > this->sprite->getRadius() && sf::Mouse::getPosition(window).y < window.getSize().y - this->sprite->getRadius()){
-		this->sprite->setPosition(this->sprite->getPosition().x, sf::Mouse::getPosition(window).y  - this->sprite->getRadius());
-	}
-
-
-
-	if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 0){
+	/* Shoot handler */
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 100){
 		Bullet* b = this->bFactory->requestObject(1);
-		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y);
+		b->setPosition(this->sprite->getPosition().x + this->sprite->getRadius() - 2 , this->sprite->getPosition().y);
 		this->sceneObjCallBack(b);
 		clk.restart();
 	}
 
 
-	// Game Menu
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
-		std::cout << "HEHE" << std::endl;
-		Config::getInstance().state = Config::getInstance().MENU;
-	}
-
-
-
+	sf::Event event;
 	while (window.pollEvent(event))
 	{
-		if (event.type == sf::Event::Closed)
+
+		if(event.type == sf::Event::Closed){
 			window.close();
+		}
+
+		/* Key Events*/
+		if(event.type == sf::Event::KeyReleased){
+			if(event.key.code == sf::Keyboard::Escape){
+				window.close();
+			}
+		}
+
+		/* Mouse Events */
+		if (event.type == sf::Event::MouseButtonPressed){
+			//Single click
+
+		}
 
 
+		if(event.type == sf::Event::MouseMoved){
+			int current_x = sf::Mouse::getPosition(window).x, current_y = sf::Mouse::getPosition(window).y;
+			int elapsed_x = 250 - current_x, elapsed_y = 250 - current_y;
+
+			if(elapsed_x != 0 || elapsed_y != 0)
+			{
+
+				/************************************************************************/
+				/* Special Cases where user gets stuck                                                                  */
+				/************************************************************************/
+
+				// X
+				if(this->sprite->getPosition().x <= 0){
+					this->sprite->setPosition(1, this->sprite->getPosition().y);
+				}
+
+				if(this->sprite->getPosition().x >= window.getSize().x - (this->sprite->getRadius() * 2)){
+					this->sprite->setPosition(window.getSize().x - (this->sprite->getRadius() * 2), this->sprite->getPosition().y);
+				}
+
+				// Y
+				if(this->sprite->getPosition().y <= 0){
+					this->sprite->setPosition(this->sprite->getPosition().x, 1);
+				}
+
+				if(this->sprite->getPosition().y >= window.getSize().y - (this->sprite->getRadius() * 2)){
+					this->sprite->setPosition(this->sprite->getPosition().x, window.getSize().y - (this->sprite->getRadius() * 2));
+				}
+
+				/************************************************************************/
+				/* Mouse Movement Handling                                              */
+				/************************************************************************/
+				if(this->sprite->getPosition().x > 0 && this->sprite->getPosition().x < window.getSize().x){
+					this->sprite->move(-elapsed_x  , 0);
+				}
+
+				if(this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < (window.getPosition().y + window.getSize().y)){
+					this->sprite->move(0, -elapsed_y);
+				}
+
+				//      std::cout << elapsed_x << "-" << elapsed_y << "----" <<this->sprite->getPosition().x << " - - - " << this->sprite->getPosition().y  <<  std::endl;
+				sf::Mouse::setPosition(sf::Vector2i(250, 250), window);
+			}
+
+		}
 
 	}
-
 
 }
