@@ -13,7 +13,9 @@ public:
 
 	bool process(){
 		if(this->sprite->getPosition().y > 0){
-			this->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y -1); //TODO lol
+			this->sprite->setPosition(
+				this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds()*speedX),
+				this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds()*speedY)); //TODO lol
 			return true;
 		}
 		return false;
@@ -22,6 +24,10 @@ public:
 	void setPosition(int x, int y){
 		this->sprite->setPosition(x,y);
 	}
+
+private:
+	int speedX;
+	int speedY;
 
 };
 

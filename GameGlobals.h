@@ -19,7 +19,8 @@ public:
 		PAUSE
 	};
 	State state;
-
+	sf::Time elapsedTime;
+	sf::Clock gameClock;
 	sf::Font font; //Game Font
 
 private:

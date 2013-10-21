@@ -29,6 +29,7 @@ void GameEngine::runGame(){
 	// btn1.isClicked();
 	while(window.isOpen()){
 		// Clear The window
+		Config::getInstance().elapsedTime = Config::getInstance().gameClock.getElapsedTime();
 		window.clear(sf::Color::Black);
 
 		switch(Config::getInstance().state){
@@ -50,6 +51,7 @@ void GameEngine::runGame(){
 
 
 		// Display 
+		Config::getInstance().gameClock.restart();
 		window.display();
 	}
 
