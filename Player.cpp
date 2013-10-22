@@ -12,7 +12,7 @@ sf::Clock clk; //TESTING PURPOSES
 /// <param name="radius">The radius.</param>
 /// <param name="bFactory">The <see cref=BulletFactory"></param>
 /// <param name="sceneObjCallBack">The scene object call back. This is basicly a function pointer to the corresponding world function "addObject" Reason for passing this is so we can add bullets to the Scene loop</param>
-Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFactory* bFactory, std::function<void(Object*)> sceneObjCallBack):
+Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFactory* bFactory, std::function<void(Bullet*)> sceneObjCallBack):
 	bFactory(bFactory),
 	sceneObjCallBack(sceneObjCallBack),
 	Object(window)

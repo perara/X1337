@@ -7,14 +7,13 @@ Enemy::Enemy(sf::RenderWindow& window,
 			 float shootFrequency,
 			 int radius, 
 			 BulletFactory* bFactory, 
-			 std::function<void(Object*)> sceneObjCallBack):
+			 std::function<void(Bullet*)> sceneBulletCallBack):
 			 bFactory(bFactory),
-			 sceneObjCallBack(sceneObjCallBack),
+			 sceneBulletCallBack(sceneBulletCallBack),
 			 startPos(startPos),
 			 endPos(endPos),
 			 Object(window)
 {
-	this->sceneObjCallBack(this);
 	this->sprite = new sf::CircleShape(radius,30);
 	this->sprite->setPosition(startPos);
 
@@ -27,7 +26,6 @@ bool Enemy::process(){
 		float angle = atan2f(endPos.x - startPos.x, endPos.y - startPos.y) * 180 / 3.14;
 		float x = sin(angle)*0.1f;
 		float y = cos(angle)*0.1f;
-		std::cout << this->sprite->getPosition().y << "-" << endPos.y << std::endl;
 		this->sprite->move(x,y);
 
 	}

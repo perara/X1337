@@ -10,6 +10,10 @@ void Scene::draw(){
 		it->draw();
 	}
 
+	for(auto &it : bullets){
+		it->draw();
+	}
+
 }
 
 /// <summary>
@@ -18,6 +22,8 @@ void Scene::draw(){
 void Scene::process(){
 
 	// TODO , how secure is this? 
+
+	// Process Objects
 	for(std::list<Object*>::iterator i = objects.begin(); i != objects.end(); ++i)
 	{
 		bool upForDeletion = (*i)->process();
@@ -38,4 +44,11 @@ void Scene::addObject(Object* object){
 
 	//system("pause");
 	this->objects.push_back(object);
+}
+
+void Scene::addBullet(Bullet* bullet){
+	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
+
+	//system("pause");
+	this->bullets.push_back(bullet);
 }

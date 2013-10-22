@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
 #include "Log.h"
+#include "Bullet.h"
 
 #include <deque>
 #include <list>
@@ -16,11 +17,15 @@
 class Scene{
 public:
 	std::list<Object*> objects; // Reason for using List here would be to not invalidate iterator on insertion. Need input
-	Scene(sf::RenderWindow& window):window(window){}
+	std::list<Bullet*> bullets;
+	Scene(sf::RenderWindow& window):window(window){
+		bullets.push_back(new Bullet(window,1)); // This have to be here in order to keep the std::list at a size of 1. 
+	}
 
 	virtual void draw();
 	virtual void process();
 	void addObject(Object* object);
+	void addBullet(Bullet* bullet);
 
 protected:
 	sf::RenderWindow & window;

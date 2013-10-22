@@ -9,7 +9,7 @@
 /// The player class represents the enemy
 /// </summary>
 class Enemy : public Object{
-	std::function<void(Object*)> sceneObjCallBack;
+	std::function<void(Bullet*)> sceneBulletCallBack;
 	BulletFactory* bFactory;
 	sf::Vector2f startPos;
 	sf::Vector2f endPos;
@@ -22,7 +22,7 @@ public:
 		float shootFrequency,
 		int radius, 
 		BulletFactory* bFactory, 
-		std::function<void(Object*)> sceneObjCallBack);
+		std::function<void(Bullet*)> sceneBulletCallBack);
 	bool process();
 	void test();
 
