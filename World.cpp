@@ -46,9 +46,8 @@ void World::process(){
 		}
 
 		// COLLISION TODO
-		sf::CircleShape theSpr = *(*i)->sprite;
-		for(auto& it : objects){
-			if(CircleTest(*it->sprite, theSpr)){
+		for(auto& playerEnemy : objects){ // Loop through all player/enemy objects
+			if(CircleTest(*playerEnemy->sprite,  (*(*i)->sprite))){
 				this->deleteBullet(i);
 			}
 		}
