@@ -42,9 +42,47 @@ void World::process(){
 	{
 		bool upForDeletion = (*i)->process();
 		if (!upForDeletion){
-			this->bFactory->returnObject( (Bullet*)*i); // TODO CLEAN?
-			bullets.erase(i--); 
-
+			this->deleteBullet(i);
 		}
+
+		// COLLISION TODO
+		sf::CircleShape theSpr = *(*i)->sprite;
+		for(auto& it : objects){
+			if(CircleTest(*it->sprite, theSpr)){
+				this->deleteBullet(i);
+			}
+		}
+
 	}
+}
+
+void World::deleteBullet(std::list<Bullet*>::iterator& i){
+	this->bFactory->returnObject( (Bullet*)*i); // TODO CLEAN?
+	bullets.erase(i--); 
+}
+
+sf::Vector2f World::GetSpriteCenter (const sf::CircleShape& Object)
+{
+	sf::FloatRect AABB = Object.getGlobalBounds();
+	return sf::Vector2f (AABB.left+AABB.width/2.f, AABB.top+AABB.height/2.f);
+}
+
+sf::Vector2f World::GetSpriteSize (const sf::CircleShape& Object)
+{
+	sf::IntRect OriginalSize = Object.getTextureRect();
+	sf::Vector2f Scale = Object.getScale();
+	return sf::Vector2f (OriginalSize.width*Scale.x, OriginalSize.height*Scale.y);
+}
+
+bool World::CircleTest(const sf::CircleShape& Object1, const sf::CircleShape& Object2) {
+	sf::Vector2f Obj1Size = GetSpriteSize(Object1);
+	sf::Vector2f Obj2Size = GetSpriteSize(Object2);
+	float Radius1 = Object1.getRadius();
+	float Radius2 = Object2.getRadius();
+
+
+
+	sf::Vector2f Distance = GetSpriteCenter(Object1)-GetSpriteCenter(Object2);
+
+	return (Distance.x * Distance.x + Distance.y * Distance.y <= (Radius1 + Radius2) * (Radius1 + Radius2));
 }

@@ -17,4 +17,11 @@ public:
 
 	void process();
 
+	// TODO
+	sf::Vector2f GetSpriteCenter (const sf::CircleShape& Object);
+	sf::Vector2f GetSpriteSize (const sf::CircleShape& Object);
+	bool CircleTest(const sf::CircleShape& Object1, const sf::CircleShape& Object2);
+
+private:
+	void deleteBullet(std::list<Bullet*>::iterator& i);
 };

@@ -21,17 +21,6 @@ void Scene::draw(){
 /// </summary>
 void Scene::process(){
 
-	// TODO , how secure is this? 
-
-	// Process Objects
-	for(std::list<Object*>::iterator i = objects.begin(); i != objects.end(); ++i)
-	{
-		bool upForDeletion = (*i)->process();
-		if (!upForDeletion){
-			objects.erase(i--); 
-		}
-	}
-
 }
 
 
