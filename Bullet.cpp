@@ -5,11 +5,12 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="type">The bullet type.</param>
-Bullet::Bullet(sf::RenderWindow& window, int type): Object(window)
+Bullet::Bullet(sf::RenderWindow& window, int type): 
+	Object(window),
+	type(type)
 {
-	this->speedX = 20;
-	this->speedY = -500;
-	this->type = type;
+	this->speedX = 0;
+	this->speedY = -100;
 	this->sprite = new sf::CircleShape(2,30);
 }
 
@@ -22,9 +23,9 @@ bool Bullet::process(){
 		this->sprite->setPosition(
 			this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds() * speedX),
 			this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
-		return true;
+		return false; // Should be deleted
 	}
-	return false;
+	return true; // Should stay in process
 }
 
 
@@ -37,3 +38,6 @@ void Bullet::setPosition(int x, int y){
 	this->sprite->setPosition(x,y);
 }
 
+void Bullet::setOwner(Object* owner){
+	this->owner = owner;
+}

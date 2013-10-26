@@ -60,6 +60,7 @@ Bullet* BulletFactory::requestObject(int type){
 }
 
 void BulletFactory::returnObject(Bullet* bullet){
+	//bullet->owner = new Object(window); // Set owner to dummy object
 	this->objects[bullet->type].push_back(bullet); // O(0)
 	//LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->type].size());
 

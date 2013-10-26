@@ -9,9 +9,11 @@
 class Bullet :  public Object{
 public:
 	int type;
+	Object* owner;
 	Bullet(sf::RenderWindow& window, int type);
 	bool process();
 	void setPosition(int x, int y);
+	void setOwner(Object* owner);
 
 protected:
 	int speedX;
