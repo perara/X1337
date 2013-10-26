@@ -1,5 +1,4 @@
 #include "GameEngine.h"
-#include "Log.h"
 
 GameEngine::GameEngine():
 	window(sf::VideoMode(500, 500), "X1337", sf::Style::Titlebar | sf::Style::Close),

@@ -1,8 +1,10 @@
 #pragma once
+#include "GameGlobals.h"
+
+#include <SFML\Window\Mouse.hpp>
 #include <SFML\Graphics\RectangleShape.hpp>
 #include <SFML\Graphics\RenderWindow.hpp>
 #include <SFML\Graphics\Text.hpp>
-#include <string>
 
 /// <summary>
 /// A button class for menu //TODO

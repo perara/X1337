@@ -1,8 +1,5 @@
 #include "Button.h"
-#include "GameGlobals.h"
-#include <iostream>
-#include <SFML\Window\Mouse.hpp>
-#include <SFML\Graphics\Rect.hpp>
+
 
 Button::Button(sf::String label, int labelSize, sf::Vector2f position, sf::Vector2f size){
 	// Initialize the Button Size and properties

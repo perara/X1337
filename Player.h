@@ -3,9 +3,6 @@
 #include "Bullet.h"
 #include "GameGlobals.h"
 
-#include <SFML\Window\Event.hpp>
-#include <SFML\System\Clock.hpp>
-
 /// <summary>
 /// The player class represents the player
 /// </summary>

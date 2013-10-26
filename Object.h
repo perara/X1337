@@ -1,10 +1,9 @@
 #pragma once
 #include "Log.h"
 
-#include <SFML\Graphics\Sprite.hpp>
+#include <SFML/Window.hpp>
 #include <SFML\Graphics\CircleShape.hpp>
 #include <SFML\Graphics\RenderWindow.hpp>
-#include <vector>
 
 /// <summary>
 /// Abstract base class for all objects in the game. A object can for example be a Player, Bullet or a Enemy.

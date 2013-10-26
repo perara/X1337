@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+
+#include <SFML\System.hpp>
 #include <SFML\Graphics\Font.hpp>
 /*http://stackoverflow.com/questions/270947/can-any-one-provide-me-a-sample-of-singleton-in-c/271104#271104*/
 /// <summary>

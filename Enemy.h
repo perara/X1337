@@ -1,11 +1,6 @@
 #pragma once
 #include "Shootable.h"
 
-#include <SFML\Window\Event.hpp>
-
-
-
-
 /// <summary>
 /// The player class represents the enemy
 /// </summary>

@@ -3,13 +3,7 @@
 #include "Log.h"
 #include "Bullet.h"
 
-#include <deque>
 #include <list>
-#include <iostream>
-#include <vector>
-#include <SFML\Graphics\CircleShape.hpp>
-#include <SFML\Graphics\RenderWindow.hpp>
-
 
 /// <summary>
 /// The scene class is an abstract class which is base class for all States. All state is a Scene.

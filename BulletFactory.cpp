@@ -1,5 +1,4 @@
 #include "BulletFactory.h"
-#include <iostream>
 
 
 /// <summary>

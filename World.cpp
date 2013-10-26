@@ -1,6 +1,4 @@
 #include "World.h"
-#include "Enemy.h"
-
 
 World::World(sf::RenderWindow& window): Scene(window){
 	// Initialize Factories
