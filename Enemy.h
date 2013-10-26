@@ -1,28 +1,26 @@
 #pragma once
-#include "Object.h"
+#include "Shootable.h"
+
 #include <SFML\Window\Event.hpp>
-#include "BulletFactory.h"
-#include <functional>
+
+
 
 
 /// <summary>
 /// The player class represents the enemy
 /// </summary>
-class Enemy : public Object{
-	std::function<void(Bullet*)> sceneBulletCallBack;
-	BulletFactory* bFactory;
+class Enemy : public Shootable{
 	sf::Vector2f startPos;
 	sf::Vector2f endPos;
 
 public:
-	Enemy(){}
 	Enemy::Enemy(sf::RenderWindow& window, 
 		sf::Vector2f startPos,
 		sf::Vector2f endPos,
 		float shootFrequency,
 		int radius, 
 		BulletFactory* bFactory, 
-		std::function<void(Bullet*)> sceneBulletCallBack);
+		std::list<Bullet*>& bullets);
 	bool process();
 	void test();
 

@@ -1,24 +1,23 @@
 #pragma once
-#include "Object.h"
-#include <SFML\Window\Event.hpp>
-#include "BulletFactory.h"
-#include <functional>
+#include "Shootable.h"
+#include "Bullet.h"
+#include "GameGlobals.h"
 
+#include <SFML\Window\Event.hpp>
+#include <SFML\System\Clock.hpp>
 
 /// <summary>
 /// The player class represents the player
 /// </summary>
-class Player : public Object{
-	std::function<void(Bullet*)> sceneObjCallBack;
-	BulletFactory* bFactory;
-
+class Player : public Shootable{
 public:
-	Player(){}
+
 	Player(sf::RenderWindow& window, 
 		sf::Vector2f pos, 
 		int radius,
 		BulletFactory* bFactory,
-		std::function<void(Bullet*)> sceneObjCallBack);
+		std::list<Bullet*>&bullets                                      //std::function<void(Bullet*)> sceneObjCallBack Deprecating this. need full access to bullets in players and enemies
+		);
 	void inputHandler();
 	bool process();
 

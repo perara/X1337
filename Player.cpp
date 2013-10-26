@@ -1,7 +1,4 @@
 #include "Player.h"
-#include "GameGlobals.h"
-#include <SFML\System\Clock.hpp>
-#include <functional>
 sf::Clock clk; //TESTING PURPOSES
 
 /// <summary>
@@ -11,11 +8,9 @@ sf::Clock clk; //TESTING PURPOSES
 /// <param name="pos">The initial startposition of the player</param>
 /// <param name="radius">The radius.</param>
 /// <param name="bFactory">The <see cref=BulletFactory"></param>
-/// <param name="sceneObjCallBack">The scene object call back. This is basicly a function pointer to the corresponding world function "addObject" Reason for passing this is so we can add bullets to the Scene loop</param>
-Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFactory* bFactory, std::function<void(Bullet*)> sceneObjCallBack):
-	bFactory(bFactory),
-	sceneObjCallBack(sceneObjCallBack),
-	Object(window)
+/// <param name="sceneBulletListCallback">The scene object call back. This is basicly a function pointer to the corresponding world function "addObject" Reason for passing this is so we can add bullets to the Scene loop</param>
+Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFactory* bFactory, std::list<Bullet*>& bullets):
+	Shootable(window, bullets, bFactory)
 {
 
 	this->sprite = new sf::CircleShape(radius,30);
@@ -27,6 +22,7 @@ Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFac
 
 bool Player::process(){
 	this->inputHandler();
+	this->shootableProcess();
 	return true;
 }
 
@@ -34,10 +30,11 @@ bool Player::process(){
 void Player::inputHandler(){
 
 	/* Shoot handler */
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 100){
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 0){
 		Bullet* b = this->bFactory->requestObject(1);
+		b->setOwner(this);
 		b->setPosition(this->sprite->getPosition().x + this->sprite->getRadius() - 2 , this->sprite->getPosition().y - 10);
-		this->sceneObjCallBack(b);
+		this->bullets.push_back(b);
 		clk.restart();
 	}
 
