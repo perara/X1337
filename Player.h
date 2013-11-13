@@ -13,7 +13,7 @@ public:
 		sf::Vector2f pos, 
 		int radius,
 		BulletFactory* bFactory,
-		std::list<Bullet*>&bullets                                      //std::function<void(Bullet*)> sceneObjCallBack Deprecating this. need full access to bullets in players and enemies
+		std::list<std::shared_ptr<Bullet>>&bullets                                      //std::function<void(Bullet*)> sceneObjCallBack Deprecating this. need full access to bullets in players and enemies
 		);
 	void inputHandler();
 	bool process();

@@ -2,9 +2,9 @@
 
 World::World(sf::RenderWindow& window): Scene(window){
 	// Initialize Factories
-	bFactory = new BulletFactory(window, 1000);
+	BulletFactory* bFactory(new BulletFactory(window, 100));
 
-
+	
 	// Add player objects
 	Player* p1 = new Player(
 		window, 
@@ -24,7 +24,7 @@ World::World(sf::RenderWindow& window): Scene(window){
 		bFactory,
 		bullets
 		);
-
+		
 
 	this->addObject(e1);
 	this->addObject(p1);

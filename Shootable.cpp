@@ -1,15 +1,16 @@
 #include "Shootable.h"
 
-Shootable::Shootable(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFactory* bFactory): 
+Shootable::Shootable(sf::RenderWindow& window, std::list<std::shared_ptr<Bullet>>& bullets, BulletFactory* bFactory): 
 	Object(window),
 	bullets(bullets),
 	bFactory(bFactory)
-{health = 100;}
+{health = 100;
+}
 
 int Shootable::hitDetection(){
 	// COLLISION TODO
 	int hitCounter = 0;
-	for(std::list<Bullet*>::iterator i = std::next(bullets.begin()); i != bullets.end(); ++i)
+	for(std::list<std::shared_ptr<Bullet>>::iterator i = std::next(bullets.begin()); i != bullets.end(); ++i)
 	{
 		bool upForDeletion = (*i)->process();
 		bool wasHit = wasHit = CircleTest(*(*i)->sprite,  *this->sprite);
@@ -85,7 +86,7 @@ bool Shootable::CircleTest(const sf::CircleShape& Object1, const sf::CircleShape
 	return (Distance.x * Distance.x + Distance.y * Distance.y <= (Radius1 + Radius2) * (Radius1 + Radius2));
 }
 
-void Shootable::deleteBullet(std::list<Bullet*>::iterator& i){
-	this->bFactory->returnObject( (Bullet*)*i); // TODO CLEAN?
+void Shootable::deleteBullet(std::list<std::shared_ptr<Bullet>>::iterator& i){
+	this->bFactory->returnObject( (std::shared_ptr<Bullet>)*i); // TODO CLEAN?
 	bullets.erase(i--); 
 }

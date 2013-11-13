@@ -21,7 +21,7 @@ BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity):
 void BulletFactory::produceObjects(int type,int quantity){
 
 	for(int i = 0; i < quantity; i++){
-		this->objects[type].push_back(new Bullet(window, 1));
+		this->objects[type].push_back(std::shared_ptr<Bullet>(new Bullet(window, 1)));
 	}
 
 }
@@ -32,10 +32,10 @@ void BulletFactory::produceObjects(int type,int quantity){
 /// <param name="quantity">Quantity of bullets.</param>
 /// <param name="type">Bullettype</param>
 /// <returns>Returns a vector with the quantity of Bullet* requested</returns>
-std::list<Bullet*> BulletFactory::requestBatch(int quantity, int type){
-	std::list<Bullet*> retList;
+std::list<std::shared_ptr<Bullet>> BulletFactory::requestBatch(int quantity, int type){
+	std::list<std::shared_ptr<Bullet>> retList;
 	int i = 0;
-	for (std::list<Bullet*>::iterator it = this->objects[type].begin(); it != this->objects[type].end() && i < quantity; it++ , i++){
+	for (std::list<std::shared_ptr<Bullet>>::iterator it = this->objects[type].begin(); it != this->objects[type].end() && i < quantity; it++ , i++){
 		retList.push_back(*it);
 	}
 	return retList;
@@ -47,18 +47,18 @@ std::list<Bullet*> BulletFactory::requestBatch(int quantity, int type){
 /// </summary>
 /// <param name="type">Bullet type</param>
 /// <returns>Returns a single Bullet*</returns>
-Bullet* BulletFactory::requestObject(int type){
+std::shared_ptr<Bullet> BulletFactory::requestObject(int type){
 	if(this->objects[type].size() < 50){
 		this->produceObjects(type, this->initQuantity * 0.20); //Increase the size by 20%
 	}
 
-	Bullet* b = this->objects[type].front();
+	std::shared_ptr<Bullet> b = this->objects[type].front();
 	this->objects[type].pop_front(); // O(0)
 	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[b->type].size());
 	return  b;
 }
 
-void BulletFactory::returnObject(Bullet* bullet){
+void BulletFactory::returnObject(std::shared_ptr<Bullet> bullet){
 	//bullet->owner = new Object(window); // Set owner to dummy object
 	this->objects[bullet->type].push_back(bullet); // O(0)
 	//LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->type].size());

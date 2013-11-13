@@ -35,7 +35,7 @@ void Scene::addObject(Object* object){
 	this->objects.push_back(object);
 }
 
-void Scene::addBullet(Bullet* bullet){
+void Scene::addBullet(std::shared_ptr<Bullet> bullet){
 	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
 
 	//system("pause");
