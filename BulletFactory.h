@@ -2,7 +2,6 @@
 #include "Bullet.h"
 
 
-#include <memory.h>
 #include <list>
 
 /// <summary>
@@ -13,14 +12,14 @@ public:
 	BulletFactory();
 	BulletFactory(sf::RenderWindow& window, int quantity);
 	
-	void returnObject(std::shared_ptr<Bullet> bullet);
-	std::list<std::shared_ptr<Bullet> > requestBatch(int quantity, int type);
-	std::shared_ptr<Bullet> requestObject(int type);
+	void returnObject(Bullet* bullet);
+	std::list<Bullet*> requestBatch(int quantity, int type);
+	Bullet* requestObject(int type);
 
 protected:
 	void produceObjects(int type, int quantity);
 
-	std::map<int, std::list<std::shared_ptr<Bullet> > > objects;
+	std::map<int, std::list<Bullet*>> objects;
 	sf::RenderWindow& window;
 	int initQuantity;
 };

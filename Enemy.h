@@ -15,7 +15,7 @@ public:
 		float shootFrequency,
 		int radius, 
 		BulletFactory* bFactory, 
-		std::list<std::shared_ptr<Bullet>>& bullets);
+		std::list<Bullet*>& bullets);
 	bool process();
 	void test();
 

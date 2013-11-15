@@ -7,10 +7,10 @@
 
 class Shootable: public Object{
 protected:
-	std::list<std::shared_ptr<Bullet>>& bullets;
+	std::list<Bullet*>& bullets;
 	BulletFactory* bFactory;
 
-	Shootable(sf::RenderWindow& window, std::list<std::shared_ptr<Bullet>>& bullets, BulletFactory* bFactory);
+	Shootable(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFactory* bFactory);
 
 	/* Health Related */
 	void setHealth(int value);
@@ -24,7 +24,7 @@ protected:
 private:
 	int health;
 	virtual int hitDetection();
-	void deleteBullet(std::list<std::shared_ptr<Bullet>>::iterator& i);
+	void deleteBullet(std::list<Bullet*>::iterator& i);
 
 	// TODO Hit detection
 	sf::Vector2f GetSpriteCenter (const sf::CircleShape& Object);

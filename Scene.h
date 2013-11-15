@@ -11,11 +11,11 @@
 class Scene{
 public:
 	std::list<Object*> objects; // Reason for using List here would be to not invalidate iterator on insertion. Need input
-	std::list<std::shared_ptr<Bullet>> bullets;
+	std::list<Bullet*> bullets;
 	Scene(sf::RenderWindow& window):window(window){
 
 		//TODO?
-		std::shared_ptr<Bullet> initB(new Bullet(window,1));
+		Bullet* initB = new Bullet(window,1);
 		initB->setPosition(-10,-10);
 		bullets.push_back(initB); // This have to be here in order to keep the std::list at a size of 1. 
 	}
@@ -23,7 +23,7 @@ public:
 	virtual void draw();
 	virtual void process();
 	void addObject(Object* object);
-	void addBullet(std::shared_ptr<Bullet> bullet);
+	void addBullet(Bullet* bullet);
 
 protected:
 	sf::RenderWindow & window;
