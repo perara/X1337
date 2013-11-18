@@ -41,13 +41,15 @@ void Bullet::deleteBullet()
 }
 bool Bullet::isOutOfBounds()
 {
-	/*if(this->sprite->getPosition.z>window.getSize().x || this->sprite->getPosition.x<0 || this->sprite->getPosition.y>window.getSize().y || this->sprite->getPosition.y<0)
-		return true;
-	else
+	if(this->sprite->getPosition().x > window.getSize().x || 
+		this->sprite->getPosition().x < 0 || 
+		this->sprite->getPosition().y > window.getSize().y || 
+		this->sprite->getPosition().y < 0){
+			return true;
+	}else{
 		return false;
-		*/
+	}
 
-	return true;
 }
 
 

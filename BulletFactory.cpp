@@ -8,9 +8,10 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="quantity">Input of the initial quantity the Factory should have at initialization.</param>
-BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity): 
+BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*> bullets): 
 	initQuantity(quantity), 
-	window(window)
+	window(window),
+	bullets(bullets)
 {
 	produceObjects(1, quantity);  //TODO, implement TYPES
 }
@@ -23,7 +24,7 @@ BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity):
 void BulletFactory::produceObjects(int type,int quantity){
 
 	for(int i = 0; i < quantity; i++){
-		this->objects[type].push_back(new Bullet(window, 1, this));
+		this->objects[type].push_back(new Bullet(window, 1, bullets, this));
 	}
 
 }
