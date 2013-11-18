@@ -15,7 +15,8 @@ int Shooter::hitDetection(){
 		{
 			bool wasHit = wasHit = CircleTest(*(*i)->sprite,  *this->sprite);
 			if(wasHit && this != (*i)->owner){
-				(*i)->deleteBullet();
+				i = (*i)->deleteBullet();
+
 				hitCounter++;
 			}
 		}

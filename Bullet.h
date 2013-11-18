@@ -19,7 +19,7 @@ public:
 	void setPosition(int x, int y);
 	void setOwner(Object* owner);
 	bool isOutOfBounds();
-	void deleteBullet();
+	std::list<Bullet*>::iterator deleteBullet();
 
 protected:
 	int speedX;
