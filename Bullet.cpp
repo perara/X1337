@@ -24,10 +24,13 @@ bool Bullet::process(){
 	this->sprite->setPosition(
 		this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds() * speedX),
 		this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
-	if(isOutOfBounds)
+	if(isOutOfBounds())
 	{
 		deleteBullet();
 	}
+
+
+	return true; // TODODODODODODO
 }
 
 void Bullet::deleteBullet()
@@ -38,10 +41,13 @@ void Bullet::deleteBullet()
 }
 bool Bullet::isOutOfBounds()
 {
-	if(this->sprite->getPosition.z>window.getSize().x || this->sprite->getPosition.x<0 || this->sprite->getPosition.y>window.getSize().y || this->sprite->getPosition.y<0)
+	/*if(this->sprite->getPosition.z>window.getSize().x || this->sprite->getPosition.x<0 || this->sprite->getPosition.y>window.getSize().y || this->sprite->getPosition.y<0)
 		return true;
 	else
 		return false;
+		*/
+
+	return true;
 }
 
 

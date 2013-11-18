@@ -1,7 +1,9 @@
 #pragma once
 #include "Object.h"
 #include "GameGlobals.h"
+#include <list>
 #include "BulletFactory.h"
+
 
 /// <summary>
 /// This class represents a bullet in the game, these bullets will be handled by BulletFactory.h

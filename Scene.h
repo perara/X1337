@@ -15,9 +15,9 @@ public:
 	Scene(sf::RenderWindow& window):window(window){
 
 		//TODO?
-		Bullet* initB = new Bullet(window,1);
+		/*Bullet* initB = new Bullet(window,1);
 		initB->setPosition(-10,-10);
-		bullets.push_back(initB); // This have to be here in order to keep the std::list at a size of 1. 
+		bullets.push_back(initB);*/ // This have to be here in order to keep the std::list at a size of 1. 
 	}
 
 	virtual void draw();

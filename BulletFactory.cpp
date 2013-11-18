@@ -1,4 +1,6 @@
 #include "BulletFactory.h"
+#include "Bullet.h"
+
 
 
 /// <summary>
