@@ -9,21 +9,19 @@ Shootable::Shootable(sf::RenderWindow& window, std::list<Bullet*>& bullets, Bull
 int Shootable::hitDetection(){
 	// COLLISION TODO
 	int hitCounter = 0;
-
-	for(auto&it : bullets){
-		bool upForDeletion = it->process();
-		bool wasHit = wasHit = CircleTest(*it->sprite,  *this->sprite);
+	for(std::list<Bullet*>::iterator i = std::next(bullets.begin()); i != bullets.end(); ++i)
+	{
+		bool upForDeletion = (*i)->process();
+		bool wasHit = wasHit = CircleTest(*(*i)->sprite,  *this->sprite);
 
 		if(upForDeletion){
-			it->deleteQueued = true;
+			this->deleteBullet(i);
 
-		}else if(wasHit && this != it->owner){
-			//this->deleteBullet(i);
-			it->deleteQueued = true;
+		}else if(wasHit && this != (*i)->owner){
+			this->deleteBullet(i);
 			hitCounter++;
 		}
 	}
-
 	
 
 	return hitCounter;

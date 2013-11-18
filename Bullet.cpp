@@ -12,7 +12,6 @@ Bullet::Bullet(sf::RenderWindow& window, int type):
 	this->speedX = 0;
 	this->speedY = -100;
 	this->sprite = new sf::CircleShape(2,30);
-	this->deleteQueued = false;
 }
 
 /// <summary>
@@ -21,10 +20,9 @@ Bullet::Bullet(sf::RenderWindow& window, int type):
 /// <returns>bool which indicates if the object is up for deletion in Scene.h's object list <see cref="Scene"> </returns>
 bool Bullet::process(){
 	if(this->sprite->getPosition().y > 0){
-		this->sprite->move(
-			(Config::getInstance().elapsedTime.asSeconds() * speedX),
-			(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
-		std::cout << ((Config::getInstance().elapsedTime.asSeconds() * speedY)) << std::endl;
+		this->sprite->setPosition(
+			this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds() * speedX),
+			this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
 		return false; // Should be deleted
 	}
 	return true; // Should stay in process

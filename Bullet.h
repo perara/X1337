@@ -14,7 +14,6 @@ public:
 	bool process();
 	void setPosition(int x, int y);
 	void setOwner(Object* owner);
-	bool deleteQueued;
 
 protected:
 	int speedX;

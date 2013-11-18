@@ -8,7 +8,6 @@ GameEngine::GameEngine():
 	// Set mouse properties
 	sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window); // Default mouse location
 	window.setMouseCursorVisible(false);
-	window.setFramerateLimit	(60)	;
 
 	// Initial Configuration
 	Config::getInstance().state = Config::getInstance().GAME;		// Set gamestate to Game
