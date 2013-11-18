@@ -30,7 +30,7 @@ bool Player::process(){
 void Player::inputHandler(){
 
 	/* Shoot handler */
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 0){
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 100){
 		Bullet* b = this->bFactory->requestObject(1);
 		b->setOwner(this);
 		b->setPosition(this->sprite->getPosition().x + this->sprite->getRadius() - 2 , this->sprite->getPosition().y - 10);

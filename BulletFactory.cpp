@@ -8,7 +8,7 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="quantity">Input of the initial quantity the Factory should have at initialization.</param>
-BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*> bullets): 
+BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*>& bullets): 
 	initQuantity(quantity), 
 	window(window),
 	bullets(bullets)

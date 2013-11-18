@@ -12,7 +12,7 @@ class Bullet;
 class BulletFactory{
 public:
 	BulletFactory();
-	BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*> bullets);
+	BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*>& bullets);
 	
 	void returnObject(Bullet* bullet);
 	std::list<Bullet*> requestBatch(int quantity, int type);
@@ -21,7 +21,7 @@ public:
 protected:
 	void produceObjects(int type, int quantity);
 
-	std::list<Bullet*> bullets;
+	std::list<Bullet*>& bullets;
 	std::map<int, std::list<Bullet*>> objects;
 	sf::RenderWindow& window;
 	int initQuantity;

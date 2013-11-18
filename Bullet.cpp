@@ -24,11 +24,11 @@ bool Bullet::process(){
 	this->sprite->setPosition(
 		this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds() * speedX),
 		this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
+	
 	if(isOutOfBounds())
 	{
 		deleteBullet();
 	}
-
 
 	return true; // TODODODODODODO
 }
@@ -36,8 +36,10 @@ bool Bullet::process(){
 void Bullet::deleteBullet()
 {
 	this->bFactory->returnObject(this);
-	std::list<Bullet*>::iterator i = std::find(bullets.begin(), bullets.end(), this);
-	bullets.erase(i);
+
+	// HER E FEILEN
+	std::list<Bullet*>::iterator in = std::find(bullets.begin(), bullets.end(), this);
+	bullets.erase(in);
 }
 bool Bullet::isOutOfBounds()
 {

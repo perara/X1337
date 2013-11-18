@@ -45,7 +45,7 @@ void Shooter::shootableProcess(){
 	int hitCount = this->hitDetection();
 
 	if(hitCount > 0){
-		LOGD("Shootable#"<<this << " has " << this->getHealth() << " health");
+		//LOGD("Shootable#"<<this << " has " << this->getHealth() << " health");
 		this->decrementHealth();
 	}
 }
