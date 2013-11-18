@@ -5,10 +5,6 @@ int count = 0;
 World::World(sf::RenderWindow& window): Scene(window){
 	// Initialize Factories
 	bFactory = new BulletFactory(window, 1000, bullets);
-	//Initial Bullet
-	Bullet* initB = new Bullet(window,1, bullets, bFactory);
-		initB->setPosition(-10,-10);
-		bullets.push_back(initB);
 
 	// Add player objects
 	Player* p1 = new Player(

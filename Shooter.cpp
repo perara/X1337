@@ -9,15 +9,18 @@ Shooter::Shooter(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFa
 int Shooter::hitDetection(){
 	// COLLISION TODO
 	int hitCounter = 0;
-	for(std::list<Bullet*>::iterator i = std::next(bullets.begin()); i != bullets.end(); ++i)
-	{
-		bool wasHit = wasHit = CircleTest(*(*i)->sprite,  *this->sprite);
-		if(wasHit && this != (*i)->owner){
-			(*i)->deleteBullet();
-			hitCounter++;
+
+	if(!bullets.empty()){
+		for(std::list<Bullet*>::iterator i = std::next(bullets.begin()); i != bullets.end(); ++i)
+		{
+			bool wasHit = wasHit = CircleTest(*(*i)->sprite,  *this->sprite);
+			if(wasHit && this != (*i)->owner){
+				(*i)->deleteBullet();
+				hitCounter++;
+			}
 		}
 	}
-	
+
 
 	return hitCounter;
 }
@@ -40,7 +43,7 @@ void Shooter::incrementHealth(){
 
 void Shooter::shootableProcess(){
 	int hitCount = this->hitDetection();
-	
+
 	if(hitCount > 0){
 		LOGD("Shootable#"<<this << " has " << this->getHealth() << " health");
 		this->decrementHealth();
