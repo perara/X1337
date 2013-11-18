@@ -13,5 +13,4 @@ public:
 	World(sf::RenderWindow& window);
 
 	void process();
-	void deleteBullet(std::list<Bullet*>::iterator& i);
 };

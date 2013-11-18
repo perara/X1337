@@ -21,7 +21,7 @@ BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity):
 void BulletFactory::produceObjects(int type,int quantity){
 
 	for(int i = 0; i < quantity; i++){
-		this->objects[type].push_back(new Bullet(window, 1));
+		this->objects[type].push_back(new Bullet(window, 1, this));
 	}
 
 }

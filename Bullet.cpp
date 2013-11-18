@@ -5,9 +5,11 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="type">The bullet type.</param>
-Bullet::Bullet(sf::RenderWindow& window, int type): 
+Bullet::Bullet(sf::RenderWindow& window, int type, std::list<Bullet*>& bullets, BulletFactory* bFactory): 
 	Object(window),
-	type(type)
+	type(type),
+	bullets(bullets),
+	bFactory(bFactory)
 {
 	this->speedX = 0;
 	this->speedY = -100;
@@ -19,13 +21,27 @@ Bullet::Bullet(sf::RenderWindow& window, int type):
 /// </summary>
 /// <returns>bool which indicates if the object is up for deletion in Scene.h's object list <see cref="Scene"> </returns>
 bool Bullet::process(){
-	if(this->sprite->getPosition().y > 0){
-		this->sprite->setPosition(
-			this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds() * speedX),
-			this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
-		return false; // Should be deleted
+	this->sprite->setPosition(
+		this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds() * speedX),
+		this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
+	if(isOutOfBounds)
+	{
+		deleteBullet();
 	}
-	return true; // Should stay in process
+}
+
+void Bullet::deleteBullet()
+{
+	this->bFactory->returnObject(this);
+	std::list<Bullet*>::iterator i = std::find(bullets.begin(), bullets.end(), this);
+	bullets.erase(i);
+}
+bool Bullet::isOutOfBounds()
+{
+	if(this->sprite->getPosition.z>window.getSize().x || this->sprite->getPosition.x<0 || this->sprite->getPosition.y>window.getSize().y || this->sprite->getPosition.y<0)
+		return true;
+	else
+		return false;
 }
 
 

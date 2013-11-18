@@ -10,7 +10,7 @@ sf::Clock clk; //TESTING PURPOSES
 /// <param name="bFactory">The <see cref=BulletFactory"></param>
 /// <param name="sceneBulletListCallback">The scene object call back. This is basicly a function pointer to the corresponding world function "addObject" Reason for passing this is so we can add bullets to the Scene loop</param>
 Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFactory* bFactory, std::list<Bullet*>& bullets):
-	Shootable(window, bullets, bFactory)
+	Shooter(window, bullets, bFactory)
 {
 
 	this->sprite = new sf::CircleShape(radius,30);

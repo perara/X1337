@@ -1,10 +1,10 @@
 #pragma once
-#include "Shootable.h"
+#include "Shooter.h"
 
 /// <summary>
 /// The player class represents the enemy
 /// </summary>
-class Enemy : public Shootable{
+class Enemy : public Shooter{
 	sf::Vector2f startPos;
 	sf::Vector2f endPos;
 

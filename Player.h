@@ -1,12 +1,12 @@
 #pragma once
-#include "Shootable.h"
+#include "Shooter.h"
 #include "Bullet.h"
 #include "GameGlobals.h"
 
 /// <summary>
 /// The player class represents the player
 /// </summary>
-class Player : public Shootable{
+class Player : public Shooter{
 public:
 
 	Player(sf::RenderWindow& window, 

@@ -10,7 +10,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 			 std::list<Bullet*>& bullets):
 startPos(startPos),
 	endPos(endPos),
-	Shootable(window, bullets, bFactory)
+	Shooter(window, bullets, bFactory)
 {
 	this->sprite = new sf::CircleShape(radius,30);
 	this->sprite->setPosition(startPos);
