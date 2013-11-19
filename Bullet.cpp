@@ -11,6 +11,7 @@ Bullet::Bullet(sf::RenderWindow& window, int type, std::list<Bullet*>& bullets, 
 	bullets(bullets),
 	bFactory(bFactory)
 {
+	this->setDeleted(false);
 	this->speedX = 0;
 	this->speedY = -100;
 	this->sprite = new sf::CircleShape(2,30);
@@ -20,26 +21,27 @@ Bullet::Bullet(sf::RenderWindow& window, int type, std::list<Bullet*>& bullets, 
 /// Processes this bullet object.
 /// </summary>
 /// <returns>bool which indicates if the object is up for deletion in Scene.h's object list <see cref="Scene"> </returns>
-bool Bullet::process(){
-	this->sprite->setPosition(
-		this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds() * speedX),
-		this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
-
-	if(isOutOfBounds())
+bool Bullet::process()
+{
+	if(!deleted)
 	{
-		deleteBullet();
+		this->sprite->setPosition(
+			this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds() * speedX),
+			this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
+
+		if(isOutOfBounds())
+		{
+			this->setDeleted(true);
+		}
 	}
 
 	return true; // TODODODODODODO
 }
 
-std::list<Bullet*>::iterator Bullet::deleteBullet()
+void Bullet::deleteBullet(std::list<Bullet*>::iterator i)
 {
 	this->bFactory->returnObject(this);
-
-	// Find the pointer
-	std::list<Bullet*>::iterator in = std::find(bullets.begin(), bullets.end(), this);
-	return bullets.erase(in); // Delete and return new iterator
+	bullets.erase(i);
 
 }
 bool Bullet::isOutOfBounds()
@@ -61,10 +63,26 @@ bool Bullet::isOutOfBounds()
 /// </summary>
 /// <param name="x">Sets x position.</param>
 /// <param name="y">Sets y position</param>
-void Bullet::setPosition(int x, int y){
+void Bullet::setPosition(int x, int y)
+{
 	this->sprite->setPosition(x,y);
 }
 
-void Bullet::setOwner(Object* owner){
+void Bullet::setOwner(Object* owner)
+{
 	this->owner = owner;
+}
+
+void Bullet::setDeleted(bool val)
+{
+	this->deleted = val;
+}
+
+bool Bullet::getDeleted()
+{
+	return this->deleted;
+}
+
+void Bullet::resetObject(){
+	this->setDeleted(false);
 }

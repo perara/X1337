@@ -6,16 +6,20 @@ Shooter::Shooter(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFa
 	bFactory(bFactory)
 {health = 100;}
 
-int Shooter::hitDetection(){
+int Shooter::hitDetection()
+{
 	// COLLISION TODO
 	int hitCounter = 0;
 
-	if(!bullets.empty()){
-		for(std::list<Bullet*>::iterator i = std::next(bullets.begin()); i != bullets.end(); ++i)
+	if(!bullets.empty())
+	{
+		for(std::list<Bullet*>::iterator i = bullets.begin(); i != bullets.end();i++)
 		{
 			bool wasHit = wasHit = CircleTest(*(*i)->sprite,  *this->sprite);
-			if(wasHit && this != (*i)->owner){
-				i = (*i)->deleteBullet();
+			
+			if(wasHit && this != (*i)->owner)
+			{
+				(*i)->setDeleted(true);
 
 				hitCounter++;
 			}
@@ -26,26 +30,32 @@ int Shooter::hitDetection(){
 	return hitCounter;
 }
 
-void Shooter::setHealth(int value){
+void Shooter::setHealth(int value)
+{
 	this->health = value;
 }
 
-int Shooter::getHealth(){
+int Shooter::getHealth()
+{
 	return this->health;
 }
 
-void Shooter::decrementHealth(){
+void Shooter::decrementHealth()
+{
 	this->health--;
 }
 
-void Shooter::incrementHealth(){
+void Shooter::incrementHealth()
+{
 	this->health++;
 }
 
-void Shooter::shootableProcess(){
+void Shooter::shootableProcess()
+{
 	int hitCount = this->hitDetection();
 
-	if(hitCount > 0){
+	if(hitCount > 0)
+	{
 		//LOGD("Shootable#"<<this << " has " << this->getHealth() << " health");
 		this->decrementHealth();
 	}
@@ -65,7 +75,8 @@ sf::Vector2f Shooter::GetSpriteSize (const sf::CircleShape& Object)
 	return sf::Vector2f (OriginalSize.width*Scale.x, OriginalSize.height*Scale.y);
 }
 
-bool Shooter::CircleTest(const sf::CircleShape& Object1, const sf::CircleShape& Object2) {
+bool Shooter::CircleTest(const sf::CircleShape& Object1, const sf::CircleShape& Object2) 
+{
 	sf::Vector2f Obj1Size = GetSpriteSize(Object1);
 	sf::Vector2f Obj2Size = GetSpriteSize(Object2);
 	float Radius1 = Object1.getRadius();

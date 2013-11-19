@@ -20,7 +20,6 @@ public:
 
 protected:
 	void produceObjects(int type, int quantity);
-
 	std::list<Bullet*>& bullets;
 	std::map<int, std::list<Bullet*>> objects;
 	sf::RenderWindow& window;

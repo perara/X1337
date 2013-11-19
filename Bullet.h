@@ -8,7 +8,8 @@
 /// <summary>
 /// This class represents a bullet in the game, these bullets will be handled by BulletFactory.h
 /// </summary>
-class Bullet :  public Object{
+class Bullet :  public Object
+{
 public:
 	int type;
 	Object* owner;
@@ -19,11 +20,16 @@ public:
 	void setPosition(int x, int y);
 	void setOwner(Object* owner);
 	bool isOutOfBounds();
-	std::list<Bullet*>::iterator deleteBullet();
+	void deleteBullet(std::list<Bullet*>::iterator i);
+	void resetObject();
+
+	void setDeleted(bool deleted);
+	bool getDeleted(); 
 
 protected:
 	int speedX;
 	int speedY;
+	bool deleted;
 
 };
 
