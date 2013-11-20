@@ -14,12 +14,14 @@ int Shooter::hitDetection()
 	{
 		for(auto& i:bullets)
 		{
-			bool wasHit = CircleTest(*i->sprite,  *this->sprite);
+			bool wasHit;
+			if(i->getBulletType()==Bullet::standardShot)
+				wasHit = CircleTest(*i->sprite,  *this->sprite);
 			
 			if(wasHit && this != i->owner)
 			{
 				i->setDeleted(true);
-				hitCounter++;
+				health=health-i->getBulletType();
 			}
 		}
 	}

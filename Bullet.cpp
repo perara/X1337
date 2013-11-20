@@ -11,6 +11,11 @@ Bullet::Bullet(sf::RenderWindow& window, int type, std::list<Bullet*>& bullets, 
 	bullets(bullets),
 	bFactory(bFactory)
 {
+	if(1==type)
+		this->bulletType = standardShot;
+	else if(2==type)
+		this->bulletType = heavyShot;
+
 	this->setDeleted(false);
 	this->speedX = 0;
 	this->speedY = -500;
@@ -72,6 +77,11 @@ bool Bullet::getDeleted()
 {
 	return this->deleted;
 }
-void Bullet::resetObject(){
+void Bullet::resetObject()
+{
 	this->setDeleted(false);
+}
+Bullet::Type Bullet::getBulletType()
+{
+	return this->bulletType;
 }

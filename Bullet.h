@@ -12,6 +12,7 @@ class Bullet :  public Object
 {
 public:
 	int type;
+	enum Type {standardShot = 1, heavyShot = 5};
 	Object* owner;
 	BulletFactory* bFactory;
 	std::list<Bullet*>& bullets;
@@ -24,8 +25,9 @@ public:
 	void resetObject();
 	void setDeleted(bool deleted);
 	bool getDeleted(); 
-
+	Type getBulletType();
 protected:
+	Type bulletType;
 	int speedX;
 	int speedY;
 	bool deleted;
