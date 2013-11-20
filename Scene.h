@@ -13,7 +13,6 @@ public:
 	std::list<Object*> objects; // Reason for using List here would be to not invalidate iterator on insertion. Need input
 	std::list<Bullet*> bullets;
 	Scene(sf::RenderWindow& window):window(window){}
-
 	virtual void draw();
 	virtual void process();
 	void addObject(Object* object);

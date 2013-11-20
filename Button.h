@@ -18,5 +18,4 @@ public:
 private:
 	sf::Text label;
 	sf::FloatRect hitBox;
-
 };

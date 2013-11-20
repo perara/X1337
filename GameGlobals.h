@@ -15,14 +15,12 @@ public:
 		static Config    instance;
 		return instance;
 	}
-
 	enum State{
 		GAME, 
 		MENU, 
 		OPTIONS, 
 		PAUSE
 	};
-
 	State state;
 	sf::Time elapsedTime;
 	sf::Clock gameClock;

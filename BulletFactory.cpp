@@ -1,8 +1,6 @@
 #include "BulletFactory.h"
 #include "Bullet.h"
 
-
-
 /// <summary>
 /// Initializes a new instance of the <see cref="BulletFactory"/> class.
 /// </summary>
@@ -15,27 +13,27 @@ BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::list<B
 {
 	produceObjects(1, quantity);  //TODO, implement TYPES
 }
-
 /// <summary>
 /// Produces "quantity" amount of bullets of "type" x
 /// </summary>
 /// <param name="type">The type.</param>
 /// <param name="quantity">The quantity.</param>
-void BulletFactory::produceObjects(int type,int quantity){
+void BulletFactory::produceObjects(int type,int quantity)
+{
 
 	for(int i = 0; i < quantity; i++){
 		this->objects[type].push_back(new Bullet(window, 1, bullets, this));
 	}
 
 }
-
 /// <summary>
 /// Requests a batch of bullets
 /// </summary>
 /// <param name="quantity">Quantity of bullets.</param>
 /// <param name="type">Bullettype</param>
 /// <returns>Returns a vector with the quantity of Bullet* requested</returns>
-std::list<Bullet*> BulletFactory::requestBatch(int quantity, int type){
+std::list<Bullet*> BulletFactory::requestBatch(int quantity, int type)
+{
 	std::list<Bullet*> retList;
 	int i = 0;
 	for (std::list<Bullet*>::iterator it = this->objects[type].begin(); it != this->objects[type].end() && i < quantity; it++ , i++){
@@ -43,14 +41,13 @@ std::list<Bullet*> BulletFactory::requestBatch(int quantity, int type){
 	}
 	return retList;
 }
-
-
 /// <summary>
 /// Requests a single bullet*
 /// </summary>
 /// <param name="type">Bullet type</param>
 /// <returns>Returns a single Bullet*</returns>
-Bullet* BulletFactory::requestObject(int type){
+Bullet* BulletFactory::requestObject(int type)
+{
 	if(this->objects[type].size() < 50){
 		this->produceObjects(type, this->initQuantity * 0.20); //Increase the size by 20%
 	}
@@ -60,12 +57,11 @@ Bullet* BulletFactory::requestObject(int type){
 	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[b->type].size());
 	return  b;
 }
-
-void BulletFactory::returnObject(Bullet* bullet){
+void BulletFactory::returnObject(Bullet* bullet)
+{
 	bullet->resetObject();
 	this->objects[bullet->type].push_back(bullet); // O(0)
 
 	//LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->type].size());
 
 }
-

@@ -8,7 +8,6 @@
 /// </summary>
 class Player : public Shooter{
 public:
-
 	Player(sf::RenderWindow& window, 
 		sf::Vector2f pos, 
 		int radius,
@@ -17,6 +16,4 @@ public:
 		);
 	void inputHandler();
 	bool process();
-
-
 };

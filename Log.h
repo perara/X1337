@@ -21,5 +21,4 @@
 #define LOGW(line) std::cout << "W/" << LOG(line) << std::endl
 #define LOGE(line) std::cout << "E/" << LOG(line) << std::endl
 
-
 #endif

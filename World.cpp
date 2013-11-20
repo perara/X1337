@@ -26,17 +26,13 @@ World::World(sf::RenderWindow& window): Scene(window)
 		bFactory,
 		bullets
 		);
-
-
+	
 	this->addObject(e1);
 	this->addObject(p1);
 }
 
-
 void World::process()
 {
-
-
 	/* Processing Processing */
 	for(auto& it : objects)
 	{
@@ -47,7 +43,6 @@ void World::process()
 	{
 		it->process();
 	}
-
 
 	/* Cleanup Processing */
 	if(!bullets.empty())
@@ -60,12 +55,8 @@ void World::process()
 				if(bullets.empty()) break;
 				i = bullets.begin();
 			}
-
-
 		}
 	}
-
-
 
 	if(clkW.getElapsedTime().asMilliseconds() > 2000)
 	{
@@ -80,10 +71,8 @@ void World::process()
 			bFactory,
 			bullets
 			);
-
-
+		
 		this->addObject(e1);
 		clkW.restart();
 	}
-
 }

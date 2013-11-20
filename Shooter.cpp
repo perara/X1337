@@ -10,23 +10,19 @@ int Shooter::hitDetection()
 {
 	// COLLISION TODO
 	int hitCounter = 0;
-
 	if(!bullets.empty())
 	{
-		for(std::list<Bullet*>::iterator i = bullets.begin(); i != bullets.end();i++)
+		for(auto& i:bullets)
 		{
-			bool wasHit = wasHit = CircleTest(*(*i)->sprite,  *this->sprite);
+			bool wasHit = CircleTest(*i->sprite,  *this->sprite);
 			
-			if(wasHit && this != (*i)->owner)
+			if(wasHit && this != i->owner)
 			{
-				(*i)->setDeleted(true);
-
+				i->setDeleted(true);
 				hitCounter++;
 			}
 		}
 	}
-
-
 	return hitCounter;
 }
 

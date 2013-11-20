@@ -13,10 +13,9 @@ Bullet::Bullet(sf::RenderWindow& window, int type, std::list<Bullet*>& bullets, 
 {
 	this->setDeleted(false);
 	this->speedX = 0;
-	this->speedY = -100;
+	this->speedY = -500;
 	this->sprite = new sf::CircleShape(2,30);
 }
-
 /// <summary>
 /// Processes this bullet object.
 /// </summary>
@@ -34,15 +33,12 @@ bool Bullet::process()
 			this->setDeleted(true);
 		}
 	}
-
 	return true; // TODODODODODODO
 }
-
 void Bullet::deleteBullet(std::list<Bullet*>::iterator i)
 {
 	this->bFactory->returnObject(this);
 	bullets.erase(i);
-
 }
 bool Bullet::isOutOfBounds()
 {
@@ -54,10 +50,7 @@ bool Bullet::isOutOfBounds()
 	}else{
 		return false;
 	}
-
 }
-
-
 /// <summary>
 /// Sets the position of the bullet.
 /// </summary>
@@ -67,22 +60,18 @@ void Bullet::setPosition(int x, int y)
 {
 	this->sprite->setPosition(x,y);
 }
-
 void Bullet::setOwner(Object* owner)
 {
 	this->owner = owner;
 }
-
 void Bullet::setDeleted(bool val)
 {
 	this->deleted = val;
 }
-
 bool Bullet::getDeleted()
 {
 	return this->deleted;
 }
-
 void Bullet::resetObject(){
 	this->setDeleted(false);
 }

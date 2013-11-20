@@ -1,9 +1,7 @@
 #include "GameEngine.h"
 
-int main(){
+int main()
+{
 	GameEngine *gaym = new GameEngine();
-
-
-
 	return 0;
 }

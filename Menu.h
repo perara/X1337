@@ -3,5 +3,4 @@
 
 class Menu: public Scene{
 	Menu();
-
 };

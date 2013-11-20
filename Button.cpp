@@ -1,7 +1,7 @@
 #include "Button.h"
 
-
-Button::Button(sf::String label, int labelSize, sf::Vector2f position, sf::Vector2f size){
+Button::Button(sf::String label, int labelSize, sf::Vector2f position, sf::Vector2f size)
+{
 	// Initialize the Button Size and properties
 	this->setPosition(position);
 	this->setSize(size);
@@ -20,28 +20,24 @@ Button::Button(sf::String label, int labelSize, sf::Vector2f position, sf::Vecto
 	while(lbl.findCharacterPos(label.getSize()).x >= this->getPosition().x + this->getSize().x){
 		lbl.setCharacterSize(lbl.getCharacterSize()-1);
 	}
-
 	// Add label to button
 	this->label = lbl;
-
-
 }
 
 // This function checks if the button is clicked, This is the equavilent to process
-bool Button::isClicked(){
+bool Button::isClicked()
+{
 	sf::RectangleShape mPos(sf::Vector2f(1,1));
 	mPos.setPosition(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->hitBox.intersects(mPos.getGlobalBounds())){
 		std::cout << "Hello i clicked" << std::endl;
 	}
-
-
 	return true;
 }
 
-void Button::Draw(sf::RenderWindow &window){
+void Button::Draw(sf::RenderWindow &window)
+{
 	window.draw(*this);
 	window.draw(this->label);
-
 }

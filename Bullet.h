@@ -22,7 +22,6 @@ public:
 	bool isOutOfBounds();
 	void deleteBullet(std::list<Bullet*>::iterator i);
 	void resetObject();
-
 	void setDeleted(bool deleted);
 	bool getDeleted(); 
 
@@ -30,6 +29,4 @@ protected:
 	int speedX;
 	int speedY;
 	bool deleted;
-
 };
-

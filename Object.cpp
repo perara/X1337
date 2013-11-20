@@ -1,11 +1,11 @@
 #include "Object.h"
 
-void Object::draw(){
+void Object::draw()
+{
 	this->window.draw(*this->sprite);
 }
-
-bool Object::process(){
-	
+bool Object::process()
+{
 	return true;
 }
 
