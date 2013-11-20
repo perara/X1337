@@ -12,6 +12,7 @@ BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::list<B
 	bullets(bullets)
 {
 	produceObjects(1, quantity);  //TODO, implement TYPES
+	produceObjects(2, quantity);
 }
 /// <summary>
 /// Produces "quantity" amount of bullets of "type" x
