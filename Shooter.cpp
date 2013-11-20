@@ -15,7 +15,7 @@ int Shooter::hitDetection()
 		for(auto& i:bullets)
 		{
 			bool wasHit;
-			if(i->getBulletType()==Bullet::standardShot)
+			if(i->getBulletType() == BulletFactory::BulletType::standardShot)
 				wasHit = CircleTest(*i->sprite,  *this->sprite);
 			
 			if(wasHit && this != i->owner)

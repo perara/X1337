@@ -5,16 +5,12 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="type">The bullet type.</param>
-Bullet::Bullet(sf::RenderWindow& window, int type, std::list<Bullet*>& bullets, BulletFactory* bFactory): 
+Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType, std::list<Bullet*>& bullets, BulletFactory* bFactory): 
 	Object(window),
-	type(type),
+	bulletType(bulletType),
 	bullets(bullets),
 	bFactory(bFactory)
 {
-	if(1==type)
-		this->bulletType = standardShot;
-	else if(2==type)
-		this->bulletType = heavyShot;
 
 	this->setDeleted(false);
 	this->speedX = 0;
@@ -81,7 +77,7 @@ void Bullet::resetObject()
 {
 	this->setDeleted(false);
 }
-Bullet::Type Bullet::getBulletType()
+BulletFactory::BulletType Bullet::getBulletType()
 {
 	return this->bulletType;
 }

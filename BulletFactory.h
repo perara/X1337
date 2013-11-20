@@ -12,14 +12,17 @@ public:
 	BulletFactory();
 	BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*>& bullets);
 	
+	const enum BulletType {standardShot = 1, heavyShot = 5};
+
+
 	void returnObject(Bullet* bullet);
-	std::list<Bullet*> requestBatch(int quantity, int type);
-	Bullet* requestObject(int type);
+	std::list<Bullet*> requestBatch(int quantity, BulletFactory::BulletType type);
+	Bullet* requestObject(BulletFactory::BulletType type);
 
 protected:
-	void produceObjects(int type, int quantity);
+	void produceObjects(BulletFactory::BulletType type, int quantity);
 	std::list<Bullet*>& bullets;
-	std::map<int, std::list<Bullet*>> objects;
+	std::map<BulletFactory::BulletType , std::list<Bullet*>> objects;
 	sf::RenderWindow& window;
 	int initQuantity;
 };
