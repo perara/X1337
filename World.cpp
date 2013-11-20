@@ -4,6 +4,9 @@ int count = 0;
 
 World::World(sf::RenderWindow& window): Scene(window)
 {
+	// Initialize Background
+	bg->addBackground("assets//sprites//bg1.jpg");
+
 	// Initialize Factories
 	bFactory = new BulletFactory(window, 1000, bullets);
 
@@ -44,6 +47,8 @@ void World::process()
 		it->process();
 	}
 
+	
+
 	/* Cleanup Processing */
 	if(!bullets.empty())
 	{
@@ -75,4 +80,5 @@ void World::process()
 		this->addObject(e1);
 		clkW.restart();
 	}
+
 }

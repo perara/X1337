@@ -8,6 +8,7 @@
 /// </summary>
 class World: public Scene{
 	BulletFactory* bFactory;
+
 public:
 	World();
 	World(sf::RenderWindow& window);
