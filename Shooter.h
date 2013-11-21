@@ -23,5 +23,5 @@ protected:
 	virtual void shootableProcess();
 
 private:
-	virtual int hitDetection();
+	virtual int hitDetection() = 0;
 };

@@ -6,10 +6,6 @@ Shooter::Shooter(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFa
 	bFactory(bFactory)
 {health = 100;}
 
-int Shooter::hitDetection()
-{
-	return 0;
-}
 
 void Shooter::setHealth(int value)
 {

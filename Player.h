@@ -18,4 +18,6 @@ public:
 
 	void inputHandler();
 	bool process();
+protected:
+		int hitDetection();
 };

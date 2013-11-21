@@ -100,7 +100,7 @@ void Player::inputHandler()
 				{
 					this->sprite->setPosition(this->sprite->getPosition().x, window.getSize().y - this->sprite->getRadius());
 				}
-				
+
 				/************************************************************************/
 				/* Mouse Movement Handling                                              */
 				/************************************************************************/
@@ -117,4 +117,9 @@ void Player::inputHandler()
 			}
 		}
 	}
+}
+
+
+int Player::hitDetection(){
+	return 0;
 }
