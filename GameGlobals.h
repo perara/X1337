@@ -3,6 +3,7 @@
 
 #include <SFML\System.hpp>
 #include <SFML\Graphics\Font.hpp>
+#include "ResourceHandler.h"
 /*http://stackoverflow.com/questions/270947/can-any-one-provide-me-a-sample-of-singleton-in-c/271104#271104*/
 /// <summary>
 /// A singleton which eases use of some variables. We use this to pass objects which we see as unnecessary to pass via Dependency Injection.
@@ -24,10 +25,12 @@ public:
 	State state;
 	sf::Time elapsedTime;
 	sf::Clock gameClock;
-	sf::Font font; //Game Font
+	ResourceHandler* resourceHandler;
 
 private:
 	Config() {}
 	Config(Config const&);              // Don't Implement.
 	void operator=(Config const&); // Don't implement
+
+
 };

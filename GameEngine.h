@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "World.h"
 #include "GameGlobals.h"
+#include "ResourceHandler.h"
+
 
 /// <summary>
 /// This is the game engine class which processes everything in the game. It holds the statemachine which decides current state.
