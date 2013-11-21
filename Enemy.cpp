@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "stdlib.h"
 sf::Clock clsk;
 
 Enemy::Enemy(sf::RenderWindow& window, 
@@ -15,6 +16,30 @@ Enemy::Enemy(sf::RenderWindow& window,
 	this->sprite = new GameShape(GameShape::circle, 10);
 	this->sprite->setPosition(startPos);
 }
+int Enemy::hitDetection()
+{
+	// COLLISION TODO
+	int hitCounter = 0;
+	if(!bullets.empty())
+	{
+		for(auto& i:bullets)
+		{
+			bool wasHit = false;
+			if(i->getBulletType() == BulletFactory::BulletType::standardShot)
+			{
+				wasHit = false; //TODO
+				// TODO HIT DETECTIOn
+				wasHit = circleTest(*i->sprite);
+			}
+			if(wasHit && this != i->owner)
+			{
+				i->setDeleted(true);
+				health=health-i->getBulletType();
+			}
+		}
+	}
+	return hitCounter;
+}
 
 bool Enemy::process()
 {
@@ -28,8 +53,6 @@ bool Enemy::process()
 	return true;
 }
 
-
-
 void Enemy::circularShoot()
 {
 	double speed = 0.1;  
@@ -39,4 +62,18 @@ void Enemy::circularShoot()
 	double move_y = speed * sin( angle ) + cos(angle);
 
 	this->sprite->move(move_x,move_y);
+}
+
+bool Enemy::circleTest(GameShape bullet)
+{
+	int spriteRadius = this->sprite->getRadius();
+	int bulletRadius = bullet.getRadius();
+	int xDistance = abs(this->sprite->getPosition().x-bullet.getPosition().x);
+	int yDistance = abs(this->sprite->getPosition().y-bullet.getPosition().y);
+	int distance = sqrt(xDistance*xDistance+yDistance*yDistance);
+	if(distance<=spriteRadius+bulletRadius)
+	{
+		return true;
+	}
+	return false;
 }

@@ -10,7 +10,8 @@ class Shooter: public Object
 protected:
 	std::list<Bullet*>& bullets;
 	BulletFactory* bFactory;
-	Shooter(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFactory* bFactory);
+	Shooter(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFactory* bFactory);	
+	int health;
 
 	/* Health Related */
 	void setHealth(int value);
@@ -22,7 +23,5 @@ protected:
 	virtual void shootableProcess();
 
 private:
-	int health;
 	virtual int hitDetection();
-
 };

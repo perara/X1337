@@ -19,6 +19,8 @@ public:
 
 protected:
 	void circularShoot();
+	virtual int hitDetection();
 	sf::Vector2f startPos;
 	sf::Vector2f endPos;
+	bool Enemy::circleTest(GameShape bullet);
 };

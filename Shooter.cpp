@@ -8,33 +8,13 @@ Shooter::Shooter(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFa
 
 int Shooter::hitDetection()
 {
-	// COLLISION TODO
-	int hitCounter = 0;
-	if(!bullets.empty())
-	{
-		for(auto& i:bullets)
-		{
-			bool wasHit = false;
-			if(i->getBulletType() == BulletFactory::BulletType::standardShot)
-				wasHit = false; //TODO
-				// TODO HIT DETECTIOn
-				///wasHit = CircleTest(*i->sprite,  *this->sprite);
-			
-			if(wasHit && this != i->owner)
-			{
-				i->setDeleted(true);
-				health=health-i->getBulletType();
-			}
-		}
-	}
-	return hitCounter;
+	return 0;
 }
 
 void Shooter::setHealth(int value)
 {
 	this->health = value;
 }
-
 int Shooter::getHealth()
 {
 	return this->health;
