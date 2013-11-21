@@ -27,10 +27,10 @@ void GameEngine::runGame()
 		{
 			// Process Scene
 			this->world.process();
-
+			Config::getInstance().elapsedTime = Config::getInstance().gameClock.getElapsedTime();
 			// Draw Scene
 			this->world.draw();
-			Config::getInstance().elapsedTime = Config::getInstance().gameClock.getElapsedTime();
+			
 		}
 		if(Config::getInstance().state == Config::MENU){
 

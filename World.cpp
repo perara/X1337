@@ -63,7 +63,6 @@ void World::process()
 	{
 		for(std::list<Object*>::iterator i = objects.begin(); i != objects.end();i++)
 		{
-			std::cout << objects.size() << std::endl;
 			if((*i)->getDeleted())
 			{ // If the bullet is up for deletion
 				if(objects.empty()) break;
