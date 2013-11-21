@@ -45,9 +45,9 @@ bool Enemy::process()
 	this->shootableProcess();
 	if((int)this->sprite->getPosition().x != (int)endPos.x || (int)this->sprite->getPosition().y != (int)endPos.y){
 		float angle = atan2f(endPos.x - startPos.x, endPos.y - startPos.y) * 180 / 3.14;
-		float x = sin(angle)*0.1f;
-		float y = cos(angle)*0.1f;
-		this->sprite->move(x + (Config::getInstance().elapsedTime.asSeconds() * 50) ,y + (Config::getInstance().elapsedTime.asSeconds() * 50));
+		float x = sin(angle) * (Config::getInstance().gameClock.getElapsedTime().asSeconds() * 100.1f);
+		float y = cos(angle) * (Config::getInstance().gameClock.getElapsedTime().asSeconds() * 100.1f);
+		this->sprite->move(x  ,y );
 	}
 	return true;
 }
