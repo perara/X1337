@@ -29,7 +29,7 @@ void Shooter::incrementHealth()
 void Shooter::shootableProcess()
 {
 	int hitCount = this->hitDetection();
-
+	int hitCount = 0;
 	if(hitCount > 0)
 	{
 		//LOGD("Shootable#"<<this << " has " << this->getHealth() << " health");

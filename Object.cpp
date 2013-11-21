@@ -9,3 +9,6 @@ bool Object::process()
 	return true;
 }
 
+bool Object::getDeleted(){
+	return this->deleted;
+}

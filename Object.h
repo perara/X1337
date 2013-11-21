@@ -12,11 +12,13 @@ class Object
 {
 public:
 	Object();
-	Object(sf::RenderWindow & window) : window(window){};
+	Object(sf::RenderWindow & window) : window(window){deleted = false;};
 	virtual void draw();
 	virtual bool process();
 	GameShape* sprite;
+	bool getDeleted();
 
 protected:
 	sf::RenderWindow& window;
+	bool deleted;
 };

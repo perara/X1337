@@ -58,7 +58,25 @@ void World::process()
 		}
 	}
 
-	if(clkW.getElapsedTime().asMilliseconds() > 200)
+	/* Cleanup Processing OBJECTS */
+	if(!objects.empty())
+	{
+		for(std::list<Object*>::iterator i = objects.begin(); i != objects.end();i++)
+		{
+			std::cout << objects.size() << std::endl;
+			if((*i)->getDeleted())
+			{ // If the bullet is up for deletion
+				if(objects.empty()) break;
+				objects.erase(i);
+				i = objects.begin();
+			}
+		}
+	}
+
+
+
+
+	if(clkW.getElapsedTime().asMilliseconds() > 1000)
 	{
 		count++;
 		// Add player objects
