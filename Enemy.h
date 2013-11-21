@@ -4,7 +4,8 @@
 /// <summary>
 /// The player class represents the enemy
 /// </summary>
-class Enemy : public Shooter{
+class Enemy : public Shooter
+{
 public:
 	Enemy::Enemy(sf::RenderWindow& window, 
 		sf::Vector2f startPos,

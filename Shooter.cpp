@@ -14,9 +14,13 @@ int Shooter::hitDetection()
 	{
 		for(auto& i:bullets)
 		{
-			bool wasHit;
+			bool wasHit=false;
 			if(i->getBulletType()==Bullet::standardShot)
-				wasHit = CircleTest(*i->sprite,  *this->sprite);
+			{
+				sf::CircleShape* cs = dynamic_cast<sf::CircleShape*> (i->sprite);
+				sf::CircleShape* cs2 = dynamic_cast<sf::CircleShape*> (this->sprite);
+				//wasHit = hitDetection(*cs,  *cs2);
+			}
 			
 			if(wasHit && this != i->owner)
 			{
@@ -73,7 +77,7 @@ sf::Vector2f Shooter::GetSpriteSize (const sf::CircleShape& Object)
 	return sf::Vector2f (OriginalSize.width*Scale.x, OriginalSize.height*Scale.y);
 }
 
-bool Shooter::CircleTest(const sf::CircleShape& Object1, const sf::CircleShape& Object2) 
+bool Shooter::hitDetection(const sf::CircleShape& Object1, const sf::CircleShape& Object2) 
 {
 	sf::Vector2f Obj1Size = GetSpriteSize(Object1);
 	sf::Vector2f Obj2Size = GetSpriteSize(Object2);
@@ -84,3 +88,7 @@ bool Shooter::CircleTest(const sf::CircleShape& Object1, const sf::CircleShape& 
 
 	return (Distance.x * Distance.x + Distance.y * Distance.y <= (Radius1 + Radius2) * (Radius1 + Radius2));
 }
+/*bool Shooter::hitDetection(const sf::RectangleShape& Object1, const sf::CircleShape& Object2)
+{
+	return true;
+}*/

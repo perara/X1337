@@ -12,14 +12,18 @@ Bullet::Bullet(sf::RenderWindow& window, int type, std::list<Bullet*>& bullets, 
 	bFactory(bFactory)
 {
 	if(1==type)
+	{
 		this->bulletType = standardShot;
+		this->sprite = new sf::CircleShape(2,30);
+	}
 	else if(2==type)
+	{
 		this->bulletType = heavyShot;
-
+//		this->sprite = new sf::RectangleShape(sf::Vector2f(10, 10));
+	}
 	this->setDeleted(false);
 	this->speedX = 0;
 	this->speedY = -500;
-	this->sprite = new sf::CircleShape(2,30);
 }
 /// <summary>
 /// Processes this bullet object.

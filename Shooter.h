@@ -5,7 +5,8 @@
 
 
 
-class Shooter: public Object{
+class Shooter: public Object
+{
 protected:
 	std::list<Bullet*>& bullets;
 	BulletFactory* bFactory;
@@ -27,5 +28,6 @@ private:
 	// TODO Hit detection
 	sf::Vector2f GetSpriteCenter (const sf::CircleShape& Object);
 	sf::Vector2f GetSpriteSize (const sf::CircleShape& Object);
-	bool CircleTest(const sf::CircleShape& Object1, const sf::CircleShape& Object2);
+	bool hitDetection(const sf::CircleShape& Object1, const sf::CircleShape& Object2);
+//	bool hitDetection(const sf::RectangleShape& Object1, const sf::CircleShape& Object2);
 };
