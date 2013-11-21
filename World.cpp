@@ -58,7 +58,7 @@ void World::process()
 		}
 	}
 
-	if(clkW.getElapsedTime().asMilliseconds() > 2000)
+	if(clkW.getElapsedTime().asMilliseconds() > 200)
 	{
 		count++;
 		// Add player objects

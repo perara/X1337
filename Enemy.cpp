@@ -9,9 +9,9 @@ Enemy::Enemy(sf::RenderWindow& window,
 			 int radius, 
 			 BulletFactory* bFactory, 
 			 std::list<Bullet*>& bullets):
-			 startPos(startPos),
-			 endPos(endPos),
-			 Shooter(window, bullets, bFactory)
+startPos(startPos),
+	endPos(endPos),
+	Shooter(window, bullets, bFactory)
 {
 	this->sprite = new GameShape(GameShape::circle, 10);
 	this->sprite->setPosition(startPos);
@@ -24,13 +24,12 @@ int Enemy::hitDetection()
 	{
 		for(auto& i:bullets)
 		{
-			bool wasHit = false;
+			bool wasHit;
 			if(i->getBulletType() == BulletFactory::BulletType::standardShot)
 			{
-				wasHit = false; //TODO
-				// TODO HIT DETECTIOn
 				wasHit = circleTest(*i->sprite);
 			}
+
 			if(wasHit && this != i->owner)
 			{
 				i->setDeleted(true);
@@ -48,7 +47,7 @@ bool Enemy::process()
 		float angle = atan2f(endPos.x - startPos.x, endPos.y - startPos.y) * 180 / 3.14;
 		float x = sin(angle)*0.1f;
 		float y = cos(angle)*0.1f;
-		this->sprite->move(x * 0.01,y * 0.01);
+		this->sprite->move(x + (Config::getInstance().elapsedTime.asSeconds() * 50) ,y + (Config::getInstance().elapsedTime.asSeconds() * 50));
 	}
 	return true;
 }
