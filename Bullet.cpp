@@ -5,25 +5,17 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="type">The bullet type.</param>
-Bullet::Bullet(sf::RenderWindow& window, int type, std::list<Bullet*>& bullets, BulletFactory* bFactory): 
+Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType, std::list<Bullet*>& bullets, BulletFactory* bFactory): 
 	Object(window),
-	type(type),
+	bulletType(bulletType),
 	bullets(bullets),
 	bFactory(bFactory)
 {
-	if(1==type)
-	{
-		this->bulletType = standardShot;
-		this->sprite = new sf::CircleShape(2,30);
-	}
-	else if(2==type)
-	{
-		this->bulletType = heavyShot;
-//		this->sprite = new sf::RectangleShape(sf::Vector2f(10, 10));
-	}
+
 	this->setDeleted(false);
 	this->speedX = 0;
 	this->speedY = -500;
+	this->sprite = new GameShape(GameShape::circle, 2);
 }
 /// <summary>
 /// Processes this bullet object.
@@ -85,7 +77,7 @@ void Bullet::resetObject()
 {
 	this->setDeleted(false);
 }
-Bullet::Type Bullet::getBulletType()
+BulletFactory::BulletType Bullet::getBulletType()
 {
 	return this->bulletType;
 }

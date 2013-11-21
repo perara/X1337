@@ -1,9 +1,8 @@
 #pragma once
 #include "Log.h"
+#include "GameShape.h"
 
 #include <SFML/Window.hpp>
-#include <SFML\Graphics\CircleShape.hpp>
-#include <SFML\Graphics\RectangleShape.hpp>
 #include <SFML\Graphics\RenderWindow.hpp>
 
 /// <summary>
@@ -16,7 +15,7 @@ public:
 	Object(sf::RenderWindow & window) : window(window){};
 	virtual void draw();
 	virtual bool process();
-	sf::CircleShape* sprite;
+	GameShape* sprite;
 
 protected:
 	sf::RenderWindow& window;

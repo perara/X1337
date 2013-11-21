@@ -37,6 +37,7 @@ void GameEngine::runGame()
 		}
 		// Display 
 		Config::getInstance().gameClock.restart();
+
 		window.display();
 	}
 }

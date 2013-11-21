@@ -14,12 +14,11 @@ int Shooter::hitDetection()
 	{
 		for(auto& i:bullets)
 		{
-			bool wasHit=false;
-			if(i->getBulletType()==Bullet::standardShot)
-			{
-				// HIT DETECTION HERE
-				//wasHit = hitDetection(*cs,  *cs2);
-			}
+			bool wasHit;
+			if(i->getBulletType() == BulletFactory::BulletType::standardShot)
+				wasHit = false; //TODO
+				// TODO HIT DETECTIOn
+				///wasHit = CircleTest(*i->sprite,  *this->sprite);
 			
 			if(wasHit && this != i->owner)
 			{
@@ -61,4 +60,3 @@ void Shooter::shootableProcess()
 		this->decrementHealth();
 	}
 }
-

@@ -12,7 +12,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 			 endPos(endPos),
 			 Shooter(window, bullets, bFactory)
 {
-	this->sprite = new sf::CircleShape(radius,30);
+	this->sprite = new GameShape(GameShape::circle, 10);
 	this->sprite->setPosition(startPos);
 }
 
