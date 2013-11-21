@@ -24,7 +24,7 @@ int Enemy::hitDetection()
 	{
 		for(auto& i:bullets)
 		{
-			bool wasHit;
+			bool wasHit = false;
 			if(i->getBulletType() == BulletFactory::BulletType::standardShot)
 			{
 				wasHit = circleTest(*i->sprite);
