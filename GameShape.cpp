@@ -1,6 +1,7 @@
 #include "GameShape.h"
 
 
+// Other Default
 GameShape::GameShape(GameShape::ShapeType shapeType):
 	shapeType(shapeType)
 {
@@ -8,6 +9,8 @@ GameShape::GameShape(GameShape::ShapeType shapeType):
 	switch(shapeType)
 	{
 	case GameShape::ShapeType::triangle:
+		this->setPointCount(3);
+		setTriangleShape(20);
 		break;
 	case GameShape::ShapeType::square:
 		break;
@@ -17,6 +20,25 @@ GameShape::GameShape(GameShape::ShapeType shapeType):
 	};
 
 }
+
+// Triangle
+GameShape::GameShape(GameShape::ShapeType shapeType, float size):
+	shapeType(shapeType)
+{
+	switch(shapeType)
+	{
+	case GameShape::ShapeType::triangle:
+		this->setPointCount(3);
+		setTriangleShape(size);
+		break;
+	default:
+		LOGE("There is no shapetype defined for this constructor which maches your type");
+		break;
+	};
+
+}
+
+
 
 /* Circle or shapes with radius */
 GameShape::GameShape(GameShape::ShapeType shapeType, int radius, int pointCount):
@@ -38,6 +60,15 @@ GameShape::GameShape(GameShape::ShapeType shapeType, int radius, int pointCount)
 GameShape::ShapeType GameShape::getShapeType()
 {
 	return shapeType;
+}
+
+void GameShape::setTriangleShape(float size)
+{
+	this->setPoint(0, sf::Vector2f(-0.5,0));
+	this->setPoint(1, sf::Vector2f(0.5,0));
+	this->setPoint(2, sf::Vector2f(0,-1));
+	this->setScale(size,size);
+
 }
 
 

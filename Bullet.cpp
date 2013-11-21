@@ -14,8 +14,16 @@ Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType, s
 
 	this->setDeleted(false);
 	this->speedX = 0;
-	this->speedY = -500;
-	this->sprite = new GameShape(GameShape::circle, 2);
+	this->speedY = -250;
+
+	if(BulletFactory::BulletType::standardShot == bulletType){
+		this->sprite = new GameShape(GameShape::circle, 2);
+
+	}
+
+	else if(BulletFactory::BulletType::heavyShot == bulletType)
+		this->sprite = new GameShape(GameShape::triangle, 20.0f);
+
 }
 /// <summary>
 /// Processes this bullet object.

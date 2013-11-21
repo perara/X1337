@@ -11,6 +11,7 @@ BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::list<B
 	window(window),
 	bullets(bullets)
 {
+
 	produceObjects(BulletFactory::BulletType::standardShot, quantity);  //TODO, implement TYPES
 	produceObjects(BulletFactory::BulletType::heavyShot, quantity);
 
@@ -57,7 +58,7 @@ Bullet* BulletFactory::requestObject(BulletFactory::BulletType type)
 
 	Bullet* b = this->objects[type].front();
 	this->objects[type].pop_front(); // O(0)
-	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[b->type].size());
+	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[type].size());
 	return  b;
 }
 void BulletFactory::returnObject(Bullet* bullet)

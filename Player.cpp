@@ -34,6 +34,16 @@ void Player::inputHandler()
 		clk.restart();
 	}
 
+	/* TEMPORARY FOR TESTING */ //TODODODODODODODODODODODOD
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && clk.getElapsedTime().asMilliseconds() > 100){
+
+		Bullet* b = this->bFactory->requestObject(BulletFactory::BulletType::heavyShot);
+		b->setOwner(this);
+		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
+		this->bullets.push_back(b);
+		clk.restart();
+	}
+
 	sf::Event event;
 	while (window.pollEvent(event))
 	{

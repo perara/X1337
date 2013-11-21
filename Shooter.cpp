@@ -14,7 +14,7 @@ int Shooter::hitDetection()
 	{
 		for(auto& i:bullets)
 		{
-			bool wasHit;
+			bool wasHit = false;
 			if(i->getBulletType() == BulletFactory::BulletType::standardShot)
 				wasHit = false; //TODO
 				// TODO HIT DETECTIOn

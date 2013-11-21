@@ -12,8 +12,9 @@ public:
 		square = 2, 
 	};
 
-	GameShape(ShapeType shapeType);
-	GameShape(ShapeType shapeType, int radius, int pointCount = 10);
+	GameShape(ShapeType shapeType); // Other
+	GameShape(GameShape::ShapeType shapeType, float size); // Triangle
+	GameShape(ShapeType shapeType, int radius, int pointCount = 10); // Circle
 
 	ShapeType getShapeType();
 
@@ -21,5 +22,6 @@ public:
 protected:
 	ShapeType shapeType;
 	void setCircleShape(double radius, sf::Vector2f center);
+	void setTriangleShape(float size);
 	std::map<std::string, float> properties;
 };
