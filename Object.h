@@ -16,7 +16,7 @@ public:
 	Object(sf::RenderWindow & window) : window(window){};
 	virtual void draw();
 	virtual bool process();
-	sf::Shape* sprite;
+	sf::CircleShape* sprite;
 
 protected:
 	sf::RenderWindow& window;

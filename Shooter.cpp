@@ -17,8 +17,7 @@ int Shooter::hitDetection()
 			bool wasHit=false;
 			if(i->getBulletType()==Bullet::standardShot)
 			{
-				sf::CircleShape* cs = dynamic_cast<sf::CircleShape*> (i->sprite);
-				sf::CircleShape* cs2 = dynamic_cast<sf::CircleShape*> (this->sprite);
+				// HIT DETECTION HERE
 				//wasHit = hitDetection(*cs,  *cs2);
 			}
 			
@@ -63,32 +62,3 @@ void Shooter::shootableProcess()
 	}
 }
 
-/* Privates */
-sf::Vector2f Shooter::GetSpriteCenter (const sf::CircleShape& Object)
-{
-	sf::FloatRect AABB = Object.getGlobalBounds();
-	return sf::Vector2f (AABB.left+AABB.width/2.f, AABB.top+AABB.height/2.f);
-}
-
-sf::Vector2f Shooter::GetSpriteSize (const sf::CircleShape& Object)
-{
-	sf::IntRect OriginalSize = Object.getTextureRect();
-	sf::Vector2f Scale = Object.getScale();
-	return sf::Vector2f (OriginalSize.width*Scale.x, OriginalSize.height*Scale.y);
-}
-
-bool Shooter::hitDetection(const sf::CircleShape& Object1, const sf::CircleShape& Object2) 
-{
-	sf::Vector2f Obj1Size = GetSpriteSize(Object1);
-	sf::Vector2f Obj2Size = GetSpriteSize(Object2);
-	float Radius1 = Object1.getRadius();
-	float Radius2 = Object2.getRadius();
-
-	sf::Vector2f Distance = GetSpriteCenter(Object1)-GetSpriteCenter(Object2);
-
-	return (Distance.x * Distance.x + Distance.y * Distance.y <= (Radius1 + Radius2) * (Radius1 + Radius2));
-}
-/*bool Shooter::hitDetection(const sf::RectangleShape& Object1, const sf::CircleShape& Object2)
-{
-	return true;
-}*/

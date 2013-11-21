@@ -9,7 +9,6 @@
 class Player : public Shooter
 {
 public:
-	sf::CircleShape* sprite;
 	Player(sf::RenderWindow& window, 
 		sf::Vector2f pos, 
 		int radius,

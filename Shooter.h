@@ -25,9 +25,4 @@ private:
 	int health;
 	virtual int hitDetection();
 
-	// TODO Hit detection
-	sf::Vector2f GetSpriteCenter (const sf::CircleShape& Object);
-	sf::Vector2f GetSpriteSize (const sf::CircleShape& Object);
-	bool hitDetection(const sf::CircleShape& Object1, const sf::CircleShape& Object2);
-//	bool hitDetection(const sf::RectangleShape& Object1, const sf::CircleShape& Object2);
 };
