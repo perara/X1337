@@ -5,7 +5,7 @@
 #include "Log.h"
 #include "Player.h"
 #include "World.h"
-#include "GameGlobals.h"
+#include "Globals.h"
 #include "ResourceHandler.h"
 
 

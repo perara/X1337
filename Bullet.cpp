@@ -34,8 +34,8 @@ void Bullet::process()
 	if(!deleted)
 	{
 		this->sprite->setPosition(
-			this->sprite->getPosition().x+(Config::getInstance().timeStep.asSeconds() * speedX),
-			this->sprite->getPosition().y+(Config::getInstance().timeStep.asSeconds() * speedY)); //TODO
+			this->sprite->getPosition().x+(Globals::getInstance().getTimeStep().asSeconds() * speedX),
+			this->sprite->getPosition().y+(Globals::getInstance().getTimeStep().asSeconds() * speedY)); //TODO
 
 		if(isOutOfBounds())
 		{

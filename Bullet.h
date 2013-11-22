@@ -1,6 +1,6 @@
 #pragma once
 #include "Object.h"
-#include "GameGlobals.h"
+#include "Globals.h"
 #include <list>
 #include "BulletFactory.h"
 

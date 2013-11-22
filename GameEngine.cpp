@@ -5,17 +5,17 @@ GameEngine::GameEngine():
 	window(sf::VideoMode(500, 500), "X1337", sf::Style::Titlebar | sf::Style::Close)
 {
 	// Init and set resourceHandler
-	Config::getInstance().resourceHandler = new ResourceHandler(window);
-	Config::getInstance().resourceHandler->init();
+	Globals::getInstance().setResourceHandler(new ResourceHandler(window));
+	Globals::getInstance().getResourceHandler()->init();
 
 	// Init World
 	world = new World(window);
 
 	// Set timeStep to 60 fps
-	Config::getInstance().timeStep =  sf::seconds(1.0f/60.0f);
+	Globals::getInstance().setTimeStep(sf::seconds(1.0f/60.0f));
 
 	// Initial Game State
-	Config::getInstance().state = Config::getInstance().GAME;		// Set gamestate to Game
+	Globals::getInstance().setState(Globals::getInstance().GAME);		// Set gamestate to Game
 
 
 	// Set mouse properties
@@ -32,35 +32,35 @@ void GameEngine::runGame()
 	{
 		this->elapsedTime += this->gameClock.restart();
 
-		while(this->elapsedTime >=  Config::getInstance().timeStep)
+		while(this->elapsedTime >=  Globals::getInstance().getTimeStep())
 		{
 
-			if(Config::getInstance().state == Config::GAME)
+			if(Globals::getInstance().getState() == Globals::GAME)
 			{
 				// Process Scene
 				this->world->process();
 
 			}
 
-			if(Config::getInstance().state == Config::MENU)
+			if(Globals::getInstance().getState() == Globals::MENU)
 			{
 
 			}
 
-			this->elapsedTime -= Config::getInstance().timeStep;
+			this->elapsedTime -= Globals::getInstance().getTimeStep();
 
 		}
 
 		window.clear(sf::Color::Black);
 		
-		if(Config::getInstance().state == Config::GAME)
+		if(Globals::getInstance().getState() == Globals::GAME)
 		{
 			// Draw Game
 			this->world->draw();
 
 		}
 
-		if(Config::getInstance().state == Config::MENU)
+		if(Globals::getInstance().getState() == Globals::MENU)
 		{
 
 		}

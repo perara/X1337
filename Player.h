@@ -1,7 +1,7 @@
 #pragma once
 #include "Shooter.h"
 #include "Bullet.h"
-#include "GameGlobals.h"
+#include "Globals.h"
 
 /// <summary>
 /// The player class represents the player

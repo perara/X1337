@@ -5,7 +5,7 @@ int count = 0;
 World::World(sf::RenderWindow& window): Scene(window)
 {
 	// Initialize Background
-	bg->addBackground(Config::getInstance().resourceHandler->getTexture(ResourceHandler::Resource::BACKGROUND1));
+	bg->addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Resource::BACKGROUND1));
 
 	// Initialize Factories
 	bFactory = new BulletFactory(window, 1000, bullets);
