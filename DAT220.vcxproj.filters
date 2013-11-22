@@ -1,101 +1,123 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="Background.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BulletFactory.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ResourceHandler.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source\Bullet</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="BulletFactory.cpp">
+      <Filter>Source\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="Shooter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source\Shooters</Filter>
     </ClCompile>
-<<<<<<< HEAD
+    <ClCompile Include="World.cpp">
+      <Filter>Source\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source\Shooters</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source\Shooters</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Source\Base Classes</Filter>
+    </ClCompile>
     <ClCompile Include="GameShape.cpp">
-=======
-    <ClCompile Include="Background.cpp">
->>>>>>> dx7background
-      <Filter>Source Files</Filter>
+      <Filter>Source\Base Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine.cpp">
+      <Filter>Source\Base Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameEngine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameGlobals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BulletFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Log.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="ResourceHandler.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header\Shooters</Filter>
     </ClInclude>
     <ClInclude Include="Shooter.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header\Shooters</Filter>
     </ClInclude>
-<<<<<<< HEAD
+    <ClInclude Include="Enemy.h">
+      <Filter>Header\Shooters</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Header\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletFactory.h">
+      <Filter>Header\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Header\Base Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameGlobals.h">
+      <Filter>Header\Base Classes</Filter>
+    </ClInclude>
     <ClInclude Include="GameShape.h">
-=======
-    <ClInclude Include="Background.h">
->>>>>>> dx7background
-      <Filter>Header Files</Filter>
+      <Filter>Header\Base Classes</Filter>
     </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{7eb0d83e-44e2-4a93-87d4-eb5fb071c92b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{c4359e45-3e57-4296-b57f-a5258fa6a2ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Shooters">
+      <UniqueIdentifier>{07146d3f-f8c6-47f1-b6cd-011392000a84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Bullet">
+      <UniqueIdentifier>{a6cdcf77-fa84-418f-ae0f-4664b62beed9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Base Classes">
+      <UniqueIdentifier>{68d145ec-3ae0-4176-81be-f1d3fa0b1af8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\States">
+      <UniqueIdentifier>{c3740925-22ad-4ad0-a3c9-39b900ef6a68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Base Classes">
+      <UniqueIdentifier>{952f98d3-9c95-4882-ac8e-629e34709793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\States">
+      <UniqueIdentifier>{ed8ea406-a6fe-49f4-927e-fd3f89a043b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Shooters">
+      <UniqueIdentifier>{8af8b7f0-531a-4cbe-a879-18e3797ae325}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Bullet">
+      <UniqueIdentifier>{25d21a93-d22f-4f83-bcd6-7890489517f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
