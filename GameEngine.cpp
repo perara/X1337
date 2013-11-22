@@ -5,10 +5,8 @@ GameEngine::GameEngine():
 	window(sf::VideoMode(500, 500), "X1337", sf::Style::Titlebar | sf::Style::Close),
 	world(window)
 {
-	// Setup and init resource handler
-	ResourceHandler* resourceHandler = new ResourceHandler(window);
-	resourceHandler->init();
-	Config::getInstance().resourceHandler = resourceHandler;
+	ResourceHandler* rH = new ResourceHandler(window);
+	rH->init();
 
 	// Set mouse properties
 	sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window); // Default mouse location

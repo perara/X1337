@@ -1,33 +1,33 @@
 #pragma once
-#include <stdexcept>
 #include <SFML/Graphics.hpp>
-
-
+#include <map>
 #include "log.h"
 
 
 class ResourceHandler
 {
 public:
-	// Texture identifier
-	enum class Texture
-	{
+	const enum Resource{
 		BACKGROUND1,
 		COUNT
 	};
 
 	ResourceHandler(sf::RenderWindow& window);
+
+
+	void init();
 	void draw();
+	void setInit(bool);
+	bool getInit();
 
-	bool init();
-	const sf::Texture& GetTexture(Texture textureId) const;
+	sf::Texture* getTexture(ResourceHandler::Resource);
 
-	// Get pointer to pre-loaded font
-	const sf::Font& GetFont() const;
 
 protected:
-	sf::Texture textures[(size_t)Texture::COUNT];
-	sf::Font font;
-	bool inited;
 	sf::RenderWindow& window;
+	bool inited;
+	std::map<Resource, std::string> resources;
+	sf::Texture textures[Resource::COUNT];
+	sf::Font font;
+	
 };

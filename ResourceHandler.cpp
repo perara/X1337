@@ -1,76 +1,59 @@
 #include "ResourceHandler.h"
 
-
-struct TextureMapping
-{
-	ResourceHandler::Texture texture;
-	const char* const path;
-};
-
 ResourceHandler::ResourceHandler(sf::RenderWindow& window):
 	window(window)
-{ 
-	inited = false; 
-
+{
+	this->setInit(false);
 }
 
-bool ResourceHandler::init()
+
+void ResourceHandler::init()
 {
-	// Font loading 
-	LOGI("Loading font...");
-	font.loadFromFile("assets/fonts/COMICATE.TTF");
-	this->draw();  // Draw Loading screen
+	// Load fonts
+	font.loadFromFile("assets/fonts/COMICATE.ttf");
 
+	this->draw();
+	// Init resources
+	resources[Resource::BACKGROUND1]  = "assets/images/background1.jpg";
 
-	static struct TextureMapping textureList[] =
+	// Load resources
+	for(auto& i : resources)
 	{
-		{ Texture::BACKGROUND1,	"assets/images/background1.jpg" },
-	};
-
-	if (inited)
-	{
-		LOGW("Texture manager has already been initialized");
-		return true;
-	}
-
-	LOGI("Loading textures...");
-
-	for (size_t i = 0; i < (int)Texture::COUNT; i++)
-	{
-		if (textures[(size_t)textureList[i].texture].loadFromFile(textureList[i].path))
+		if (textures[i.first].loadFromFile(i.second)){
 			LOGD("Texture loaded: " << textureList[i].path);
+		}
 		else
 		{
-			LOGE("Failed to load texture: " << textureList[i].path);
-			return false;
+			LOGD("Failed to load texture: " << textureList[i].path);
+			
 		}
 	}
 
-
-	inited = true;
-
-	return true;
+	this->setInit(true);
 }
 
-const sf::Texture& ResourceHandler::GetTexture(ResourceHandler::Texture textureId) const
+sf::Texture* ResourceHandler::getTexture(ResourceHandler::Resource res)
 {
-	LOGD("Getting texture: " << (size_t)textureId);
-
-	if (textures[(size_t)textureId].getSize().x == 0)
-		throw std::runtime_error("Attempting to fetch empty texture");
-
-	return textures[(size_t)textureId];
+	return &this->textures[res];
 }
 
-const sf::Font& ResourceHandler::GetFont() const
+
+
+bool ResourceHandler::getInit()
 {
-	return font;
+	return this->inited;
 }
+
+void ResourceHandler::setInit(bool init)
+{
+	this->inited = init;
+}
+
 
 void ResourceHandler::draw()
 {
 	sf::Text label;
-	label.setFont(this->GetFont());
+	label.setFont(this->font);
 	label.setString(sf::String("Loading... Please Wait!"));
 	label.setPosition((window.getPosition().x / 2) -  label.getGlobalBounds().width , (window.getPosition().y / 2) - label.getGlobalBounds().height);
 	label.setColor(sf::Color::White);
