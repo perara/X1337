@@ -1,21 +1,24 @@
 #pragma once
 #include "Log.h"
+#include "GameShape.h"
 
 #include <SFML/Window.hpp>
-#include <SFML\Graphics\CircleShape.hpp>
 #include <SFML\Graphics\RenderWindow.hpp>
 
 /// <summary>
 /// Abstract base class for all objects in the game. A object can for example be a Player, Bullet or a Enemy.
 /// </summary>
-class Object{
+class Object
+{
 public:
 	Object();
-	Object(sf::RenderWindow & window) : window(window){};
+	Object(sf::RenderWindow & window) : window(window){deleted = false;};
 	virtual void draw();
-	virtual bool process();
-	sf::CircleShape* sprite;
+	virtual void process();
+	GameShape* sprite;
+	bool getDeleted();
 
 protected:
 	sf::RenderWindow& window;
+	bool deleted;
 };

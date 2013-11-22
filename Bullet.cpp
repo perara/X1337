@@ -5,36 +5,45 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="type">The bullet type.</param>
-Bullet::Bullet(sf::RenderWindow& window, int type, std::list<Bullet*>& bullets, BulletFactory* bFactory): 
+Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType, std::list<Bullet*>& bullets, BulletFactory* bFactory): 
 	Object(window),
-	type(type),
+	bulletType(bulletType),
 	bullets(bullets),
 	bFactory(bFactory)
 {
+
 	this->setDeleted(false);
 	this->speedX = 0;
-	this->speedY = -500;
-	this->sprite = new sf::CircleShape(2,30);
+	this->speedY = -250;
+
+	if(BulletFactory::BulletType::standardShot == bulletType){
+		this->sprite = new GameShape(GameShape::circle, 2);
+
+	}
+
+	else if(BulletFactory::BulletType::heavyShot == bulletType)
+		this->sprite = new GameShape(GameShape::triangle, 20.0f);
+
 }
 /// <summary>
 /// Processes this bullet object.
 /// </summary>
 /// <returns>bool which indicates if the object is up for deletion in Scene.h's object list <see cref="Scene"> </returns>
-bool Bullet::process()
+void Bullet::process()
 {
 	if(!deleted)
 	{
 		this->sprite->setPosition(
-			this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds() * speedX),
-			this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
+			this->sprite->getPosition().x+(Config::getInstance().timeStep.asSeconds() * speedX),
+			this->sprite->getPosition().y+(Config::getInstance().timeStep.asSeconds() * speedY)); //TODO
 
 		if(isOutOfBounds())
 		{
 			this->setDeleted(true);
 		}
 	}
-	return true; // TODODODODODODO
 }
+
 void Bullet::deleteBullet(std::list<Bullet*>::iterator i)
 {
 	this->bFactory->returnObject(this);
@@ -72,6 +81,11 @@ bool Bullet::getDeleted()
 {
 	return this->deleted;
 }
-void Bullet::resetObject(){
+void Bullet::resetObject()
+{
 	this->setDeleted(false);
+}
+BulletFactory::BulletType Bullet::getBulletType()
+{
+	return this->bulletType;
 }

@@ -20,11 +20,11 @@ void ResourceHandler::init()
 	for(auto& i : resources)
 	{
 		if (textures[i.first].loadFromFile(i.second)){
-			LOGD("Texture loaded: " << textureList[i].path);
+			LOGD("Texture loaded: " << i.second);
 		}
 		else
 		{
-			LOGD("Failed to load texture: " << textureList[i].path);
+			LOGD("Failed to load texture: " << i.second);
 			
 		}
 	}

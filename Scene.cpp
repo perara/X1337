@@ -5,6 +5,9 @@
 /// </summary>
 void Scene::draw()
 {
+	// Draw background
+	bg->process();
+
 	for(auto &it : objects)
 	{
 		it->draw();

@@ -11,21 +11,24 @@
 class Bullet :  public Object
 {
 public:
-	int type;
+
 	Object* owner;
 	BulletFactory* bFactory;
 	std::list<Bullet*>& bullets;
-	Bullet(sf::RenderWindow& window, int type, std::list<Bullet*>& bullets, BulletFactory* bFactory);
-	bool process();
+	Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType, std::list<Bullet*>& bullets, BulletFactory* bFactory);
+	void process();
+	bool isOutOfBounds();
+	
 	void setPosition(int x, int y);
 	void setOwner(Object* owner);
-	bool isOutOfBounds();
 	void deleteBullet(std::list<Bullet*>::iterator i);
 	void resetObject();
 	void setDeleted(bool deleted);
 	bool getDeleted(); 
+	BulletFactory::BulletType getBulletType();
 
 protected:
+	BulletFactory::BulletType bulletType;
 	int speedX;
 	int speedY;
 	bool deleted;

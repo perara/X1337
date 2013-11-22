@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML\Graphics\RenderWindow.hpp>
+#include <SFML\System\Time.hpp>
 
 #include "Log.h"
 #include "Player.h"
@@ -17,5 +18,8 @@ public:
 	void runGame();
 	void gameLoop();
 	sf::RenderWindow window;
-	World world;
+	World* world;
+	
+	sf::Time elapsedTime;
+	sf::Clock gameClock;
 };

@@ -4,6 +4,9 @@ int count = 0;
 
 World::World(sf::RenderWindow& window): Scene(window)
 {
+	// Initialize Background
+	bg->addBackground(Config::getInstance().resourceHandler->getTexture(ResourceHandler::Resource::BACKGROUND1));
+
 	// Initialize Factories
 	bFactory = new BulletFactory(window, 1000, bullets);
 
@@ -44,6 +47,8 @@ void World::process()
 		it->process();
 	}
 
+	
+
 	/* Cleanup Processing */
 	if(!bullets.empty())
 	{
@@ -58,7 +63,24 @@ void World::process()
 		}
 	}
 
-	if(clkW.getElapsedTime().asMilliseconds() > 2000)
+	/* Cleanup Processing OBJECTS */
+	if(!objects.empty())
+	{
+		for(std::list<Object*>::iterator i = objects.begin(); i != objects.end();i++)
+		{
+			if((*i)->getDeleted())
+			{ // If the bullet is up for deletion
+				if(objects.empty()) break;
+				objects.erase(i);
+				i = objects.begin();
+			}
+		}
+	}
+
+
+
+
+	if(clkW.getElapsedTime().asMilliseconds() > 100)
 	{
 		count++;
 		// Add player objects
@@ -75,4 +97,5 @@ void World::process()
 		this->addObject(e1);
 		clkW.restart();
 	}
+
 }

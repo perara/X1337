@@ -11,20 +11,22 @@ BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::list<B
 	window(window),
 	bullets(bullets)
 {
-	produceObjects(1, quantity);  //TODO, implement TYPES
+
+	produceObjects(BulletFactory::BulletType::standardShot, quantity);  //TODO, implement TYPES
+	produceObjects(BulletFactory::BulletType::heavyShot, quantity);
+
 }
 /// <summary>
 /// Produces "quantity" amount of bullets of "type" x
 /// </summary>
 /// <param name="type">The type.</param>
 /// <param name="quantity">The quantity.</param>
-void BulletFactory::produceObjects(int type,int quantity)
+void BulletFactory::produceObjects(BulletFactory::BulletType type,int quantity)
 {
-
-	for(int i = 0; i < quantity; i++){
-		this->objects[type].push_back(new Bullet(window, 1, bullets, this));
+	for(int i = 0; i < quantity; i++)
+	{
+		this->objects[type].push_back(new Bullet(window, type, bullets, this));
 	}
-
 }
 /// <summary>
 /// Requests a batch of bullets
@@ -32,11 +34,12 @@ void BulletFactory::produceObjects(int type,int quantity)
 /// <param name="quantity">Quantity of bullets.</param>
 /// <param name="type">Bullettype</param>
 /// <returns>Returns a vector with the quantity of Bullet* requested</returns>
-std::list<Bullet*> BulletFactory::requestBatch(int quantity, int type)
+std::list<Bullet*> BulletFactory::requestBatch(int quantity, BulletFactory::BulletType type)
 {
 	std::list<Bullet*> retList;
 	int i = 0;
-	for (std::list<Bullet*>::iterator it = this->objects[type].begin(); it != this->objects[type].end() && i < quantity; it++ , i++){
+	for (std::list<Bullet*>::iterator it = this->objects[type].begin(); it != this->objects[type].end() && i < quantity; it++ , i++)
+	{
 		retList.push_back(*it);
 	}
 	return retList;
@@ -46,22 +49,22 @@ std::list<Bullet*> BulletFactory::requestBatch(int quantity, int type)
 /// </summary>
 /// <param name="type">Bullet type</param>
 /// <returns>Returns a single Bullet*</returns>
-Bullet* BulletFactory::requestObject(int type)
+Bullet* BulletFactory::requestObject(BulletFactory::BulletType type)
 {
-	if(this->objects[type].size() < 50){
+	if(this->objects[type].size() < 50)
+	{
 		this->produceObjects(type, this->initQuantity * 0.20); //Increase the size by 20%
 	}
 
 	Bullet* b = this->objects[type].front();
 	this->objects[type].pop_front(); // O(0)
-	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[b->type].size());
+	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[type].size());
 	return  b;
 }
 void BulletFactory::returnObject(Bullet* bullet)
 {
 	bullet->resetObject();
-	this->objects[bullet->type].push_back(bullet); // O(0)
+	this->objects[bullet->getBulletType()].push_back(bullet); // O(0)
 
 	//LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->type].size());
-
 }

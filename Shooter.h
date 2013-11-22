@@ -5,11 +5,13 @@
 
 
 
-class Shooter: public Object{
+class Shooter: public Object
+{
 protected:
 	std::list<Bullet*>& bullets;
 	BulletFactory* bFactory;
-	Shooter(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFactory* bFactory);
+	Shooter(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFactory* bFactory);	
+	int health;
 
 	/* Health Related */
 	void setHealth(int value);
@@ -21,11 +23,5 @@ protected:
 	virtual void shootableProcess();
 
 private:
-	int health;
-	virtual int hitDetection();
-
-	// TODO Hit detection
-	sf::Vector2f GetSpriteCenter (const sf::CircleShape& Object);
-	sf::Vector2f GetSpriteSize (const sf::CircleShape& Object);
-	bool CircleTest(const sf::CircleShape& Object1, const sf::CircleShape& Object2);
+	virtual int hitDetection() = 0;
 };

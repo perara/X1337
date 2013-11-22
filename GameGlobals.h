@@ -22,10 +22,12 @@ public:
 		OPTIONS, 
 		PAUSE
 	};
+	
 	State state;
-	sf::Time elapsedTime;
-	sf::Clock gameClock;
+
 	ResourceHandler* resourceHandler;
+
+	sf::Time timeStep;
 
 private:
 	Config() {}

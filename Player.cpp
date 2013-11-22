@@ -12,24 +12,33 @@ sf::Clock clk; //TESTING PURPOSES
 Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFactory* bFactory, std::list<Bullet*>& bullets):
 	Shooter(window, bullets, bFactory)
 {
-	this->sprite = new sf::CircleShape(radius,30);
+	this->sprite = new GameShape(GameShape::circle, 10);
 	this->sprite->setPosition(pos);
 }
 
-bool Player::process()
+void Player::process()
 {
 	this->inputHandler();
 	this->shootableProcess();
-	return true;
 }
 
 void Player::inputHandler()
 {
 	/* Shoot handler */
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 100){
-		Bullet* b = this->bFactory->requestObject(1);
+		Bullet* b = this->bFactory->requestObject(BulletFactory::BulletType::standardShot);
 		b->setOwner(this);
-		b->setPosition(this->sprite->getPosition().x + this->sprite->getRadius() - 2 , this->sprite->getPosition().y - 10);
+		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
+		this->bullets.push_back(b);
+		clk.restart();
+	}
+
+	/* TEMPORARY FOR TESTING */ //TODODODODODODODODODODODOD
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && clk.getElapsedTime().asMilliseconds() > 100){
+
+		Bullet* b = this->bFactory->requestObject(BulletFactory::BulletType::heavyShot);
+		b->setOwner(this);
+		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		this->bullets.push_back(b);
 		clk.restart();
 	}
@@ -69,25 +78,26 @@ void Player::inputHandler()
 				/************************************************************************/
 
 				// X
-				if(this->sprite->getPosition().x <= 0)
+				if(this->sprite->getPosition().x - this->sprite->getRadius() <= 0)
 				{
-					this->sprite->setPosition(1, this->sprite->getPosition().y);
+					this->sprite->setPosition(this->sprite->getRadius(), this->sprite->getPosition().y);
 				}
 
-				if(this->sprite->getPosition().x >= window.getSize().x - (this->sprite->getRadius() * 2))
+				if(this->sprite->getPosition().x >= window.getSize().x - this->sprite->getRadius())
 				{
-					this->sprite->setPosition(window.getSize().x - (this->sprite->getRadius() * 2), this->sprite->getPosition().y);
+					this->sprite->setPosition(window.getSize().x - this->sprite->getRadius(), this->sprite->getPosition().y);
 				}
 
 				// Y
-				if(this->sprite->getPosition().y <= 0)
+				if(this->sprite->getPosition().y - this->sprite->getRadius() <= 0)
 				{
-					this->sprite->setPosition(this->sprite->getPosition().x, 1);
+					this->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getRadius());
 				}
 
-				if(this->sprite->getPosition().y >= window.getSize().y - (this->sprite->getRadius() * 2))
+
+				if(this->sprite->getPosition().y >= window.getSize().y - this->sprite->getRadius())
 				{
-					this->sprite->setPosition(this->sprite->getPosition().x, window.getSize().y - (this->sprite->getRadius() * 2));
+					this->sprite->setPosition(this->sprite->getPosition().x, window.getSize().y - this->sprite->getRadius());
 				}
 
 				/************************************************************************/
@@ -106,4 +116,9 @@ void Player::inputHandler()
 			}
 		}
 	}
+}
+
+
+int Player::hitDetection(){
+	return 0;
 }

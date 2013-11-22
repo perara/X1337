@@ -30,9 +30,6 @@
     <ClCompile Include="World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,7 +45,11 @@
     <ClCompile Include="Shooter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceHandler.cpp">
+<<<<<<< HEAD
+    <ClCompile Include="GameShape.cpp">
+=======
+    <ClCompile Include="Background.cpp">
+>>>>>>> dx7background
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,9 +64,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
@@ -92,7 +90,11 @@
     <ClInclude Include="Shooter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceHandler.h">
+<<<<<<< HEAD
+    <ClInclude Include="GameShape.h">
+=======
+    <ClInclude Include="Background.h">
+>>>>>>> dx7background
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
