@@ -26,6 +26,7 @@ public:
 	void setDeleted(bool deleted);
 	bool getDeleted(); 
 	BulletFactory::BulletType getBulletType();
+
 protected:
 	BulletFactory::BulletType bulletType;
 	int speedX;

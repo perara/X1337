@@ -45,7 +45,11 @@
     <ClCompile Include="Shooter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="GameShape.cpp">
+=======
+    <ClCompile Include="Background.cpp">
+>>>>>>> dx7background
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,7 +90,11 @@
     <ClInclude Include="Shooter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="GameShape.h">
+=======
+    <ClInclude Include="Background.h">
+>>>>>>> dx7background
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

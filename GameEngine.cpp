@@ -44,11 +44,11 @@ void GameEngine::runGame()
 
 		}
 
-
+		window.clear(sf::Color::Black);
+		
 		if(Config::getInstance().state == Config::GAME)
 		{
 			// Draw Game
-			window.clear(sf::Color::Black);
 			this->world.draw();
 
 		}
