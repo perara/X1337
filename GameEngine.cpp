@@ -4,6 +4,8 @@ GameEngine::GameEngine():
 	window(sf::VideoMode(500, 500), "X1337", sf::Style::Titlebar | sf::Style::Close),
 	world(window)
 {
+	Config::getInstance().timeStep =  sf::seconds(1.0f/60.0f);
+
 	// Set mouse properties
 	sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window); // Default mouse location
 	window.setMouseCursorVisible(false);
@@ -21,23 +23,28 @@ void GameEngine::runGame()
 {
 	while(window.isOpen())
 	{
-		window.clear(sf::Color::Black);
+		Config::getInstance().elapsedTime += Config::getInstance().gameClock.restart();
 
-		if(Config::getInstance().state == Config::GAME)
+		while(Config::getInstance().elapsedTime >=  Config::getInstance().timeStep)
 		{
-			// Process Scene
-			this->world.process();
-			Config::getInstance().elapsedTime = Config::getInstance().gameClock.getElapsedTime();
-			// Draw Scene
-			this->world.draw();
-			
-		}
-		if(Config::getInstance().state == Config::MENU){
+
+			if(Config::getInstance().state == Config::GAME)
+			{
+				// Process Scene
+				this->world.process();
+
+			}
+
+			if(Config::getInstance().state == Config::MENU){
+
+			}
+
+			Config::getInstance().elapsedTime -= Config::getInstance().timeStep;
 
 		}
-		// Display 
-		Config::getInstance().gameClock.restart();
-
+		// Draw Scene'
+		window.clear(sf::Color::Black);
+		this->world.draw();
 		window.display();
 	}
 }

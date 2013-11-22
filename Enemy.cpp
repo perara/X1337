@@ -52,8 +52,8 @@ bool Enemy::process()
 	{
 
 		float angle = atan2f(endPos.x - startPos.x, endPos.y - startPos.y) * 180 / 3.14;
-		float x = sin(angle) * (Config::getInstance().gameClock.getElapsedTime().asSeconds() * 100);
-		float y = cos(angle) * (Config::getInstance().gameClock.getElapsedTime().asSeconds() * 100);
+		float x = sin(angle) * (Config::getInstance().timeStep.asSeconds() * 100);
+		float y = cos(angle) * (Config::getInstance().timeStep.asSeconds() * 100);
 		this->sprite->move(x ,y );
 	}else
 	{

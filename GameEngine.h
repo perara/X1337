@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML\Graphics\RenderWindow.hpp>
+#include <SFML\System\Time.hpp>
 
 #include "Log.h"
 #include "Player.h"

@@ -34,8 +34,8 @@ bool Bullet::process()
 	if(!deleted)
 	{
 		this->sprite->setPosition(
-			this->sprite->getPosition().x+(Config::getInstance().elapsedTime.asSeconds() * speedX),
-			this->sprite->getPosition().y+(Config::getInstance().elapsedTime.asSeconds() * speedY)); //TODO
+			this->sprite->getPosition().x+(Config::getInstance().timeStep.asSeconds() * speedX),
+			this->sprite->getPosition().y+(Config::getInstance().timeStep.asSeconds() * speedY)); //TODO
 
 		if(isOutOfBounds())
 		{
@@ -44,6 +44,7 @@ bool Bullet::process()
 	}
 	return true; // TODODODODODODO
 }
+
 void Bullet::deleteBullet(std::list<Bullet*>::iterator i)
 {
 	this->bFactory->returnObject(this);
