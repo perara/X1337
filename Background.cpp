@@ -37,10 +37,11 @@ void Background::process()
 
 void Background::draw()
 {
-	currentImage.setTexture(textures.front());
-	currentImage.setPosition(0,0);
-	//std::cout << "Height: " << currentImage.getLocalBounds().height << "| Width: " << currentImage.getLocalBounds().width << std::endl;
-	this->window.draw(currentImage);
-
+	if(!textures.empty()){
+		currentImage.setTexture(textures.front());
+		currentImage.setPosition(0,0);
+		//std::cout << "Height: " << currentImage.getLocalBounds().height << "| Width: " << currentImage.getLocalBounds().width << std::endl;
+		this->window.draw(currentImage);
+	}
 
 }
