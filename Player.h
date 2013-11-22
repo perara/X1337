@@ -1,7 +1,10 @@
 #pragma once
 #include "Shooter.h"
-#include "Bullet.h"
-#include "Globals.h"
+
+
+class BulletFactory;
+class Bullet;
+
 
 /// <summary>
 /// The player class represents the player
@@ -19,5 +22,5 @@ public:
 	void inputHandler();
 	void process();
 protected:
-		int hitDetection();
+		virtual int hitDetection();
 };

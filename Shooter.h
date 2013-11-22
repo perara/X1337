@@ -1,9 +1,8 @@
 #pragma once
 #include "Object.h"
-#include "Bullet.h"
-#include "BulletFactory.h"
 
-
+class BulletFactory;
+class Bullet;
 
 class Shooter: public Object
 {

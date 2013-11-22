@@ -23,6 +23,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ResourceHandler.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Script.cpp" />
     <ClCompile Include="Shooter.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -34,12 +35,15 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="GameShape.h" />
+    <ClInclude Include="libs\rapidxml.hpp" />
+    <ClInclude Include="libs\rapidxml_print.hpp" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ResourceHandler.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Script.h" />
     <ClInclude Include="Shooter.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
@@ -74,9 +78,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>E:\libraries\C++\pugixml-1.2\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>E:\libraries\C++\pugixml-1.2\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

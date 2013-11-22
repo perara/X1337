@@ -1,4 +1,6 @@
 #include "Bullet.h"
+#include "GameShape.h"
+#include "Globals.h"
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Bullet"/> class.

@@ -1,8 +1,6 @@
 #pragma once
-#include "Object.h"
-#include "Globals.h"
-#include <list>
 #include "BulletFactory.h"
+#include "Object.h"
 
 
 /// <summary>

@@ -43,6 +43,9 @@
     <ClCompile Include="Globals.cpp">
       <Filter>Source\Base Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Log.h">
@@ -90,6 +93,15 @@
     <ClInclude Include="Globals.h">
       <Filter>Header\Base Classes</Filter>
     </ClInclude>
+    <ClInclude Include="libs\rapidxml.hpp">
+      <Filter>Header\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\rapidxml_print.hpp">
+      <Filter>Header\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>Header\Base Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -121,6 +133,9 @@
     </Filter>
     <Filter Include="Source\Bullet">
       <UniqueIdentifier>{25d21a93-d22f-4f83-bcd6-7890489517f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Libraries">
+      <UniqueIdentifier>{89159793-3288-4fc2-8b7c-c08ed907094c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

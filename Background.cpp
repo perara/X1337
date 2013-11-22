@@ -1,6 +1,5 @@
 #include "Background.h"
 
-#include <iostream>
 
 Background::Background(sf::RenderWindow& window): window(window)
 {

@@ -1,7 +1,5 @@
-#include <SFML\Graphics\ConvexShape.hpp>
+#include <SFML\Graphics.hpp>
 #include <map>
-#include <string>
-#include "Log.h"
 
 class GameShape : public sf::ConvexShape
 {

@@ -1,4 +1,8 @@
 #include "Player.h"
+#include "Bullet.h"
+#include "BulletFactory.h"
+#include "GameShape.h"
+
 sf::Clock clk; //TESTING PURPOSES
 
 /// <summary>

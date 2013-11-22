@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include "ResourceHandler.h"
 
 // Resource Handler getter/setter
 void Globals::setResourceHandler(ResourceHandler* rh)

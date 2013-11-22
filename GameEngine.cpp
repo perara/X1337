@@ -1,5 +1,7 @@
 #include "GameEngine.h"
-
+#include "Globals.h"
+#include "World.h"
+#include "ResourceHandler.h"
 
 GameEngine::GameEngine():
 	window(sf::VideoMode(500, 500), "X1337", sf::Style::Titlebar | sf::Style::Close)
@@ -52,7 +54,7 @@ void GameEngine::runGame()
 		}
 
 		window.clear(sf::Color::Black);
-		
+
 		if(Globals::getInstance().getState() == Globals::GAME)
 		{
 			// Draw Game

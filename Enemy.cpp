@@ -1,21 +1,28 @@
 #include "Enemy.h"
-#include "stdlib.h"
+#include "GameShape.h"
+#include "BulletFactory.h"
+#include "Bullet.h"
+
+//#include "stdlib.h"
 sf::Clock clsk;
 
 Enemy::Enemy(sf::RenderWindow& window, 
-			 sf::Vector2f startPos,
-			 sf::Vector2f endPos,
-			 float shootFrequency,
+			 std::queue<sf::Vector3f>& path,
 			 int radius, 
 			 BulletFactory* bFactory, 
 			 std::list<Bullet*>& bullets):
-startPos(startPos),
-	endPos(endPos),
+	path(path),
 	Shooter(window, bullets, bFactory)
 {
+	currentPath = path.front();
+	path.pop();
+
 	this->sprite = new GameShape(GameShape::circle, 10);
-	this->sprite->setPosition(startPos);
+	this->sprite->setPosition(currentPath.x , path.front().y);
+	
+
 }
+
 int Enemy::hitDetection()
 {
 	// COLLISION TODO
@@ -43,15 +50,14 @@ int Enemy::hitDetection()
 void Enemy::process()
 {
 	this->shootableProcess();
+	/*std::cout << currentPath.x << "," << currentPath.y << std::endl;
+	std::cout << path.size() << std::endl;
 	if(
-		(int)this->sprite->getPosition().x != (int)endPos.x && 
-		(int)this->sprite->getPosition().y != (int)endPos.y &&
-		(this->sprite->getPosition().x > 0  && this->sprite->getPosition().x < this->window.getSize().x && 
-		this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < this->window.getSize().y)) 
-
+		(int)this->sprite->getPosition().x != (int)path.front().x && 
+		(int)this->sprite->getPosition().y != (int)path.front().y)
 	{
 
-		float angle = atan2f(endPos.x - startPos.x, endPos.y - startPos.y) * 180 / 3.14;
+		float angle = atan2f(path.front().x - currentPath.x, path.front().y - currentPath.y) * 180 / 3.14;
 		float x = sin(angle) * (Globals::getInstance().getTimeStep().asSeconds() * 100);
 		float y = cos(angle) * (Globals::getInstance().getTimeStep().asSeconds() * 100);
 		this->sprite->move(x ,y );
@@ -59,7 +65,7 @@ void Enemy::process()
 	{
 		this->deleted = true;
 	}
-
+	*/
 }
 
 void Enemy::circularShoot()

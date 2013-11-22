@@ -1,9 +1,12 @@
 #pragma once
-#include <list>
 #include <SFML\Graphics\RenderWindow.hpp>
+#include <list>
 #include <map>
 
+
 class Bullet;
+
+
 /// <summary>
 /// This is a factory which produces a set amount of bullets and then serves when requested. This class can also serve multiple bullets in a batch.
 /// </summary>

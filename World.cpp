@@ -1,11 +1,18 @@
 #include "World.h"
+#include "BulletFactory.h";
+#include "Globals.h"
+#include "ResourceHandler.h"
+#include "Player.h"
+#include <queue>
+#include "Enemy.h"
+
 sf::Clock clkW;
 int count = 0;
 
 World::World(sf::RenderWindow& window): Scene(window)
 {
 	// Initialize Background
-	bg->addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Resource::BACKGROUND1));
+	bg->addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::BACKGROUND1));
 
 	// Initialize Factories
 	bFactory = new BulletFactory(window, 1000, bullets);
@@ -20,11 +27,14 @@ World::World(sf::RenderWindow& window): Scene(window)
 		);
 
 	// Add player objects
+	std::queue<sf::Vector3f> pathQueue;
+	pathQueue.push(sf::Vector3f(50,50,0));
+	pathQueue.push(sf::Vector3f(250,250,0));
+	pathQueue.push(sf::Vector3f(30,30,0));
+
 	Enemy* e1 = new Enemy(
 		window, 
-		sf::Vector2f(250,50), 
-		sf::Vector2f(250,300), 
-		50,
+		pathQueue,
 		10, 
 		bFactory,
 		bullets
@@ -84,7 +94,7 @@ void World::process()
 	{
 		count++;
 		// Add player objects
-		Enemy* e1 = new Enemy(
+		/*Enemy* e1 = new Enemy(
 			window, 
 			sf::Vector2f(250,10), 
 			sf::Vector2f(rand() % 500 + 10,rand() % 500 + 10), 
@@ -92,9 +102,9 @@ void World::process()
 			10, 
 			bFactory,
 			bullets
-			);
+			);*/
 		
-		this->addObject(e1);
+		//this->addObject(e1);
 		clkW.restart();
 	}
 

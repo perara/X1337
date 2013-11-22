@@ -1,15 +1,27 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <map>
-#include "log.h"
+#include <SFML/Audio.hpp>
 
+#include "libs\rapidxml.hpp"
+#include "libs\rapidxml_print.hpp"
+#include <fstream>
+#include <boost\lexical_cast.hpp>
 
 class ResourceHandler
 {
 public:
-	const enum Resource{
+	const enum Texture{
 		BACKGROUND1,
-		COUNT
+		TEXTURECOUNT
+	};
+
+	const enum Sound{
+		SONG1,
+		SOUNDCOUNT
+	};
+	const enum Scripts{
+		ENCOUNTER1,
+		SCRIPTSCOUNT
 	};
 
 	ResourceHandler(sf::RenderWindow& window);
@@ -20,14 +32,31 @@ public:
 	void setInit(bool);
 	bool getInit();
 
-	sf::Texture* getTexture(ResourceHandler::Resource);
 
+	sf::Texture* getTexture(ResourceHandler::Texture);
+private:
+	void loadTextures();
+	void loadFont();
+	void loadSound();
+	void loadScripts();
 
 protected:
-	sf::RenderWindow& window;
 	bool inited;
-	std::map<Resource, std::string> resources;
-	sf::Texture textures[Resource::COUNT];
+	sf::RenderWindow& window;
+
+	// Textures
+	std::map<Texture, std::string> textureList;
+	sf::Texture textures[Texture::TEXTURECOUNT];
+
+	// Sound
+	std::map<Sound, std::string> soundList;
+	sf::SoundBuffer sounds[Sound::SOUNDCOUNT];
+
+	// Scripts
+	//std::map<Scripts, std::string> scriptList;
+	//Script scripts[Scripts::SCRIPTSCOUNT]; //TODO
+
+	// Font
 	sf::Font font;
-	
+
 };

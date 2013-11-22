@@ -2,11 +2,9 @@
 #include <SFML\Graphics\RenderWindow.hpp>
 #include <SFML\System\Time.hpp>
 
-#include "Log.h"
-#include "Player.h"
-#include "World.h"
-#include "Globals.h"
-#include "ResourceHandler.h"
+
+class World;
+
 
 
 /// <summary>

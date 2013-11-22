@@ -1,5 +1,7 @@
+
 #include "GameShape.h"
 
+#include "Log.h"
 
 // Other Default
 GameShape::GameShape(GameShape::ShapeType shapeType):
