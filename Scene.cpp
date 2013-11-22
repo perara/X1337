@@ -1,4 +1,6 @@
 #include "Scene.h"
+#include "Object.h"
+#include "Bullet.h"
 
 /// <summary>
 /// Draws all scene objects
@@ -34,8 +36,6 @@ void Scene::process()
 void Scene::addObject(Object* object)
 {
 	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
-
-	//system("pause");
 	this->objects.push_back(object);
 }
 

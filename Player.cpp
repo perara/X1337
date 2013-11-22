@@ -2,6 +2,7 @@
 #include "Bullet.h"
 #include "BulletFactory.h"
 #include "GameShape.h"
+#include "Log.h"
 
 sf::Clock clk; //TESTING PURPOSES
 
@@ -13,8 +14,8 @@ sf::Clock clk; //TESTING PURPOSES
 /// <param name="radius">The radius.</param>
 /// <param name="bFactory">The <see cref=BulletFactory"></param>
 /// <param name="sceneBulletListCallback">The scene object call back. This is basicly a function pointer to the corresponding world function "addObject" Reason for passing this is so we can add bullets to the Scene loop</param>
-Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFactory* bFactory, std::list<Bullet*>& bullets):
-	Shooter(window, bullets, bFactory)
+Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius):
+	Shooter(window)
 {
 	this->sprite = new GameShape(GameShape::circle, 10);
 	this->sprite->setPosition(pos);
@@ -22,6 +23,8 @@ Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFac
 
 void Player::process()
 {
+	if(!this->getInited()) return;
+
 	this->inputHandler();
 	this->shootableProcess();
 }
@@ -30,20 +33,20 @@ void Player::inputHandler()
 {
 	/* Shoot handler */
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 100){
-		Bullet* b = this->bFactory->requestObject(BulletFactory::BulletType::standardShot);
+		Bullet* b = this->getBulletFactory()->requestObject(BulletFactory::BulletType::standardShot);
 		b->setOwner(this);
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
-		this->bullets.push_back(b);
+		this->getBullets()->push_back(b);
 		clk.restart();
 	}
 
 	/* TEMPORARY FOR TESTING */ //TODODODODODODODODODODODOD
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && clk.getElapsedTime().asMilliseconds() > 100){
 
-		Bullet* b = this->bFactory->requestObject(BulletFactory::BulletType::heavyShot);
+		Bullet* b = this->getBulletFactory()->requestObject(BulletFactory::BulletType::heavyShot);
 		b->setOwner(this);
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
-		this->bullets.push_back(b);
+		this->getBullets()->push_back(b);
 		clk.restart();
 	}
 

@@ -12,9 +12,8 @@ class Enemy : public Shooter
 public:
 	Enemy::Enemy(sf::RenderWindow& window, 
 		std::queue<sf::Vector3f>& path,
-		int radius, 
-		BulletFactory* bFactory, 
-		std::list<Bullet*>& bullets);
+		int type
+		);
 	void process();
 	void test();
 
@@ -23,5 +22,5 @@ protected:
 	virtual int hitDetection();
 	std::queue<sf::Vector3f>& path;
 	sf::Vector3f currentPath;
-	bool circleTest(GameShape bullet);
+	bool circleTest(GameShape& bullet);
 };

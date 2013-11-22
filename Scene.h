@@ -1,8 +1,10 @@
 #pragma once
-#include "Object.h"
 #include "Log.h"
-#include "Bullet.h"
 #include "Background.h"
+
+class Bullet;
+class Object;
+class BulletFactory;
 
 #include <list>
 
@@ -12,11 +14,14 @@
 class Scene
 {
 public:
-	std::list<Object*> objects; // Reason for using List here would be to not invalidate iterator on insertion. Need input
+	std::list<Object*> objects; 
 	std::list<Bullet*> bullets;
+	BulletFactory* bFactory;
+
 	Scene(sf::RenderWindow& window):window(window)
 	{
 		bg = new Background(window);
+
 	}
 
 	virtual void draw();

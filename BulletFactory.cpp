@@ -9,7 +9,7 @@
 BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*>& bullets): 
 	initQuantity(quantity), 
 	window(window),
-	bullets(bullets)
+	bullets(&bullets)
 {
 
 	produceObjects(BulletFactory::BulletType::standardShot, quantity);  //TODO, implement TYPES
@@ -25,7 +25,11 @@ void BulletFactory::produceObjects(BulletFactory::BulletType type,int quantity)
 {
 	for(int i = 0; i < quantity; i++)
 	{
-		this->objects[type].push_back(new Bullet(window, type, bullets, this));
+		Bullet * b = new Bullet(window, type);
+		b->init(this, *this->bullets);
+
+		this->objects[type].push_back(b);
+
 	}
 }
 /// <summary>

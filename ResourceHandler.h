@@ -7,6 +7,8 @@
 #include <fstream>
 #include <boost\lexical_cast.hpp>
 
+#include "Script.h"
+
 class ResourceHandler
 {
 public:
@@ -53,8 +55,8 @@ protected:
 	sf::SoundBuffer sounds[Sound::SOUNDCOUNT];
 
 	// Scripts
-	//std::map<Scripts, std::string> scriptList;
-	//Script scripts[Scripts::SCRIPTSCOUNT]; //TODO
+	std::map<Scripts, std::string> scriptList;
+	Script scripts[Scripts::SCRIPTSCOUNT]; //TODO
 
 	// Font
 	sf::Font font;

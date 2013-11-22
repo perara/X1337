@@ -11,9 +11,7 @@ class Bullet :  public Object
 public:
 
 	Object* owner;
-	BulletFactory* bFactory;
-	std::list<Bullet*>& bullets;
-	Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType, std::list<Bullet*>& bullets, BulletFactory* bFactory);
+	Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType);
 	void process();
 	bool isOutOfBounds();
 	

@@ -7,9 +7,9 @@ class Bullet;
 class Shooter: public Object
 {
 protected:
-	std::list<Bullet*>& bullets;
-	BulletFactory* bFactory;
-	Shooter(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFactory* bFactory);	
+
+	Shooter(sf::RenderWindow& window
+	);	
 	int health;
 
 	/* Health Related */
@@ -23,4 +23,5 @@ protected:
 
 private:
 	virtual int hitDetection() = 0;
+
 };

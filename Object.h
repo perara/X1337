@@ -6,6 +6,8 @@
 #include <list>
 
 class GameShape;
+class BulletFactory;
+class Bullet;
 
 /// <summary>
 /// Abstract base class for all objects in the game. A object can for example be a Player, Bullet or a Enemy.
@@ -14,13 +16,32 @@ class Object
 {
 public:
 	Object();
-	Object(sf::RenderWindow & window) : window(window){deleted = false;};
+	Object(sf::RenderWindow & window) : window(window)
+	{
+		deleted = false;
+		inited = false;
+	};
 	virtual void draw();
 	virtual void process();
 	GameShape* sprite;
 	bool getDeleted();
+	bool getInited();
+	void setInited(bool);
+	virtual void init(BulletFactory*, std::list<Bullet*>&);
+
+	// Bullets getter/setter
+	std::list<Bullet*>* getBullets();
+	void setBullets(std::list<Bullet*>& bullets);
+
+	// BulletFactory Getter/Setter
+	BulletFactory* getBulletFactory();
+	void setBulletFactory(BulletFactory* bFactory);
 
 protected:
 	sf::RenderWindow& window;
 	bool deleted;
+	bool inited;
+
+	BulletFactory* bFactory;
+	std::list<Bullet*>* bullets;
 };

@@ -8,11 +8,10 @@ sf::Clock clsk;
 
 Enemy::Enemy(sf::RenderWindow& window, 
 			 std::queue<sf::Vector3f>& path,
-			 int radius, 
-			 BulletFactory* bFactory, 
-			 std::list<Bullet*>& bullets):
+			 int type
+			 ):
 	path(path),
-	Shooter(window, bullets, bFactory)
+	Shooter(window)
 {
 	currentPath = path.front();
 	path.pop();
@@ -27,9 +26,11 @@ int Enemy::hitDetection()
 {
 	// COLLISION TODO
 	int hitCounter = 0;
-	if(!bullets.empty())
+
+	
+	if(!this->getBullets()->empty())
 	{
-		for(auto& i:bullets)
+		for(auto& i: *this->getBullets())
 		{
 			bool wasHit = false;
 			if(i->getBulletType() == BulletFactory::BulletType::standardShot)
@@ -49,6 +50,8 @@ int Enemy::hitDetection()
 
 void Enemy::process()
 {
+	if(!this->getInited()) return;
+
 	this->shootableProcess();
 	/*std::cout << currentPath.x << "," << currentPath.y << std::endl;
 	std::cout << path.size() << std::endl;
@@ -79,7 +82,7 @@ void Enemy::circularShoot()
 	this->sprite->move(move_x,move_y);
 }
 
-bool Enemy::circleTest(GameShape bullet)
+bool Enemy::circleTest(GameShape& bullet)
 {
 	int spriteRadius = this->sprite->getRadius();
 	int bulletRadius = bullet.getRadius();

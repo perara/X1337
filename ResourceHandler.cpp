@@ -1,5 +1,6 @@
 #include "ResourceHandler.h"
 #include "Log.h"
+#include "Enemy.h"
 
 ResourceHandler::ResourceHandler(sf::RenderWindow& window):
 	window(window)
@@ -23,7 +24,7 @@ void ResourceHandler::init()
 
 	// Scripts
 	{
-		//scriptList[Scripts::ENCOUNTER1] = "";
+		scriptList[Scripts::ENCOUNTER1] = "assets/scripts/test.xml";
 	}
 
 
@@ -81,46 +82,52 @@ void ResourceHandler::loadSound()
 void ResourceHandler::loadScripts()
 {
 
-	std::ifstream theFile ("assets/scripts/test.xml");
-	std::vector<char> buffer((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>());
-	buffer.push_back('\0');
-
-	rapidxml::xml_document<> doc;
-
-	// Parse XML file
-	doc.parse<0>(&buffer[0]);
-
-	// Root Node
-	rapidxml::xml_node<> *node = doc.first_node("Enemies");
-
-	int enemyCounter = 0; // Counter
-	for (rapidxml::xml_node<> *enemy = node->first_node(); enemy; enemy = enemy->next_sibling())
+	for(auto& i : scriptList)
 	{
-		// Variables
-		int x, y, type, delay;
-		bool shoot;
+		Script * script = new Script();
+		std::queue<sf::Vector3f> pathQueue;
 
-		type = atoi(enemy->first_node("Type")->value());
-		delay = atoi(enemy->first_node("Delay")->value());
 
-		// Output data:
-		std::cout << "Enemy #" << enemyCounter << ":\n\t" << "Type: " << type << "\n\tDelay: " << delay << 
-			"\n\t Paths: " << std::endl;
+		std::ifstream theFile (i.second);
+		std::vector<char> buffer((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>());
+		buffer.push_back('\0');
 
-		// Parse Paths
-		rapidxml::xml_node<> *node = enemy->first_node("Path");
-		for (rapidxml::xml_node<> *child = node->first_node(); child; child = child->next_sibling())
+		rapidxml::xml_document<> doc;
+
+		// Parse XML file
+		doc.parse<0>(&buffer[0]);
+
+		// Root Node
+		rapidxml::xml_node<> *node = doc.first_node("Enemies");
+
+		int enemyCounter = 0; // Counter
+		for (rapidxml::xml_node<> *enemy = node->first_node(); enemy; enemy = enemy->next_sibling())
 		{
-			x = atoi(child->first_attribute("x")->value());
-			y = atoi(child->first_attribute("y")->value());
-			shoot = boost::lexical_cast<bool>(child->first_attribute("shoot")->value());
-			std::cout << "\n\t\tX: " << x <<
-				"\n\t\tY: " << y <<
-				"\n\t\tShoot: " << shoot << std::endl;
+			int type = atoi(enemy->first_node("Type")->value());
+			int delay = atoi(enemy->first_node("Delay")->value());
 
+			// Parse Paths
+			rapidxml::xml_node<> *node = enemy->first_node("Path");
+			for (rapidxml::xml_node<> *child = node->first_node(); child; child = child->next_sibling())
+			{
+				int x = atoi(child->first_attribute("x")->value());
+				int y = atoi(child->first_attribute("y")->value());
+				int shoot = atoi(child->first_attribute("shoot")->value());
+
+				// Push path into queue
+				pathQueue.push(sf::Vector3f(x,y,shoot));
+			}
+
+			/*Enemy* e1 = new Enemy(
+				window, 
+				pathQueue,
+				10, 
+				bFactory,
+				bullets
+				);
+				*/
+			enemyCounter++;
 		}
-
-		enemyCounter++;
 	}
 
 }

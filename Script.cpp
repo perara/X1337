@@ -9,7 +9,7 @@ void Script::addEnemy(Enemy* enemy, int delay)
 	tick->enemy = enemy;
 
 
-	//this->list.push(tick);
+	this->list.push(tick);
 
 }
 

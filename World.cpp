@@ -5,26 +5,26 @@
 #include "Player.h"
 #include <queue>
 #include "Enemy.h"
+#include "Bullet.h"
+
 
 sf::Clock clkW;
 int count = 0;
 
 World::World(sf::RenderWindow& window): Scene(window)
 {
+
 	// Initialize Background
 	bg->addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::BACKGROUND1));
 
 	// Initialize Factories
-	bFactory = new BulletFactory(window, 1000, bullets);
-
+	this->bFactory = new BulletFactory(window, 1000, bullets);
 	// Add player objects
 	Player* p1 = new Player(
 		window, 
 		sf::Vector2f(100,250), 
-		10, 
-		bFactory,
-		bullets
-		);
+		10);
+	p1->init(this->bFactory, this->bullets);
 
 	// Add player objects
 	std::queue<sf::Vector3f> pathQueue;
@@ -35,17 +35,17 @@ World::World(sf::RenderWindow& window): Scene(window)
 	Enemy* e1 = new Enemy(
 		window, 
 		pathQueue,
-		10, 
-		bFactory,
-		bullets
-		);
-	
+		10);
+	e1->init(this->bFactory, this->bullets);
+
 	this->addObject(e1);
 	this->addObject(p1);
+
 }
 
 void World::process()
 {
+
 	/* Processing Processing */
 	for(auto& it : objects)
 	{
@@ -57,7 +57,7 @@ void World::process()
 		it->process();
 	}
 
-	
+
 
 	/* Cleanup Processing */
 	if(!bullets.empty())
@@ -72,6 +72,7 @@ void World::process()
 			}
 		}
 	}
+
 
 	/* Cleanup Processing OBJECTS */
 	if(!objects.empty())
@@ -95,15 +96,15 @@ void World::process()
 		count++;
 		// Add player objects
 		/*Enemy* e1 = new Enemy(
-			window, 
-			sf::Vector2f(250,10), 
-			sf::Vector2f(rand() % 500 + 10,rand() % 500 + 10), 
-			50,
-			10, 
-			bFactory,
-			bullets
-			);*/
-		
+		window, 
+		sf::Vector2f(250,10), 
+		sf::Vector2f(rand() % 500 + 10,rand() % 500 + 10), 
+		50,
+		10, 
+		bFactory,
+		bullets
+		);*/
+
 		//this->addObject(e1);
 		clkW.restart();
 	}

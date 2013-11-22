@@ -1,10 +1,8 @@
 #include "Shooter.h"
 
 
-Shooter::Shooter(sf::RenderWindow& window, std::list<Bullet*>& bullets, BulletFactory* bFactory): 
-	Object(window),
-	bullets(bullets),
-	bFactory(bFactory)
+Shooter::Shooter(sf::RenderWindow& window): 
+	Object(window)
 {health = 100;}
 
 

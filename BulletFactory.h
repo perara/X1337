@@ -12,7 +12,7 @@ class Bullet;
 /// </summary>
 class BulletFactory{
 public:
-	BulletFactory();
+
 	BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*>& bullets);
 	
 	const enum BulletType {standardShot = 1, heavyShot = 5};
@@ -24,7 +24,7 @@ public:
 
 protected:
 	void produceObjects(BulletFactory::BulletType type, int quantity);
-	std::list<Bullet*>& bullets;
+	std::list<Bullet*>* bullets;
 	std::map<BulletFactory::BulletType , std::list<Bullet*>> objects;
 	sf::RenderWindow& window;
 	int initQuantity;

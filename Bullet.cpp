@@ -7,11 +7,9 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="type">The bullet type.</param>
-Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType, std::list<Bullet*>& bullets, BulletFactory* bFactory): 
+Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType): 
 	Object(window),
-	bulletType(bulletType),
-	bullets(bullets),
-	bFactory(bFactory)
+	bulletType(bulletType)
 {
 
 	this->setDeleted(false);
@@ -33,7 +31,7 @@ Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType, s
 /// <returns>bool which indicates if the object is up for deletion in Scene.h's object list <see cref="Scene"> </returns>
 void Bullet::process()
 {
-	if(!deleted)
+	if(!deleted && this->getInited())
 	{
 		this->sprite->setPosition(
 			this->sprite->getPosition().x+(Globals::getInstance().getTimeStep().asSeconds() * speedX),
@@ -48,8 +46,9 @@ void Bullet::process()
 
 void Bullet::deleteBullet(std::list<Bullet*>::iterator i)
 {
-	this->bFactory->returnObject(this);
-	bullets.erase(i);
+	
+	this->getBulletFactory()->returnObject(this);
+	this->getBullets()->erase(i);
 }
 bool Bullet::isOutOfBounds()
 {
