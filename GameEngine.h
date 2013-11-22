@@ -17,4 +17,7 @@ public:
 	void gameLoop();
 	sf::RenderWindow window;
 	World world;
+	
+	sf::Time elapsedTime;
+	sf::Clock gameClock;
 };

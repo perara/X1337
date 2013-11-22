@@ -14,7 +14,7 @@ public:
 		int radius, 
 		BulletFactory* bFactory, 
 		std::list<Bullet*>& bullets);
-	bool process();
+	void process();
 	void test();
 
 protected:

@@ -14,7 +14,7 @@ public:
 	Object();
 	Object(sf::RenderWindow & window) : window(window){deleted = false;};
 	virtual void draw();
-	virtual bool process();
+	virtual void process();
 	GameShape* sprite;
 	bool getDeleted();
 

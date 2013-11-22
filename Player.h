@@ -17,7 +17,7 @@ public:
 		);
 
 	void inputHandler();
-	bool process();
+	void process();
 protected:
 		int hitDetection();
 };

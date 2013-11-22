@@ -29,7 +29,7 @@ Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType, s
 /// Processes this bullet object.
 /// </summary>
 /// <returns>bool which indicates if the object is up for deletion in Scene.h's object list <see cref="Scene"> </returns>
-bool Bullet::process()
+void Bullet::process()
 {
 	if(!deleted)
 	{
@@ -42,7 +42,6 @@ bool Bullet::process()
 			this->setDeleted(true);
 		}
 	}
-	return true; // TODODODODODODO
 }
 
 void Bullet::deleteBullet(std::list<Bullet*>::iterator i)

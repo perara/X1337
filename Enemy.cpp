@@ -40,7 +40,7 @@ int Enemy::hitDetection()
 	return hitCounter;
 }
 
-bool Enemy::process()
+void Enemy::process()
 {
 	this->shootableProcess();
 	if(
@@ -59,7 +59,7 @@ bool Enemy::process()
 	{
 		this->deleted = true;
 	}
-	return true;
+
 }
 
 void Enemy::circularShoot()

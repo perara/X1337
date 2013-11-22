@@ -21,11 +21,9 @@ public:
 		OPTIONS, 
 		PAUSE
 	};
+	
 	State state;
-	sf::Time elapsedTime;
-	sf::Clock gameClock;
 	sf::Time timeStep;
-	sf::Font font; //Game Font
 
 private:
 	Config() {}

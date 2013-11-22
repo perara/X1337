@@ -16,11 +16,10 @@ Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius, BulletFac
 	this->sprite->setPosition(pos);
 }
 
-bool Player::process()
+void Player::process()
 {
 	this->inputHandler();
 	this->shootableProcess();
-	return true;
 }
 
 void Player::inputHandler()
