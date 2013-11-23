@@ -1,6 +1,9 @@
 #include "Bullet.h"
 #include "GameShape.h"
 #include "Globals.h"
+#include "Log.h"
+#include "Enemy.h"
+#include "Player.h"
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Bullet"/> class.
@@ -46,7 +49,7 @@ void Bullet::process()
 
 void Bullet::deleteBullet(std::list<Bullet*>::iterator i)
 {
-	
+
 	this->getBulletFactory()->returnObject(this);
 	this->getBullets()->erase(i);
 }
@@ -72,6 +75,20 @@ void Bullet::setPosition(int x, int y)
 }
 void Bullet::setOwner(Object* owner)
 {
+
+	// TODO?
+	if(dynamic_cast<Enemy*>(owner))
+	{
+		this->speedX = 0;
+		this->speedY = 150;
+	}
+	else if(dynamic_cast<Player*>(owner))
+	{
+		this->speedX = 0;
+		this->speedY = -150;
+	}
+
+
 	this->owner = owner;
 }
 void Bullet::setDeleted(bool val)

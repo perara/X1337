@@ -8,8 +8,6 @@
 
 #define PI 3.14159265
 
-//#include "stdlib.h"
-sf::Clock clsk;
 
 Enemy::Enemy(sf::RenderWindow& window, 
 			 std::queue<sf::Vector3f>* path,
@@ -17,6 +15,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 			 ):
 Shooter(window)
 {
+	this->enemyClock.restart();
 	this->path = path;
 	this->currentPath = this->path->front();
 	this->path->pop();
@@ -61,6 +60,18 @@ int Enemy::hitDetection()
 	return hitCounter;
 }
 
+void Enemy::shoot(int shoot)
+{
+	if(shoot != -1)
+	{
+		Bullet* b = this->getBulletFactory()->requestObject(BulletFactory::BulletType::standardShot);
+		b->setOwner(this);
+		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
+		this->getBullets()->push_back(b);
+	}
+
+}
+
 void Enemy::process()
 {
 	if(!this->getInited()) return;
@@ -84,20 +95,26 @@ void Enemy::process()
 	dx = (dx / len) * Globals::getInstance().getTimeStep().asSeconds() * 100;
 	dy = (dy / len) * Globals::getInstance().getTimeStep().asSeconds() * 100;
 
+
+	// TODO
+	if(this->enemyClock.getElapsedTime().asMilliseconds() > 400)
+	{
+		this->shoot(this->currentPath.z);
+		this->enemyClock.restart();
+	}
+
 	if(
-		currentPosition.x <= length.x || 
-		currentPosition.y <= length.y &&
-		length.x != 0 &&
-		length.y != 0
+		currentPosition.x < length.x || 
+		currentPosition.y < length.y
 		)
 	{
 
-		if(currentPosition.x <= length.x)
+		if(currentPosition.x < length.x)
 		{
 			this->sprite->move(dx ,0 );
 		}
 
-		if(currentPosition.y <= length.y)
+		if(currentPosition.y < length.y)
 		{
 			this->sprite->move(0 ,dy );
 		}
@@ -105,6 +122,7 @@ void Enemy::process()
 	}
 	else
 	{
+		//std::cout << currentPath.x << ","<< currentPath.y << "->" << this->path->front().x << "," << this->path->front().y << std::endl;
 		currentPath = path->front();
 		if(path->size() > 1)
 		{
@@ -117,25 +135,6 @@ void Enemy::process()
 		}
 
 	}
-
-
-
-}
-
-void Enemy::nextStep(int x0, int y0, int x1, int y1)
-{
-	float slope = ((float)y1 - y0)/ ((float) x1 - x0);
-	float err = 0.0;
-	int y = 0;
-
-	this->sprite->move(x0,y);
-	err += slope;
-	if(err >= 0.5)
-	{
-		y++;
-		err -= 1.0;
-	}
-
 
 
 

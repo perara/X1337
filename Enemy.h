@@ -19,7 +19,6 @@ public:
 
 
 	void process();
-	void Enemy::nextStep(int x0, int y0, int x1, int y1);
 
 protected:
 	void circularShoot();
@@ -27,4 +26,7 @@ protected:
 	std::queue<sf::Vector3f>* path;
 	sf::Vector3f currentPath;
 	bool circleTest(GameShape& bullet);
+
+	sf::Clock enemyClock;
+	void Enemy::shoot(int);
 };

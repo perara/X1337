@@ -4,8 +4,12 @@
 #include "ResourceHandler.h"
 
 GameEngine::GameEngine():
-	window(sf::VideoMode(500, 500), "X1337", sf::Style::Titlebar | sf::Style::Close)
+	window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close)
 {
+	sf::View gameView(sf::FloatRect(0,0,500,500));
+	Globals::getInstance().setGameView(gameView);
+	window.setView(Globals::getInstance().getGameView());
+
 	this->window.setFramerateLimit(120);
 
 	// Init and set resourceHandler

@@ -2,6 +2,7 @@
 #include "Log.h"
 #include "Enemy.h"
 #include <memory>
+#include "Globals.h"
 
 ResourceHandler::ResourceHandler(sf::RenderWindow& window):
 	window(window)
@@ -27,6 +28,7 @@ void ResourceHandler::init()
 	{
 		scriptList[Scripts::ENCOUNTER1] = "assets/scripts/encounterDemo.xml";
 		scriptList[Scripts::ENCOUNTER2] = "assets/scripts/encounter.xml";
+		scriptList[Scripts::ENCOUNTER3] = "assets/scripts/encounter.xml";
 	}
 
 
@@ -169,8 +171,11 @@ void ResourceHandler::draw()
 	sf::Text label;
 	label.setFont(this->font);
 	label.setString(sf::String("Loading... Please Wait!"));
-	label.setPosition((window.getPosition().x / 2) -  label.getGlobalBounds().width , (window.getPosition().y / 2) - label.getGlobalBounds().height);
+	label.setPosition(
+		Globals::getInstance().getGameView().getCenter().x  -  (label.getGlobalBounds().width / 2) , 
+		Globals::getInstance().getGameView().getCenter().y - (label.getGlobalBounds().height / 2));
 	label.setColor(sf::Color::White);
+
 
 	window.clear(sf::Color::Black);
 	window.draw(label);

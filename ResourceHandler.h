@@ -24,6 +24,7 @@ public:
 	const enum Scripts{
 		ENCOUNTER1,
 		ENCOUNTER2,
+		ENCOUNTER3,
 		SCRIPTSCOUNT
 	};
 

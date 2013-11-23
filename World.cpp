@@ -14,7 +14,7 @@ int count = 0;
 World::World(sf::RenderWindow& window): Scene(window)
 {
 	// Initialize Script
-	this->setScript(Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::ENCOUNTER2));
+	this->setScript(Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::ENCOUNTER3));
 
 	// Initialize Background
 	bg->addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::BACKGROUND1));

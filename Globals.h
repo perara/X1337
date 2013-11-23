@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML\System.hpp>
 #include <SFML\Graphics\Font.hpp>
+#include <SFML\Graphics\View.hpp>
 
 class ResourceHandler;
 
@@ -39,11 +40,15 @@ public:
 
 	int statsltakts;
 
+	void setGameView(sf::View);
+	sf::View& getGameView();
+
 
 private:
 	ResourceHandler* resourceHandler;
 	State state;
 	sf::Time timeStep;
+	sf::View gameView;
 
 private:
 	Globals() {}

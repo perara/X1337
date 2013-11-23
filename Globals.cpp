@@ -14,20 +14,34 @@ ResourceHandler*  Globals::getResourceHandler()
 
 
 // State getter/setter
-void Globals::setState(Globals::State state){
+void Globals::setState(Globals::State state)
+{
 	this->state = state;
 }
 
-Globals::State& Globals::getState(){
+Globals::State& Globals::getState()
+{
 	return this->state;
 }
 
 // Time Step getter/setter
-void Globals::setTimeStep(sf::Time& timeStep){
+void Globals::setTimeStep(sf::Time& timeStep)
+{
 	this->timeStep = timeStep;
 }
 
 
-sf::Time& Globals::getTimeStep(){
+sf::Time& Globals::getTimeStep()
+{
 	return this->timeStep;
+}
+
+void Globals::setGameView(sf::View view)
+{
+	this->gameView = view;
+}
+
+sf::View& Globals::getGameView()
+{
+	return this->gameView;
 }
