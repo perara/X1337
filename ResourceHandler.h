@@ -23,6 +23,7 @@ public:
 	};
 	const enum Scripts{
 		ENCOUNTER1,
+		ENCOUNTER2,
 		SCRIPTSCOUNT
 	};
 
@@ -36,13 +37,14 @@ public:
 
 
 	sf::Texture* getTexture(ResourceHandler::Texture);
+	Script* getScript(ResourceHandler::Scripts);
+
 private:
 	void loadTextures();
 	void loadFont();
 	void loadSound();
 	void loadScripts();
 
-protected:
 	bool inited;
 	sf::RenderWindow& window;
 

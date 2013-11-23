@@ -5,6 +5,7 @@
 class Bullet;
 class Object;
 class BulletFactory;
+class Script;
 
 #include <list>
 
@@ -21,6 +22,7 @@ public:
 	Scene(sf::RenderWindow& window):window(window)
 	{
 		bg = new Background(window);
+		script = NULL;
 
 	}
 
@@ -32,4 +34,10 @@ public:
 protected:
 	sf::RenderWindow & window;
 	Background* bg;
+
+	Script* getScript();
+	void setScript(Script*);
+
+private:
+	Script * script;
 };

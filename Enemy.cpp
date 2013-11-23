@@ -2,32 +2,45 @@
 #include "GameShape.h"
 #include "BulletFactory.h"
 #include "Bullet.h"
+#include "Log.h"
+#include "Globals.h"
+#include <math.h>       /* cos */
+
+#define PI 3.14159265
 
 //#include "stdlib.h"
 sf::Clock clsk;
 
 Enemy::Enemy(sf::RenderWindow& window, 
-			 std::queue<sf::Vector3f>& path,
+			 std::queue<sf::Vector3f>* path,
 			 int type
 			 ):
-	path(path),
-	Shooter(window)
+Shooter(window)
 {
-	currentPath = path.front();
-	path.pop();
+	this->path = path;
+	this->currentPath = this->path->front();
+	this->path->pop();
 
 	this->sprite = new GameShape(GameShape::circle, 10);
-	this->sprite->setPosition(currentPath.x , path.front().y);
-	
+	this->sprite->setPosition(currentPath.x , currentPath.y);
 
 }
+
+Enemy::~Enemy(){
+	LOGD("Deconstructor called for: Enemy#" << this);
+
+	delete this->path;
+}
+
+
+
 
 int Enemy::hitDetection()
 {
 	// COLLISION TODO
 	int hitCounter = 0;
 
-	
+
 	if(!this->getBullets()->empty())
 	{
 		for(auto& i: *this->getBullets())
@@ -53,23 +66,81 @@ void Enemy::process()
 	if(!this->getInited()) return;
 
 	this->shootableProcess();
-	/*std::cout << currentPath.x << "," << currentPath.y << std::endl;
-	std::cout << path.size() << std::endl;
+
+
+	sf::Vector2f length;
+	length.x = abs(this->currentPath.x - path->front().x);
+	length.y = abs(this->currentPath.y - path->front().y);
+
+	sf::Vector2f currentPosition;
+	currentPosition.x = abs(this->currentPath.x - this->sprite->getPosition().x);
+	currentPosition.y = abs(this->currentPath.y - this->sprite->getPosition().y);
+
+
+
+	float dx = this->path->front().x - this->currentPath.x;
+	float dy = this->path->front().y - this->currentPath.y;
+	float len = sqrtf(dx * dx + dy * dy);
+	dx = (dx / len) * Globals::getInstance().getTimeStep().asSeconds() * 100;
+	dy = (dy / len) * Globals::getInstance().getTimeStep().asSeconds() * 100;
+
 	if(
-		(int)this->sprite->getPosition().x != (int)path.front().x && 
-		(int)this->sprite->getPosition().y != (int)path.front().y)
+		currentPosition.x <= length.x || 
+		currentPosition.y <= length.y &&
+		length.x != 0 &&
+		length.y != 0
+		)
 	{
 
-		float angle = atan2f(path.front().x - currentPath.x, path.front().y - currentPath.y) * 180 / 3.14;
-		float x = sin(angle) * (Globals::getInstance().getTimeStep().asSeconds() * 100);
-		float y = cos(angle) * (Globals::getInstance().getTimeStep().asSeconds() * 100);
-		this->sprite->move(x ,y );
-	}else
-	{
-		this->deleted = true;
+		if(currentPosition.x <= length.x)
+		{
+			this->sprite->move(dx ,0 );
+		}
+
+		if(currentPosition.y <= length.y)
+		{
+			this->sprite->move(0 ,dy );
+		}
+
 	}
-	*/
+	else
+	{
+		currentPath = path->front();
+		if(path->size() > 1)
+		{
+			path->pop();
+		}
+		else
+		{
+			LOGD("Enemy#" << this <<" delete flag set");
+			this->deleted = true;
+		}
+
+	}
+
+
+
 }
+
+void Enemy::nextStep(int x0, int y0, int x1, int y1)
+{
+	float slope = ((float)y1 - y0)/ ((float) x1 - x0);
+	float err = 0.0;
+	int y = 0;
+
+	this->sprite->move(x0,y);
+	err += slope;
+	if(err >= 0.5)
+	{
+		y++;
+		err -= 1.0;
+	}
+
+
+
+
+}
+
 
 void Enemy::circularShoot()
 {

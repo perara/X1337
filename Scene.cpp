@@ -46,3 +46,18 @@ void Scene::addBullet(Bullet* bullet)
 	//system("pause");
 	this->bullets.push_back(bullet);
 }
+
+Script* Scene::getScript()
+{
+	if(!this->script == NULL)
+		return this->script;
+	else{
+		LOGE("Script was loaded unsuccessfully (nullptr)");
+		return NULL;
+	}
+}
+
+void Scene::setScript(Script* script)
+{
+	this->script = script;
+}

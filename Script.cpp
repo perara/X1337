@@ -1,5 +1,7 @@
 #include "Script.h"
 #include "Log.h"
+#include "Object.h"
+#include "Enemy.h"
 
 void Script::addEnemy(Enemy* enemy, int delay)
 {
@@ -32,20 +34,31 @@ bool Script::getInit()
 }
 void Script::setInit(bool status)
 {
+	if(status) this->getClock().restart();
 	this->inited = status;
 }
 
 // Process
-void Script::process()
+void Script::process(std::list<Object*>& objects)
 {
-	if(this->getInit())
+	// Do processing
+	if(!this->list.empty())
 	{
-		// Do processing
 		ScriptTick* e = this->list.front();
+		if(
+			this->getInit() &&
+			this->getClock().getElapsedTime().asMilliseconds() > e->delay
+			)
 
-		this->list.pop();
+		{
+			LOGD("Spawning Enemy#" << e->enemy);
+			objects.push_back(e->enemy);
 
+			if(this->list.size() > 0)
+				this->list.pop();
 
+			this->getClock().restart();
+		}
 	}
 
 

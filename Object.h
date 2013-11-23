@@ -21,6 +21,9 @@ public:
 		deleted = false;
 		inited = false;
 	};
+
+	virtual ~Object();
+
 	virtual void draw();
 	virtual void process();
 	GameShape* sprite;

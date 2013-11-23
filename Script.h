@@ -1,14 +1,14 @@
 #pragma once
 #include <queue>
+#include <list>
 #include <SFML\System\Clock.hpp>
 
 class Enemy;
-
+class Object;
 
 
 class Script
 {
-
 	struct ScriptTick {
 		Enemy* enemy;
 		int delay;
@@ -31,7 +31,8 @@ public:
 	void setInit(bool);
 
 	// Process
-	void process();
+	void process(std::list<Object*>&);
+
 
 
 

@@ -1,6 +1,7 @@
 #include "ResourceHandler.h"
 #include "Log.h"
 #include "Enemy.h"
+#include <memory>
 
 ResourceHandler::ResourceHandler(sf::RenderWindow& window):
 	window(window)
@@ -24,7 +25,8 @@ void ResourceHandler::init()
 
 	// Scripts
 	{
-		scriptList[Scripts::ENCOUNTER1] = "assets/scripts/test.xml";
+		scriptList[Scripts::ENCOUNTER1] = "assets/scripts/encounterDemo.xml";
+		scriptList[Scripts::ENCOUNTER2] = "assets/scripts/encounter.xml";
 	}
 
 
@@ -84,10 +86,6 @@ void ResourceHandler::loadScripts()
 
 	for(auto& i : scriptList)
 	{
-		Script * script = new Script();
-		std::queue<sf::Vector3f> pathQueue;
-
-
 		std::ifstream theFile (i.second);
 		std::vector<char> buffer((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>());
 		buffer.push_back('\0');
@@ -101,8 +99,13 @@ void ResourceHandler::loadScripts()
 		rapidxml::xml_node<> *node = doc.first_node("Enemies");
 
 		int enemyCounter = 0; // Counter
+		
+		// Enemy X
 		for (rapidxml::xml_node<> *enemy = node->first_node(); enemy; enemy = enemy->next_sibling())
 		{
+			std::queue<sf::Vector3f>* pathQueue = new std::queue<sf::Vector3f>();
+
+
 			int type = atoi(enemy->first_node("Type")->value());
 			int delay = atoi(enemy->first_node("Delay")->value());
 
@@ -115,19 +118,22 @@ void ResourceHandler::loadScripts()
 				int shoot = atoi(child->first_attribute("shoot")->value());
 
 				// Push path into queue
-				pathQueue.push(sf::Vector3f(x,y,shoot));
+				pathQueue->push(sf::Vector3f(x,y,shoot));
+				
 			}
 
-			/*Enemy* e1 = new Enemy(
+			Enemy* e1 = new Enemy(
 				window, 
 				pathQueue,
-				10, 
-				bFactory,
-				bullets
-				);
-				*/
+				type);
+
+			this->scripts[i.first].addEnemy(e1, delay);
+
 			enemyCounter++;
 		}
+
+		// Set init 
+		this->scripts[i.first].setInit(true);
 	}
 
 }
@@ -138,6 +144,11 @@ void ResourceHandler::loadScripts()
 sf::Texture* ResourceHandler::getTexture(ResourceHandler::Texture res)
 {
 	return &this->textures[res];
+}
+
+Script* ResourceHandler::getScript(ResourceHandler::Scripts query)
+{
+	return &this->scripts[query];
 }
 
 

@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "Log.h"
 #include "GameShape.h"
 
 void Object::draw()
@@ -21,6 +22,10 @@ void Object::setInited(bool init)
 	this->inited = init;
 }
 
+ Object::~Object()
+ {
+
+ }
 
 // BulletFactory Getter/Setter
 BulletFactory* Object::getBulletFactory()

@@ -6,6 +6,8 @@
 GameEngine::GameEngine():
 	window(sf::VideoMode(500, 500), "X1337", sf::Style::Titlebar | sf::Style::Close)
 {
+	this->window.setFramerateLimit(120);
+
 	// Init and set resourceHandler
 	Globals::getInstance().setResourceHandler(new ResourceHandler(window));
 	Globals::getInstance().getResourceHandler()->init();

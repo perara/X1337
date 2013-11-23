@@ -17,6 +17,7 @@ public:
 		static Globals    instance;
 		return instance;
 	}
+
 	enum State{
 		GAME, 
 		MENU, 
@@ -36,6 +37,7 @@ public:
 	void setTimeStep(sf::Time& timeStep);
 	sf::Time& getTimeStep();
 
+	int statsltakts;
 
 
 private:
