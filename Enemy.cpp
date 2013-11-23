@@ -154,14 +154,11 @@ void Enemy::circularShoot()
 
 bool Enemy::circleTest(GameShape& bullet)
 {
-	int spriteRadius = this->sprite->getRadius();
-	int bulletRadius = bullet.getRadius();
-	int xDistance = abs(this->sprite->getPosition().x-bullet.getPosition().x);
-	int yDistance = abs(this->sprite->getPosition().y-bullet.getPosition().y);
-	int distance = sqrt(xDistance*xDistance+yDistance*yDistance);
-	if(distance<=spriteRadius+bulletRadius)
-	{
-		return true;
-	}
-	return false;
+	int radius = this->sprite->getRadius() + bullet.getRadius();
+	const sf::Vector2f& thisPosition = this->sprite->getPosition();
+	const sf::Vector2f& bulletPosition = bullet.getPosition();
+	int xDistance = thisPosition.x - bulletPosition.x;
+	int yDistance = thisPosition.y - bulletPosition.y;
+
+	return xDistance * xDistance + yDistance * yDistance <= radius * radius;
 }
