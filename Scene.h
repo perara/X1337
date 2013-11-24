@@ -1,13 +1,5 @@
 #pragma once
-#include "Log.h"
-#include "Background.h"
-
-class Bullet;
-class Shooter;
-class BulletFactory;
-class Script;
-
-#include <list>
+#include <SFML\Graphics\RenderWindow.hpp>
 
 /// <summary>
 /// The scene class is an abstract class which is base class for all States. All state is a Scene.
@@ -15,29 +7,17 @@ class Script;
 class Scene
 {
 public:
-	std::vector<Shooter*> objects; 
-	std::vector<Bullet*> bullets;
-	BulletFactory* bFactory;
+	Scene(sf::RenderWindow& window):window(window){};
 
-	Scene(sf::RenderWindow& window):window(window)
-	{
-		bg = new Background(window);
-		script = NULL;
+	virtual void draw() = 0;
+	virtual void process() = 0;
+	virtual void init() = 0;
 
-	}
-
-	virtual void draw();
-	virtual void process();
-	void addObject(Shooter* object);
-	void addBullet(Bullet* bullet);
+	void setInited(bool);
+	bool getInited();
 
 protected:
-	sf::RenderWindow & window;
-	Background* bg;
+	sf::RenderWindow& window;
+	bool inited;
 
-	Script* getScript();
-	void setScript(Script*);
-
-private:
-	Script * script;
 };

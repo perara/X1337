@@ -46,6 +46,9 @@
     <ClCompile Include="Script.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Log.h">

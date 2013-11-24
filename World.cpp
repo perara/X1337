@@ -3,26 +3,29 @@
 #include "Globals.h"
 #include "ResourceHandler.h"
 #include "Player.h"
-#include <queue>
 #include "Enemy.h"
 #include "Bullet.h"
-
-
-sf::Clock clkW;
-int count = 0;
+#include "Background.h"
+#include "Log.h"
 
 World::World(sf::RenderWindow& window): Scene(window)
+{
+	this->init();
+}
+
+void World::init()
 {
 	// Initialize Script
 	this->setScript(Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::ENCOUNTER3));
 
 	// Initialize Background
+	bg = new Background(window);
 	bg->addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::BACKGROUND1));
 
-	// Initialize Factories
+	// Initialize Bullet Factory
 	this->bFactory = new BulletFactory(window, 1000, bullets);
-	
-	// Add player objects
+
+	// Initialize Player
 	this->player = new Player(
 		window, 
 		sf::Vector2f(100,250), 
@@ -30,7 +33,10 @@ World::World(sf::RenderWindow& window): Scene(window)
 	player->init(this->bFactory, this->bullets);
 	this->addObject(player);
 
+	// Set inited to true
+	this->setInited(true);
 }
+
 
 void World::process()
 {
@@ -107,6 +113,56 @@ void World::process()
 void World::drawStats()
 {
 	player->drawStats();
+}
 
+/// <summary>
+/// Adds a object to the scene
+/// </summary>
+/// <param name="object">The object thats requested for addition</param>
+void World::addObject(Shooter* object)
+{
+	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
+	this->objects.push_back(object);
+}
 
+void World::addBullet(Bullet* bullet)
+{
+	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
+
+	//system("pause");
+	this->bullets.push_back(bullet);
+}
+
+Script* World::getScript()
+{
+	if(!this->script == NULL)
+		return this->script;
+	else{
+		LOGE("Script was loaded unsuccessfully (nullptr)");
+		return NULL;
+	}
+}
+
+void World::setScript(Script* script)
+{
+	this->script = script;
+}
+
+/// <summary>
+/// Draws all scene objects
+/// </summary>
+void World::draw()
+{
+	// Draw background
+	bg->process(); // TODO
+
+	for(auto &it : objects)
+	{
+		it->draw();
+	}
+
+	for(auto &it : bullets)
+	{
+		it->draw();
+	}
 }
