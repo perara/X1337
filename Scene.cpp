@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include "Bullet.h"
 #include "Shooter.h"
-#include "QuadTree.h"
+
 
 /// <summary>
 /// Draws all scene objects
