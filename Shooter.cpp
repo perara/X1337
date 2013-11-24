@@ -29,7 +29,7 @@ void Shooter::incrementHealth()
 
 void Shooter::shooterProcess()
 {
-	int hitCount = this->hitDetection();
+	this->hitDetection();
 	/*if(hitCount > 0)
 	{
 	//LOGD("Shootable#"<<this << " has " << this->getHealth() << " health");
@@ -111,23 +111,19 @@ bool Shooter::sat(GameShape* c1, GameShape* c2)
 }
 
 
-int Shooter::hitDetection()
+void Shooter::hitDetection()
 {
-	// COLLISION TODO
-	int hitCounter = 0;
-
-
 	if(!this->getBullets()->empty())
 	{
 		for(auto& i: *this->getBullets())
 		{
 			bool wasHit = this->sat(this->sprite, i->sprite);
-			//bool wasHit = this->circleTest(*i->sprite);
 
-			if(wasHit && this != i->owner)
+			if(wasHit && this->getType() != i->owner)
 			{
 				i->setDeleted(true);
-				health= health-i->getBulletType();
+				health = health-i->getBulletType();
+
 				// KILL IF DEAD
 				if(health < 0 && this->getType() != Shooter::ShooterType::PLAYER)
 				{
@@ -137,7 +133,6 @@ int Shooter::hitDetection()
 			}
 		}
 	}
-	return hitCounter;
 }
 
 void Shooter::setType(Shooter::ShooterType shooterType)

@@ -34,7 +34,7 @@ protected:
 
 
 private:
-	virtual int hitDetection() ;
+	virtual void hitDetection() ;
 	bool circleTest(GameShape& bullet);
 	bool sat(GameShape* c1, GameShape* c2);
 	

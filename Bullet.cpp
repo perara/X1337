@@ -72,19 +72,20 @@ void Bullet::setPosition(int x, int y)
 {
 	this->sprite->setPosition(x,y);
 }
-void Bullet::setOwner(Object* owner)
+void Bullet::setOwner(Shooter::ShooterType owner)
 {
 
-	// TODO?
-	if(dynamic_cast<Enemy*>(owner))
-	{
-		this->speedX = 0;
-		this->speedY = 150;
-	}
-	else if(dynamic_cast<Player*>(owner))
+	if(owner == Shooter::ShooterType::PLAYER)
 	{
 		this->speedX = 0;
 		this->speedY = -250;
+	}
+	else
+	{
+
+		this->speedX = 0;
+		this->speedY = 150;
+
 	}
 
 
