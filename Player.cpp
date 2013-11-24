@@ -4,6 +4,7 @@
 #include "GameShape.h"
 #include "Log.h"
 #include "Globals.h"
+#include "ResourceHandler.h"
 
 sf::Clock clk; //TESTING PURPOSES
 
@@ -18,6 +19,7 @@ sf::Clock clk; //TESTING PURPOSES
 Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius):
 	Shooter(window)
 {
+	this->setType(Shooter::ShooterType::PLAYER);
 	this->sprite = new GameShape(GameShape::CIRCLE, 10);
 	this->sprite->setPosition(pos);
 }
@@ -63,6 +65,33 @@ void Player::detectEdge()
 	}
 }
 
+void Player::drawStats()
+{
+	// Draw Health
+	sf::Text txtHealth;
+	txtHealth.setFont(Globals::getInstance().getResourceHandler()->getFont(ResourceHandler::Fonts::SANSATION));
+	txtHealth.setString(sf::String("Health: "));
+	txtHealth.setCharacterSize(25);
+	txtHealth.setPosition(20,20);
+	txtHealth.setColor(sf::Color::White);
+
+	int heartX = 105;
+	for(int i = 0; i < this->getHealth(); i++)
+	{
+
+		std::shared_ptr<sf::Sprite> sprite = std::shared_ptr<sf::Sprite>(new sf::Sprite);
+		sprite->setTexture(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::HEART), true);
+		sprite->setPosition(heartX, 20);
+		sprite->setScale(0.05f,0.05f);
+		this->window.draw(*sprite);
+		heartX = heartX + 35;
+	}
+
+	this->window.draw(txtHealth);
+
+
+}
+
 void Player::inputHandler()
 {
 	/* Shoot handler */
@@ -75,7 +104,7 @@ void Player::inputHandler()
 	}
 
 	/* TEMPORARY FOR TESTING */ //TODODODODODODODODODODODOD
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && clk.getElapsedTime().asMilliseconds() > 100){
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && clk.getElapsedTime().asMilliseconds()){
 
 		Bullet* b = this->getBulletFactory()->requestObject(BulletFactory::BulletType::heavyShot);
 		b->setOwner(this);

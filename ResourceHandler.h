@@ -12,21 +12,33 @@
 class ResourceHandler
 {
 public:
-	const enum Texture{
+	const enum Texture
+	{
 		BACKGROUND1,
+		HEART,
 		TEXTURECOUNT
 	};
 
-	const enum Sound{
+	const enum Sound
+	{
 		SONG1,
 		SOUNDCOUNT
 	};
-	const enum Scripts{
+	const enum Scripts
+	{
 		ENCOUNTER1,
 		ENCOUNTER2,
 		ENCOUNTER3,
 		SCRIPTSCOUNT
 	};
+
+	const enum Fonts
+	{
+		COMICATE,
+		SANSATION,
+		FONTCOUNT,
+	};
+
 
 	ResourceHandler(sf::RenderWindow& window);
 
@@ -37,12 +49,13 @@ public:
 	bool getInit();
 
 
-	sf::Texture* getTexture(ResourceHandler::Texture);
+	sf::Texture& getTexture(ResourceHandler::Texture);
 	Script* getScript(ResourceHandler::Scripts);
+	sf::Font& getFont(ResourceHandler::Fonts);
 
 private:
 	void loadTextures();
-	void loadFont();
+	void loadFonts();
 	void loadSound();
 	void loadScripts();
 
@@ -61,7 +74,7 @@ private:
 	std::map<Scripts, std::string> scriptList;
 	Script scripts[Scripts::SCRIPTSCOUNT]; //TODO
 
-	// Font
-	sf::Font font;
-
+	// Fonts
+	std::map<Fonts, std::string> fontList;
+	sf::Font fonts[Fonts::FONTCOUNT];
 };

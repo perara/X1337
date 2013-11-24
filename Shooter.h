@@ -6,6 +6,15 @@ class Bullet;
 
 class Shooter: public Object
 {
+public:
+	const enum ShooterType
+	{
+		REGULAR,
+		BOSS,
+		PLAYER,
+		SHOOTERTYPECOUNT
+	};
+
 protected:
 
 	Shooter(sf::RenderWindow& window
@@ -20,10 +29,14 @@ protected:
 
 	/* Processing */
 	virtual void shooterProcess();
+	void setType(Shooter::ShooterType);
+	ShooterType& getType();
+
 
 private:
 	virtual int hitDetection() ;
 	bool circleTest(GameShape& bullet);
 	bool sat(GameShape* c1, GameShape* c2);
-
+	
+	ShooterType shooterType;
 };

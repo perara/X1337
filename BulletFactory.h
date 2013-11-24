@@ -13,19 +13,19 @@ class Bullet;
 class BulletFactory{
 public:
 
-	BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*>& bullets);
+	BulletFactory(sf::RenderWindow& window, int quantity, std::vector<Bullet*>& bullets);
 	
 	const enum BulletType {standardShot = 1, heavyShot = 5};
 
 
 	void returnObject(Bullet* bullet);
-	std::list<Bullet*> requestBatch(int quantity, BulletFactory::BulletType type);
+	std::vector<Bullet*> requestBatch(int quantity, BulletFactory::BulletType type);
 	Bullet* requestObject(BulletFactory::BulletType type);
 
 protected:
 	void produceObjects(BulletFactory::BulletType type, int quantity);
-	std::list<Bullet*>* bullets;
-	std::map<BulletFactory::BulletType , std::list<Bullet*>> objects;
+	std::vector<Bullet*>* bullets;
+	std::map<BulletFactory::BulletType , std::vector<Bullet*>> objects;
 	sf::RenderWindow& window;
 	int initQuantity;
 };

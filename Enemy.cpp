@@ -16,6 +16,7 @@ Shooter(window)
 	this->currentPath = this->path->front();
 	this->path->pop();
 
+	this->setType(Shooter::ShooterType::REGULAR);
 	this->sprite = new GameShape(GameShape::STARSHIP);
 	this->sprite->setPosition(currentPath.x , currentPath.y);
 

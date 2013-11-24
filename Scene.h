@@ -15,8 +15,8 @@ class Script;
 class Scene
 {
 public:
-	std::list<Object*> objects; 
-	std::list<Bullet*> bullets;
+	std::vector<Object*> objects; 
+	std::vector<Bullet*> bullets;
 	BulletFactory* bFactory;
 
 	Scene(sf::RenderWindow& window):window(window)

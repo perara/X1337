@@ -13,7 +13,7 @@ public:
 
 	GameShape(ShapeType shapeType); // Other
 	GameShape(GameShape::ShapeType shapeType, float size); // Triangle
-	GameShape(ShapeType shapeType, int radius, int pointCount = 10); // Circle
+	GameShape(ShapeType shapeType, int radius, int pointCount = 5); // Circle
 
 	ShapeType getShapeType();
 

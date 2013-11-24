@@ -31,7 +31,7 @@ public:
 	void setInit(bool);
 
 	// Process
-	void process(std::list<Object*>&);
+	void process(std::vector<Object*>&);
 
 
 

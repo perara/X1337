@@ -16,12 +16,14 @@ void ResourceHandler::init()
 	// Define Resources
 	// Textures
 	{
-		textureList[Texture::BACKGROUND1]  = "assets/images/background1.jpg";
+		textureList[Texture::BACKGROUND1]  = "assets/sprites/bg1.jpg";
+		textureList[Texture::HEART]  = "assets/sprites/heart.png";
 	}
 
 	// Sounds
 	{
-		soundList[Sound::SONG1]  = "assets/images/background1.jpg";
+		soundList[Sound::SONG1]  = "assets/sprites/background1.jpg";
+
 	}
 
 	// Scripts
@@ -31,8 +33,14 @@ void ResourceHandler::init()
 		scriptList[Scripts::ENCOUNTER3] = "assets/scripts/encounter.xml";
 	}
 
+	// Fonts
+	{
+		fontList[Fonts::COMICATE] = "assets/fonts/COMICATE.ttf";
+		fontList[Fonts::SANSATION] = "assets/fonts/sansation.ttf";
+	}
 
-	this->loadFont();
+
+	this->loadFonts();
 	this->draw();
 	this->loadTextures();
 	this->loadSound();
@@ -43,17 +51,26 @@ void ResourceHandler::init()
 	this->setInit(true);
 }
 
-
-void ResourceHandler::loadFont()
+void ResourceHandler::loadFonts()
 {
-	// Load fonts
-	font.loadFromFile("assets/fonts/COMICATE.ttf");
+	// Load Fonts
+	for(auto& i : fontList)
+	{
+		if (fonts[i.first].loadFromFile(i.second)){
+			LOGD("Font loaded: " << i.second);
+		}
+		else
+		{
+			LOGD("Failed to load font: " << i.second);
+
+		}
+	}
 }
 
 
 void ResourceHandler::loadTextures()
 {
-	// Load resources
+	// Load Textures
 	for(auto& i : textureList)
 	{
 		if (textures[i.first].loadFromFile(i.second)){
@@ -69,6 +86,7 @@ void ResourceHandler::loadTextures()
 
 void ResourceHandler::loadSound()
 {
+	// Load sounds
 	for(auto& i: soundList)
 	{
 		if (sounds[i.first].loadFromFile(i.second)){
@@ -85,7 +103,7 @@ void ResourceHandler::loadSound()
 
 void ResourceHandler::loadScripts()
 {
-
+	// Load Scripts
 	for(auto& i : scriptList)
 	{
 		std::ifstream theFile (i.second);
@@ -101,7 +119,7 @@ void ResourceHandler::loadScripts()
 		rapidxml::xml_node<> *node = doc.first_node("Enemies");
 
 		int enemyCounter = 0; // Counter
-		
+
 		// Enemy X
 		for (rapidxml::xml_node<> *enemy = node->first_node(); enemy; enemy = enemy->next_sibling())
 		{
@@ -121,7 +139,7 @@ void ResourceHandler::loadScripts()
 
 				// Push path into queue
 				pathQueue->push(sf::Vector3f(x,y,shoot));
-				
+
 			}
 
 			Enemy* e1 = new Enemy(
@@ -142,15 +160,22 @@ void ResourceHandler::loadScripts()
 
 
 
-
-sf::Texture* ResourceHandler::getTexture(ResourceHandler::Texture res)
+/*
+GETTERS
+*/
+sf::Texture& ResourceHandler::getTexture(ResourceHandler::Texture res)
 {
-	return &this->textures[res];
+	return this->textures[res];
 }
 
 Script* ResourceHandler::getScript(ResourceHandler::Scripts query)
 {
 	return &this->scripts[query];
+}
+
+sf::Font& ResourceHandler::getFont(ResourceHandler::Fonts query)
+{
+	return this->fonts[query];
 }
 
 
@@ -169,7 +194,7 @@ void ResourceHandler::setInit(bool init)
 void ResourceHandler::draw()
 {
 	sf::Text label;
-	label.setFont(this->font);
+	label.setFont(this->getFont(ResourceHandler::COMICATE));
 	label.setString(sf::String("Loading... Please Wait!"));
 	label.setPosition(
 		Globals::getInstance().getGameView().getCenter().x  -  (label.getGlobalBounds().width / 2) , 

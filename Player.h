@@ -20,5 +20,5 @@ public:
 	void inputHandler();
 	void process();
 	void detectEdge();
-
+	void drawStats();
 };

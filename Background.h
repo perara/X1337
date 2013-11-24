@@ -17,7 +17,7 @@ class Background
 
 public:
 	Background(sf::RenderWindow& window);
-	void addBackground(sf::Texture*);
+	void addBackground(sf::Texture&);
 	void process();
 	void draw();
 

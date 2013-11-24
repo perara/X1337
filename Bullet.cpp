@@ -17,7 +17,7 @@ Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType):
 
 	this->setDeleted(false);
 	this->speedX = 0;
-	this->speedY = -250;
+	this->speedY = 0;
 
 	if(BulletFactory::BulletType::standardShot == bulletType){
 		this->sprite = new GameShape(GameShape::CIRCLE, 2);
@@ -36,6 +36,7 @@ void Bullet::process()
 {
 	if(!deleted && this->getInited())
 	{
+
 		this->sprite->setPosition(
 			this->sprite->getPosition().x+(Globals::getInstance().getTimeStep().asSeconds() * speedX),
 			this->sprite->getPosition().y+(Globals::getInstance().getTimeStep().asSeconds() * speedY)); //TODO
@@ -83,7 +84,7 @@ void Bullet::setOwner(Object* owner)
 	else if(dynamic_cast<Player*>(owner))
 	{
 		this->speedX = 0;
-		this->speedY = -150;
+		this->speedY = -250;
 	}
 
 

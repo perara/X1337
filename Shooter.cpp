@@ -5,7 +5,7 @@
 
 Shooter::Shooter(sf::RenderWindow& window): 
 	Object(window)
-{health = 100;}
+{health = 5;}
 
 
 void Shooter::setHealth(int value)
@@ -81,8 +81,10 @@ bool Shooter::sat(GameShape* c1, GameShape* c2)
 		ay /= len_v;
 
 		//Carve out the min and max values
-		float c1_min = std::numeric_limits<float>::max(), c1_max = -c1_min;
-		float c2_min = std::numeric_limits<float>::max(), c2_max = -c2_min;
+		//float c1_min = std::numeric_limits<float>::max(), c1_max = -c1_min;
+		//float c2_min = std::numeric_limits<float>::max(), c2_max = -c2_min;
+		float c1_min = FLT_MAX, c1_max = -FLT_MAX;
+		float c2_min = FLT_MAX, c2_max = -FLT_MAX;
 
 		//Project every point in c1 on the axis and store min and max
 		for(int j = 0; j < c1_faces; j++)
@@ -120,14 +122,30 @@ int Shooter::hitDetection()
 		for(auto& i: *this->getBullets())
 		{
 			bool wasHit = this->sat(this->sprite, i->sprite);
+			//bool wasHit = this->circleTest(*i->sprite);
 
 			if(wasHit && this != i->owner)
 			{
 				i->setDeleted(true);
 				health= health-i->getBulletType();
-			
+				// KILL IF DEAD
+				if(health < 0 && this->getType() != Shooter::ShooterType::PLAYER)
+				{
+					this->deleted = true;
+				}
+
 			}
 		}
 	}
 	return hitCounter;
+}
+
+void Shooter::setType(Shooter::ShooterType shooterType)
+{
+	this->shooterType = shooterType;
+}
+
+Shooter::ShooterType& Shooter::getType()
+{
+	return this->shooterType;
 }

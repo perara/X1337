@@ -8,7 +8,7 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="quantity">Input of the initial quantity the Factory should have at initialization.</param>
-BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*>& bullets): 
+BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::vector<Bullet*>& bullets): 
 	initQuantity(quantity), 
 	window(window),
 	bullets(&bullets)
@@ -40,11 +40,11 @@ void BulletFactory::produceObjects(BulletFactory::BulletType type,int quantity)
 /// <param name="quantity">Quantity of bullets.</param>
 /// <param name="type">Bullettype</param>
 /// <returns>Returns a vector with the quantity of Bullet* requested</returns>
-std::list<Bullet*> BulletFactory::requestBatch(int quantity, BulletFactory::BulletType type)
+std::vector<Bullet*> BulletFactory::requestBatch(int quantity, BulletFactory::BulletType type)
 {
-	std::list<Bullet*> retList;
+	std::vector<Bullet*> retList;
 	int i = 0;
-	for (std::list<Bullet*>::iterator it = this->objects[type].begin(); it != this->objects[type].end() && i < quantity; it++ , i++)
+	for (std::vector<Bullet*>::iterator it = this->objects[type].begin(); it != this->objects[type].end() && i < quantity; it++ , i++)
 	{
 		retList.push_back(*it);
 	}
@@ -62,8 +62,8 @@ Bullet* BulletFactory::requestObject(BulletFactory::BulletType type)
 		this->produceObjects(type, this->initQuantity * 0.20); //Increase the size by 20%
 	}
 
-	Bullet* b = this->objects[type].front();
-	this->objects[type].pop_front(); // O(0)
+	Bullet* b = this->objects[type].back();
+	this->objects[type].pop_back(); // O(0)
 	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[type].size());
 	return  b;
 }

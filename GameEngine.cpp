@@ -3,12 +3,20 @@
 #include "World.h"
 #include "ResourceHandler.h"
 
+sf::View playerStatsView;
+
 GameEngine::GameEngine():
-	window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close)
+	window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize)
 {
+	
 	sf::View gameView(sf::FloatRect(0,0,500,500));
 	Globals::getInstance().setGameView(gameView);
-	window.setView(Globals::getInstance().getGameView());
+	Globals::getInstance().getGameView().setViewport(sf::FloatRect(0, 0, 0.75f, 1));
+
+	// mini-map (upper-right corner)
+	playerStatsView = sf::View(sf::FloatRect(0,0,300,600));
+	playerStatsView.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 1.0f));
+
 
 	this->window.setFramerateLimit(120);
 
@@ -63,8 +71,12 @@ void GameEngine::runGame()
 
 		if(Globals::getInstance().getState() == Globals::GAME)
 		{
-			// Draw Game
+
+			window.setView(Globals::getInstance().getGameView());
 			this->world->draw();
+
+			window.setView(playerStatsView);
+			this->world->drawStats();
 
 		}
 

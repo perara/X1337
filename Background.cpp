@@ -6,13 +6,13 @@ Background::Background(sf::RenderWindow& window): window(window)
 }
 
 
-void Background::addBackground(sf::Texture* texture)
+void Background::addBackground(sf::Texture& texture)
 {
 	// Create the sprite
 	sf::Sprite sprite;
 	sprite.setColor(sf::Color(255,0,255)); // TEMP
-	sprite.scale(((float)Globals::getInstance().getGameView().getSize().x / texture->getSize().x) , ((float)Globals::getInstance().getGameView().getSize().y / texture->getSize().y));
-	textures.push_back(texture);
+	sprite.scale(((float)Globals::getInstance().getGameView().getSize().x / texture.getSize().x) , ((float)Globals::getInstance().getGameView().getSize().y / texture.getSize().y));
+	textures.push_back(&texture);
 
 	if(currentImage.getLocalBounds().height == 0)
 	{

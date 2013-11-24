@@ -39,17 +39,17 @@ void Object::setBulletFactory(BulletFactory* bFactorys)
 }
 
 // Bullets getter/setter
-std::list<Bullet*>* Object::getBullets()
+std::vector<Bullet*>* Object::getBullets()
 {
 	return this->bullets;
 }
 
-void Object::setBullets(std::list<Bullet*>& bullets)
+void Object::setBullets(std::vector<Bullet*>& bullets)
 {
 	this->bullets = &bullets;
 }
 
-void Object::init(BulletFactory* bFactory, std::list<Bullet*>& bullets)
+void Object::init(BulletFactory* bFactory, std::vector<Bullet*>& bullets)
 {
 	this->setBullets(bullets);
 	this->setBulletFactory(bFactory);

@@ -21,28 +21,14 @@ World::World(sf::RenderWindow& window): Scene(window)
 
 	// Initialize Factories
 	this->bFactory = new BulletFactory(window, 1000, bullets);
+	
 	// Add player objects
-	Player* p1 = new Player(
+	this->player = new Player(
 		window, 
 		sf::Vector2f(100,250), 
 		10);
-	p1->init(this->bFactory, this->bullets);
-
-	// Add player objects
-	std::queue<sf::Vector3f>* pathQueue = new std::queue<sf::Vector3f>();
-	pathQueue->push(sf::Vector3f(250,50,0));
-	pathQueue->push(sf::Vector3f(250,250,0));
-	pathQueue->push(sf::Vector3f(250,50,0));
-	pathQueue->push(sf::Vector3f(250,50,0));
-	pathQueue->push(sf::Vector3f(250,250,0));
-	Enemy* e1 = new Enemy(
-		window, 
-		pathQueue,
-		10);
-	e1->init(this->bFactory, this->bullets);
-
-	//this->addObject(e1);
-	this->addObject(p1);
+	player->init(this->bFactory, this->bullets);
+	this->addObject(player);
 
 }
 
@@ -80,7 +66,7 @@ void World::process()
 		}
 		}*/
 
-		std::list<Bullet*> tmp;
+		std::vector<Bullet*> tmp;
 		for(auto& i : bullets)
 		{
 			if(i->getDeleted())
@@ -88,7 +74,7 @@ void World::process()
 				i->deleteBullet();
 			}else
 			{
-				tmp.push_front(i);
+				tmp.push_back(i);
 			}
 
 		}
@@ -101,7 +87,7 @@ void World::process()
 	/* Cleanup Processing OBJECTS */
 	if(!objects.empty())
 	{
-		for(std::list<Object*>::iterator i = objects.begin(); i != objects.end();i++)
+		for(std::vector<Object*>::iterator i = objects.begin(); i != objects.end();i++)
 		{
 
 			if((*i)->getDeleted())
@@ -115,5 +101,12 @@ void World::process()
 			}
 		}
 	}
+
+}
+
+void World::drawStats()
+{
+	player->drawStats();
+
 
 }
