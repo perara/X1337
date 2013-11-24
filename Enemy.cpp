@@ -4,10 +4,6 @@
 #include "Bullet.h"
 #include "Log.h"
 #include "Globals.h"
-#include <math.h>       /* cos */
-
-#define PI 3.14159265
-
 
 Enemy::Enemy(sf::RenderWindow& window, 
 			 std::queue<sf::Vector3f>* path,
@@ -20,7 +16,7 @@ Shooter(window)
 	this->currentPath = this->path->front();
 	this->path->pop();
 
-	this->sprite = new GameShape(GameShape::circle, 10);
+	this->sprite = new GameShape(GameShape::STARSHIP);
 	this->sprite->setPosition(currentPath.x , currentPath.y);
 
 }
@@ -31,34 +27,6 @@ Enemy::~Enemy(){
 	delete this->path;
 }
 
-
-
-
-int Enemy::hitDetection()
-{
-	// COLLISION TODO
-	int hitCounter = 0;
-
-
-	if(!this->getBullets()->empty())
-	{
-		for(auto& i: *this->getBullets())
-		{
-			bool wasHit = false;
-			if(i->getBulletType() == BulletFactory::BulletType::standardShot)
-			{
-				wasHit = circleTest(*i->sprite);
-			}
-
-			if(wasHit && this != i->owner)
-			{
-				i->setDeleted(true);
-				health=health-i->getBulletType();
-			}
-		}
-	}
-	return hitCounter;
-}
 
 void Enemy::shoot(int shoot)
 {
@@ -76,13 +44,14 @@ void Enemy::process()
 {
 	if(!this->getInited()) return;
 
-	this->shootableProcess();
+	this->shooterProcess();
 
-
+	// Start
 	sf::Vector2f length;
 	length.x = abs(this->currentPath.x - path->front().x);
 	length.y = abs(this->currentPath.y - path->front().y);
 
+	// End
 	sf::Vector2f currentPosition;
 	currentPosition.x = abs(this->currentPath.x - this->sprite->getPosition().x);
 	currentPosition.y = abs(this->currentPath.y - this->sprite->getPosition().y);
@@ -92,11 +61,10 @@ void Enemy::process()
 	float dx = this->path->front().x - this->currentPath.x;
 	float dy = this->path->front().y - this->currentPath.y;
 	float len = sqrtf(dx * dx + dy * dy);
-	dx = (dx / len) * Globals::getInstance().getTimeStep().asSeconds() * 100;
-	dy = (dy / len) * Globals::getInstance().getTimeStep().asSeconds() * 100;
 
+	dx = (dx / len) * Globals::getInstance().getTimeStep().asSeconds() * 50;
+	dy = (dy / len) * Globals::getInstance().getTimeStep().asSeconds() * 50;
 
-	// TODO
 	if(this->enemyClock.getElapsedTime().asMilliseconds() > 400)
 	{
 		this->shoot(this->currentPath.z);
@@ -136,8 +104,6 @@ void Enemy::process()
 
 	}
 
-
-
 }
 
 
@@ -150,15 +116,4 @@ void Enemy::circularShoot()
 	double move_y = speed * sin( angle ) + cos(angle);
 
 	this->sprite->move(move_x,move_y);
-}
-
-bool Enemy::circleTest(GameShape& bullet)
-{
-	int radius = this->sprite->getRadius() + bullet.getRadius();
-	const sf::Vector2f& thisPosition = this->sprite->getPosition();
-	const sf::Vector2f& bulletPosition = bullet.getPosition();
-	int xDistance = thisPosition.x - bulletPosition.x;
-	int yDistance = thisPosition.y - bulletPosition.y;
-
-	return xDistance * xDistance + yDistance * yDistance <= radius * radius;
 }

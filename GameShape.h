@@ -5,9 +5,10 @@ class GameShape : public sf::ConvexShape
 {
 public:
 	const enum ShapeType{
-		circle = 0,
-		triangle = 1,
-		square = 2, 
+		CIRCLE,
+		TRIANGLE,
+		STARSHIP,
+		SHAPECOUNT
 	};
 
 	GameShape(ShapeType shapeType); // Other

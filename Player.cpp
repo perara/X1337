@@ -3,6 +3,7 @@
 #include "BulletFactory.h"
 #include "GameShape.h"
 #include "Log.h"
+#include "Globals.h"
 
 sf::Clock clk; //TESTING PURPOSES
 
@@ -17,7 +18,7 @@ sf::Clock clk; //TESTING PURPOSES
 Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius):
 	Shooter(window)
 {
-	this->sprite = new GameShape(GameShape::circle, 10);
+	this->sprite = new GameShape(GameShape::CIRCLE, 10);
 	this->sprite->setPosition(pos);
 }
 
@@ -26,7 +27,40 @@ void Player::process()
 	if(!this->getInited()) return;
 
 	this->inputHandler();
-	this->shootableProcess();
+	this->shooterProcess();
+	this->detectEdge();
+
+
+}
+
+void Player::detectEdge()
+{
+	/************************************************************************/
+	/* Game Bounds Collision test                                           */
+	/************************************************************************/
+
+	// X
+	if(this->sprite->getPosition().x - this->sprite->getRadius() <= 0)
+	{
+		this->sprite->setPosition(this->sprite->getRadius(), this->sprite->getPosition().y);
+	}
+
+	if(this->sprite->getPosition().x >= Globals::getInstance().getGameView().getSize().x - this->sprite->getRadius())
+	{
+		this->sprite->setPosition(Globals::getInstance().getGameView().getSize().x - this->sprite->getRadius(), this->sprite->getPosition().y);
+	}
+
+	// Y
+	if(this->sprite->getPosition().y - this->sprite->getRadius() <= 0)
+	{
+		this->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getRadius());
+	}
+
+
+	if(this->sprite->getPosition().y >= Globals::getInstance().getGameView().getSize().y - this->sprite->getRadius())
+	{
+		this->sprite->setPosition(this->sprite->getPosition().x, Globals::getInstance().getGameView().getSize().y - this->sprite->getRadius());
+	}
 }
 
 void Player::inputHandler()
@@ -75,57 +109,27 @@ void Player::inputHandler()
 		if(event.type == sf::Event::MouseMoved)
 		{
 			int current_x = sf::Mouse::getPosition(window).x, current_y = sf::Mouse::getPosition(window).y;
-			int elapsed_x = (window.getSize().x / 2) - current_x, elapsed_y = (window.getSize().y / 2) - current_y;
+			int elapsed_x = (Globals::getInstance().getGameView().getSize().x / 2) - current_x, elapsed_y = (Globals::getInstance().getGameView().getSize().y / 2) - current_y;
 
 			if(elapsed_x != 0 || elapsed_y != 0)
 			{
 
-				/************************************************************************/
-				/* Special Cases where user gets stuck                                                                  */
-				/************************************************************************/
 
-				// X
-				if(this->sprite->getPosition().x - this->sprite->getRadius() <= 0)
-				{
-					this->sprite->setPosition(this->sprite->getRadius(), this->sprite->getPosition().y);
-				}
-
-				if(this->sprite->getPosition().x >= window.getSize().x - this->sprite->getRadius())
-				{
-					this->sprite->setPosition(window.getSize().x - this->sprite->getRadius(), this->sprite->getPosition().y);
-				}
-
-				// Y
-				if(this->sprite->getPosition().y - this->sprite->getRadius() <= 0)
-				{
-					this->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getRadius());
-				}
-
-
-				if(this->sprite->getPosition().y >= window.getSize().y - this->sprite->getRadius())
-				{
-					this->sprite->setPosition(this->sprite->getPosition().x, window.getSize().y - this->sprite->getRadius());
-				}
 
 				/************************************************************************/
 				/* Mouse Movement Handling                                              */
 				/************************************************************************/
-				if(this->sprite->getPosition().x > 0 && this->sprite->getPosition().x < window.getSize().x)
+				if(this->sprite->getPosition().x > 0 && this->sprite->getPosition().x < Globals::getInstance().getGameView().getSize().x)
 				{
 					this->sprite->move(-elapsed_x  , 0);
 				}
 
-				if(this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < (window.getPosition().y + window.getSize().y))
+				if(this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < (Globals::getInstance().getGameView().getSize().y + Globals::getInstance().getGameView().getSize().y))
 				{
 					this->sprite->move(0, -elapsed_y);
 				}
-				sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window);
+				sf::Mouse::setPosition(sf::Vector2i((Globals::getInstance().getGameView().getSize().x / 2), (Globals::getInstance().getGameView().getSize().y / 2)), window);
 			}
 		}
 	}
-}
-
-
-int Player::hitDetection(){
-	return 0;
 }

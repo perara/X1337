@@ -10,11 +10,22 @@ GameShape::GameShape(GameShape::ShapeType shapeType):
 
 	switch(shapeType)
 	{
-	case GameShape::ShapeType::triangle:
+	case GameShape::ShapeType::TRIANGLE:
 		this->setPointCount(3);
 		setTriangleShape(20);
 		break;
-	case GameShape::ShapeType::square:
+	case GameShape::ShapeType::STARSHIP:
+		this->setPointCount(8);
+
+		this->setPoint(0, sf::Vector2f(-10,0));
+		this->setPoint(1, sf::Vector2f(0,-10));
+		this->setPoint(2, sf::Vector2f(0,-20));
+		this->setPoint(3, sf::Vector2f(10,-30));
+		this->setPoint(4, sf::Vector2f(30,-30));
+		this->setPoint(5, sf::Vector2f(40,-20));
+		this->setPoint(6, sf::Vector2f(40,-10));
+		this->setPoint(7, sf::Vector2f(50,0));
+
 		break;
 	default:
 		LOGE("There is no shapetype defined for this constructor which maches your type");
@@ -29,7 +40,7 @@ GameShape::GameShape(GameShape::ShapeType shapeType, float size):
 {
 	switch(shapeType)
 	{
-	case GameShape::ShapeType::triangle:
+	case GameShape::ShapeType::TRIANGLE:
 		this->setPointCount(3);
 		setTriangleShape(size);
 		break;
@@ -48,7 +59,7 @@ GameShape::GameShape(GameShape::ShapeType shapeType, int radius, int pointCount)
 {
 	switch(shapeType)
 	{
-	case GameShape::ShapeType::circle:
+	case GameShape::ShapeType::CIRCLE:
 		this->setPointCount(pointCount);
 		this->properties["radius"] = radius;
 		setCircleShape(radius, sf::Vector2f(0,0)); // TODO
@@ -66,10 +77,9 @@ GameShape::ShapeType GameShape::getShapeType()
 
 void GameShape::setTriangleShape(float size)
 {
-	this->setPoint(0, sf::Vector2f(-0.5,0));
-	this->setPoint(1, sf::Vector2f(0.5,0));
-	this->setPoint(2, sf::Vector2f(0,-1));
-	this->setScale(size,size);
+	this->setPoint(0, sf::Vector2f(-0.5,0)*size);
+	this->setPoint(1, sf::Vector2f(0.5,0)*size);
+	this->setPoint(2, sf::Vector2f(0,-1)*size);
 
 }
 
@@ -94,7 +104,7 @@ void GameShape::setCircleShape(double radius, sf::Vector2f center)
 
 // Returns radius of a shape, -1 if shape is not a circle (not valid for radius)
 int GameShape::getRadius(){
-	if(this->shapeType  == GameShape::ShapeType::circle){
+	if(this->shapeType  == GameShape::ShapeType::CIRCLE){
 		return this->properties["radius"];
 	}else{
 		return -1;

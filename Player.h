@@ -19,6 +19,6 @@ public:
 
 	void inputHandler();
 	void process();
-protected:
-		virtual int hitDetection();
+	void detectEdge();
+
 };

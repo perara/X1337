@@ -9,7 +9,7 @@ class Shooter: public Object
 protected:
 
 	Shooter(sf::RenderWindow& window
-	);	
+		);	
 	int health;
 
 	/* Health Related */
@@ -19,9 +19,11 @@ protected:
 	void incrementHealth();
 
 	/* Processing */
-	virtual void shootableProcess();
+	virtual void shooterProcess();
 
 private:
-	virtual int hitDetection() = 0;
+	virtual int hitDetection() ;
+	bool circleTest(GameShape& bullet);
+	bool sat(GameShape* c1, GameShape* c2);
 
 };

@@ -20,12 +20,12 @@ Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType):
 	this->speedY = -250;
 
 	if(BulletFactory::BulletType::standardShot == bulletType){
-		this->sprite = new GameShape(GameShape::circle, 2);
+		this->sprite = new GameShape(GameShape::CIRCLE, 2);
 
 	}
 
 	else if(BulletFactory::BulletType::heavyShot == bulletType)
-		this->sprite = new GameShape(GameShape::triangle, 20.0f);
+		this->sprite = new GameShape(GameShape::TRIANGLE, 20.0f);
 
 }
 /// <summary>

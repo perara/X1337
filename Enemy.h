@@ -22,10 +22,8 @@ public:
 
 protected:
 	void circularShoot();
-	virtual int hitDetection();
 	std::queue<sf::Vector3f>* path;
 	sf::Vector3f currentPath;
-	bool circleTest(GameShape& bullet);
 
 	sf::Clock enemyClock;
 	void Enemy::shoot(int);

@@ -1,6 +1,8 @@
 #include "BulletFactory.h"
 #include "Bullet.h"
 
+#include "Log.h"
+
 /// <summary>
 /// Initializes a new instance of the <see cref="BulletFactory"/> class.
 /// </summary>
@@ -70,5 +72,5 @@ void BulletFactory::returnObject(Bullet* bullet)
 	bullet->resetObject();
 	this->objects[bullet->getBulletType()].push_back(bullet); // O(0)
 
-	//LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->type].size());
+	LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->getBulletType()].size());
 }
