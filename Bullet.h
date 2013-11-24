@@ -17,7 +17,7 @@ public:
 	
 	void setPosition(int x, int y);
 	void setOwner(Object* owner);
-	void deleteBullet(std::list<Bullet*>::iterator i);
+	void deleteBullet();
 	void resetObject();
 	void setDeleted(bool deleted);
 	bool getDeleted(); 

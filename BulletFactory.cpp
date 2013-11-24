@@ -72,5 +72,6 @@ void BulletFactory::returnObject(Bullet* bullet)
 	bullet->resetObject();
 	this->objects[bullet->getBulletType()].push_back(bullet); // O(0)
 
+	//std::cout << "DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->getBulletType()].size() << std::endl;
 	LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->getBulletType()].size());
 }

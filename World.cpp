@@ -66,18 +66,35 @@ void World::process()
 
 
 
-	/* Cleanup Processing */
+	/* Cleanup Bullets */
 	if(!bullets.empty())
 	{
-		for(std::list<Bullet*>::iterator i = bullets.begin(); i != bullets.end();i++)
+		/*	for(std::list<Bullet*>::iterator i = bullets.begin(); i != bullets.end();i++)
 		{
-			if((*i)->getDeleted())
-			{ // If the bullet is up for deletion
-				(*i)->deleteBullet(i);
-				if(bullets.empty()) break;
-				i = bullets.begin();
-			}
+		if((*i)->getDeleted())
+		{ // If the bullet is up for deletion
+		(*i)->deleteBullet();
+		bullets.erase(i);
+		if(bullets.empty()) break;
+		i = bullets.begin();
 		}
+		}*/
+
+		std::list<Bullet*> tmp;
+		for(auto& i : bullets)
+		{
+			if(i->getDeleted())
+			{
+				i->deleteBullet();
+			}else
+			{
+				tmp.push_front(i);
+			}
+
+		}
+		bullets.clear(); // Needed?
+		bullets = tmp;
+
 	}
 
 
@@ -90,7 +107,7 @@ void World::process()
 			if((*i)->getDeleted())
 			{ // If the bullet is up for deletion
 				if(objects.empty()) break;
-				
+
 				delete *i; 
 				objects.erase(i);
 				i = objects.begin();

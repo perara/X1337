@@ -47,11 +47,9 @@ void Bullet::process()
 	}
 }
 
-void Bullet::deleteBullet(std::list<Bullet*>::iterator i)
+void Bullet::deleteBullet()
 {
-
 	this->getBulletFactory()->returnObject(this);
-	this->getBullets()->erase(i);
 }
 bool Bullet::isOutOfBounds()
 {
