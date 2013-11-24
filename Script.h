@@ -4,7 +4,7 @@
 #include <SFML\System\Clock.hpp>
 
 class Enemy;
-class Object;
+class Shooter;
 
 
 class Script
@@ -31,7 +31,7 @@ public:
 	void setInit(bool);
 
 	// Process
-	void process(std::vector<Object*>&);
+	void process(std::vector<Shooter*>&);
 
 
 

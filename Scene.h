@@ -3,7 +3,7 @@
 #include "Background.h"
 
 class Bullet;
-class Object;
+class Shooter;
 class BulletFactory;
 class Script;
 
@@ -15,7 +15,7 @@ class Script;
 class Scene
 {
 public:
-	std::vector<Object*> objects; 
+	std::vector<Shooter*> objects; 
 	std::vector<Bullet*> bullets;
 	BulletFactory* bFactory;
 
@@ -28,7 +28,7 @@ public:
 
 	virtual void draw();
 	virtual void process();
-	void addObject(Object* object);
+	void addObject(Shooter* object);
 	void addBullet(Bullet* bullet);
 
 protected:

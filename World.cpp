@@ -52,7 +52,7 @@ void World::process()
 
 
 
-	/* Cleanup Bullets */
+	/* Cleanup Bullets  TODO*/
 	if(!bullets.empty())
 	{
 		/*	for(std::list<Bullet*>::iterator i = bullets.begin(); i != bullets.end();i++)
@@ -87,7 +87,7 @@ void World::process()
 	/* Cleanup Processing OBJECTS */
 	if(!objects.empty())
 	{
-		for(std::vector<Object*>::iterator i = objects.begin(); i != objects.end();i++)
+		for(std::vector<Shooter*>::iterator i = objects.begin(); i != objects.end();i++)
 		{
 
 			if((*i)->getDeleted())

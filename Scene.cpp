@@ -1,6 +1,7 @@
 #include "Scene.h"
-#include "Object.h"
 #include "Bullet.h"
+#include "Shooter.h"
+#include "QuadTree.h"
 
 /// <summary>
 /// Draws all scene objects
@@ -8,7 +9,7 @@
 void Scene::draw()
 {
 	// Draw background
-	bg->process();
+	bg->process(); // TODO
 
 	for(auto &it : objects)
 	{
@@ -19,6 +20,8 @@ void Scene::draw()
 	{
 		it->draw();
 	}
+
+
 }
 
 /// <summary>
@@ -33,7 +36,7 @@ void Scene::process()
 /// Adds a object to the scene
 /// </summary>
 /// <param name="object">The object thats requested for addition</param>
-void Scene::addObject(Object* object)
+void Scene::addObject(Shooter* object)
 {
 	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
 	this->objects.push_back(object);
