@@ -6,26 +6,31 @@
 #include "Globals.h"
 
 Enemy::Enemy(sf::RenderWindow& window, 
-			 std::queue<sf::Vector3f>* path,
-			 int type
+			 std::queue<sf::Vector3f> path,
+			 int type, int repeat
 			 ):
 Shooter(window)
 {
+	this->setRepeat(repeat);
 	this->enemyClock.restart();
-	this->path = path;
-	this->currentPath = this->path->front();
-	this->path->pop();
+	this->pathTemplate = path; // A qeueu which should not be touched (This is used to refill old queue
+	init();
+
+}
+
+void Enemy::init()
+{
+	this->path = pathTemplate;
+	this->currentPath = this->path.front();
+	this->path.pop();
 
 	this->setType(Shooter::ShooterType::REGULAR);
 	this->sprite = new GameShape(GameShape::STARSHIP);
 	this->sprite->setPosition(currentPath.x , currentPath.y);
-
 }
 
 Enemy::~Enemy(){
 	LOGD("Deconstructor called for: Enemy#" << this);
-
-	delete this->path;
 }
 
 
@@ -49,8 +54,8 @@ void Enemy::process()
 
 	// Start
 	sf::Vector2f length;
-	length.x = abs(this->currentPath.x - path->front().x);
-	length.y = abs(this->currentPath.y - path->front().y);
+	length.x = abs(this->currentPath.x - path.front().x);
+	length.y = abs(this->currentPath.y - path.front().y);
 
 	// End
 	sf::Vector2f currentPosition;
@@ -59,8 +64,8 @@ void Enemy::process()
 
 
 
-	float dx = this->path->front().x - this->currentPath.x;
-	float dy = this->path->front().y - this->currentPath.y;
+	float dx = this->path.front().x - this->currentPath.x;
+	float dy = this->path.front().y - this->currentPath.y;
 	float len = sqrtf(dx * dx + dy * dy);
 
 	dx = (dx / len) * Globals::getInstance().getTimeStep().asSeconds() * 50;
@@ -92,15 +97,18 @@ void Enemy::process()
 	else
 	{
 		//std::cout << currentPath.x << ","<< currentPath.y << "->" << this->path->front().x << "," << this->path->front().y << std::endl;
-		currentPath = path->front();
-		if(path->size() > 1)
+		if(path.size() > 1)
 		{
-			path->pop();
+			path.pop();
 		}
 		else
 		{
 			LOGD("Enemy#" << this <<" delete flag set");
 			this->deleted = true;
+			if(this->getRepeat() == 1){
+				//init();
+			}
+			
 		}
 
 	}
@@ -118,3 +126,13 @@ void Enemy::circularShoot()
 
 	this->sprite->move(move_x,move_y);
 }
+
+int Enemy::getRepeat()
+{
+	return this->repeat;
+}
+void Enemy::setRepeat(int rep)
+{
+	this->repeat = rep;
+}
+

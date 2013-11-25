@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "Enemy.h"
 
+
 void Script::addEnemy(Enemy* enemy, int delay)
 {
 	LOGD("Adding new enemy to queue pool (Enemy#" << enemy << ")");
@@ -45,6 +46,7 @@ void Script::process(std::vector<Shooter*>& objects)
 	if(!this->list.empty())
 	{
 		ScriptTick* e = this->list.front();
+
 		if(
 			this->getInit() &&
 			this->getClock().getElapsedTime().asMilliseconds() > e->delay

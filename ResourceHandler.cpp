@@ -40,6 +40,7 @@ void ResourceHandler::init()
 		scriptList[Scripts::ENCOUNTER1] = "assets/scripts/encounterDemo.xml";
 		scriptList[Scripts::ENCOUNTER2] = "assets/scripts/encounter.xml";
 		scriptList[Scripts::ENCOUNTER3] = "assets/scripts/encounter.xml";
+		scriptList[Scripts::GAME_MENU] = "assets/scripts/game_menu.xml";
 	}
 
 	// Fonts
@@ -132,12 +133,15 @@ void ResourceHandler::loadScripts()
 		// Root Node
 		rapidxml::xml_node<> *node = doc.first_node("Enemies");
 
+		// Get repeat node
+		rapidxml::xml_node<> *repeat = doc.first_node("Repeat");
+
 		int enemyCounter = 0; // Counter
 
 		// Enemy X
 		for (rapidxml::xml_node<> *enemy = node->first_node(); enemy; enemy = enemy->next_sibling())
 		{
-			std::queue<sf::Vector3f>* pathQueue = new std::queue<sf::Vector3f>();
+			std::queue<sf::Vector3f> pathQueue = std::queue<sf::Vector3f>();
 
 
 			int type = atoi(enemy->first_node("Type")->value());
@@ -152,14 +156,15 @@ void ResourceHandler::loadScripts()
 				int shoot = atoi(child->first_attribute("shoot")->value());
 
 				// Push path into queue
-				pathQueue->push(sf::Vector3f(x,y,shoot));
+				pathQueue.push(sf::Vector3f(x,y,shoot));
 
 			}
 
 			Enemy* e1 = new Enemy(
 				window, 
 				pathQueue,
-				type);
+				type,
+				atoi(repeat->value()));
 
 			this->scripts[i.first].addEnemy(e1, delay);
 
@@ -217,7 +222,7 @@ void ResourceHandler::draw()
 	label.setString(sf::String("Loading... Please Wait!"));
 	label.setPosition(
 		Globals::getInstance().getGameView().getCenter().x  -  (label.getGlobalBounds().width / 2) , 
-		Globals::getInstance().getGameView().getCenter().y - (label.getGlobalBounds().height / 2));
+		Globals::getInstance().getGameView().getCenter().y /2 - (label.getGlobalBounds().height / 2));
 	label.setColor(sf::Color::White);
 
 

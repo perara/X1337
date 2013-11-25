@@ -39,9 +39,9 @@ public:
 	// BulletFactory Getter/Setter
 	BulletFactory* getBulletFactory();
 	void setBulletFactory(BulletFactory* bFactory);
-
-protected:
 	sf::RenderWindow& window;
+protected:
+
 	bool deleted;
 	bool inited;
 

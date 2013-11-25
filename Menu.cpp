@@ -9,11 +9,16 @@ Menu::Menu(sf::RenderWindow& window):
 	Scene(window)
 {
 	Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).play();
+	Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).setLoop(true);
 	this->init();
 
-
-
 }
+
+Menu::~Menu()
+{
+	
+}
+
 
 void Menu::init()
 {
@@ -28,6 +33,12 @@ void Menu::init()
 
 
 	this->setInited(true);
+}
+
+void Menu::reset()
+{
+	Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).stop();
+	this->setInited(false);
 }
 
 
@@ -62,6 +73,14 @@ void Menu::draw()
 	window.draw(sh);
 
 
+	// Draw Game Title text
+	sf::Text gameTitle;
+	gameTitle.setString(sf::String("X1337"));
+	gameTitle.setFont(Globals::getInstance().getResourceHandler()->getFont(ResourceHandler::Fonts::COMICATE));
+	gameTitle.setColor(sf::Color::Red);
+	gameTitle.setCharacterSize(80);
+	gameTitle.setPosition(sf::Vector2f(window.getSize().x / 2 - (gameTitle.getGlobalBounds().width / 2), window.getSize().y / 4 - (gameTitle.getGlobalBounds().height / 2)));
+	window.draw(gameTitle);
 }
 
 
@@ -79,7 +98,7 @@ void Menu::loadMenuOptions()
 		txt->setString(sf::String(rit->second));
 		txt->setCharacterSize(30);
 		txt->setPosition(20,y);
-		txt->setColor(sf::Color::White);
+		txt->setColor(sf::Color(139,137,137));
 		option[rit->first] = txt;
 
 		y-= 50;
@@ -125,7 +144,7 @@ void Menu::input(sf::Event& event)
 		switch(currentOption)
 		{
 		case Menu::NEW_GAME:
-			Globals::getInstance().setState(Globals::State::GAME);
+			Globals::getInstance().setState(Globals::State::INIT_GAME);
 			break;
 		case Menu::LOAD_GAME:
 			break;

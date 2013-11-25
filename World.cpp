@@ -35,12 +35,46 @@ void World::init()
 		sf::Vector2f(100,250), 
 		10);
 	player->init(this->bFactory, this->bullets);
-	this->addObject(player);
+	if(!this->isDemo()) this->addObject(player);
 
 	// Set inited to true
 	this->setInited(true);
 }
 
+void World::reset()
+{
+	if(!(this->bg != nullptr))delete this->bg;
+	if(!(this->bFactory != nullptr))delete bFactory;
+	if(!(this->player != nullptr))delete this->player;
+	
+	// Delete bullets
+	for(Bullet* i : this->bullets)
+	{
+		delete i;
+	}
+	bullets.clear();
+
+	// Delete objects
+	for(Object* i : this->objects)
+	{
+		delete i;
+	}
+	objects.clear();
+
+	this->init();
+
+}
+
+bool World::isDemo()
+{
+	return this->demo;
+}
+
+void World::setDemo(bool demo)
+{
+	this->demo = demo;
+	if(this->demo)this->setScript(Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::GAME_MENU));
+}
 
 void World::process()
 {
@@ -158,7 +192,7 @@ void World::setScript(Script* script)
 void World::draw()
 {
 	// Draw background
-	bg->process(); // TODO
+	if(!this->isDemo()) bg->process(); // TODO
 
 	for(auto &it : objects)
 	{

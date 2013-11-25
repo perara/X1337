@@ -15,6 +15,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletFactory.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="GameShape.cpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="BulletFactory.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Bullet.h" />

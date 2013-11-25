@@ -30,6 +30,7 @@ public:
 		ENCOUNTER1,
 		ENCOUNTER2,
 		ENCOUNTER3,
+		GAME_MENU,
 		SCRIPTSCOUNT
 	};
 
@@ -72,11 +73,11 @@ private:
 	// Sound
 	std::map<Sound, std::string> soundList;
 	sf::Sound sounds[Sound::SOUNDCOUNT];
+	std::list<sf::SoundBuffer*> sBufferList;
 
 	// Scripts
 	std::map<Scripts, std::string> scriptList;
 	Script scripts[Scripts::SCRIPTSCOUNT]; //TODO
-	std::list<sf::SoundBuffer*> sBufferList;
 
 	// Fonts
 	std::map<Fonts, std::string> fontList;

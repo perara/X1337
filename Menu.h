@@ -4,11 +4,15 @@
 
 class Menu: public Scene{
 public:
+
 	Menu(sf::RenderWindow& window);
+	~Menu();
+
 	virtual void draw();
 	virtual void process();
 	virtual void init();
 	virtual void input(sf::Event&);
+	virtual void reset();
 
 private:
 	void loadMenuOptions();

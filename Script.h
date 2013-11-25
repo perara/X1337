@@ -3,12 +3,15 @@
 #include <list>
 #include <SFML\System\Clock.hpp>
 
-class Enemy;
+
+class Object;
 class Shooter;
+class Enemy;
 
 
 class Script
 {
+
 	struct ScriptTick {
 		Enemy* enemy;
 		int delay;

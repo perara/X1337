@@ -28,4 +28,10 @@ private:
 	sf::Time elapsedTime;
 	sf::Clock gameClock;
 	sf::Event event;
+
+
+	// VIEWS
+	sf::View fullScreen;
+	sf::View menuGameDemoView;
+	sf::View playerStatsView;
 };

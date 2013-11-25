@@ -29,6 +29,10 @@ public:
 	virtual void process();
 	virtual void init();
 	virtual void input(sf::Event&);
+	virtual void reset();
+
+	bool isDemo();
+	void setDemo(bool);
 
 private:
 	Player* player;
@@ -36,4 +40,5 @@ private:
 	Script* getScript();
 	void setScript(Script*);
 	Script * script;
+	bool demo;
 };

@@ -13,6 +13,7 @@ public:
 	virtual void process() = 0;
 	virtual void init() = 0;
 	virtual void input(sf::Event&) = 0;
+	virtual void reset() = 0; //Should also call setInit(false)
 
 	void setInited(bool);
 	bool getInited();
