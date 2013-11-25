@@ -8,7 +8,9 @@
 Menu::Menu(sf::RenderWindow& window):
 	Scene(window)
 {
+	Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).play();
 	this->init();
+
 
 
 }

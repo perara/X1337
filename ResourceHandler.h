@@ -22,6 +22,7 @@ public:
 	const enum Sound
 	{
 		SONG1,
+		MENU_SONG,
 		SOUNDCOUNT
 	};
 	const enum Scripts
@@ -41,6 +42,7 @@ public:
 
 
 	ResourceHandler(sf::RenderWindow& window);
+	~ResourceHandler();
 
 
 	void init();
@@ -52,6 +54,7 @@ public:
 	sf::Texture& getTexture(ResourceHandler::Texture);
 	Script* getScript(ResourceHandler::Scripts);
 	sf::Font& getFont(ResourceHandler::Fonts);
+	sf::Sound& getSound(ResourceHandler::Sound);
 
 private:
 	void loadTextures();
@@ -68,11 +71,12 @@ private:
 
 	// Sound
 	std::map<Sound, std::string> soundList;
-	sf::SoundBuffer sounds[Sound::SOUNDCOUNT];
+	sf::Sound sounds[Sound::SOUNDCOUNT];
 
 	// Scripts
 	std::map<Scripts, std::string> scriptList;
 	Script scripts[Scripts::SCRIPTSCOUNT]; //TODO
+	std::list<sf::SoundBuffer*> sBufferList;
 
 	// Fonts
 	std::map<Fonts, std::string> fontList;

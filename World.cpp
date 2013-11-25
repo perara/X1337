@@ -15,6 +15,8 @@ World::World(sf::RenderWindow& window): Scene(window)
 	this->init();
 }
 
+
+
 void World::init()
 {
 	// Initialize Script

@@ -10,6 +10,15 @@ ResourceHandler::ResourceHandler(sf::RenderWindow& window):
 	this->setInit(false);
 }
 
+ResourceHandler::~ResourceHandler()
+{
+	// Delete sound buffer
+	for(auto&i : sBufferList)
+	{
+		delete i;
+	}
+
+}
 
 void ResourceHandler::init()
 {
@@ -22,8 +31,8 @@ void ResourceHandler::init()
 
 	// Sounds
 	{
-		soundList[Sound::SONG1]  = "assets/sprites/background1.jpg";
-
+		soundList[Sound::SONG1]  = "assets/sound/a.ogg";
+		soundList[Sound::MENU_SONG] = "assets/sound/game_menu.ogg";
 	}
 
 	// Scripts
@@ -68,11 +77,13 @@ void ResourceHandler::loadFonts()
 }
 
 
+
 void ResourceHandler::loadTextures()
 {
 	// Load Textures
 	for(auto& i : textureList)
 	{
+
 		if (textures[i.first].loadFromFile(i.second)){
 			LOGD("Texture loaded: " << i.second);
 		}
@@ -89,7 +100,10 @@ void ResourceHandler::loadSound()
 	// Load sounds
 	for(auto& i: soundList)
 	{
-		if (sounds[i.first].loadFromFile(i.second)){
+		sf::SoundBuffer* buf = new sf::SoundBuffer;
+		sBufferList.push_back(buf);
+		if (buf->loadFromFile(i.second)){
+			sounds[i.first].setBuffer(*buf);
 			LOGD("Sound loaded: " << i.second);
 		}
 		else
@@ -176,6 +190,11 @@ Script* ResourceHandler::getScript(ResourceHandler::Scripts query)
 sf::Font& ResourceHandler::getFont(ResourceHandler::Fonts query)
 {
 	return this->fonts[query];
+}
+
+sf::Sound& ResourceHandler::getSound(ResourceHandler::Sound query)
+{
+	return this->sounds[query];
 }
 
 
