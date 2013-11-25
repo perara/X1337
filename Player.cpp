@@ -28,7 +28,6 @@ void Player::process()
 {
 	if(!this->getInited()) return;
 
-	this->inputHandler();
 	this->shooterProcess();
 	this->detectEdge();
 
@@ -92,7 +91,7 @@ void Player::drawStats()
 
 }
 
-void Player::inputHandler()
+void Player::input(sf::Event& event)
 {
 	/* Shoot handler */
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 100){
@@ -113,52 +112,33 @@ void Player::inputHandler()
 		clk.restart();
 	}
 
-	sf::Event event;
-	while (window.pollEvent(event))
+
+
+
+	if(event.type == sf::Event::MouseMoved)
 	{
-		if(event.type == sf::Event::Closed)
-		{
-			window.close();
-		}
+		int current_x = sf::Mouse::getPosition(window).x, current_y = sf::Mouse::getPosition(window).y;
+		int elapsed_x = (Globals::getInstance().getGameView().getSize().x / 2) - current_x, elapsed_y = (Globals::getInstance().getGameView().getSize().y / 2) - current_y;
 
-		/* Key Events*/
-		if(event.type == sf::Event::KeyReleased)
+		if(elapsed_x != 0 || elapsed_y != 0)
 		{
-			if(event.key.code == sf::Keyboard::Escape){
-				window.close();
-			}
-		}
 
-		/* Mouse Events */
-		if (event.type == sf::Event::MouseButtonPressed)
-		{
-			//Single click
-		}
 
-		if(event.type == sf::Event::MouseMoved)
-		{
-			int current_x = sf::Mouse::getPosition(window).x, current_y = sf::Mouse::getPosition(window).y;
-			int elapsed_x = (Globals::getInstance().getGameView().getSize().x / 2) - current_x, elapsed_y = (Globals::getInstance().getGameView().getSize().y / 2) - current_y;
 
-			if(elapsed_x != 0 || elapsed_y != 0)
+			/************************************************************************/
+			/* Mouse Movement Handling                                              */
+			/************************************************************************/
+			if(this->sprite->getPosition().x > 0 && this->sprite->getPosition().x < Globals::getInstance().getGameView().getSize().x)
 			{
-
-
-
-				/************************************************************************/
-				/* Mouse Movement Handling                                              */
-				/************************************************************************/
-				if(this->sprite->getPosition().x > 0 && this->sprite->getPosition().x < Globals::getInstance().getGameView().getSize().x)
-				{
-					this->sprite->move(-elapsed_x  , 0);
-				}
-
-				if(this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < (Globals::getInstance().getGameView().getSize().y + Globals::getInstance().getGameView().getSize().y))
-				{
-					this->sprite->move(0, -elapsed_y);
-				}
-				sf::Mouse::setPosition(sf::Vector2i((Globals::getInstance().getGameView().getSize().x / 2), (Globals::getInstance().getGameView().getSize().y / 2)), window);
+				this->sprite->move(-elapsed_x  , 0);
 			}
+
+			if(this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < (Globals::getInstance().getGameView().getSize().y + Globals::getInstance().getGameView().getSize().y))
+			{
+				this->sprite->move(0, -elapsed_y);
+			}
+			sf::Mouse::setPosition(sf::Vector2i((Globals::getInstance().getGameView().getSize().x / 2), (Globals::getInstance().getGameView().getSize().y / 2)), window);
 		}
 	}
+
 }

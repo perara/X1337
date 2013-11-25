@@ -15,6 +15,7 @@ public:
 		SHOOTERTYPECOUNT
 	};
 
+int getHealth(); // Todo should be protected
 protected:
 
 	Shooter(sf::RenderWindow& window
@@ -23,7 +24,7 @@ protected:
 
 	/* Health Related */
 	void setHealth(int value);
-	int getHealth();
+	
 	void decrementHealth();
 	void incrementHealth();
 

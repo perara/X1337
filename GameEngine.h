@@ -1,9 +1,11 @@
 #pragma once
 #include <SFML\Graphics\RenderWindow.hpp>
 #include <SFML\System\Time.hpp>
+#include <SFML\Graphics.hpp>
 
 
 class World;
+class Menu;
 
 
 
@@ -13,11 +15,17 @@ class World;
 class GameEngine{
 public:
 	GameEngine();
+
+private:
 	void runGame();
 	void gameLoop();
+	void pollInput();
 	sf::RenderWindow window;
+
 	World* world;
-	
+	Menu* menu;
+
 	sf::Time elapsedTime;
 	sf::Clock gameClock;
+	sf::Event event;
 };

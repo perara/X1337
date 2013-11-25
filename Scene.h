@@ -12,6 +12,7 @@ public:
 	virtual void draw() = 0;
 	virtual void process() = 0;
 	virtual void init() = 0;
+	virtual void input(sf::Event&) = 0;
 
 	void setInited(bool);
 	bool getInited();
@@ -19,5 +20,4 @@ public:
 protected:
 	sf::RenderWindow& window;
 	bool inited;
-
 };

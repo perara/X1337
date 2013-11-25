@@ -8,6 +8,8 @@
 #include "Background.h"
 #include "Log.h"
 
+#include "GameShape.h"
+
 World::World(sf::RenderWindow& window): Scene(window)
 {
 	this->init();
@@ -159,10 +161,29 @@ void World::draw()
 	for(auto &it : objects)
 	{
 		it->draw();
+
+
+		/* TODO REMOVE LATER*/
+		sf::Text* txt = new sf::Text();
+		txt->setFont(Globals::getInstance().getResourceHandler()->getFont(ResourceHandler::Fonts::SANSATION));
+
+		int number = it->getHealth();
+		std::stringstream ss;//create a stringstream
+		ss << number;//add number to the stream
+		txt->setString(sf::String(ss.str()));
+		txt->setCharacterSize(15);
+		txt->setPosition(it->sprite->getGlobalBounds().left, it->sprite->getGlobalBounds().top);
+		txt->setColor(sf::Color::Red);
+		window.draw(*txt);
 	}
 
 	for(auto &it : bullets)
 	{
 		it->draw();
 	}
+}
+
+void World::input(sf::Event& event)
+{
+	this->player->input(event);
 }

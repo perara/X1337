@@ -28,6 +28,7 @@ public:
 	virtual void draw();
 	virtual void process();
 	virtual void init();
+	virtual void input(sf::Event&);
 
 private:
 	Player* player;

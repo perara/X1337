@@ -17,7 +17,7 @@ public:
 		int radius
 		);
 
-	void inputHandler();
+	void input(sf::Event&);
 	void process();
 	void detectEdge();
 	void drawStats();
