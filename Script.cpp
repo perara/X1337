@@ -11,7 +11,6 @@ void Script::addEnemy(Enemy* enemy, int delay)
 	tick->delay = delay;
 	tick->enemy = enemy;
 
-
 	this->list.push(tick);
 
 }
@@ -46,22 +45,22 @@ void Script::process(std::vector<Shooter*>& objects)
 	if(!this->list.empty())
 	{
 		ScriptTick* e = this->list.front();
-
 		if(
 			this->getInit() &&
 			this->getClock().getElapsedTime().asMilliseconds() > e->delay
 			)
 
 		{
+
 			LOGD("Spawning Enemy#" << e->enemy);
 			objects.push_back(e->enemy);
 
-			if(this->list.size() > 0)
-				this->list.pop();
+
+			this->list.pop();
+
 
 			this->getClock().restart();
 		}
 	}
-
 
 }

@@ -79,6 +79,7 @@ void GameEngine::runGame()
 			switch(Globals::getInstance().getState())
 			{
 			case Globals::INIT_GAME: // Init game is initiated whenever new game is pressed
+				Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).stop();
 				this->world->setDemo(false);
 				this->world->reset();
 				Globals::getInstance().setState(Globals::GAME);

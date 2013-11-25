@@ -117,7 +117,7 @@ void Shooter::hitDetection()
 
 			bool wasHit = false;
 
-			if(this->getType() == Shooter::ShooterType::REGULAR && i->getBulletType() == BulletFactory::BulletType::standardShot)
+			/*if(this->getType() == Shooter::ShooterType::REGULAR && i->getBulletType() == BulletFactory::BulletType::standardShot)
 			{
 				// Square vs Circle
 			}
@@ -129,8 +129,8 @@ void Shooter::hitDetection()
 			{
 				// Convex vs Circle
 				wasHit = this->sat(this->sprite, i->sprite);
-			}
-
+			}*/
+			wasHit = this->sat(this->sprite, i->sprite);
 			if(wasHit && this->getType() != i->owner)
 			{
 

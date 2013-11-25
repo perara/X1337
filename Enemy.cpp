@@ -20,6 +20,8 @@ Shooter(window)
 
 void Enemy::init()
 {
+
+	this->deleted = false;
 	this->path = pathTemplate;
 	this->currentPath = this->path.front();
 	this->path.pop();
@@ -48,6 +50,7 @@ void Enemy::shoot(int shoot)
 
 void Enemy::process()
 {
+
 	if(!this->getInited()) return;
 
 	this->shooterProcess();
@@ -106,9 +109,9 @@ void Enemy::process()
 			LOGD("Enemy#" << this <<" delete flag set");
 			this->deleted = true;
 			if(this->getRepeat() == 1){
-				//init();
+				init();
 			}
-			
+
 		}
 
 	}

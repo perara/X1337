@@ -46,7 +46,7 @@ void World::reset()
 	if(!(this->bg != nullptr))delete this->bg;
 	if(!(this->bFactory != nullptr))delete bFactory;
 	if(!(this->player != nullptr))delete this->player;
-	
+
 	// Delete bullets
 	for(Bullet* i : this->bullets)
 	{
@@ -81,34 +81,16 @@ void World::process()
 	// Process the script
 	this->getScript()->process(objects);
 
-	/* Processing Processing */
-	for(auto& it : objects)
-	{
-		if(!it->getInited()) it->init(bFactory, bullets);
-
-		it->process();
-	}
-
-	for(auto& it : bullets)
-	{
-		it->process();
-	}
-
-
 
 	/* Cleanup Bullets  TODO*/
 	if(!bullets.empty())
 	{
-		/*	for(std::list<Bullet*>::iterator i = bullets.begin(); i != bullets.end();i++)
+
+		for(auto& it : bullets)
 		{
-		if((*i)->getDeleted())
-		{ // If the bullet is up for deletion
-		(*i)->deleteBullet();
-		bullets.erase(i);
-		if(bullets.empty()) break;
-		i = bullets.begin();
+			it->process();
 		}
-		}*/
+
 
 		std::vector<Bullet*> tmp;
 		for(auto& i : bullets)
@@ -131,6 +113,14 @@ void World::process()
 	/* Cleanup Processing OBJECTS */
 	if(!objects.empty())
 	{
+		/* Processing Processing */
+		for(auto& it : objects)
+		{
+			if(!it->getInited()) it->init(bFactory, bullets);
+
+			it->process();
+		}
+
 		for(std::vector<Shooter*>::iterator i = objects.begin(); i != objects.end();i++)
 		{
 
@@ -200,7 +190,7 @@ void World::draw()
 
 
 		/* TODO REMOVE LATER*/
-		sf::Text* txt = new sf::Text();
+		/*sf::Text* txt = new sf::Text();
 		txt->setFont(Globals::getInstance().getResourceHandler()->getFont(ResourceHandler::Fonts::SANSATION));
 
 		int number = it->getHealth();
@@ -210,7 +200,7 @@ void World::draw()
 		txt->setCharacterSize(15);
 		txt->setPosition(it->sprite->getGlobalBounds().left, it->sprite->getGlobalBounds().top);
 		txt->setColor(sf::Color::Red);
-		window.draw(*txt);
+		window.draw(*txt);*/
 	}
 
 	for(auto &it : bullets)
