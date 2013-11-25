@@ -30,11 +30,6 @@ void Shooter::incrementHealth()
 void Shooter::shooterProcess()
 {
 	this->hitDetection();
-	/*if(hitCount > 0)
-	{
-	//LOGD("Shootable#"<<this << " has " << this->getHealth() << " health");
-	this->decrementHealth();
-	}*/
 }
 
 
@@ -115,12 +110,30 @@ void Shooter::hitDetection()
 {
 	if(!this->getBullets()->empty())
 	{
+
+
 		for(auto& i: *this->getBullets())
 		{
-			bool wasHit = this->sat(this->sprite, i->sprite);
+
+			bool wasHit = false;
+
+			if(this->getType() == Shooter::ShooterType::REGULAR && i->getBulletType() == BulletFactory::BulletType::standardShot)
+			{
+				// Square vs Circle
+			}
+			else if(this->getType() == Shooter::ShooterType::REGULAR && i->getBulletType() == BulletFactory::BulletType::heavyShot)
+			{
+				// Square vs Triangle
+			}
+			else if(this->getType() == Shooter::ShooterType::PLAYER && i->getBulletType() == BulletFactory::BulletType::standardShot)
+			{
+				// Convex vs Circle
+				wasHit = this->sat(this->sprite, i->sprite);
+			}
 
 			if(wasHit && this->getType() != i->owner)
 			{
+
 				i->setDeleted(true);
 				health = health-i->getBulletType();
 
