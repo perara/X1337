@@ -1,5 +1,4 @@
 #pragma once
-#include "BulletFactory.h"
 #include "Object.h"
 #include "Shooter.h"
 
@@ -9,22 +8,27 @@
 class Bullet :  public Object
 {
 public:
+	const enum Type {
+		standardShot = 1,
+		heavyShot = 5
+	};
 
 	Shooter::ShooterType owner;
-	Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType);
+	Bullet(sf::RenderWindow& window, Bullet::Type);
 	void process();
 	bool isOutOfBounds();
-	
+
 	void setPosition(int x, int y);
 	void setOwner(Shooter::ShooterType owner);
-	void deleteBullet();
+	void deleteBullet(BulletFactory& bFactory);
 	void resetObject();
 	void setDeleted(bool deleted);
 	bool getDeleted(); 
-	BulletFactory::BulletType getBulletType();
+
+	Bullet::Type getBulletType();
 
 protected:
-	BulletFactory::BulletType bulletType;
+	Bullet::Type bulletType;
 	int speedX;
 	int speedY;
 	bool deleted;

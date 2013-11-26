@@ -97,7 +97,7 @@ void World::process()
 		{
 			if(i->getDeleted())
 			{
-				i->deleteBullet();
+				i->deleteBullet(*bFactory);
 			}else
 			{
 				tmp.push_back(i);

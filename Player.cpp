@@ -95,7 +95,7 @@ void Player::input(sf::Event& event)
 {
 	/* Shoot handler */
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 100){
-		Bullet* b = this->getBulletFactory()->requestObject(BulletFactory::BulletType::standardShot);
+		Bullet* b = this->getBulletFactory()->requestObject(Bullet::Type::standardShot);
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		this->getBullets()->push_back(b);
@@ -105,7 +105,7 @@ void Player::input(sf::Event& event)
 	/* TEMPORARY FOR TESTING */ //TODODODODODODODODODODODOD
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && clk.getElapsedTime().asMilliseconds()){
 
-		Bullet* b = this->getBulletFactory()->requestObject(BulletFactory::BulletType::heavyShot);
+		Bullet* b = this->getBulletFactory()->requestObject(Bullet::Type::heavyShot);
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		this->getBullets()->push_back(b);

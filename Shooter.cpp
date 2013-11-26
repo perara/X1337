@@ -119,16 +119,16 @@ void Shooter::hitDetection()
 
 			/*if(this->getType() == Shooter::ShooterType::REGULAR && i->getBulletType() == BulletFactory::BulletType::standardShot)
 			{
-				// Square vs Circle
+			// Square vs Circle
 			}
 			else if(this->getType() == Shooter::ShooterType::REGULAR && i->getBulletType() == BulletFactory::BulletType::heavyShot)
 			{
-				// Square vs Triangle
+			// Square vs Triangle
 			}
 			else if(this->getType() == Shooter::ShooterType::PLAYER && i->getBulletType() == BulletFactory::BulletType::standardShot)
 			{
-				// Convex vs Circle
-				wasHit = this->sat(this->sprite, i->sprite);
+			// Convex vs Circle
+			wasHit = this->sat(this->sprite, i->sprite);
 			}*/
 			wasHit = this->sat(this->sprite, i->sprite);
 			if(wasHit && this->getType() != i->owner)
@@ -156,4 +156,36 @@ void Shooter::setType(Shooter::ShooterType shooterType)
 Shooter::ShooterType& Shooter::getType()
 {
 	return this->shooterType;
+}
+
+
+void Shooter::init(BulletFactory* bFactory, std::vector<Bullet*>& bullets)
+{
+	this->setBullets(bullets);
+	this->setBulletFactory(bFactory);
+
+	this->setInited(true);
+}
+
+
+// BulletFactory Getter/Setter
+BulletFactory* Shooter::getBulletFactory()
+{
+	return this->bFactory;
+}
+
+void Shooter::setBulletFactory(BulletFactory* bFactorys)
+{
+	this->bFactory = bFactorys;
+}
+
+// Bullets getter/setter
+std::vector<Bullet*>* Shooter::getBullets()
+{
+	return this->bullets;
+}
+
+void Shooter::setBullets(std::vector<Bullet*>& bullets)
+{
+	this->bullets = &bullets;
 }

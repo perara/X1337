@@ -15,7 +15,9 @@ public:
 		SHOOTERTYPECOUNT
 	};
 
-int getHealth(); // Todo should be protected
+	virtual void init(BulletFactory*, std::vector<Bullet*>&);
+
+	int getHealth(); // Todo should be protected
 protected:
 
 	Shooter(sf::RenderWindow& window
@@ -24,7 +26,7 @@ protected:
 
 	/* Health Related */
 	void setHealth(int value);
-	
+
 	void decrementHealth();
 	void incrementHealth();
 
@@ -34,11 +36,22 @@ protected:
 	ShooterType& getType();
 
 
+	// Bullets getter/setter
+	std::vector<Bullet*>* getBullets();
+	void setBullets(std::vector<Bullet*>& bullets);
+
+	// BulletFactory Getter/Setter
+	BulletFactory* getBulletFactory();
+	void setBulletFactory(BulletFactory* bFactory);
+
+
 private:
 	virtual void hitDetection() ;
 	bool circleTest(GameShape& bullet);
 	bool sat(GameShape* c1, GameShape* c2);
 
+	BulletFactory* bFactory;
+	std::vector<Bullet*>* bullets;
 
 	ShooterType shooterType;
 };

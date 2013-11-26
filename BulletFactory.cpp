@@ -1,6 +1,4 @@
 #include "BulletFactory.h"
-#include "Bullet.h"
-
 #include "Log.h"
 
 /// <summary>
@@ -14,8 +12,8 @@ BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::vector
 	bullets(&bullets)
 {
 
-	produceObjects(BulletFactory::BulletType::standardShot, quantity);  //TODO, implement TYPES
-	produceObjects(BulletFactory::BulletType::heavyShot, quantity);
+	produceObjects(Bullet::Type::standardShot, quantity);  //TODO, implement TYPES
+	produceObjects(Bullet::Type::heavyShot, quantity);
 
 }
 /// <summary>
@@ -23,12 +21,12 @@ BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::vector
 /// </summary>
 /// <param name="type">The type.</param>
 /// <param name="quantity">The quantity.</param>
-void BulletFactory::produceObjects(BulletFactory::BulletType type,int quantity)
+void BulletFactory::produceObjects(Bullet::Type type,int quantity)
 {
 	for(int i = 0; i < quantity; i++)
 	{
 		Bullet * b = new Bullet(window, type);
-		b->init(this, *this->bullets);
+		b->init();
 
 		this->objects[type].push_back(b);
 
@@ -40,7 +38,7 @@ void BulletFactory::produceObjects(BulletFactory::BulletType type,int quantity)
 /// <param name="quantity">Quantity of bullets.</param>
 /// <param name="type">Bullettype</param>
 /// <returns>Returns a vector with the quantity of Bullet* requested</returns>
-std::vector<Bullet*> BulletFactory::requestBatch(int quantity, BulletFactory::BulletType type)
+std::vector<Bullet*> BulletFactory::requestBatch(int quantity, Bullet::Type type)
 {
 	std::vector<Bullet*> retList;
 	int i = 0;
@@ -55,7 +53,7 @@ std::vector<Bullet*> BulletFactory::requestBatch(int quantity, BulletFactory::Bu
 /// </summary>
 /// <param name="type">Bullet type</param>
 /// <returns>Returns a single Bullet*</returns>
-Bullet* BulletFactory::requestObject(BulletFactory::BulletType type)
+Bullet* BulletFactory::requestObject(Bullet::Type type)
 {
 	if(this->objects[type].size() < 50)
 	{

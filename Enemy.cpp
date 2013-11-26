@@ -40,7 +40,7 @@ void Enemy::shoot(int shoot)
 {
 	if(shoot != -1)
 	{
-		Bullet* b = this->getBulletFactory()->requestObject(BulletFactory::BulletType::standardShot);
+		Bullet* b = this->getBulletFactory()->requestObject(Bullet::Type::standardShot);
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		this->getBullets()->push_back(b);

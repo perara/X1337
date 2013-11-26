@@ -38,32 +38,7 @@ void Object::setInited(bool init)
 
  }
 
-// BulletFactory Getter/Setter
-BulletFactory* Object::getBulletFactory()
+void Object::init()
 {
-	return this->bFactory;
-}
-
-void Object::setBulletFactory(BulletFactory* bFactorys)
-{
-	this->bFactory = bFactorys;
-}
-
-// Bullets getter/setter
-std::vector<Bullet*>* Object::getBullets()
-{
-	return this->bullets;
-}
-
-void Object::setBullets(std::vector<Bullet*>& bullets)
-{
-	this->bullets = &bullets;
-}
-
-void Object::init(BulletFactory* bFactory, std::vector<Bullet*>& bullets)
-{
-	this->setBullets(bullets);
-	this->setBulletFactory(bFactory);
-
 	this->setInited(true);
 }

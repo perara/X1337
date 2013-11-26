@@ -52,6 +52,9 @@
     <ClCompile Include="EnemyFactory.cpp">
       <Filter>Source\Factory</Filter>
     </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>Source\Base Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Log.h">
@@ -110,6 +113,9 @@
     </ClInclude>
     <ClInclude Include="EnemyFactory.h">
       <Filter>Header\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="SliceEngine.h">
+      <Filter>Header\Base Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
