@@ -78,52 +78,50 @@ void World::setDemo(bool demo)
 
 void World::process()
 {
-	// Process the script
+	// Process loaded script
 	this->getScript()->process(objects);
 
-
-	/* Cleanup Bullets  TODO*/
+	///////////////////////////////////
+	// Bullet processing and cleanup //
+	///////////////////////////////////
 	if(!bullets.empty())
 	{
-
+		std::vector<Bullet*> tmp;
 		for(auto& it : bullets)
 		{
+
+			// Process
 			it->process();
-		}
 
-
-		std::vector<Bullet*> tmp;
-		for(auto& i : bullets)
-		{
-			if(i->getDeleted())
+			// Cleanup
+			if(it->getDeleted())
 			{
-				i->deleteBullet(*bFactory);
+				it->deleteBullet(*bFactory);
 			}else
 			{
-				tmp.push_back(i);
+				tmp.push_back(it);
 			}
 
 		}
 		bullets.clear(); // Needed?
 		bullets = tmp;
-
 	}
 
 
-	/* Cleanup Processing OBJECTS */
+	///////////////////////////////////
+	// Object processing and cleanup //
+	///////////////////////////////////
 	if(!objects.empty())
 	{
-		/* Processing Processing */
-		for(auto& it : objects)
-		{
-			if(!it->getInited()) it->init(bFactory, bullets);
-
-			it->process();
-		}
-
 		for(std::vector<Shooter*>::iterator i = objects.begin(); i != objects.end();i++)
 		{
+			// Init object if its not already inited
+			if(!(*i)->getInited()) (*i)->init(bFactory, bullets);
 
+			// Process
+			(*i)->process();
+
+			// Cleanup
 			if((*i)->getDeleted())
 			{ // If the bullet is up for deletion
 				if(objects.empty()) break;
@@ -188,19 +186,6 @@ void World::draw()
 	{
 		it->draw();
 
-
-		/* TODO REMOVE LATER*/
-		/*sf::Text* txt = new sf::Text();
-		txt->setFont(Globals::getInstance().getResourceHandler()->getFont(ResourceHandler::Fonts::SANSATION));
-
-		int number = it->getHealth();
-		std::stringstream ss;//create a stringstream
-		ss << number;//add number to the stream
-		txt->setString(sf::String(ss.str()));
-		txt->setCharacterSize(15);
-		txt->setPosition(it->sprite->getGlobalBounds().left, it->sprite->getGlobalBounds().top);
-		txt->setColor(sf::Color::Red);
-		window.draw(*txt);*/
 	}
 
 	for(auto &it : bullets)

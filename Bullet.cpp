@@ -112,3 +112,8 @@ Bullet::Type Bullet::getBulletType()
 {
 	return this->bulletType;
 }
+
+Shooter::ShooterType Bullet::getOwner()
+{
+	return this->owner;
+}

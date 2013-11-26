@@ -7,17 +7,16 @@ class Bullet;
 class Shooter: public Object
 {
 public:
+
 	const enum ShooterType
 	{
-		REGULAR,
-		BOSS,
 		PLAYER,
-		SHOOTERTYPECOUNT
+		ENEMY
 	};
 
 	virtual void init(BulletFactory*, std::vector<Bullet*>&);
-
 	int getHealth(); // Todo should be protected
+	Shooter::ShooterType getType();
 protected:
 
 	Shooter(sf::RenderWindow& window
@@ -32,8 +31,8 @@ protected:
 
 	/* Processing */
 	virtual void shooterProcess();
+
 	void setType(Shooter::ShooterType);
-	ShooterType& getType();
 
 
 	// Bullets getter/setter
@@ -43,6 +42,8 @@ protected:
 	// BulletFactory Getter/Setter
 	BulletFactory* getBulletFactory();
 	void setBulletFactory(BulletFactory* bFactory);
+
+
 
 
 private:

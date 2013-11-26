@@ -11,6 +11,13 @@
 class Enemy : public Shooter
 {
 public:
+	const enum EnemyType
+	{
+		REGULAR,
+		BOSS,
+		SHOOTERTYPECOUNT
+	};
+
 	Enemy(sf::RenderWindow& window, 
 		std::queue<sf::Vector3f> path,
 		int type, int repeat);
@@ -21,6 +28,7 @@ public:
 	void process();
 	int getRepeat();
 	void setRepeat(int);
+	Enemy::EnemyType getEnemyType();
 
 protected:
 	int repeat;
@@ -28,8 +36,13 @@ protected:
 	std::queue<sf::Vector3f> pathTemplate;
 	std::queue<sf::Vector3f> path;
 	sf::Vector3f currentPath;
-
+	void setEnemyType(Enemy::EnemyType);
+	
+	
 	sf::Clock enemyClock;
 	void Enemy::shoot(int);
-	void init();
+
+private:
+	Enemy::EnemyType enemyType;
+	void setInitPath();
 };

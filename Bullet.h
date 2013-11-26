@@ -8,12 +8,12 @@
 class Bullet :  public Object
 {
 public:
+
 	const enum Type {
 		standardShot = 1,
 		heavyShot = 5
 	};
 
-	Shooter::ShooterType owner;
 	Bullet(sf::RenderWindow& window, Bullet::Type);
 	void process();
 	bool isOutOfBounds();
@@ -27,9 +27,13 @@ public:
 
 	Bullet::Type getBulletType();
 
+	Shooter::ShooterType getOwner();
 protected:
 	Bullet::Type bulletType;
 	int speedX;
 	int speedY;
 	bool deleted;
+
+private:
+	Shooter::ShooterType owner;
 };

@@ -11,14 +11,16 @@ Enemy::Enemy(sf::RenderWindow& window,
 			 ):
 Shooter(window)
 {
-	this->setRepeat(repeat);
-	this->enemyClock.restart();
+	this->setType(Shooter::ShooterType::ENEMY);
 	this->pathTemplate = path; // A qeueu which should not be touched (This is used to refill old queue
-	init();
+	this->enemyClock.restart();
+	this->setRepeat(repeat);
+	this->sprite = new GameShape(GameShape::STARSHIP);
 
+	setInitPath();
 }
 
-void Enemy::init()
+void Enemy::setInitPath()
 {
 
 	this->deleted = false;
@@ -26,9 +28,9 @@ void Enemy::init()
 	this->currentPath = this->path.front();
 	this->path.pop();
 
-	this->setType(Shooter::ShooterType::REGULAR);
-	this->sprite = new GameShape(GameShape::STARSHIP);
 	this->sprite->setPosition(currentPath.x , currentPath.y);
+
+
 }
 
 Enemy::~Enemy(){
@@ -109,7 +111,7 @@ void Enemy::process()
 			LOGD("Enemy#" << this <<" delete flag set");
 			this->deleted = true;
 			if(this->getRepeat() == 1){
-				init();
+				setInitPath();
 			}
 
 		}

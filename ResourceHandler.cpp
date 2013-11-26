@@ -171,8 +171,6 @@ void ResourceHandler::loadScripts()
 			enemyCounter++;
 		}
 
-		// Set init 
-		this->scripts[i.first].setInit(true);
 	}
 
 }
