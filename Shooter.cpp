@@ -144,7 +144,7 @@ Shooter::ShooterType Shooter::getType()
 }
 
 
-void Shooter::init(BulletFactory& bFactory, std::vector<Bullet*>& bullets)
+void Shooter::init(BulletFactory& bFactory, std::list<Bullet*>& bullets)
 {
 	this->setBullets(bullets);
 	this->setBulletFactory(bFactory);
@@ -164,12 +164,12 @@ void Shooter::setBulletFactory(BulletFactory& bFactory)
 }
 
 // Bullets getter/setter
-std::vector<Bullet*>* Shooter::getBullets()
+std::list<Bullet*>* Shooter::getBullets()
 {
 	return this->bullets;
 }
 
-void Shooter::setBullets(std::vector<Bullet*>& bullets)
+void Shooter::setBullets(std::list<Bullet*>& bullets)
 {
 	this->bullets = &bullets;
 }

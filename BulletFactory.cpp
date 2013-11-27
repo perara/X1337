@@ -1,15 +1,16 @@
 #include "BulletFactory.h"
 #include "Log.h"
 
+
 /// <summary>
 /// Initializes a new instance of the <see cref="BulletFactory"/> class.
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="quantity">Input of the initial quantity the Factory should have at initialization.</param>
-BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::vector<Bullet*>& bullets): 
+BulletFactory::BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*>& bullets): 
 	initQuantity(quantity), 
 	window(window),
-	bullets(&bullets)
+	bullets(bullets)
 {
 
 	produceObjects(Bullet::Type::standardShot, quantity);  //TODO, implement TYPES
@@ -25,7 +26,7 @@ void BulletFactory::produceObjects(Bullet::Type type,int quantity)
 {
 	for(int i = 0; i < quantity; i++)
 	{
-		Bullet * b = new Bullet(window, type);
+		Bullet*  b = new Bullet(window, type);
 		b->init();
 
 		this->objects[type].push_back(b);
@@ -38,13 +39,13 @@ void BulletFactory::produceObjects(Bullet::Type type,int quantity)
 /// <param name="quantity">Quantity of bullets.</param>
 /// <param name="type">Bullettype</param>
 /// <returns>Returns a vector with the quantity of Bullet* requested</returns>
-std::vector<Bullet*> BulletFactory::requestBatch(int quantity, Bullet::Type type)
+std::list<Bullet*> BulletFactory::requestBatch(int quantity, Bullet::Type type)
 {
-	std::vector<Bullet*> retList;
+	std::list<Bullet*> retList;
 	int i = 0;
-	for (std::vector<Bullet*>::iterator it = this->objects[type].begin(); it != this->objects[type].end() && i < quantity; it++ , i++)
+	for (std::list<Bullet*>::iterator it = this->objects[type].begin(); it != this->objects[type].end() && i < quantity; it++ , i++)
 	{
-		retList.push_back(*it);
+		retList.push_back(*it); // TODO might not work?
 	}
 	return retList;
 }

@@ -38,7 +38,7 @@ public:
 	void setInit(bool);
 
 	// Process
-	void process(std::vector<Shooter*>&);
+	void process(std::list<Shooter*>&);
 
 
 

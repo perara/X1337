@@ -15,8 +15,8 @@ class Script;
 /// </summary>
 class World: public Scene{
 public:
-	std::vector<Shooter*> objects; 
-	std::vector<Bullet*> bullets;
+	std::list<Shooter*> objects; 
+	std::list<Bullet*> bullets;
 
 	void addObject(Shooter* object);
 	void addBullet(Bullet* bullet);

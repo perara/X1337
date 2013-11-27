@@ -38,7 +38,7 @@ void Script::setInit(bool status)
 }
 
 // Process
-void Script::process(std::vector<Shooter*>& objects)
+void Script::process(std::list<Shooter*>& objects)
 {
 	// Do processing
 	if(!this->list.empty())

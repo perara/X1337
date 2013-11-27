@@ -80,7 +80,7 @@ void World::process()
 	///////////////////////////////////
 	if(!objects.empty())
 	{
-		for(std::vector<Shooter*>::iterator i = objects.begin(); i != objects.end();i++)
+		for(std::list<Shooter*>::iterator i = objects.begin(); i != objects.end();i++)
 		{
 			// Init object if its not already inited
 			if(!(*i)->getInited()) (*i)->init(bFactory, bullets);
@@ -92,11 +92,8 @@ void World::process()
 			if((*i)->getDeleted())
 			{ // If the bullet is up for deletion
 				if(objects.empty()) break;
-
 				delete *i; 
-				objects.erase(i);
-				i = objects.begin();
-
+				i = objects.erase(i);
 			}
 		}
 	}
@@ -106,25 +103,22 @@ void World::process()
 	///////////////////////////////////
 	if(!bullets.empty())
 	{
-		std::vector<Bullet*> tmp;
-		for(auto& it : bullets)
+		for(std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end();it++)
 		{
 
 			// Process
-			it->process();
+			(*it)->process();
 
 			// Cleanup
-			if(it->getDeleted())
+			if((*it)->getDeleted())
 			{
-				it->deleteBullet(bFactory);
-			}else
-			{
-				tmp.push_back(it);
-			}
+				(*it)->deleteBullet(bFactory);
+				if(bullets.empty()) break;
+				it = bullets.erase(it);
 
+			}
 		}
-		bullets.clear(); // Needed?
-		bullets = tmp;
+
 	}
 
 }
