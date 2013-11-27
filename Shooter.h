@@ -14,7 +14,7 @@ public:
 		ENEMY
 	};
 
-	virtual void init(BulletFactory*, std::vector<Bullet*>&);
+	virtual void init(BulletFactory&, std::vector<Bullet*>&);
 	int getHealth(); // Todo should be protected
 	Shooter::ShooterType getType();
 protected:
@@ -41,7 +41,7 @@ protected:
 
 	// BulletFactory Getter/Setter
 	BulletFactory* getBulletFactory();
-	void setBulletFactory(BulletFactory* bFactory);
+	void setBulletFactory(BulletFactory& bFactory);
 
 
 
@@ -50,9 +50,8 @@ private:
 	virtual void hitDetection() ;
 	bool circleTest(GameShape& bullet);
 	bool sat(GameShape* c1, GameShape* c2);
+	std::vector<Bullet*>* bullets;
+	ShooterType shooterType;
 
 	BulletFactory* bFactory;
-	std::vector<Bullet*>* bullets;
-
-	ShooterType shooterType;
 };

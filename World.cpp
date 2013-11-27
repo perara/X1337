@@ -1,5 +1,4 @@
 #include "World.h"
-#include "BulletFactory.h";
 #include "Globals.h"
 #include "ResourceHandler.h"
 #include "Player.h"
@@ -10,7 +9,12 @@
 
 #include "GameShape.h"
 
-World::World(sf::RenderWindow& window): Scene(window)
+World::World(sf::RenderWindow& window): 
+	Scene(window),
+	sliceEngine(SliceEngine<Bullet*>(sf::FloatRect(0,0, window.getSize().x,window.getSize().y), 500)),
+	bg(Background(window)),
+	bFactory(BulletFactory(window, 1000, bullets)),
+	player(Player(window, sf::Vector2f(100,250), 10))
 {
 	this->init();
 }
@@ -23,19 +27,12 @@ void World::init()
 	this->setScript(Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::ENCOUNTER3));
 
 	// Initialize Background
-	bg = new Background(window);
-	bg->addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::BACKGROUND1));
-
-	// Initialize Bullet Factory
-	this->bFactory = new BulletFactory(window, 1000, bullets);
+	bg.addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::BACKGROUND1));
 
 	// Initialize Player
-	this->player = new Player(
-		window, 
-		sf::Vector2f(100,250), 
-		10);
-	player->init(this->bFactory, this->bullets);
-	if(!this->isDemo()) this->addObject(player);
+	player.init(this->bFactory, this->bullets);
+
+	if(!this->isDemo()) this->addObject(&player);
 
 	// Set inited to true
 	this->setInited(true);
@@ -43,9 +40,6 @@ void World::init()
 
 void World::reset()
 {
-	if(!(this->bg != nullptr))delete this->bg;
-	if(!(this->bFactory != nullptr))delete bFactory;
-	if(!(this->player != nullptr))delete this->player;
 
 	// Delete bullets
 	for(Bullet* i : this->bullets)
@@ -82,33 +76,6 @@ void World::process()
 	this->getScript()->process(objects);
 
 	///////////////////////////////////
-	// Bullet processing and cleanup //
-	///////////////////////////////////
-	if(!bullets.empty())
-	{
-		std::vector<Bullet*> tmp;
-		for(auto& it : bullets)
-		{
-
-			// Process
-			it->process();
-
-			// Cleanup
-			if(it->getDeleted())
-			{
-				it->deleteBullet(*bFactory);
-			}else
-			{
-				tmp.push_back(it);
-			}
-
-		}
-		bullets.clear(); // Needed?
-		bullets = tmp;
-	}
-
-
-	///////////////////////////////////
 	// Object processing and cleanup //
 	///////////////////////////////////
 	if(!objects.empty())
@@ -134,11 +101,37 @@ void World::process()
 		}
 	}
 
+	///////////////////////////////////
+	// Bullet processing and cleanup //
+	///////////////////////////////////
+	if(!bullets.empty())
+	{
+		std::vector<Bullet*> tmp;
+		for(auto& it : bullets)
+		{
+
+			// Process
+			it->process();
+
+			// Cleanup
+			if(it->getDeleted())
+			{
+				it->deleteBullet(bFactory);
+			}else
+			{
+				tmp.push_back(it);
+			}
+
+		}
+		bullets.clear(); // Needed?
+		bullets = tmp;
+	}
+
 }
 
 void World::drawStats()
 {
-	player->drawStats();
+	player.drawStats();
 }
 
 /// <summary>
@@ -180,21 +173,22 @@ void World::setScript(Script* script)
 void World::draw()
 {
 	// Draw background
-	if(!this->isDemo()) bg->process(); // TODO
+	if(!this->isDemo()) bg.process(); // TODO
+
+
+	for(auto &it : bullets)
+	{
+		it->draw();
+	}
 
 	for(auto &it : objects)
 	{
 		it->draw();
 
 	}
-
-	for(auto &it : bullets)
-	{
-		it->draw();
-	}
 }
 
 void World::input(sf::Event& event)
 {
-	this->player->input(event);
+	this->player.input(event);
 }

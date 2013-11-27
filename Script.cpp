@@ -7,9 +7,8 @@
 void Script::addEnemy(Enemy* enemy, int delay)
 {
 	LOGD("Adding new enemy to queue pool (Enemy#" << enemy << ")");
-	ScriptTick* tick = new ScriptTick();
-	tick->delay = delay;
-	tick->enemy = enemy;
+	ScriptTick* tick = new ScriptTick(enemy, delay);
+
 
 	this->list.push(tick);
 

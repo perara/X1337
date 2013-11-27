@@ -13,10 +13,10 @@ ResourceHandler::ResourceHandler(sf::RenderWindow& window):
 ResourceHandler::~ResourceHandler()
 {
 	// Delete sound buffer
-	for(auto&i : sBufferList)
+	/*for(auto&i : sBufferList)
 	{
 		delete i;
-	}
+	}*/
 
 }
 
@@ -101,10 +101,10 @@ void ResourceHandler::loadSound()
 	// Load sounds
 	for(auto& i: soundList)
 	{
-		sf::SoundBuffer* buf = new sf::SoundBuffer;
+		sf::SoundBuffer buf;
 		sBufferList.push_back(buf);
-		if (buf->loadFromFile(i.second)){
-			sounds[i.first].setBuffer(*buf);
+		if (buf.loadFromFile(i.second)){
+			sounds[i.first].setBuffer(buf);
 			LOGD("Sound loaded: " << i.second);
 		}
 		else

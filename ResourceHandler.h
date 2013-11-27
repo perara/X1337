@@ -73,7 +73,7 @@ private:
 	// Sound
 	std::map<Sound, std::string> soundList;
 	sf::Sound sounds[Sound::SOUNDCOUNT];
-	std::list<sf::SoundBuffer*> sBufferList;
+	std::list<sf::SoundBuffer> sBufferList;
 
 	// Scripts
 	std::map<Scripts, std::string> scriptList;

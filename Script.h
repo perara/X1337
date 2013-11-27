@@ -11,11 +11,15 @@ class Enemy;
 
 class Script
 {
-
-	struct ScriptTick {
+	class ScriptTick
+	{
+	public:
 		Enemy* enemy;
 		int delay;
-	} ;
+		ScriptTick(Enemy* enemy, int delay):
+			enemy(enemy),
+			delay(delay){};
+	};
 
 	sf::Clock scriptClock;
 	std::queue<ScriptTick*> list;

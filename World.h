@@ -1,13 +1,14 @@
 #pragma once
-#include "Scene.h";
-#include <vector>
+#include "Scene.h"
+#include "SliceEngine.h"
+#include "Background.h"
+#include "BulletFactory.h"
+#include "Player.h"
 
-class Player;
-class Background;
 class Shooter;
 class Bullet;
 class Script;
-class BulletFactory;
+
 
 /// <summary>
 /// World is the place where all encounters in game happen. It keeps record of the player, enemies and bullets. This is rendered and processed via the Scene inheritance.
@@ -16,7 +17,6 @@ class World: public Scene{
 public:
 	std::vector<Shooter*> objects; 
 	std::vector<Bullet*> bullets;
-	BulletFactory* bFactory;
 
 	void addObject(Shooter* object);
 	void addBullet(Bullet* bullet);
@@ -33,12 +33,24 @@ public:
 
 	bool isDemo();
 	void setDemo(bool);
+	BulletFactory& getBulletFactory()
+	{
+		return bFactory;
+	};
 
 private:
-	Player* player;
-	Background* bg;
+	// Objects
+	SliceEngine<Bullet*> sliceEngine;
+	Background bg;
+	BulletFactory bFactory;
+	Player player;
+
+	// Script pointers
+	Script* script;
+
+
 	Script* getScript();
 	void setScript(Script*);
-	Script * script;
+
 	bool demo;
 };
