@@ -37,6 +37,16 @@ void Script::setInit(bool status)
 	this->inited = status;
 }
 
+std::string Script::getScriptName()
+{
+	return this->scriptName;
+}
+
+void Script::setScriptName(std::string name)
+{
+	this->scriptName = name;
+}
+
 // Process
 void Script::process(std::list<Shooter*>& objects)
 {

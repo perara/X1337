@@ -12,12 +12,6 @@ ResourceHandler::ResourceHandler(sf::RenderWindow& window):
 
 ResourceHandler::~ResourceHandler()
 {
-	// Delete sound buffer
-	/*for(auto&i : sBufferList)
-	{
-		delete i;
-	}*/
-
 }
 
 void ResourceHandler::init()
@@ -41,6 +35,11 @@ void ResourceHandler::init()
 		scriptList[Scripts::ENCOUNTER2] = "assets/scripts/encounter.xml";
 		scriptList[Scripts::ENCOUNTER3] = "assets/scripts/encounter.xml";
 		scriptList[Scripts::GAME_MENU] = "assets/scripts/game_menu.xml";
+		scriptList[Scripts::DRIT] = "assets/scripts/drit.xml";
+		scriptList[Scripts::DRIT1] = "assets/scripts/drit1.xml";
+		scriptList[Scripts::DRIT2] = "assets/scripts/drit2.xml";
+		scriptList[Scripts::DRIT3] = "assets/scripts/drit3.xml";
+
 	}
 
 	// Fonts
@@ -136,6 +135,10 @@ void ResourceHandler::loadScripts()
 		// Get repeat node
 		rapidxml::xml_node<> *repeat = doc.first_node("Repeat");
 
+		// Get name node
+		rapidxml::xml_node<> *name = doc.first_node("Name");
+
+
 		int enemyCounter = 0; // Counter
 
 		// Enemy X
@@ -166,6 +169,8 @@ void ResourceHandler::loadScripts()
 				type,
 				atoi(repeat->value()));
 
+			std::string nameCpp(name->value()); // Convert name to CPP11 format
+			this->scripts[i.first].setScriptName(nameCpp);
 			this->scripts[i.first].addEnemy(e1, delay);
 
 			enemyCounter++;
@@ -185,9 +190,18 @@ sf::Texture& ResourceHandler::getTexture(ResourceHandler::Texture res)
 	return this->textures[res];
 }
 
-Script* ResourceHandler::getScript(ResourceHandler::Scripts query)
+Script ResourceHandler::getScript(ResourceHandler::Scripts query)
 {
-	return &this->scripts[query];
+	return this->scripts[query];
+}
+std::list<Script> ResourceHandler::getScripts()
+{
+	std::list<Script> ret;
+	for(Script i : scripts)
+	{
+		ret.push_back(i);
+	}
+	return ret;
 }
 
 sf::Font& ResourceHandler::getFont(ResourceHandler::Fonts query)
@@ -212,15 +226,14 @@ void ResourceHandler::setInit(bool init)
 	this->inited = init;
 }
 
-
 void ResourceHandler::draw()
 {
 	sf::Text label;
 	label.setFont(this->getFont(ResourceHandler::COMICATE));
 	label.setString(sf::String("Loading... Please Wait!"));
 	label.setPosition(
-		Globals::getInstance().getGameView().getCenter().x  -  (label.getGlobalBounds().width / 2) , 
-		Globals::getInstance().getGameView().getCenter().y /2 - (label.getGlobalBounds().height / 2));
+		window.getView().getCenter().x  -  (label.getGlobalBounds().width / 2) , 
+		window.getView().getCenter().y /2 - (label.getGlobalBounds().height / 2));
 	label.setColor(sf::Color::White);
 
 

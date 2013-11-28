@@ -15,7 +15,6 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletFactory.cpp" />
     <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="GameShape.cpp" />

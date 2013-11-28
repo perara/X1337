@@ -1,12 +1,15 @@
 #pragma once
 #include "Scene.h"
+#include "Globals.h"
+
 #include <SFML\Graphics.hpp>
+#include <map>
+#include <list>
 
 class Menu: public Scene{
 public:
 
 	Menu(sf::RenderWindow& window);
-	~Menu();
 
 	virtual void draw();
 	virtual void process();
@@ -15,8 +18,16 @@ public:
 	virtual void reset();
 
 private:
+	// Loaders
 	void loadMenuOptions();
-	
+
+
+	// Draw Functions
+	void drawStageSelect();
+	void drawMainMenu();
+	void drawOptions(Globals::State);
+	void drawGameTitle();
+
 
 	const enum Options
 	{
@@ -24,17 +35,18 @@ private:
 		LOAD_GAME,
 		CREDITS,
 		EXIT_GAME,
+		BACK,
 		MENU_OPT_COUNT
 	};
 
 	int currentOption;
-
 	int getCurrentOption();
 	void setCurrentOption(int);
 
 
 	// Option lists
-	std::map<Options, std::string> optList;
-	sf::Text* option[Options::MENU_OPT_COUNT];
+	std::map<Globals::State, std::map<Menu::Options, std::string>> optMap;
+
+	std::map<Globals::State, std::map<Menu::Options, sf::Text>> option;
 
 };

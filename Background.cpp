@@ -11,7 +11,7 @@ void Background::addBackground(sf::Texture& texture)
 	// Create the sprite
 	sf::Sprite sprite;
 	sprite.setColor(sf::Color(255,0,255)); // TEMP
-	sprite.scale(((float)Globals::getInstance().getGameView().getSize().x / texture.getSize().x) , ((float)Globals::getInstance().getGameView().getSize().y / texture.getSize().y));
+	sprite.scale(((float)window.getView().getSize().x / texture.getSize().x) , ((float)window.getView().getSize().y / texture.getSize().y));
 	textures.push_back(&texture);
 
 	if(currentImage.getLocalBounds().height == 0)

@@ -31,6 +31,7 @@ private:
 
 
 	// VIEWS
+	sf::View mainView;
 	sf::View fullScreen;
 	sf::View menuGameDemoView;
 	sf::View playerStatsView;

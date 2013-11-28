@@ -6,12 +6,10 @@
 #include "Bullet.h"
 #include "Background.h"
 #include "Log.h"
-
 #include "GameShape.h"
 
 World::World(sf::RenderWindow& window): 
 	Scene(window),
-	sliceEngine(SliceEngine<Bullet*>(sf::FloatRect(0,0, window.getSize().x,window.getSize().y), 500)),
 	bg(Background(window)),
 	bFactory(BulletFactory(window, 1000, bullets)),
 	player(Player(window, sf::Vector2f(100,250), 10))
@@ -24,7 +22,7 @@ World::World(sf::RenderWindow& window):
 void World::init()
 {
 	// Initialize Script
-	this->setScript(Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::ENCOUNTER3));
+	this->script = (Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::ENCOUNTER3));
 
 	// Initialize Background
 	bg.addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::BACKGROUND1));
@@ -67,20 +65,20 @@ bool World::isDemo()
 void World::setDemo(bool demo)
 {
 	this->demo = demo;
-	if(this->demo)this->setScript(Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::GAME_MENU));
+	if(this->demo)this->script = (Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::GAME_MENU));
 }
 
 void World::process()
 {
 	// Process loaded script
-	this->getScript()->process(objects);
+	this->script.process(objects);
 
 	///////////////////////////////////
 	// Object processing and cleanup //
 	///////////////////////////////////
 	if(!objects.empty())
 	{
-		for(std::list<Shooter*>::iterator i = objects.begin(); i != objects.end();i++)
+		for(std::list<Shooter*>::iterator i = objects.begin(); i != objects.end();)
 		{
 			// Init object if its not already inited
 			if(!(*i)->getInited()) (*i)->init(bFactory, bullets);
@@ -91,9 +89,12 @@ void World::process()
 			// Cleanup
 			if((*i)->getDeleted())
 			{ // If the bullet is up for deletion
-				if(objects.empty()) break;
 				delete *i; 
 				i = objects.erase(i);
+			}
+			else
+			{
+				++i;
 			}
 		}
 	}
@@ -103,9 +104,8 @@ void World::process()
 	///////////////////////////////////
 	if(!bullets.empty())
 	{
-		for(std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end();it++)
+		for(std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end();)
 		{
-
 			// Process
 			(*it)->process();
 
@@ -113,9 +113,11 @@ void World::process()
 			if((*it)->getDeleted())
 			{
 				(*it)->deleteBullet(bFactory);
-				if(bullets.empty()) break;
 				it = bullets.erase(it);
-
+			}
+			else
+			{
+				++it;
 			}
 		}
 
@@ -144,21 +146,6 @@ void World::addBullet(Bullet* bullet)
 
 	//system("pause");
 	this->bullets.push_back(bullet);
-}
-
-Script* World::getScript()
-{
-	if(!this->script == NULL)
-		return this->script;
-	else{
-		LOGE("Script was loaded unsuccessfully (nullptr)");
-		return NULL;
-	}
-}
-
-void World::setScript(Script* script)
-{
-	this->script = script;
 }
 
 /// <summary>

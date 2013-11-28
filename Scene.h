@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML\Graphics\RenderWindow.hpp>
+#include <SFML\Graphics.hpp>
 
 /// <summary>
 /// The scene class is an abstract class which is base class for all States. All state is a Scene.

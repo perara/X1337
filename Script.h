@@ -40,7 +40,12 @@ public:
 	// Process
 	void process(std::list<Shooter*>&);
 
+	// Get/Set scriptName
+	std::string getScriptName();
+	void setScriptName(std::string);
 
+private:
+	std::string scriptName;
 
 
 };

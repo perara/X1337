@@ -31,6 +31,10 @@ public:
 		ENCOUNTER2,
 		ENCOUNTER3,
 		GAME_MENU,
+		DRIT,
+		DRIT1,
+		DRIT2,
+		DRIT3,
 		SCRIPTSCOUNT
 	};
 
@@ -53,7 +57,8 @@ public:
 
 
 	sf::Texture& getTexture(ResourceHandler::Texture);
-	Script* getScript(ResourceHandler::Scripts);
+	Script getScript(ResourceHandler::Scripts);
+	std::list<Script> getScripts();
 	sf::Font& getFont(ResourceHandler::Fonts);
 	sf::Sound& getSound(ResourceHandler::Sound);
 

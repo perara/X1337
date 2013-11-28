@@ -1,13 +1,13 @@
 #pragma once
 #include "Scene.h"
-#include "SliceEngine.h"
 #include "Background.h"
 #include "BulletFactory.h"
 #include "Player.h"
+#include "Script.h"
+
 
 class Shooter;
 class Bullet;
-class Script;
 
 
 /// <summary>
@@ -40,17 +40,12 @@ public:
 
 private:
 	// Objects
-	SliceEngine<Bullet*> sliceEngine;
 	Background bg;
 	BulletFactory bFactory;
 	Player player;
 
 	// Script pointers
-	Script* script;
-
-
-	Script* getScript();
-	void setScript(Script*);
+	Script script;
 
 	bool demo;
 };

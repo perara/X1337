@@ -49,9 +49,6 @@
     <ClCompile Include="BulletFactory.cpp">
       <Filter>Source\Factory</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyFactory.cpp">
-      <Filter>Source\Factory</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Log.h">

@@ -5,7 +5,13 @@
 #include "Menu.h"
 
 GameEngine::GameEngine():
-	window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize)
+	window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize),
+	fullScreen(sf::View(sf::FloatRect(0,0,window.getSize().x,window.getSize().y))),
+	mainView (sf::View(sf::FloatRect(0,0,800,600))),
+	playerStatsView(sf::View(sf::FloatRect(0,0,300,600))),
+	menuGameDemoView(sf::View (sf::FloatRect(0,0,800,600)))
+
+
 {
 	// Window configuration
 	this->window.setFramerateLimit(120);
@@ -13,31 +19,17 @@ GameEngine::GameEngine():
 	//************************************//
 	//*********View Declaration***********//
 	//************************************//
-	fullScreen = sf::View(sf::FloatRect(0,0,window.getSize().x,window.getSize().y));
 	fullScreen.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
+	window.setView(fullScreen);
 
+	mainView.setViewport(sf::FloatRect(0, 0, 0.75f, 1));
+	playerStatsView.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 1.0f));
+	menuGameDemoView.setViewport(sf::FloatRect(0.40f, 0.40f, 0.25f, 0.25f));
 
-	// Game Views
-	{
-		// Main View
-		sf::View gameView(sf::FloatRect(0,0,800,600));
-		Globals::getInstance().setGameView(gameView); // TODO not global
-		Globals::getInstance().getGameView().setViewport(sf::FloatRect(0, 0, 0.75f, 1));
-
-		// Sidepanel view
-		playerStatsView = sf::View(sf::FloatRect(0,0,300,600));
-		playerStatsView.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 1.0f));
-	}
-
-	// Menu Views
-	{
-		menuGameDemoView = sf::View (sf::FloatRect(0,0,800,600));
-		menuGameDemoView.setViewport(sf::FloatRect(0.40f, 0.40f, 0.25f, 0.25f));
-	}
 
 
 	// Init and set resourceHandler
-	Globals::getInstance().setResourceHandler(new ResourceHandler(window));
+	Globals::getInstance().setResourceHandler(std::shared_ptr<ResourceHandler>(new ResourceHandler(window)));
 	Globals::getInstance().getResourceHandler()->init();
 
 	// Set timeStep to 60 fps
@@ -63,8 +55,6 @@ GameEngine::GameEngine():
 
 	// Start Gameloop
 	this->runGame();
-
-
 }
 
 void GameEngine::runGame()
@@ -76,27 +66,24 @@ void GameEngine::runGame()
 
 		while(this->elapsedTime >=  Globals::getInstance().getTimeStep())
 		{
-			switch(Globals::getInstance().getState())
+			if(GlobalState == Globals::GAME)
 			{
-			case Globals::INIT_GAME: // Init game is initiated whenever new game is pressed
+				// Process Scene
+				this->world->process();
+				this->world->input(this->event); // todo should be in polLEvent
+			}
+			else if(GlobalState == Globals::INIT_GAME)
+			{
 				Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).stop();
 				this->world->setDemo(false);
 				this->world->reset();
 				Globals::getInstance().setState(Globals::GAME);
-
-				break;
-			case Globals::GAME:
-				// Process Scene
-				this->world->process();
-				this->world->input(this->event); // todo should be in polLEvent
-
-				break;
-			case Globals::MAIN_MENU:
+			}
+			else if(GlobalState == Globals::MAIN_MENU  || GlobalState == Globals::STAGE_SELECT)
+			{
 				this->world->process();
 				this->menu->process();
-				break;
 			}
-
 			this->elapsedTime -= Globals::getInstance().getTimeStep();
 
 		}
@@ -104,26 +91,24 @@ void GameEngine::runGame()
 		window.clear(sf::Color::Black);
 
 
-		switch(Globals::getInstance().getState())
+		if(GlobalState == Globals::GAME)
 		{
-		case Globals::GAME:
-			window.setView(Globals::getInstance().getGameView());
+			window.setView(mainView);
 			this->world->draw();
 
 			window.setView(playerStatsView);
 			this->world->drawStats();
-			break;
-		case Globals::MAIN_MENU:
+		}
+		else if(GlobalState == Globals::INIT_GAME)
+		{
+
+		}
+		else if(GlobalState == Globals::MAIN_MENU || GlobalState == Globals::STAGE_SELECT)
+		{
 			window.setView(fullScreen);
 			this->world->draw();
 			this->menu->draw();
-
-			break;
-
 		}
-
-
-
 
 		window.display();
 	}
@@ -135,16 +120,19 @@ void GameEngine::pollInput()
 	{
 
 		/* Input event for each of the STATES */
-		switch(Globals::getInstance().getState())
+		if(GlobalState == Globals::GAME)
 		{
-		case Globals::GAME:
 			this->menu->input(this->event);
-			break;
-		case Globals::MAIN_MENU:
-			this->menu->input(this->event);
-			break;
+		}
+		else if(GlobalState == Globals::INIT_GAME)
+		{
 
 		}
+		else if(GlobalState == Globals::MAIN_MENU || GlobalState == Globals::STAGE_SELECT)
+		{
+			this->menu->input(this->event);
+		}
+
 
 		if(this->event.type == sf::Event::Closed)
 		{
