@@ -99,6 +99,7 @@ void Player::input(sf::Event& event)
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		this->getBullets()->push_back(b);
+		Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::STANDARD_SHOT).play();
 		clk.restart();
 	}
 
@@ -109,6 +110,7 @@ void Player::input(sf::Event& event)
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		this->getBullets()->push_back(b);
+		Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::HEAVY_SHOT).play();
 		clk.restart();
 	}
 
@@ -140,5 +142,4 @@ void Player::input(sf::Event& event)
 			sf::Mouse::setPosition(sf::Vector2i((Globals::getInstance().getGameView().getSize().x / 2), (Globals::getInstance().getGameView().getSize().y / 2)), window);
 		}
 	}
-
 }

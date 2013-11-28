@@ -33,6 +33,8 @@ void ResourceHandler::init()
 	{
 		soundList[Sound::SONG1]  = "assets/sound/a.ogg";
 		soundList[Sound::MENU_SONG] = "assets/sound/game_menu.ogg";
+		soundList[Sound::STANDARD_SHOT] = "assets/sound/FireOneSound.ogg";
+		soundList[Sound::HEAVY_SHOT] = "assets/sound/FireOneSound.ogg";
 	}
 
 	// Scripts
