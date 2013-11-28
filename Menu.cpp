@@ -35,8 +35,17 @@ void Menu::init()
 		stageSelect[Options::SELECT_STAGE] = "Select Stage";
 	}
 
+	std::map<Menu::Options, std::string> pause;
+	{
+		pause[Options::CONTINUE_GAME] = "Continue";		
+		pause[Options::TO_MAIN_MENU] = "To Main Menu";
+	}
+
+
+
 	optMap[Globals::State::MAIN_MENU] = mainMenu;
 	optMap[Globals::State::STAGE_SELECT] = stageSelect;
+	optMap[Globals::State::PAUSE] = pause;
 
 	loadMenuOptions();
 	setStageSelectOption(1);
@@ -61,7 +70,7 @@ void Menu::loadMenuOptions()
 	for(auto &i : optMap) // Iterate through maps of options
 	{
 
-		int x = 20;
+		int x = 20 ;
 		int y = window.getSize().y - 50;
 
 
@@ -223,15 +232,18 @@ void Menu::draw()
 	}
 
 	drawGameTitle();
-	drawOptions(Globals::getInstance().getState());
-
 	switch(Globals::getInstance().getState())
 	{
-	case Globals::MAIN_MENU:
+	case Globals::State::MAIN_MENU:
 		drawMainMenu();
+		drawOptions(Globals::getInstance().getState());
 		break;
-	case Globals::STAGE_SELECT:
+	case Globals::State::STAGE_SELECT:
 		drawStageSelect();
+		drawOptions(Globals::getInstance().getState());
+		break;
+	case Globals::State::PAUSE:
+		// Do nothing
 		break;
 	}
 }
@@ -246,15 +258,21 @@ void Menu::drawMainMenu()
 /////////////////////////////////////////////
 ////Draw menu options for current state//////
 /////////////////////////////////////////////
-void Menu::drawOptions(Globals::State state)
+void Menu::drawOptions(Globals::State state, int xOffset, int yOffset, sf::Color color)
 {
 	// Draw Options
-	for(auto& i: option[state]) window.draw(i.second);
+	for(auto& i: option[state]) 
+	{
+		sf::Vector2f tmp(i.second.getPosition()); // Store original position
+		i.second.move(xOffset, yOffset); // Move 'x' offset and 'y' offset
+		window.draw(i.second);
+		i.second.setPosition(tmp); // Set pos back
+	}
 
 	// Draw Option overlay
 	sf::FloatRect pos = option[state][(Menu::Options)currentOption].getGlobalBounds();
-	sf::RectangleShape sh = sf::RectangleShape();
-	sh.setFillColor(sf::Color(255,255,255,150));
+	sf::RectangleShape sh;
+	sh.setFillColor(color);
 	sh.setSize(sf::Vector2f(pos.width + 20, pos.height / 2));
 	sh.setPosition(pos.left - 10,pos.top + (pos.height / 4));
 	window.draw(sh);
@@ -332,5 +350,13 @@ void Menu::drawStageSelect()
 	sh.setPosition(currentStageSelBounds.left - 10,currentStageSelBounds.top + (currentStageSelBounds.height / 4));
 	window.draw(sh);
 
+
+}
+
+/////////////////////////////////////////////
+////////////Stage Selection//////////////////
+/////////////////////////////////////////////
+void Menu::drawPause(int xOffSet, int yOffset)
+{		drawOptions(Globals::getInstance().getState(), xOffSet, yOffset, sf::Color::White);
 
 }

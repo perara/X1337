@@ -32,7 +32,6 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="BulletFactory.h" />
     <ClInclude Include="Enemy.h" />
-    <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Bullet.h" />

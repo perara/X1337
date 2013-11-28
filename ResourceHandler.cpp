@@ -102,10 +102,11 @@ void ResourceHandler::loadSound()
 	// Load sounds
 	for(auto& i: soundList)
 	{
-		sf::SoundBuffer buf;
+
+		std::shared_ptr<sf::SoundBuffer> buf = std::shared_ptr<sf::SoundBuffer>(new sf::SoundBuffer());
 		sBufferList.push_back(buf);
-		if (buf.loadFromFile(i.second)){
-			sounds[i.first].setBuffer(buf);
+		if (buf->loadFromFile(i.second)){
+			sounds[i.first].setBuffer(*buf);
 			LOGD("Sound loaded: " << i.second);
 		}
 		else
