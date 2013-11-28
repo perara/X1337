@@ -12,12 +12,6 @@ ResourceHandler::ResourceHandler(sf::RenderWindow& window):
 
 ResourceHandler::~ResourceHandler()
 {
-	// Delete sound buffer
-	for(auto&i : sBufferList)
-	{
-		delete i;
-	}
-
 }
 
 void ResourceHandler::init()
@@ -42,6 +36,12 @@ void ResourceHandler::init()
 		scriptList[Scripts::ENCOUNTER1] = "assets/scripts/encounterDemo.xml";
 		scriptList[Scripts::ENCOUNTER2] = "assets/scripts/encounter.xml";
 		scriptList[Scripts::ENCOUNTER3] = "assets/scripts/encounter.xml";
+		scriptList[Scripts::GAME_MENU] = "assets/scripts/game_menu.xml";
+		scriptList[Scripts::DRIT] = "assets/scripts/drit.xml";
+		scriptList[Scripts::DRIT1] = "assets/scripts/drit1.xml";
+		scriptList[Scripts::DRIT2] = "assets/scripts/drit2.xml";
+		scriptList[Scripts::DRIT3] = "assets/scripts/drit3.xml";
+
 	}
 
 	// Fonts
@@ -102,10 +102,10 @@ void ResourceHandler::loadSound()
 	// Load sounds
 	for(auto& i: soundList)
 	{
-		sf::SoundBuffer* buf = new sf::SoundBuffer;
+		sf::SoundBuffer buf;
 		sBufferList.push_back(buf);
-		if (buf->loadFromFile(i.second)){
-			sounds[i.first].setBuffer(*buf);
+		if (buf.loadFromFile(i.second)){
+			sounds[i.first].setBuffer(buf);
 			LOGD("Sound loaded: " << i.second);
 		}
 		else
@@ -134,12 +134,19 @@ void ResourceHandler::loadScripts()
 		// Root Node
 		rapidxml::xml_node<> *node = doc.first_node("Enemies");
 
+		// Get repeat node
+		rapidxml::xml_node<> *repeat = doc.first_node("Repeat");
+
+		// Get name node
+		rapidxml::xml_node<> *name = doc.first_node("Name");
+
+
 		int enemyCounter = 0; // Counter
 
 		// Enemy X
 		for (rapidxml::xml_node<> *enemy = node->first_node(); enemy; enemy = enemy->next_sibling())
 		{
-			std::queue<sf::Vector3f>* pathQueue = new std::queue<sf::Vector3f>();
+			std::queue<sf::Vector3f> pathQueue = std::queue<sf::Vector3f>();
 
 
 			int type = atoi(enemy->first_node("Type")->value());
@@ -154,22 +161,26 @@ void ResourceHandler::loadScripts()
 				int shoot = atoi(child->first_attribute("shoot")->value());
 
 				// Push path into queue
-				pathQueue->push(sf::Vector3f(x,y,shoot));
+				pathQueue.push(sf::Vector3f(x,y,shoot));
 
 			}
 
 			Enemy* e1 = new Enemy(
 				window, 
 				pathQueue,
-				type);
+				type,
+				atoi(repeat->value()));
 
+			//std::cout << e1 << std::endl;
+			std::string nameCpp(name->value()); // Convert name to CPP11 format
+			this->scripts[i.first].setScriptEnumVal(i.first);
+			this->scripts[i.first].setScriptTitle(nameCpp);
 			this->scripts[i.first].addEnemy(e1, delay);
 
 			enemyCounter++;
 		}
 
-		// Set init 
-		this->scripts[i.first].setInit(true);
+		this->scripts[i.first].setInit(true); // Set script init to true
 	}
 
 }
@@ -184,9 +195,30 @@ sf::Texture& ResourceHandler::getTexture(ResourceHandler::Texture res)
 	return this->textures[res];
 }
 
-Script* ResourceHandler::getScript(ResourceHandler::Scripts query)
+Script ResourceHandler::getScript(ResourceHandler::Scripts query)
 {
-	return &this->scripts[query];
+	return this->scripts[query];
+}
+
+Script ResourceHandler::getScriptById(int iteNum)
+{
+	// Meh method
+	int cnt = 1;
+	for(Script& i : Globals::getInstance().getResourceHandler()->getScripts())
+	{
+		if (cnt == iteNum) return i;
+		cnt++;
+	}
+}
+
+std::list<Script> ResourceHandler::getScripts()
+{
+	std::list<Script> ret;
+	for(Script i : scripts)
+	{
+		ret.push_back(i);
+	}
+	return ret;
 }
 
 sf::Font& ResourceHandler::getFont(ResourceHandler::Fonts query)
@@ -211,15 +243,14 @@ void ResourceHandler::setInit(bool init)
 	this->inited = init;
 }
 
-
 void ResourceHandler::draw()
 {
 	sf::Text label;
 	label.setFont(this->getFont(ResourceHandler::COMICATE));
 	label.setString(sf::String("Loading... Please Wait!"));
 	label.setPosition(
-		Globals::getInstance().getGameView().getCenter().x  -  (label.getGlobalBounds().width / 2) , 
-		Globals::getInstance().getGameView().getCenter().y - (label.getGlobalBounds().height / 2));
+		window.getView().getCenter().x  -  (label.getGlobalBounds().width / 2) , 
+		window.getView().getCenter().y /2 - (label.getGlobalBounds().height / 2));
 	label.setColor(sf::Color::White);
 
 

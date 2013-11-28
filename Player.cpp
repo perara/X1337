@@ -46,9 +46,9 @@ void Player::detectEdge()
 		this->sprite->setPosition(this->sprite->getRadius(), this->sprite->getPosition().y);
 	}
 
-	if(this->sprite->getPosition().x >= Globals::getInstance().getGameView().getSize().x - this->sprite->getRadius())
+	if(this->sprite->getPosition().x >= window.getSize().x - this->sprite->getRadius())
 	{
-		this->sprite->setPosition(Globals::getInstance().getGameView().getSize().x - this->sprite->getRadius(), this->sprite->getPosition().y);
+		this->sprite->setPosition(window.getSize().x - this->sprite->getRadius(), this->sprite->getPosition().y);
 	}
 
 	// Y
@@ -58,9 +58,9 @@ void Player::detectEdge()
 	}
 
 
-	if(this->sprite->getPosition().y >= Globals::getInstance().getGameView().getSize().y - this->sprite->getRadius())
+	if(this->sprite->getPosition().y >= window.getSize().y - this->sprite->getRadius())
 	{
-		this->sprite->setPosition(this->sprite->getPosition().x, Globals::getInstance().getGameView().getSize().y - this->sprite->getRadius());
+		this->sprite->setPosition(this->sprite->getPosition().x, window.getSize().y - this->sprite->getRadius());
 	}
 }
 
@@ -95,7 +95,7 @@ void Player::input(sf::Event& event)
 {
 	/* Shoot handler */
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 100){
-		Bullet* b = this->getBulletFactory()->requestObject(BulletFactory::BulletType::standardShot);
+		Bullet* b = this->getBulletFactory()->requestObject(Bullet::Type::standardShot);
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		this->getBullets()->push_back(b);
@@ -106,7 +106,7 @@ void Player::input(sf::Event& event)
 	/* TEMPORARY FOR TESTING */ //TODODODODODODODODODODODOD
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && clk.getElapsedTime().asMilliseconds()){
 
-		Bullet* b = this->getBulletFactory()->requestObject(BulletFactory::BulletType::heavyShot);
+		Bullet* b = this->getBulletFactory()->requestObject(Bullet::Type::heavyShot);
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		this->getBullets()->push_back(b);
@@ -120,26 +120,25 @@ void Player::input(sf::Event& event)
 	if(event.type == sf::Event::MouseMoved)
 	{
 		int current_x = sf::Mouse::getPosition(window).x, current_y = sf::Mouse::getPosition(window).y;
-		int elapsed_x = (Globals::getInstance().getGameView().getSize().x / 2) - current_x, elapsed_y = (Globals::getInstance().getGameView().getSize().y / 2) - current_y;
+		int elapsed_x = (window.getSize().x / 2) - current_x, elapsed_y = (window.getView().getSize().y / 2) - current_y;
 
 		if(elapsed_x != 0 || elapsed_y != 0)
 		{
 
 
-
 			/************************************************************************/
 			/* Mouse Movement Handling                                              */
 			/************************************************************************/
-			if(this->sprite->getPosition().x > 0 && this->sprite->getPosition().x < Globals::getInstance().getGameView().getSize().x)
+			if(this->sprite->getPosition().x > 0 && this->sprite->getPosition().x < window.getSize().x)
 			{
 				this->sprite->move(-elapsed_x  , 0);
 			}
 
-			if(this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < (Globals::getInstance().getGameView().getSize().y + Globals::getInstance().getGameView().getSize().y))
+			if(this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < (window.getSize().y + window.getSize().y))
 			{
 				this->sprite->move(0, -elapsed_y);
 			}
-			sf::Mouse::setPosition(sf::Vector2i((Globals::getInstance().getGameView().getSize().x / 2), (Globals::getInstance().getGameView().getSize().y / 2)), window);
+			sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window);
 		}
 	}
 }

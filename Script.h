@@ -3,16 +3,25 @@
 #include <list>
 #include <SFML\System\Clock.hpp>
 
-class Enemy;
+
+
+class Object;
 class Shooter;
+class Enemy;
+
 
 
 class Script
 {
-	struct ScriptTick {
+	class ScriptTick
+	{
+	public:
 		Enemy* enemy;
 		int delay;
-	} ;
+		ScriptTick(Enemy* enemy, int delay):
+			enemy(enemy),
+			delay(delay){};
+	};
 
 	sf::Clock scriptClock;
 	std::queue<ScriptTick*> list;
@@ -31,9 +40,15 @@ public:
 	void setInit(bool);
 
 	// Process
-	void process(std::vector<Shooter*>&);
+	void process(std::list<Shooter*>&);
 
-
-
+	// Get/Set scriptName
+	std::string getScriptTitle();
+	void setScriptTitle(std::string);
+	void setScriptEnumVal(int);
+	int getScriptEnumVal();
+private:
+	std::string scriptTitle;
+	int scriptEnumVal;
 
 };

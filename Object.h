@@ -30,21 +30,10 @@ public:
 	bool getDeleted();
 	bool getInited();
 	void setInited(bool);
-	virtual void init(BulletFactory*, std::vector<Bullet*>&);
+	virtual void init();
 
-	// Bullets getter/setter
-	std::vector<Bullet*>* getBullets();
-	void setBullets(std::vector<Bullet*>& bullets);
-
-	// BulletFactory Getter/Setter
-	BulletFactory* getBulletFactory();
-	void setBulletFactory(BulletFactory* bFactory);
-
-protected:
 	sf::RenderWindow& window;
+protected:
 	bool deleted;
 	bool inited;
-
-	BulletFactory* bFactory;
-	std::vector<Bullet*>* bullets;
 };

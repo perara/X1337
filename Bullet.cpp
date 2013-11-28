@@ -4,13 +4,14 @@
 #include "Log.h"
 #include "Enemy.h"
 #include "Player.h"
+#include "BulletFactory.h"
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Bullet"/> class.
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="type">The bullet type.</param>
-Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType): 
+Bullet::Bullet(sf::RenderWindow& window, Bullet::Type bulletType): 
 	Object(window),
 	bulletType(bulletType)
 {
@@ -19,12 +20,12 @@ Bullet::Bullet(sf::RenderWindow& window, BulletFactory::BulletType bulletType):
 	this->speedX = 0;
 	this->speedY = 0;
 
-	if(BulletFactory::BulletType::standardShot == bulletType){
+	if(Bullet::Type::standardShot == bulletType){
 		this->sprite = new GameShape(GameShape::CIRCLE, 2);
 
 	}
 
-	else if(BulletFactory::BulletType::heavyShot == bulletType)
+	else if(Bullet::Type::heavyShot == bulletType)
 		this->sprite = new GameShape(GameShape::TRIANGLE, 20.0f);
 
 }
@@ -48,9 +49,9 @@ void Bullet::process()
 	}
 }
 
-void Bullet::deleteBullet()
+void Bullet::deleteBullet(BulletFactory& bFactory)
 {
-	this->getBulletFactory()->returnObject(this);
+	bFactory.returnObject(this);
 }
 bool Bullet::isOutOfBounds()
 {
@@ -91,19 +92,28 @@ void Bullet::setOwner(Shooter::ShooterType owner)
 
 	this->owner = owner;
 }
+
 void Bullet::setDeleted(bool val)
 {
 	this->deleted = val;
 }
+
 bool Bullet::getDeleted()
 {
 	return this->deleted;
 }
+
 void Bullet::resetObject()
 {
 	this->setDeleted(false);
 }
-BulletFactory::BulletType Bullet::getBulletType()
+
+Bullet::Type Bullet::getBulletType()
 {
 	return this->bulletType;
+}
+
+Shooter::ShooterType Bullet::getOwner()
+{
+	return this->owner;
 }

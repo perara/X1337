@@ -32,6 +32,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="BulletFactory.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Bullet.h" />
@@ -46,6 +47,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="Shooter.h" />
+    <ClInclude Include="SliceEngine.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -2,12 +2,12 @@
 #include "ResourceHandler.h"
 
 // Resource Handler getter/setter
-void Globals::setResourceHandler(ResourceHandler* rh)
+void Globals::setResourceHandler(std::shared_ptr<ResourceHandler> rh)
 {
 	this->resourceHandler = rh;
 };
 
-ResourceHandler*  Globals::getResourceHandler()
+std::shared_ptr<ResourceHandler> Globals::getResourceHandler()
 {
 	return this->resourceHandler;
 }

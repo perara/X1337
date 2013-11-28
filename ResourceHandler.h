@@ -33,6 +33,11 @@ public:
 		ENCOUNTER1,
 		ENCOUNTER2,
 		ENCOUNTER3,
+		GAME_MENU,
+		DRIT,
+		DRIT1,
+		DRIT2,
+		DRIT3,
 		SCRIPTSCOUNT
 	};
 
@@ -55,9 +60,11 @@ public:
 
 
 	sf::Texture& getTexture(ResourceHandler::Texture);
-	Script* getScript(ResourceHandler::Scripts);
+	Script getScript(ResourceHandler::Scripts);
+	std::list<Script> getScripts();
 	sf::Font& getFont(ResourceHandler::Fonts);
 	sf::Sound& getSound(ResourceHandler::Sound);
+	Script getScriptById(int iteNum);
 
 private:
 	void loadTextures();
@@ -75,11 +82,11 @@ private:
 	// Sound
 	std::map<Sound, std::string> soundList;
 	sf::Sound sounds[Sound::SOUNDCOUNT];
+	std::list<sf::SoundBuffer> sBufferList;
 
 	// Scripts
 	std::map<Scripts, std::string> scriptList;
 	Script scripts[Scripts::SCRIPTSCOUNT]; //TODO
-	std::list<sf::SoundBuffer*> sBufferList;
 
 	// Fonts
 	std::map<Fonts, std::string> fontList;

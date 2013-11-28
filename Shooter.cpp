@@ -1,7 +1,7 @@
 #include "Shooter.h"
 #include "GameShape.h"
 #include "BulletFactory.h"
-#include "Bullet.h"
+#include "Log.h"
 
 Shooter::Shooter(sf::RenderWindow& window): 
 	Object(window)
@@ -110,30 +110,15 @@ void Shooter::hitDetection()
 {
 	if(!this->getBullets()->empty())
 	{
-
-
+		bool wasHit = false;
 		for(auto& i: *this->getBullets())
 		{
+			if(this->getType() == i->getOwner()) continue; // Dont compute bullets for your own type
 
-			bool wasHit = false;
-
-			if(this->getType() == Shooter::ShooterType::REGULAR && i->getBulletType() == BulletFactory::BulletType::standardShot)
+			wasHit = this->sat(this->sprite, i->sprite);
+			
+			if(wasHit)
 			{
-				// Square vs Circle
-			}
-			else if(this->getType() == Shooter::ShooterType::REGULAR && i->getBulletType() == BulletFactory::BulletType::heavyShot)
-			{
-				// Square vs Triangle
-			}
-			else if(this->getType() == Shooter::ShooterType::PLAYER && i->getBulletType() == BulletFactory::BulletType::standardShot)
-			{
-				// Convex vs Circle
-				wasHit = this->sat(this->sprite, i->sprite);
-			}
-
-			if(wasHit && this->getType() != i->owner)
-			{
-
 				i->setDeleted(true);
 				health = health-i->getBulletType();
 
@@ -153,7 +138,38 @@ void Shooter::setType(Shooter::ShooterType shooterType)
 	this->shooterType = shooterType;
 }
 
-Shooter::ShooterType& Shooter::getType()
+Shooter::ShooterType Shooter::getType()
 {
 	return this->shooterType;
+}
+
+
+void Shooter::init(BulletFactory& bFactory, std::list<Bullet*>& bullets)
+{
+	this->setBullets(bullets);
+	this->setBulletFactory(bFactory);
+	this->setInited(true);
+}
+
+
+// BulletFactory Getter/Setter
+BulletFactory* Shooter::getBulletFactory()
+{
+	return bFactory;
+}
+
+void Shooter::setBulletFactory(BulletFactory& bFactory)
+{
+	this->bFactory = &bFactory;
+}
+
+// Bullets getter/setter
+std::list<Bullet*>* Shooter::getBullets()
+{
+	return this->bullets;
+}
+
+void Shooter::setBullets(std::list<Bullet*>& bullets)
+{
+	this->bullets = &bullets;
 }

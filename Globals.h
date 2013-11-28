@@ -2,8 +2,11 @@
 #include <SFML\System.hpp>
 #include <SFML\Graphics\Font.hpp>
 #include <SFML\Graphics\View.hpp>
-
 #include "ResourceHandler.h"
+#include <memory>
+
+// Resides in Globals.h
+#define GlobalState Globals::getInstance().getState()
 
 
 /*http://stackoverflow.com/questions/270947/can-any-one-provide-me-a-sample-of-singleton-in-c/271104#271104*/
@@ -21,14 +24,16 @@ public:
 
 	enum State{
 		GAME, 
-		MENU, 
+		INIT_GAME,
+		STAGE_SELECT,
+		MAIN_MENU, 
 		OPTIONS, 
 		PAUSE
 	};
 
 	// Resource Handler getter/setter
-	void setResourceHandler(ResourceHandler* rh);
-	ResourceHandler* getResourceHandler();
+	void setResourceHandler(std::shared_ptr<ResourceHandler> rh);
+	std::shared_ptr<ResourceHandler> getResourceHandler();
 
 	// State getter/setter
 	void setState(Globals::State state);
@@ -45,7 +50,7 @@ public:
 
 
 private:
-	ResourceHandler* resourceHandler;
+	std::shared_ptr<ResourceHandler> resourceHandler;
 	State state;
 	sf::Time timeStep;
 	sf::View gameView;
