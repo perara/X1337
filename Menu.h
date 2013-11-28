@@ -17,6 +17,7 @@ public:
 	virtual void input(sf::Event&);
 	virtual void reset();
 
+	void drawPause(int xOffSet, int yOffset); // Should be accessible to gameEngine 
 	int getStageSelectOption();
 private:
 	// Loaders
@@ -26,7 +27,7 @@ private:
 	// Draw Functions
 	void drawStageSelect();
 	void drawMainMenu();
-	void drawOptions(Globals::State);
+	void drawOptions(Globals::State, int xOffset = 0, int yOffset = 0, sf::Color color = sf::Color(255,255,255,150));
 	void drawGameTitle();
 
 	// Input functions
@@ -35,14 +36,19 @@ private:
 
 	const enum Options
 	{
+		// Main menu opts
 		NEW_GAME,
 		LOAD_GAME,
 		CREDITS,
-		EXIT_GAME,		
+		EXIT_GAME,	
 
+		// Stage Select opts
 		SELECT_STAGE,
 		BACK,
 
+		// In game pause opts
+		CONTINUE_GAME,
+		TO_MAIN_MENU,
 		MENU_OPT_COUNT
 	};
 

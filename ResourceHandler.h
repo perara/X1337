@@ -5,7 +5,7 @@
 #include "libs\rapidxml.hpp"
 #include "libs\rapidxml_print.hpp"
 #include <fstream>
-#include <boost\lexical_cast.hpp>
+#include <memory>
 
 #include "Script.h"
 
@@ -79,7 +79,7 @@ private:
 	// Sound
 	std::map<Sound, std::string> soundList;
 	sf::Sound sounds[Sound::SOUNDCOUNT];
-	std::list<sf::SoundBuffer> sBufferList;
+	std::list<std::shared_ptr<sf::SoundBuffer>> sBufferList;
 
 	// Scripts
 	std::map<Scripts, std::string> scriptList;

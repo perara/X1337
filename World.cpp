@@ -34,7 +34,7 @@ void World::init()
 void World::init(int scriptNum)
 {
 	// Initialize Script
-	this->script = (Globals::getInstance().getResourceHandler()->getScript((ResourceHandler::Scripts)scriptNum));
+	this->script = Globals::getInstance().getResourceHandler()->getScriptById(scriptNum);
 	this->init();
 
 }

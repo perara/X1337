@@ -112,6 +112,24 @@ void GameEngine::runGame()
 			this->world->draw();
 			this->menu->draw();
 		}
+		else if(GlobalState == Globals::PAUSE)
+		{
+			window.setView(playerStatsView);
+			this->world->drawStats();
+
+			window.setView(mainView);
+			this->world->draw();
+
+			window.setView(fullScreen);
+			sf::RectangleShape darkOverLay(sf::Vector2f(window.getSize()));
+			darkOverLay.setFillColor(sf::Color(0,0,0,150));
+			darkOverLay.setPosition(0,0);
+			window.draw(darkOverLay);
+
+			this->menu->draw();
+			this->menu->drawPause(( window.getSize().y / 2),( window.getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
+
+		}
 
 		window.display();
 	}
@@ -147,7 +165,14 @@ void GameEngine::pollInput()
 		if(this->event.type == sf::Event::KeyReleased)
 		{
 			if(this->event.key.code == sf::Keyboard::Escape){
-				this->window.close();
+				if(GlobalState == Globals::State::GAME)
+				{
+					Globals::getInstance().setState(Globals::State::PAUSE);
+				}
+				else if(GlobalState == Globals::State::PAUSE)
+				{
+					Globals::getInstance().setState(Globals::State::GAME);
+				}
 			}
 		}
 

@@ -105,9 +105,6 @@
     <ClInclude Include="Script.h">
       <Filter>Header\Base Classes</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyFactory.h">
-      <Filter>Header\Factory</Filter>
-    </ClInclude>
     <ClInclude Include="SliceEngine.h">
       <Filter>Header\Base Classes</Filter>
     </ClInclude>
