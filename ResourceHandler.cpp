@@ -110,7 +110,6 @@ void ResourceHandler::loadSound()
 		else
 		{
 			LOGD("Failed to load sound: " << i.second);
-
 		}
 
 	}
@@ -164,11 +163,11 @@ void ResourceHandler::loadScripts()
 
 			}
 
-			Enemy* e1 = new Enemy(
+			std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
 				window, 
 				pathQueue,
 				type,
-				atoi(repeat->value()));
+				atoi(repeat->value())));
 
 			//std::cout << e1 << std::endl;
 			std::string nameCpp(name->value()); // Convert name to CPP11 format

@@ -23,25 +23,23 @@ void Menu::init()
 
 	std::map<Menu::Options, std::string> mainMenu;
 	{
-		mainMenu[Options::NEW_GAME] = "New Game";
-		mainMenu[Options::LOAD_GAME] = "Load Existing Game";
-		mainMenu[Options::CREDITS] = "Credits";
-		mainMenu[Options::EXIT_GAME] = "Exit Game";
+		mainMenu[Menu::Options::NEW_GAME] = "New Game";
+		mainMenu[Menu::Options::LOAD_GAME] = "Load Existing Game";
+		mainMenu[Menu::Options::CREDITS] = "Credits";
+		mainMenu[Menu::Options::EXIT_GAME] = "Exit Game";
 	}
 
 	std::map<Menu::Options, std::string> stageSelect;
 	{
-		stageSelect[Options::BACK] = "Back";		
-		stageSelect[Options::SELECT_STAGE] = "Select Stage";
+		stageSelect[Menu::Options::BACK] = "Back";		
+		stageSelect[Menu::Options::SELECT_STAGE] = "Select Stage";
 	}
 
 	std::map<Menu::Options, std::string> pause;
 	{
-		pause[Options::CONTINUE_GAME] = "Continue";		
-		pause[Options::TO_MAIN_MENU] = "To Main Menu";
+		pause[Menu::Options::CONTINUE_GAME] = "Continue";		
+		pause[Menu::Options::TO_MAIN_MENU] = "To Main Menu";
 	}
-
-
 
 	optMap[Globals::State::MAIN_MENU] = mainMenu;
 	optMap[Globals::State::STAGE_SELECT] = stageSelect;
@@ -74,7 +72,7 @@ void Menu::loadMenuOptions()
 		int y = window.getSize().y - 50;
 
 
-		std::map<Options, std::string>::reverse_iterator rit;
+		std::map<Menu::Options, std::string>::reverse_iterator rit;
 		for (rit=i.second.rbegin(); rit != i.second.rend(); ++rit)
 		{
 			sf::Text txt;
@@ -132,35 +130,53 @@ void Menu::input(sf::Event& event)
 	{
 		switch(currentOption)
 		{
-		case Menu::NEW_GAME:
+			/////////////////////////////////////////////
+			/////////////////Main Menu///////////////////
+			/////////////////////////////////////////////
+		case Menu::Options::NEW_GAME:
 			Globals::getInstance().setState(Globals::State::STAGE_SELECT);
 			this->setCurrentOption(option[GlobalState].begin()->first);
 			break;
-		case Menu::LOAD_GAME:
+		case Menu::Options::LOAD_GAME:
 			break;
-		case Menu::BACK:
+		case Menu::Options::CREDITS:
+			break;
+		case Menu::Options::EXIT_GAME:
+			exit(EXIT_SUCCESS);
+			break;
+
+			/////////////////////////////////////////////
+			///////////////Stage Select//////////////////
+			/////////////////////////////////////////////
+		case Menu::Options::SELECT_STAGE:
+			Globals::getInstance().setState(Globals::State::INIT_GAME);
+			this->setCurrentOption(option[Globals::State::PAUSE].begin()->first); // Set to pause, because we dont have options for INIT_GAME (which basicly is game)
+			break;
+		case Menu::Options::BACK:
 			Globals::getInstance().setState(Globals::State::MAIN_MENU);
 			this->setCurrentOption(option[GlobalState].begin()->first);
 			break;
-		case Menu::CREDITS:
+
+			/////////////////////////////////////////////
+			/////////////IN-GAME-Pause///////////////////
+			/////////////////////////////////////////////
+		case Menu::Options::CONTINUE_GAME:
+			Globals::getInstance().setState(Globals::State::GAME);
+			this->setCurrentOption(option[Globals::State::PAUSE].begin()->first); // Set back to Pause, since that is the only menu set we can have at this stage.
 			break;
-		case Menu::SELECT_STAGE:
-			Globals::getInstance().setState(Globals::State::INIT_GAME);
+		case Menu::Options::TO_MAIN_MENU:
+			Globals::getInstance().setState(Globals::State::INIT_MAIN_MENU);
+			this->setCurrentOption(option[Globals::State::MAIN_MENU].begin()->first); 
 			break;
-		case Menu::EXIT_GAME:
-			exit(EXIT_SUCCESS);
-			break;
+
 		default:
 			LOGD("Missing menu action!");
 			break;
 		}
 	}
 
-	// Do additional input for stage select
-	if(GlobalState == Globals::State::STAGE_SELECT)
-	{
-		stageSelectInput(event);
-	}
+	// Do additional input for stage select (Two input handlers, horizontal + vertical
+	if(GlobalState == Globals::State::STAGE_SELECT)	stageSelectInput(event);
 
 }
 
@@ -263,18 +279,19 @@ void Menu::drawOptions(Globals::State state, int xOffset, int yOffset, sf::Color
 	// Draw Options
 	for(auto& i: option[state]) 
 	{
-		sf::Vector2f tmp(i.second.getPosition()); // Store original position
 		i.second.move(xOffset, yOffset); // Move 'x' offset and 'y' offset
+		i.second.setColor(color);
 		window.draw(i.second);
-		i.second.setPosition(tmp); // Set pos back
+		i.second.move(-xOffset, -yOffset); // Move back  'x' offset and 'y' offset
+
 	}
 
 	// Draw Option overlay
 	sf::FloatRect pos = option[state][(Menu::Options)currentOption].getGlobalBounds();
 	sf::RectangleShape sh;
-	sh.setFillColor(color);
+	sh.setFillColor(sf::Color(255,255,255,150));
 	sh.setSize(sf::Vector2f(pos.width + 20, pos.height / 2));
-	sh.setPosition(pos.left - 10,pos.top + (pos.height / 4));
+	sh.setPosition(pos.left - 10 + xOffset,pos.top + (pos.height / 4) + yOffset);
 	window.draw(sh);
 }
 

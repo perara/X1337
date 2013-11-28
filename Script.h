@@ -2,7 +2,7 @@
 #include <queue>
 #include <list>
 #include <SFML\System\Clock.hpp>
-
+#include <memory>
 
 
 class Object;
@@ -16,9 +16,9 @@ class Script
 	class ScriptTick
 	{
 	public:
-		Enemy* enemy;
+		std::shared_ptr<Enemy> enemy;
 		int delay;
-		ScriptTick(Enemy* enemy, int delay):
+		ScriptTick(std::shared_ptr<Enemy> enemy, int delay):
 			enemy(enemy),
 			delay(delay){};
 	};
@@ -29,7 +29,7 @@ class Script
 
 
 public:
-	void addEnemy(Enemy* enemy, int delay);
+	void addEnemy(std::shared_ptr<Enemy> enemy, int delay);
 
 	// ScriptClock
 	sf::Clock& getClock();
@@ -40,7 +40,7 @@ public:
 	void setInit(bool);
 
 	// Process
-	void process(std::list<Shooter*>&);
+	void process(std::list<std::shared_ptr<Shooter>>&);
 
 	// Get/Set scriptName
 	std::string getScriptTitle();

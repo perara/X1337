@@ -27,11 +27,11 @@ private:
 	// Draw Functions
 	void drawStageSelect();
 	void drawMainMenu();
-	void drawOptions(Globals::State, int xOffset = 0, int yOffset = 0, sf::Color color = sf::Color(255,255,255,150));
+	void drawOptions(Globals::State, int xOffset = 0, int yOffset = 0, sf::Color color = sf::Color(139,137,137));
 	void drawGameTitle();
 
 	// Input functions
-	void stageSelectInput(sf::Event& event);
+	void stageSelectInput(sf::Event&);
 
 
 	const enum Options
@@ -62,7 +62,6 @@ private:
 
 	// Option lists
 	std::map<Globals::State, std::map<Menu::Options, std::string>> optMap;
-
 	std::map<Globals::State, std::map<Menu::Options, sf::Text>> option;
 
 };

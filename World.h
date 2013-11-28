@@ -4,6 +4,7 @@
 #include "BulletFactory.h"
 #include "Player.h"
 #include "Script.h"
+#include <memory>
 
 
 class Shooter;
@@ -15,10 +16,10 @@ class Bullet;
 /// </summary>
 class World: public Scene{
 public:
-	std::list<Shooter*> objects; 
+	std::list<std::shared_ptr<Shooter>> objects; 
 	std::list<Bullet*> bullets;
 
-	void addObject(Shooter* object);
+	void addObject(std::shared_ptr<Shooter> object);
 	void addBullet(Bullet* bullet);
 
 	World();

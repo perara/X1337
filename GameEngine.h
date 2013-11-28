@@ -2,7 +2,7 @@
 #include <SFML\Graphics\RenderWindow.hpp>
 #include <SFML\System\Time.hpp>
 #include <SFML\Graphics.hpp>
-
+#include <memory>
 
 class World;
 class Menu;
@@ -22,8 +22,8 @@ private:
 	void pollInput();
 	sf::RenderWindow window;
 
-	World* world;
-	Menu* menu;
+	std::unique_ptr<World> world;
+	std::unique_ptr<Menu> menu;
 
 	sf::Time elapsedTime;
 	sf::Clock gameClock;

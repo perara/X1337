@@ -48,11 +48,11 @@ GameEngine::GameEngine():
 	window.setMouseCursorVisible(false);
 
 	// Init World
-	this->world = new World(window);
-	this->world->setDemo(true);
+	world = std::unique_ptr<World>(new World(window));
+	world->setDemo(true);
 
 	// Init Menu
-	this->menu = new Menu(window);
+	menu = std::unique_ptr<Menu>(new Menu(window));
 
 
 	// Start Gameloop
@@ -68,7 +68,7 @@ void GameEngine::runGame()
 
 		while(this->elapsedTime >=  Globals::getInstance().getTimeStep())
 		{
-			if(GlobalState == Globals::GAME)
+			if(GlobalState == Globals::State::GAME)
 			{
 				// Process Scene
 				this->world->process();
@@ -80,9 +80,15 @@ void GameEngine::runGame()
 				this->world->setDemo(false);
 				this->world->reset();
 				this->world->init(menu->getStageSelectOption());
-				Globals::getInstance().setState(Globals::GAME);
+				Globals::getInstance().setState(Globals::State::GAME);
 			}
-			else if(GlobalState == Globals::MAIN_MENU  || GlobalState == Globals::STAGE_SELECT)
+			else if(GlobalState == Globals::State::INIT_MAIN_MENU)
+			{
+				Globals::getInstance().setState(Globals::State::MAIN_MENU);
+				std::unique_ptr<World> world = std::unique_ptr<World>(new World(window));
+				this->world->setDemo(true);
+			}
+			else if(GlobalState == Globals::State::MAIN_MENU  || GlobalState == Globals::State::STAGE_SELECT)
 			{
 				this->world->process();
 				this->menu->process();
@@ -94,7 +100,7 @@ void GameEngine::runGame()
 		window.clear(sf::Color::Black);
 
 
-		if(GlobalState == Globals::GAME)
+		if(GlobalState == Globals::State::GAME)
 		{
 			window.setView(playerStatsView);
 			this->world->drawStats();
@@ -102,17 +108,17 @@ void GameEngine::runGame()
 			window.setView(mainView);
 			this->world->draw();
 		}
-		else if(GlobalState == Globals::INIT_GAME)
+		else if(GlobalState == Globals::State::INIT_GAME)
 		{
 
 		}
-		else if(GlobalState == Globals::MAIN_MENU || GlobalState == Globals::STAGE_SELECT)
+		else if(GlobalState == Globals::State::MAIN_MENU || GlobalState == Globals::State::STAGE_SELECT)
 		{
 			window.setView(fullScreen);
 			this->world->draw();
 			this->menu->draw();
 		}
-		else if(GlobalState == Globals::PAUSE)
+		else if(GlobalState == Globals::State::PAUSE)
 		{
 			window.setView(playerStatsView);
 			this->world->drawStats();
@@ -141,14 +147,14 @@ void GameEngine::pollInput()
 	{
 
 		/* Input event for each of the STATES */
-		if(GlobalState == Globals::GAME)
+		if(GlobalState == Globals::State::GAME)
 		{
 			this->menu->input(this->event);
 		}
-		else if(GlobalState == Globals::INIT_GAME)
+		else if(GlobalState == Globals::State::INIT_GAME)
 		{
 		}
-		else if(GlobalState == Globals::MAIN_MENU || GlobalState == Globals::STAGE_SELECT)
+		else if(GlobalState == Globals::State::MAIN_MENU || GlobalState == Globals::State::STAGE_SELECT || GlobalState == Globals::State::PAUSE)
 		{
 			this->menu->input(this->event);
 		}

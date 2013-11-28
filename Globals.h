@@ -25,6 +25,7 @@ public:
 	enum State{
 		GAME, 
 		INIT_GAME,
+		INIT_MAIN_MENU,
 		STAGE_SELECT,
 		MAIN_MENU, 
 		OPTIONS, 

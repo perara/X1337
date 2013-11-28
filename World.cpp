@@ -20,29 +20,30 @@ World::World(sf::RenderWindow& window):
 
 void World::init()
 {
-	// Initialize Background
+	/*// Initialize Background
 	bg.addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::BACKGROUND1));
 
 	// Initialize Player
-	player.init(this->bFactory, this->bullets);
+	if(!player.getInited()) player.init(this->bFactory, this->bullets);
 
-	if(!this->isDemo()) this->addObject(&player);
+	std::shared_ptr<Player> pPtr = std::shared_ptr<Player>(&player);
+	if(!this->isDemo()) this->addObject(pPtr);
 
 	// Set inited to true
-	this->setInited(true);
+	this->setInited(true);*/
 }
 void World::init(int scriptNum)
 {
-	// Initialize Script
+	/*// Initialize Script
 	this->script = Globals::getInstance().getResourceHandler()->getScriptById(scriptNum);
-	this->init();
+	this->init();*/
 
 }
 
 void World::reset()
 {
 
-	// Delete bullets
+/*	// Delete bullets
 	for(Bullet* i : this->bullets)
 	{
 		delete i;
@@ -50,14 +51,7 @@ void World::reset()
 	bullets.clear();
 
 	// Delete objects
-	for(Object* i : this->objects)
-	{
-		delete i;
-	}
-	objects.clear();
-
-	this->init();
-
+	objects.clear();*/
 }
 
 bool World::isDemo()
@@ -68,12 +62,12 @@ bool World::isDemo()
 void World::setDemo(bool demo)
 {
 	this->demo = demo;
-	if(this->demo)this->script = (Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::GAME_MENU));
+	//if(this->demo)this->script = Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::GAME_MENU);
 }
 
 void World::process()
 {
-	// Process loaded script
+	/*// Process loaded script
 	this->script.process(objects);
 
 	///////////////////////////////////
@@ -81,7 +75,7 @@ void World::process()
 	///////////////////////////////////
 	if(!objects.empty())
 	{
-		for(std::list<Shooter*>::iterator i = objects.begin(); i != objects.end();)
+		for(std::list<std::shared_ptr<Shooter>>::iterator i = objects.begin(); i != objects.end();)
 		{
 			// Init object if its not already inited
 			if(!(*i)->getInited()) (*i)->init(bFactory, bullets);
@@ -90,9 +84,8 @@ void World::process()
 			(*i)->process();
 
 			// Cleanup
-			if((*i)->getDeleted())
+			if((*i)->getDeleted() && (*i)->getInited())
 			{ // If the bullet is up for deletion
-				delete *i; 
 				i = objects.erase(i);
 			}
 			else
@@ -125,7 +118,7 @@ void World::process()
 		}
 
 	}
-
+	*/
 }
 
 void World::drawStats()
@@ -137,7 +130,7 @@ void World::drawStats()
 /// Adds a object to the scene
 /// </summary>
 /// <param name="object">The object thats requested for addition</param>
-void World::addObject(Shooter* object)
+void World::addObject(std::shared_ptr<Shooter> object)
 {
 	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
 	this->objects.push_back(object);
@@ -156,7 +149,7 @@ void World::addBullet(Bullet* bullet)
 /// </summary>
 void World::draw()
 {
-	// Draw background
+/*	// Draw background
 	if(!this->isDemo()) bg.process(); // TODO
 
 
@@ -169,7 +162,7 @@ void World::draw()
 	{
 		it->draw();
 
-	}
+	}*/
 }
 
 void World::input(sf::Event& event)

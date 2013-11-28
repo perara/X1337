@@ -5,7 +5,7 @@
 
 
 
-void Script::addEnemy(Enemy* enemy, int delay)
+void Script::addEnemy(std::shared_ptr<Enemy> enemy, int delay)
 {
 	LOGD("Adding new enemy to queue pool (Enemy#" << enemy << ")");
 	ScriptTick* tick = new ScriptTick(enemy, delay);
@@ -60,7 +60,7 @@ int Script::getScriptEnumVal()
 }
 
 // Process
-void Script::process(std::list<Shooter*>& objects)
+void Script::process(std::list<std::shared_ptr<Shooter>>& objects)
 {
 	// Do processing
 	if(!this->list.empty())
