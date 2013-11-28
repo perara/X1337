@@ -31,15 +31,17 @@ void Menu::init()
 
 	std::map<Menu::Options, std::string> stageSelect;
 	{
-		stageSelect[Options::BACK] = "Back";
+		stageSelect[Options::BACK] = "Back";		
+		stageSelect[Options::SELECT_STAGE] = "Select Stage";
 	}
 
 	optMap[Globals::State::MAIN_MENU] = mainMenu;
 	optMap[Globals::State::STAGE_SELECT] = stageSelect;
 
-	this->loadMenuOptions();
-	this->setCurrentOption(option[GlobalState].begin()->first);
-	this->setInited(true);
+	loadMenuOptions();
+	setStageSelectOption(1);
+	setCurrentOption(option[GlobalState].begin()->first);
+	setInited(true);
 }
 
 void Menu::process()
@@ -91,7 +93,7 @@ void Menu::input(sf::Event& event)
 
 		if(currentOption  == option[GlobalState].begin()->first)
 		{
-			currentOption = option[GlobalState].begin()->first;
+			currentOption = option[GlobalState].rbegin()->first;
 			LOGD("Pressed up, do nothing");
 		}
 		else
@@ -107,30 +109,34 @@ void Menu::input(sf::Event& event)
 
 		if(currentOption == option[GlobalState].rbegin()->first)
 		{
-			currentOption = option[GlobalState].rbegin()->first;
+			currentOption = option[GlobalState].begin()->first;
 			LOGD("Pressed down, do nothing");
 		}
 		else
 		{
 			currentOption++;
-			LOGD("Pressed up, go up");
+			LOGD("Pressed down, go up");
 		}
 
 	}
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Return )
 	{
-
 		switch(currentOption)
 		{
 		case Menu::NEW_GAME:
 			Globals::getInstance().setState(Globals::State::STAGE_SELECT);
+			this->setCurrentOption(option[GlobalState].begin()->first);
 			break;
 		case Menu::LOAD_GAME:
 			break;
 		case Menu::BACK:
 			Globals::getInstance().setState(Globals::State::MAIN_MENU);
+			this->setCurrentOption(option[GlobalState].begin()->first);
 			break;
 		case Menu::CREDITS:
+			break;
+		case Menu::SELECT_STAGE:
+			Globals::getInstance().setState(Globals::State::INIT_GAME);
 			break;
 		case Menu::EXIT_GAME:
 			exit(EXIT_SUCCESS);
@@ -139,15 +145,53 @@ void Menu::input(sf::Event& event)
 			LOGD("Missing menu action!");
 			break;
 		}
-		this->setCurrentOption(option[GlobalState].begin()->first);
+	}
+
+	// Do additional input for stage select
+	if(GlobalState == Globals::State::STAGE_SELECT)
+	{
+		stageSelectInput(event);
 	}
 
 }
 
+void Menu::stageSelectInput(sf::Event& event)
+{
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left )
+	{
+		LOGD ("Current Stage selected: " << getStageSelectOption());
 
-/////////////////////////////////////////////
-////Getter/Setter for current option/////////
-/////////////////////////////////////////////
+		if(getStageSelectOption() == 1)
+		{
+			setStageSelectOption(numStages);
+		}
+		else
+		{
+			setStageSelectOption(getStageSelectOption() - 1);
+		}
+
+	}
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right )
+	{
+		LOGD ("Current Stage selected: " << getStageSelectOption());
+
+		if(getStageSelectOption() == numStages)
+		{
+			setStageSelectOption(1);
+		}
+		else
+		{
+			setStageSelectOption(getStageSelectOption() + 1);
+		}
+	}
+
+
+}
+
+
+//////////////////////////////////////////////
+//Getter/Setter for current option variables//
+//////////////////////////////////////////////
 int Menu::getCurrentOption()
 {
 	return this->currentOption;
@@ -158,6 +202,14 @@ void Menu::setCurrentOption(int opt)
 	this->currentOption = opt;
 }
 
+int Menu::getStageSelectOption()
+{
+	return this->stageSelectOption;
+}
+void Menu::setStageSelectOption(int opt)
+{
+	this->stageSelectOption = opt;
+}
 
 /////////////////////////////////////////////
 ///////Draw implementation for Menu//////////
@@ -234,8 +286,18 @@ void Menu::drawStageSelect()
 	sf::Vector2f frameStartPos((window.getView().getSize().x/4) - 60 , window.getView().getSize().y / 4);
 	int yMult = 1;
 	int count = 1;
+	int cnt = count;
+
+	sf::FloatRect currentStageSelBounds; // Read as Current stage select bounds
 	for(Script& i : Globals::getInstance().getResourceHandler()->getScripts())
 	{
+		// Ignore Game menu script 
+		if(i.getScriptEnumVal() == ResourceHandler::Scripts::GAME_MENU)
+		{
+			cnt++;
+			continue;
+		}
+
 		// Image display
 		sf::RectangleShape frame(sf::Vector2f(window.getView().getSize().x / 8,window.getView().getSize().y / 8));
 		frame.setFillColor(sf::Color(53,24,52));
@@ -245,11 +307,13 @@ void Menu::drawStageSelect()
 		// Text Under image
 		sf::Text txtName;
 		txtName.setFont(Globals::getInstance().getResourceHandler()->getFont(ResourceHandler::Fonts::SANSATION));
-		txtName.setString(i.getScriptName());
+		txtName.setString(i.getScriptTitle());
 		txtName.setCharacterSize(20);
 		txtName.setColor(sf::Color::White);
 		txtName.setPosition(frame.getPosition().x, frame.getPosition().y + frame.getSize().y);
 		window.draw(txtName);
+
+		if(getStageSelectOption() == cnt) currentStageSelBounds = txtName.getGlobalBounds(); // Get current selected stage's text bounds
 
 		count++;
 		if(count % 4 == 1)
@@ -257,5 +321,16 @@ void Menu::drawStageSelect()
 			count = 1;
 			yMult++;
 		}
+		cnt++;
 	}
+	numStages = cnt - 1; // Set number of stages
+
+	// Draw Stage select overlay
+	sf::RectangleShape sh = sf::RectangleShape();
+	sh.setFillColor(sf::Color(255,255,255,150));
+	sh.setSize(sf::Vector2f(currentStageSelBounds.width + 20, currentStageSelBounds.height / 2));
+	sh.setPosition(currentStageSelBounds.left - 10,currentStageSelBounds.top + (currentStageSelBounds.height / 4));
+	window.draw(sh);
+
+
 }

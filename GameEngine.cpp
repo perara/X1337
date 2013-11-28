@@ -4,6 +4,8 @@
 #include "ResourceHandler.h"
 #include "Menu.h"
 
+#include <iostream>
+
 GameEngine::GameEngine():
 	window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize),
 	fullScreen(sf::View(sf::FloatRect(0,0,window.getSize().x,window.getSize().y))),
@@ -77,6 +79,7 @@ void GameEngine::runGame()
 				Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).stop();
 				this->world->setDemo(false);
 				this->world->reset();
+				this->world->init(menu->getStageSelectOption());
 				Globals::getInstance().setState(Globals::GAME);
 			}
 			else if(GlobalState == Globals::MAIN_MENU  || GlobalState == Globals::STAGE_SELECT)
@@ -93,11 +96,11 @@ void GameEngine::runGame()
 
 		if(GlobalState == Globals::GAME)
 		{
-			window.setView(mainView);
-			this->world->draw();
-
 			window.setView(playerStatsView);
 			this->world->drawStats();
+
+			window.setView(mainView);
+			this->world->draw();
 		}
 		else if(GlobalState == Globals::INIT_GAME)
 		{
@@ -126,7 +129,6 @@ void GameEngine::pollInput()
 		}
 		else if(GlobalState == Globals::INIT_GAME)
 		{
-
 		}
 		else if(GlobalState == Globals::MAIN_MENU || GlobalState == Globals::STAGE_SELECT)
 		{

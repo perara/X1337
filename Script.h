@@ -4,9 +4,11 @@
 #include <SFML\System\Clock.hpp>
 
 
+
 class Object;
 class Shooter;
 class Enemy;
+
 
 
 class Script
@@ -41,11 +43,12 @@ public:
 	void process(std::list<Shooter*>&);
 
 	// Get/Set scriptName
-	std::string getScriptName();
-	void setScriptName(std::string);
-
+	std::string getScriptTitle();
+	void setScriptTitle(std::string);
+	void setScriptEnumVal(int);
+	int getScriptEnumVal();
 private:
-	std::string scriptName;
-
+	std::string scriptTitle;
+	int scriptEnumVal;
 
 };

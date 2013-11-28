@@ -14,16 +14,12 @@ World::World(sf::RenderWindow& window):
 	bFactory(BulletFactory(window, 1000, bullets)),
 	player(Player(window, sf::Vector2f(100,250), 10))
 {
-	this->init();
-}
 
+}
 
 
 void World::init()
 {
-	// Initialize Script
-	this->script = (Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::ENCOUNTER3));
-
 	// Initialize Background
 	bg.addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::BACKGROUND1));
 
@@ -34,6 +30,13 @@ void World::init()
 
 	// Set inited to true
 	this->setInited(true);
+}
+void World::init(int scriptNum)
+{
+	// Initialize Script
+	this->script = (Globals::getInstance().getResourceHandler()->getScript((ResourceHandler::Scripts)scriptNum));
+	this->init();
+
 }
 
 void World::reset()

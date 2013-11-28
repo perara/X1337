@@ -61,6 +61,7 @@ public:
 	std::list<Script> getScripts();
 	sf::Font& getFont(ResourceHandler::Fonts);
 	sf::Sound& getSound(ResourceHandler::Sound);
+	Script getScriptById(int iteNum);
 
 private:
 	void loadTextures();

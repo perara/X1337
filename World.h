@@ -28,6 +28,7 @@ public:
 	virtual void draw();
 	virtual void process();
 	virtual void init();
+	virtual void init(int scriptNum);
 	virtual void input(sf::Event&);
 	virtual void reset();
 

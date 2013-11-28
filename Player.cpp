@@ -46,9 +46,9 @@ void Player::detectEdge()
 		this->sprite->setPosition(this->sprite->getRadius(), this->sprite->getPosition().y);
 	}
 
-	if(this->sprite->getPosition().x >= window.getView().getSize().x - this->sprite->getRadius())
+	if(this->sprite->getPosition().x >= window.getSize().x - this->sprite->getRadius())
 	{
-		this->sprite->setPosition(window.getView().getSize().x - this->sprite->getRadius(), this->sprite->getPosition().y);
+		this->sprite->setPosition(window.getSize().x - this->sprite->getRadius(), this->sprite->getPosition().y);
 	}
 
 	// Y
@@ -58,9 +58,9 @@ void Player::detectEdge()
 	}
 
 
-	if(this->sprite->getPosition().y >= window.getView().getSize().y - this->sprite->getRadius())
+	if(this->sprite->getPosition().y >= window.getSize().y - this->sprite->getRadius())
 	{
-		this->sprite->setPosition(this->sprite->getPosition().x, window.getView().getSize().y - this->sprite->getRadius());
+		this->sprite->setPosition(this->sprite->getPosition().x, window.getSize().y - this->sprite->getRadius());
 	}
 }
 
@@ -118,26 +118,25 @@ void Player::input(sf::Event& event)
 	if(event.type == sf::Event::MouseMoved)
 	{
 		int current_x = sf::Mouse::getPosition(window).x, current_y = sf::Mouse::getPosition(window).y;
-		int elapsed_x = (window.getView().getSize().x / 2) - current_x, elapsed_y = (window.getView().getSize().y / 2) - current_y;
+		int elapsed_x = (window.getSize().x / 2) - current_x, elapsed_y = (window.getView().getSize().y / 2) - current_y;
 
 		if(elapsed_x != 0 || elapsed_y != 0)
 		{
 
 
-
 			/************************************************************************/
 			/* Mouse Movement Handling                                              */
 			/************************************************************************/
-			if(this->sprite->getPosition().x > 0 && this->sprite->getPosition().x < window.getView().getSize().x)
+			if(this->sprite->getPosition().x > 0 && this->sprite->getPosition().x < window.getSize().x)
 			{
 				this->sprite->move(-elapsed_x  , 0);
 			}
 
-			if(this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < (window.getView().getSize().y + window.getView().getSize().y))
+			if(this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < (window.getSize().y + window.getSize().y))
 			{
 				this->sprite->move(0, -elapsed_y);
 			}
-			sf::Mouse::setPosition(sf::Vector2i((window.getView().getSize().x / 2), (window.getView().getSize().y / 2)), window);
+			sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window);
 		}
 	}
 
