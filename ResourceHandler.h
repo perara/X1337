@@ -6,8 +6,22 @@
 #include "libs\rapidxml_print.hpp"
 #include <fstream>
 #include <memory>
-
+#include <map>
+#include <list>
 #include "Script.h"
+
+struct HighScoreItem
+{
+	int stage;
+	std::string playerName;
+	float score;
+	std::string date;
+
+	// Construct
+	HighScoreItem(int stage, std::string playerName, 
+		float score, 
+		std::string date): stage(stage), playerName(playerName), score(score), date(date){};
+};
 
 class ResourceHandler
 {
@@ -52,7 +66,6 @@ public:
 		FONTCOUNT,
 	};
 
-
 	ResourceHandler(sf::RenderWindow& window);
 	~ResourceHandler();
 
@@ -62,6 +75,9 @@ public:
 	void setInit(bool);
 	bool getInit();
 
+	// Highscore
+	void writeHighScoreScore();
+	void loadHighScore();
 
 	sf::Texture& getTexture(ResourceHandler::Texture);
 	Script getScript(ResourceHandler::Scripts);
@@ -69,6 +85,7 @@ public:
 	sf::Font& getFont(ResourceHandler::Fonts);
 	sf::Sound& getSound(ResourceHandler::Sound);
 	Script getScriptById(int iteNum);
+	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> getHighScores();
 
 private:
 	void loadTextures();
@@ -95,4 +112,8 @@ private:
 	// Fonts
 	std::map<Fonts, std::string> fontList;
 	sf::Font fonts[Fonts::FONTCOUNT];
+
+	// Highscore
+	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> highScoreStages; // All stages
+	std::string highScoreFile;
 };

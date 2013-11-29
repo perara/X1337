@@ -111,6 +111,10 @@ void GameEngine::runGame()
 			this->world->draw();
 			this->menu->draw();
 		}
+		else if(getState() == GameState::HIGHSCORE )
+		{
+			menu->draw();
+		}
 		else if(getState() == GameState::PAUSE)
 		{
 			window.setView(playerStatsView);
@@ -147,7 +151,7 @@ void GameEngine::pollInput()
 		else if(getState() == GameState::INIT_GAME)
 		{
 		}
-		else if(getState() ==GameState::MAIN_MENU || getState() == GameState::STAGE_SELECT || getState() == GameState::PAUSE)
+		else if(getState() ==GameState::MAIN_MENU || getState() == GameState::STAGE_SELECT || getState() == GameState::PAUSE || getState() == GameState::HIGHSCORE)
 		{
 			this->menu->input(this->event);
 		}

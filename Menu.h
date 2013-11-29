@@ -31,6 +31,7 @@ private:
 	void drawMainMenu();
 	void drawOptions(GameState, int xOffset = 0, int yOffset = 0, sf::Color color = sf::Color(139,137,137));
 	void drawGameTitle();
+	void drawHighScore();
 
 	// Input functions
 	void stageSelectInput(sf::Event&);
@@ -39,7 +40,8 @@ private:
 	const enum Options
 	{
 		// Main menu opts
-		NEW_GAME,		
+		NEW_GAME,	
+		HIGHSCORE,
 		EXIT_GAME,	
 		LOAD_GAME,
 		CREDITS,

@@ -18,6 +18,7 @@ Scene(window, resourceHandler),
 	ingameSong(resourceHandler->getSound(ResourceHandler::Sound::INGAME))
 {
 
+
 }
 
 World::~World()
@@ -68,7 +69,7 @@ void World::process()
 			{ // If the bullet is up for deletion
 				if((*i)->getType()==Shooter::ShooterType::ENEMY)
 					player->addScore((*i)->getValue());
-				
+
 				i = objects.erase(i);
 			}
 			else

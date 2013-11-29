@@ -16,6 +16,9 @@ ResourceHandler::~ResourceHandler()
 void ResourceHandler::init()
 {
 	// Define Resources
+	// HIGHSCORE
+	highScoreFile = "assets/config.xml";
+
 	// Textures
 	{
 		textureList[Texture::BACKGROUND1]  = "assets/sprites/bg1.jpg";
@@ -59,6 +62,7 @@ void ResourceHandler::init()
 	this->loadTextures();
 	this->loadSound();
 	this->loadScripts();
+	this->loadHighScore();
 
 
 
@@ -118,6 +122,48 @@ void ResourceHandler::loadSound()
 		}
 
 	}
+}
+
+void ResourceHandler::loadHighScore()
+{
+	std::ifstream theFile (highScoreFile);
+	std::vector<char> buffer((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>());
+	buffer.push_back('\0');
+
+	rapidxml::xml_document<> doc;
+
+	// Parse XML file
+	doc.parse<0>(&buffer[0]);
+
+	// Root Node
+	rapidxml::xml_node<> *root = doc.first_node("Savegame");
+
+	// Parse Paths
+	rapidxml::xml_node<> *stages = root->first_node("Stages");
+
+	//Stages nodes
+	for (rapidxml::xml_node<> *stage = stages->first_node(); stage; stage = stage->next_sibling())
+	{
+		int stageEnum = atoi(stage->first_attribute("enum")->value());
+
+		std::list<std::shared_ptr<HighScoreItem>> highScoreStage; // Single Stage
+		for(rapidxml::xml_node<> *player = stage->first_node(); player; player = player->next_sibling())
+		{
+			player = stage->first_node("Player");
+			std::string pName = player->first_node("Name")->value();
+			float pScore = atof(player->first_node("Score")->value());
+			std::string date = player->first_node("Date")->value();
+			highScoreStage.push_back(std::shared_ptr<HighScoreItem>(new HighScoreItem((ResourceHandler::Scripts)stageEnum, pName, pScore, date)));
+		}
+		highScoreStages[(ResourceHandler::Scripts)stageEnum] = (highScoreStage);
+	}
+}
+
+void ResourceHandler::writeHighScoreScore()
+{
+
+
+
 }
 
 void ResourceHandler::loadScripts()
@@ -231,6 +277,10 @@ sf::Sound& ResourceHandler::getSound(ResourceHandler::Sound query)
 	return this->sounds[query];
 }
 
+std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> ResourceHandler::getHighScores()
+{
+	return this->highScoreStages;
+}
 
 
 bool ResourceHandler::getInit()
