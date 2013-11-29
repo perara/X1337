@@ -7,15 +7,18 @@
 #include "Log.h"
 #include "GameShape.h"
 
+
+
 World::World(sf::RenderWindow& window, 
 			 std::unique_ptr<ResourceHandler>& resourceHandler, 
-			 const sf::Time& timeStep): 
+			 const sf::Time& timeStep):
 Scene(window, resourceHandler),
 	bg(Background(window)),
 	bFactory(BulletFactory(window, 1000, bullets, timeStep)),
 	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100,250), 10, bFactory, bullets, resourceHandler, timeStep))),
 	timeStep(timeStep),
-	ingameSong(resourceHandler->getSound(ResourceHandler::Sound::INGAME))
+	ingameSong(resourceHandler->getSound(ResourceHandler::Sound::INGAME)),
+	gameOver(false)
 {
 
 
@@ -27,7 +30,6 @@ World::~World()
 	LOGD("World deconstructor called");
 
 }
-
 
 void World::init(bool demo, int scriptNum)
 {
@@ -68,7 +70,13 @@ void World::process()
 			if((*i)->getDeleted())
 			{ // If the bullet is up for deletion
 				if((*i)->getType()==Shooter::ShooterType::ENEMY)
+				{
 					player->addScore((*i)->getValue());
+				}
+				else if((*i)->getType()==Shooter::ShooterType::PLAYER)
+				{
+					gameOver=true;
+				}
 
 				i = objects.erase(i);
 			}
@@ -109,6 +117,11 @@ void World::drawStats()
 	player->drawStats();
 }
 
+bool World::isGameOver()
+{
+	return gameOver;
+}
+
 /// <summary>
 /// Adds a object to the scene
 /// </summary>
@@ -124,6 +137,8 @@ void World::addBullet(std::unique_ptr<Bullet> bullet)
 	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
 	this->bullets.push_back(std::move(bullet));
 }
+
+
 
 /// <summary>
 /// Draws all scene objects

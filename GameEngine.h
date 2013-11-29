@@ -23,8 +23,12 @@ public:
 		STAGE_SELECT,
 		MAIN_MENU, 
 		OPTIONS, 
+
 		HIGHSCORE,
-		PAUSE
+
+		PAUSE,
+		GAMEOVER
+
 	};
 
 	// State getter/setter

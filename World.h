@@ -18,7 +18,6 @@ public:
 
 	void addObject(std::shared_ptr<Shooter> object);
 	void addBullet(std::unique_ptr<Bullet> bullet);
-
 	World();
 	~World();
 	World(sf::RenderWindow& window, 
@@ -26,6 +25,7 @@ public:
 		const sf::Time& timeStep);
 
 	void drawStats();
+	bool isGameOver();
 
 	virtual void draw();
 	virtual void process();
@@ -39,6 +39,7 @@ public:
 
 private:
 	// Objects
+	bool gameOver;
 	Background bg;
 	BulletFactory bFactory;
 	std::shared_ptr<Player> player;

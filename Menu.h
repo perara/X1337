@@ -46,14 +46,18 @@ private:
 		LOAD_GAME,
 		CREDITS,
 
-
 		// Stage Select opts
 		SELECT_STAGE,
 		BACK,
 
-		// In game pause opts
+		// In-game pause opts
 		CONTINUE_GAME,
 		TO_MAIN_MENU,
+
+		// In-game game over opts
+		RESTART_STAGE,
+		TO_MAIN_MENU2,
+
 		MENU_OPT_COUNT
 	};
 

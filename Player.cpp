@@ -39,7 +39,11 @@ void Player::process()
 	this->shooterProcess();
 	this->detectEdge();
 
-
+	if(health<0)
+	{
+		deleted=true;
+		resourceHandler->getSound(ResourceHandler::Sound::ENEMY_DEATH).play();
+	}
 }
 
 void Player::detectEdge()
@@ -95,7 +99,6 @@ void Player::drawStats()
 		this->window.draw(*sprite);
 		heartX = heartX + 35;
 	}
-
 
 	// Draw Score
 	sf::Text txtScore;
