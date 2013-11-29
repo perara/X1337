@@ -65,10 +65,13 @@ void Menu::init()
 	}
 }
 
+void Menu::updateCurrentOption()
+{
+	this->setCurrentOption(option[state].begin()->first);
+}
+
 void Menu::process()
 {
-
-
 }
 
 /////////////////////////////////////////////
@@ -161,7 +164,6 @@ void Menu::input(sf::Event& event)
 			/////////////////////////////////////////////
 		case Menu::Options::SELECT_STAGE:
 			state = GameState::INIT_GAME;
-			this->setCurrentOption(option[GameState::PAUSE].begin()->first); // Set to pause, because we dont have options for INIT_GAME (which basicly is game)
 			break;
 		case Menu::Options::BACK:
 			state = GameState::MAIN_MENU;
@@ -173,7 +175,6 @@ void Menu::input(sf::Event& event)
 			/////////////////////////////////////////////
 		case Menu::Options::CONTINUE_GAME:
 			state = GameState::GAME;
-			this->setCurrentOption(option[GameState::PAUSE].begin()->first); // Set back to Pause, since that is the only menu set we can have at this stage.
 			break;
 		case Menu::Options::TO_MAIN_MENU:
 			state = GameState::INIT_MAIN_MENU;
@@ -185,7 +186,6 @@ void Menu::input(sf::Event& event)
 			/////////////////////////////////////////////
 		case Menu::Options::RESTART_STAGE:
 			state = GameState::INIT_GAME;
-			this->setCurrentOption(option[GameState::GAMEOVER].begin()->first); // Set to pause, because we dont have options for INIT_GAME (which basicly is game)
 			break;
 		case Menu::Options::TO_MAIN_MENU2:
 			state = GameState::INIT_MAIN_MENU;

@@ -91,7 +91,10 @@ void GameEngine::runGame()
 		if(getState() == GameState::GAME)
 		{
 			if(world->isGameOver())
+			{
 				setState(GameState::GAMEOVER);
+				menu->updateCurrentOption();
+			}
 			window.setView(playerStatsView);
 			this->world->drawStats();
 
@@ -184,7 +187,9 @@ void GameEngine::pollInput()
 				else if(getState() == GameState::PAUSE)
 				{
 					setState(GameState::GAME);
+
 				}
+				menu->updateCurrentOption();
 			}
 		}
 

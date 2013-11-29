@@ -14,6 +14,7 @@ public:
 	Menu(sf::RenderWindow& window, GameState& state, std::unique_ptr<ResourceHandler>& resourceHandler);
 
 	virtual void draw();
+	virtual void updateCurrentOption();
 	virtual void process();
 	virtual void init();
 	virtual void input(sf::Event&);
