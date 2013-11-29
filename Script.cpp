@@ -91,6 +91,10 @@ void Script::process(sf::RenderWindow& window,
 				bullets,
 				resourceHandler,
 				timeStep));
+			if(e1->getEnemyType()==Enemy::EnemyType::REGULAR)
+				e1->setValue(100);
+			else if(e1->getEnemyType()==Enemy::EnemyType::BOSS)
+				e1->setValue(500);
 			LOGD("Spawning Enemy#" << e1);
 
 

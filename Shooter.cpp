@@ -16,6 +16,15 @@ Object(window),
 
 {}
 
+void Shooter::setValue(float value)
+{
+	scoreValue=value;
+}
+
+float Shooter::getValue()
+{
+	return scoreValue;
+}
 
 void Shooter::setHealth(int value)
 {

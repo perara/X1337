@@ -66,6 +66,9 @@ void World::process()
 			// Cleanup
 			if((*i)->getDeleted())
 			{ // If the bullet is up for deletion
+				if((*i)->getType()==Shooter::ShooterType::ENEMY)
+					player->addScore((*i)->getValue());
+				
 				i = objects.erase(i);
 			}
 			else

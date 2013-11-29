@@ -18,6 +18,10 @@ public:
 
 	int getHealth(); // Todo should be protected
 	Shooter::ShooterType getType();
+	float playerScore;
+
+	void setValue(float value);
+	float getValue();
 protected:
 
 	Shooter(sf::RenderWindow& window, 
@@ -26,10 +30,12 @@ protected:
 		std::unique_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep);	
 	int health;
+
 	std::unique_ptr<ResourceHandler>& resourceHandler;
 
 	void decrementHealth();
 	void incrementHealth();
+
 
 	/* Processing */
 	virtual void shooterProcess();
@@ -52,7 +58,7 @@ private:
 	virtual void hitDetection() ;
 	bool circleTest(GameShape& bullet);
 	bool sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2);
-
+	float scoreValue;
 	ShooterType shooterType;
 
 	std::list<std::unique_ptr<Bullet>>& bullets;

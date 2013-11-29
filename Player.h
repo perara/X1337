@@ -21,8 +21,12 @@ public:
 		const sf::Time& timeStep
 		);
 
+	void addScore(float score);
+
 	void input(sf::Event&);
 	void process();
 	void detectEdge();
 	void drawStats();
+private:
+	float playerScore;
 };

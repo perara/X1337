@@ -24,7 +24,7 @@ Player::Player(sf::RenderWindow& window,
 			   std::list<std::unique_ptr<Bullet>>& bullets,
 			   std::unique_ptr<ResourceHandler>& resourceHandler,
 			   const sf::Time& timeStep
-			   ):
+			   ):playerScore(0),
 
 Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
@@ -101,7 +101,7 @@ void Player::drawStats()
 	sf::Text txtScore;
 	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 	std::stringstream scrStr;
-	scrStr << scoreTime;//add number to the stream
+	scrStr << playerScore;//add number to the stream
 	txtScore.setString(sf::String("Score: " + scrStr.str()));
 	txtScore.setCharacterSize(25);
 	txtScore.setPosition(20,80);
@@ -112,6 +112,11 @@ void Player::drawStats()
 	this->window.draw(txtScore);
 
 
+}
+
+void Player::addScore(float score)
+{
+	playerScore+=score;
 }
 
 void Player::input(sf::Event& event)

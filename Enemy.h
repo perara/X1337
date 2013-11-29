@@ -48,4 +48,5 @@ protected:
 private:
 	Enemy::EnemyType enemyType;
 	void setInitPath();
+	float scoreValue;
 };
