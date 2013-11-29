@@ -26,6 +26,11 @@ GameShape::GameShape(GameShape::ShapeType shapeType):
 		this->setPoint(7, sf::Vector2f(30,-10));
 
 		break;
+	case GameShape::ShapeType::BOSS:
+		this->setPointCount(20);
+		setCircleShape(80, sf::Vector2f(0,0));
+
+		break;
 	default:
 		LOGE("There is no shapetype defined for this constructor which maches your type");
 		break;

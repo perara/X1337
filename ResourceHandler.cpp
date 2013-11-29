@@ -20,6 +20,7 @@ void ResourceHandler::init()
 	{
 		textureList[Texture::BACKGROUND1]  = "assets/sprites/bg1.jpg";
 		textureList[Texture::HEART]  = "assets/sprites/heart.png";
+		textureList[Texture::MITT]  = "assets/sprites/mitt-romney.png";
 	}
 
 	// Sounds
@@ -28,10 +29,13 @@ void ResourceHandler::init()
 		soundList[Sound::MENU_SONG] = "assets/sound/game_menu.ogg";
 		soundList[Sound::STANDARD_SHOT] = "assets/sound/FireOneSound.ogg";
 		soundList[Sound::HEAVY_SHOT] = "assets/sound/FireOneSound.ogg";
+		soundList[Sound::ENEMY_DEATH] = "assets/sound/ExplosionSound.ogg";
+		soundList[Sound::INGAME] = "assets/sound/in-game.ogg";
 	}
 
 	// Scripts
 	{
+		scriptList[Scripts::STAGEONE] = "assets/scripts/stage1.xml";
 		scriptList[Scripts::ENCOUNTER1] = "assets/scripts/encounterDemo.xml";
 		scriptList[Scripts::ENCOUNTER2] = "assets/scripts/encounter.xml";
 		scriptList[Scripts::ENCOUNTER3] = "assets/scripts/encounter.xml";
@@ -131,14 +135,17 @@ void ResourceHandler::loadScripts()
 		doc.parse<0>(&buffer[0]);
 
 		// Root Node
-		rapidxml::xml_node<> *node = doc.first_node("Enemies");
+		rapidxml::xml_node<> *root = doc.first_node("Script");
+
+		// Root Node
+		rapidxml::xml_node<> *node = root->first_node("Enemies");
 
 		// Get repeat node
-		rapidxml::xml_node<> *repeat = doc.first_node("Repeat");
+		rapidxml::xml_node<> *repeat = root->first_node("Repeat");
 
 		// Get name node
-		rapidxml::xml_node<> *name = doc.first_node("Name");
-
+		rapidxml::xml_node<> *name = root->first_node("Name");
+		LOGD(name->value());
 
 		int enemyCounter = 0; // Counter
 

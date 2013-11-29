@@ -17,8 +17,25 @@ Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 	this->pathTemplate = path; // A qeueu which should not be touched (This is used to refill old queue
 	this->enemyClock.restart();
 	this->setRepeat(repeat);
-	sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::STARSHIP));
+	if(type == 1) // REGULAR
+	{
+		setHealth(2);
+		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::STARSHIP));
+		this->setEnemyType(Enemy::EnemyType::REGULAR);
+	}
+	else if(type == 2)
+	{
 
+
+	}
+	else if(type == 3) // BOSS
+	{
+		setHealth(250);
+		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::BOSS));
+		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::MITT));
+		this->setEnemyType(Enemy::EnemyType::BOSS);
+
+	}
 	setInitPath();
 }
 
@@ -48,6 +65,21 @@ void Enemy::shoot(int shoot)
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		getBullets().push_back(std::move(b));
+	}
+
+	if(getEnemyType() == Enemy::EnemyType::BOSS)
+	{
+		std::list<std::unique_ptr<Bullet>> bat = getBulletFactory().requestBatch(10, Bullet::Type::standardShot);
+		int startX = (this->sprite->getPosition().x) - (this->sprite->getGlobalBounds().width / 2);
+		for(auto& i : bat)
+		{
+			std::unique_ptr<Bullet> bs = std::move(i);
+			bs->setOwner(this->getType());
+			bs->setPosition(startX , this->sprite->getPosition().y - 10);
+			getBullets().push_back(std::move(bs));
+			startX+= this->sprite->getGlobalBounds().width / 10;
+		}
+
 	}
 
 }
@@ -138,5 +170,21 @@ int Enemy::getRepeat()
 void Enemy::setRepeat(int rep)
 {
 	this->repeat = rep;
+}
+
+void Enemy::setEnemyType(Enemy::EnemyType type)
+{
+	this->enemyType = type;
+}
+
+Enemy::EnemyType Enemy::getEnemyType()
+{
+	return this->enemyType;
+}
+
+
+void Enemy::setCircular(bool circular)
+{
+	this->circular = circular;
 }
 

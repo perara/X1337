@@ -43,8 +43,10 @@ protected:
 
 	// BulletFactory Getter/Setter
 	BulletFactory& getBulletFactory();
-	sf::Time timeStep;
+	const sf::Time& timeStep;
 
+	/* Health Related */
+	void setHealth(int value);
 
 private:
 	virtual void hitDetection() ;
@@ -56,6 +58,5 @@ private:
 	std::list<std::unique_ptr<Bullet>>& bullets;
 	BulletFactory& bFactory;
 
-		/* Health Related */
-	void setHealth(int value);
+
 };

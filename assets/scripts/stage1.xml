@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Script>
+<Name encounter="1">Stage 1</Name>
+<Repeat>1</Repeat>
+<Enemies>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="-6" y="27"/>
+<_1 shoot="1" x="803" y="26"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="807" y="76"/>
+<_1 shoot="1" x="-18" y="74"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="-16" y="126"/>
+<_1 shoot="1" x="823" y="131"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="814" y="170"/>
+<_1 shoot="1" x="-16" y="179"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="-17" y="231"/>
+<_1 shoot="1" x="813" y="241"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="815" y="278"/>
+<_1 shoot="1" x="-6" y="283"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="-12" y="325"/>
+<_1 shoot="1" x="819" y="340"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="816" y="387"/>
+<_1 shoot="1" x="-19" y="396"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="-10" y="444"/>
+<_1 shoot="1" x="829" y="444"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="816" y="498"/>
+<_1 shoot="1" x="-19" y="520"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="1" y="598"/>
+<_1 shoot="1" x="848" y="603"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="814" y="-3"/>
+<_1 shoot="1" x="-19" y="359"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="-12" y="-10"/>
+<_1 shoot="1" x="830" y="375"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="1" x="825" y="243"/>
+<_1 shoot="1" x="760" y="201"/>
+<_2 shoot="1" x="557" y="139"/>
+<_3 shoot="1" x="329" y="100"/>
+<_4 shoot="1" x="211" y="107"/>
+<_5 shoot="1" x="73" y="173"/>
+<_6 shoot="1" x="23" y="257"/>
+<_7 shoot="1" x="-1" y="320"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="-22" y="198"/>
+<_1 shoot="1" x="411" y="119"/>
+<_2 shoot="1" x="580" y="118"/>
+<_3 shoot="1" x="750" y="140"/>
+<_4 shoot="1" x="791" y="185"/>
+<_5 shoot="1" x="823" y="208"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="827" y="257"/>
+<_1 shoot="1" x="706" y="268"/>
+<_2 shoot="1" x="343" y="258"/>
+<_3 shoot="1" x="123" y="250"/>
+<_4 shoot="1" x="38" y="265"/>
+<_5 shoot="1" x="-10" y="282"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="-15" y="160"/>
+<_1 shoot="1" x="68" y="108"/>
+<_2 shoot="1" x="410" y="88"/>
+<_3 shoot="1" x="534" y="92"/>
+<_4 shoot="1" x="697" y="51"/>
+<_5 shoot="1" x="767" y="59"/>
+<_6 shoot="1" x="828" y="78"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="815" y="433"/>
+<_1 shoot="1" x="660" y="446"/>
+<_2 shoot="1" x="391" y="441"/>
+<_3 shoot="1" x="244" y="432"/>
+<_4 shoot="1" x="49" y="421"/>
+<_5 shoot="1" x="-16" y="440"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="-20" y="373"/>
+<_1 shoot="1" x="69" y="361"/>
+<_2 shoot="1" x="409" y="379"/>
+<_3 shoot="1" x="698" y="409"/>
+<_4 shoot="1" x="788" y="383"/>
+<_5 shoot="1" x="833" y="361"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="622" y="-12"/>
+<_1 shoot="1" x="633" y="31"/>
+<_2 shoot="1" x="668" y="218"/>
+<_3 shoot="1" x="683" y="359"/>
+<_4 shoot="1" x="695" y="459"/>
+<_5 shoot="1" x="707" y="547"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="544" y="-17"/>
+<_1 shoot="1" x="567" y="107"/>
+<_2 shoot="1" x="627" y="307"/>
+<_3 shoot="1" x="668" y="419"/>
+<_4 shoot="1" x="693" y="508"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="439" y="-23"/>
+<_1 shoot="1" x="496" y="127"/>
+<_2 shoot="1" x="551" y="334"/>
+<_3 shoot="1" x="603" y="462"/>
+<_4 shoot="1" x="613" y="519"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="367" y="-18"/>
+<_1 shoot="1" x="425" y="56"/>
+<_2 shoot="1" x="486" y="255"/>
+<_3 shoot="1" x="526" y="391"/>
+<_4 shoot="1" x="530" y="480"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="310" y="-20"/>
+<_1 shoot="1" x="328" y="24"/>
+<_2 shoot="1" x="357" y="222"/>
+<_3 shoot="1" x="391" y="313"/>
+<_4 shoot="1" x="419" y="421"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="262" y="-24"/>
+<_1 shoot="1" x="265" y="27"/>
+<_2 shoot="1" x="291" y="211"/>
+<_3 shoot="1" x="330" y="352"/>
+<_4 shoot="1" x="330" y="440"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="187" y="-4"/>
+<_1 shoot="1" x="180" y="37"/>
+<_2 shoot="1" x="203" y="273"/>
+<_3 shoot="1" x="245" y="423"/>
+<_4 shoot="1" x="250" y="511"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="96" y="-10"/>
+<_1 shoot="1" x="122" y="91"/>
+<_2 shoot="1" x="137" y="244"/>
+<_3 shoot="1" x="155" y="367"/>
+<_4 shoot="1" x="153" y="455"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="29" y="-16"/>
+<_1 shoot="1" x="30" y="94"/>
+<_2 shoot="1" x="42" y="319"/>
+<_3 shoot="1" x="51" y="457"/>
+<_4 shoot="1" x="40" y="565"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-4" y="289"/>
+<_1 shoot="1" x="298" y="274"/>
+<_2 shoot="1" x="626" y="302"/>
+<_3 shoot="1" x="762" y="304"/>
+<_4 shoot="1" x="785" y="296"/>
+<_5 shoot="1" x="809" y="285"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="809" y="207"/>
+<_1 shoot="1" x="753" y="213"/>
+<_2 shoot="1" x="530" y="217"/>
+<_3 shoot="1" x="295" y="221"/>
+<_4 shoot="1" x="124" y="227"/>
+<_5 shoot="1" x="11" y="242"/>
+<_6 shoot="1" x="-9" y="247"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-6" y="185"/>
+<_1 shoot="1" x="42" y="169"/>
+<_2 shoot="1" x="200" y="142"/>
+<_3 shoot="1" x="431" y="148"/>
+<_4 shoot="1" x="673" y="165"/>
+<_5 shoot="1" x="767" y="179"/>
+<_6 shoot="1" x="817" y="171"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="797" y="69"/>
+<_1 shoot="1" x="786" y="40"/>
+<_2 shoot="1" x="656" y="55"/>
+<_3 shoot="1" x="440" y="64"/>
+<_4 shoot="1" x="255" y="122"/>
+<_5 shoot="1" x="123" y="163"/>
+<_6 shoot="1" x="34" y="222"/>
+<_7 shoot="1" x="-24" y="300"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-3" y="394"/>
+<_1 shoot="1" x="35" y="438"/>
+<_2 shoot="1" x="277" y="498"/>
+<_3 shoot="1" x="546" y="516"/>
+<_4 shoot="1" x="679" y="494"/>
+<_5 shoot="1" x="805" y="449"/>
+<_6 shoot="1" x="833" y="398"/>
+<_7 shoot="1" x="818" y="346"/>
+<_8 shoot="1" x="786" y="282"/>
+<_9 shoot="1" x="696" y="250"/>
+<_10 shoot="1" x="577" y="227"/>
+<_11 shoot="1" x="408" y="219"/>
+<_12 shoot="1" x="243" y="215"/>
+<_13 shoot="1" x="90" y="231"/>
+<_14 shoot="1" x="-6" y="230"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-7" y="177"/>
+<_1 shoot="1" x="13" y="128"/>
+<_2 shoot="1" x="95" y="83"/>
+<_3 shoot="1" x="193" y="51"/>
+<_4 shoot="1" x="322" y="37"/>
+<_5 shoot="1" x="463" y="42"/>
+<_6 shoot="1" x="590" y="49"/>
+<_7 shoot="1" x="698" y="78"/>
+<_8 shoot="1" x="772" y="107"/>
+<_9 shoot="1" x="820" y="184"/>
+<_10 shoot="1" x="805" y="274"/>
+<_11 shoot="1" x="673" y="334"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="435" y="344"/>
+<_1 shoot="1" x="208" y="331"/>
+<_2 shoot="1" x="92" y="320"/>
+<_3 shoot="1" x="4" y="280"/>
+<_4 shoot="1" x="-10" y="190"/>
+<_5 shoot="1" x="66" y="122"/>
+<_6 shoot="1" x="224" y="80"/>
+<_7 shoot="1" x="472" y="82"/>
+<_8 shoot="1" x="712" y="121"/>
+<_9 shoot="1" x="816" y="140"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="821" y="280"/>
+<_1 shoot="1" x="750" y="275"/>
+<_2 shoot="1" x="539" y="246"/>
+<_3 shoot="1" x="338" y="224"/>
+<_4 shoot="1" x="135" y="201"/>
+<_5 shoot="1" x="47" y="177"/>
+<_6 shoot="1" x="-8" y="159"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-1" y="-4"/>
+<_1 shoot="1" x="195" y="78"/>
+<_2 shoot="1" x="460" y="173"/>
+<_3 shoot="1" x="670" y="258"/>
+<_4 shoot="1" x="737" y="307"/>
+<_5 shoot="1" x="804" y="353"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="817" y="381"/>
+<_1 shoot="1" x="804" y="392"/>
+<_2 shoot="1" x="626" y="401"/>
+<_3 shoot="1" x="420" y="390"/>
+<_4 shoot="1" x="229" y="399"/>
+<_5 shoot="1" x="110" y="403"/>
+<_6 shoot="1" x="0" y="401"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-17" y="357"/>
+<_1 shoot="1" x="2" y="339"/>
+<_2 shoot="1" x="197" y="254"/>
+<_3 shoot="1" x="445" y="225"/>
+<_4 shoot="1" x="697" y="194"/>
+<_5 shoot="1" x="748" y="183"/>
+<_6 shoot="1" x="840" y="169"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="806" y="91"/>
+<_1 shoot="1" x="702" y="106"/>
+<_2 shoot="1" x="490" y="116"/>
+<_3 shoot="1" x="264" y="138"/>
+<_4 shoot="1" x="93" y="174"/>
+<_5 shoot="1" x="11" y="200"/>
+<_6 shoot="1" x="1" y="210"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="868" y="209"/>
+<_1 shoot="1" x="-14" y="423"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="-3" y="-8"/>
+<_1 shoot="1" x="430" y="254"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="518" y="-16"/>
+<_1 shoot="1" x="364" y="302"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="860" y="-12"/>
+<_1 shoot="1" x="482" y="235"/>
+<_2 shoot="1" x="415" y="248"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="864" y="471"/>
+<_1 shoot="1" x="-6" y="432"/>
+<_2 shoot="1" x="867" y="358"/>
+<_3 shoot="1" x="-11" y="300"/>
+<_4 shoot="1" x="873" y="243"/>
+<_5 shoot="1" x="-18" y="192"/>
+<_6 shoot="1" x="872" y="147"/>
+<_7 shoot="1" x="-13" y="73"/>
+<_8 shoot="1" x="882" y="25"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="-14" y="196"/>
+<_1 shoot="1" x="900" y="209"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="709" y="309"/>
+<_1 shoot="1" x="868" y="312"/>
+<_2 shoot="1" x="-13" y="337"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="868" y="236"/>
+<_1 shoot="1" x="3" y="196"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="-17" y="93"/>
+<_1 shoot="1" x="852" y="86"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>0</Delay>
+<Path>
+<_0 shoot="1" x="869" y="-4"/>
+<_1 shoot="1" x="-10" y="351"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-5" y="311"/>
+<_1 shoot="1" x="871" y="307"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="874" y="261"/>
+<_1 shoot="1" x="-14" y="259"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-4" y="212"/>
+<_1 shoot="1" x="868" y="222"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="872" y="157"/>
+<_1 shoot="1" x="-4" y="155"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-17" y="122"/>
+<_1 shoot="1" x="866" y="131"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="883" y="78"/>
+<_1 shoot="1" x="-12" y="80"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-8" y="46"/>
+<_1 shoot="1" x="878" y="50"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="894" y="188"/>
+<_1 shoot="1" x="-21" y="175"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-16" y="381"/>
+<_1 shoot="1" x="863" y="400"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="881" y="476"/>
+<_1 shoot="1" x="-18" y="464"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>1</Type>
+<Delay>1000</Delay>
+<Path>
+<_0 shoot="1" x="-9" y="543"/>
+<_1 shoot="1" x="868" y="553"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>3</Type>
+<Delay>5000</Delay>
+<Path>
+<_0 shoot="1" x="281" y="45"/>
+<_1 shoot="1" x="48" y="44"/>
+<_2 shoot="1" x="51" y="171"/>
+<_3 shoot="1" x="276" y="175"/>
+</Path>
+</Enemy>
+<Enemy>
+<Type>3</Type>
+<Delay>5000</Delay>
+<Path>
+<_0 shoot="1" x="450" y="49"/>
+<_1 shoot="1" x="794" y="49"/>
+<_2 shoot="1" x="797" y="201"/>
+<_3 shoot="1" x="456" y="202"/>
+</Path>
+</Enemy>
+</Enemies>
+</Script>

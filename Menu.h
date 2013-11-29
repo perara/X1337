@@ -39,10 +39,11 @@ private:
 	const enum Options
 	{
 		// Main menu opts
-		NEW_GAME,
+		NEW_GAME,		
+		EXIT_GAME,	
 		LOAD_GAME,
 		CREDITS,
-		EXIT_GAME,	
+
 
 		// Stage Select opts
 		SELECT_STAGE,

@@ -8,7 +8,7 @@
 
 sf::Clock normalShotClock;
 sf::Clock specialShotClock;
-sf::Clock scoreTime;
+float scoreTime;
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Player"/> class.
@@ -28,6 +28,7 @@ Player::Player(sf::RenderWindow& window,
 
 Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
+	setHealth(5);
 	this->setType(Shooter::ShooterType::PLAYER);
 	sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::CIRCLE, 10));
 	this->sprite->setPosition(pos);
@@ -77,7 +78,8 @@ void Player::drawStats()
 	// Draw Health
 	sf::Text txtHealth;
 	txtHealth.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-	txtHealth.setString(sf::String("Health: "));
+	std::string dead = ((health < 0) ? "Dead" : "");
+	txtHealth.setString(sf::String("Health: " + dead));
 	txtHealth.setCharacterSize(25);
 	txtHealth.setPosition(20,20);
 	txtHealth.setColor(sf::Color::White);
@@ -99,13 +101,13 @@ void Player::drawStats()
 	sf::Text txtScore;
 	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 	std::stringstream scrStr;
-	scrStr << scoreTime.getElapsedTime().asSeconds();//add number to the stream
+	scrStr << scoreTime;//add number to the stream
 	txtScore.setString(sf::String("Score: " + scrStr.str()));
 	txtScore.setCharacterSize(25);
 	txtScore.setPosition(20,80);
 	txtScore.setColor(sf::Color::White);
 
-	
+
 	this->window.draw(txtHealth);
 	this->window.draw(txtScore);
 
@@ -122,6 +124,8 @@ void Player::input(sf::Event& event)
 		resourceHandler->getSound(ResourceHandler::Sound::STANDARD_SHOT).play();
 
 		getBullets().push_back(std::move(b));
+
+		if(getHealth() > 0) scoreTime += 1;
 		normalShotClock.restart();
 	}
 
@@ -131,6 +135,8 @@ void Player::input(sf::Event& event)
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		resourceHandler->getSound(ResourceHandler::Sound::HEAVY_SHOT).play();
 		getBullets().push_back(std::move(b));
+
+		if(getHealth() > 0) scoreTime += 1;
 		specialShotClock.restart();
 	}
 

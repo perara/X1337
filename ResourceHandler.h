@@ -16,6 +16,7 @@ public:
 	{
 		BACKGROUND1,
 		HEART,
+		MITT,
 		TEXTURECOUNT
 	};
 
@@ -25,12 +26,15 @@ public:
 		MENU_SONG,
 		STANDARD_SHOT,
 		HEAVY_SHOT,
+		ENEMY_DEATH,
+		INGAME,
 		SOUNDCOUNT
 
 	};
 	const enum Scripts
 	{
 		ENCOUNTER1,
+		STAGEONE,
 		ENCOUNTER2,
 		ENCOUNTER3,
 		GAME_MENU,

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Name encounter="1">Encounter 1</Name>
+<Script>
+<Name encounter="1">Placeholder 9</Name>
 <Repeat>0</Repeat>
 <Enemies>
 <Enemy>
@@ -14,4 +15,5 @@
 </Path>
 </Enemy>
 </Enemies>
+</Script>
 

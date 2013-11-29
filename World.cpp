@@ -14,13 +14,15 @@ Scene(window, resourceHandler),
 	bg(Background(window)),
 	bFactory(BulletFactory(window, 1000, bullets, timeStep)),
 	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100,250), 10, bFactory, bullets, resourceHandler, timeStep))),
-	timeStep(timeStep)
+	timeStep(timeStep),
+	ingameSong(resourceHandler->getSound(ResourceHandler::Sound::INGAME))
 {
 
 }
 
 World::~World()
 {
+	ingameSong.stop();
 	LOGD("World deconstructor called");
 
 }
@@ -36,7 +38,8 @@ void World::init(bool demo, int scriptNum)
 	else
 	{
 		this->script = resourceHandler->getScriptById(scriptNum);
-
+		ingameSong.play();
+		ingameSong.setLoop(true);
 		// Initialize Background
 		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND1));
 

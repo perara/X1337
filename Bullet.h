@@ -26,6 +26,8 @@ public:
 
 	Bullet::Type getBulletType();
 
+
+
 	Shooter::ShooterType getOwner();
 protected:
 	Bullet::Type bulletType;

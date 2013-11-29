@@ -45,10 +45,11 @@ void BulletFactory::produceObjects(Bullet::Type type,int quantity)
 std::list<std::unique_ptr<Bullet>> BulletFactory::requestBatch(int quantity, Bullet::Type type)
 {
 	std::list<std::unique_ptr<Bullet>> retList;
-	int i = 0;
-	for (std::list<std::unique_ptr<Bullet>>::iterator it = objects[type].begin(); it != objects[type].end() && i < quantity; it++ , i++)
+	for (int i = 0; i < quantity; i++)
 	{
-		retList.push_back(std::move(*it)); // TODO might not work?
+		std::unique_ptr<Bullet> b = std::move(objects[type].back());
+		objects[type].pop_back(); // O(0)
+		retList.push_back(std::move(b)); // TODO might not work?
 	}
 	return retList;
 }

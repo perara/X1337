@@ -44,8 +44,8 @@ private:
 	Background bg;
 	BulletFactory bFactory;
 	std::shared_ptr<Player> player;
-	// Script pointers
 	Script script;
 	const sf::Time& timeStep;
 	bool demo;
+	sf::Sound& ingameSong;
 };

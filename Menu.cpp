@@ -24,8 +24,8 @@ void Menu::init()
 	std::map<Menu::Options, std::string> mainMenu;
 	{
 		mainMenu[Menu::Options::NEW_GAME] = "New Game";
-		mainMenu[Menu::Options::LOAD_GAME] = "Load Existing Game";
-		mainMenu[Menu::Options::CREDITS] = "Credits";
+		//mainMenu[Menu::Options::LOAD_GAME] = "Load Existing Game";
+		//mainMenu[Menu::Options::CREDITS] = "Credits";
 		mainMenu[Menu::Options::EXIT_GAME] = "Exit Game";
 	}
 
@@ -82,7 +82,7 @@ void Menu::loadMenuOptions()
 			sf::Text txt;
 			txt.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 			txt.setString(sf::String(rit->second));
-			std::cout << rit->second << std::endl;
+			LOGD(rit->second);
 			txt.setCharacterSize(30);
 			txt.setPosition(20,y);
 			txt.setColor(sf::Color(139,137,137));
@@ -308,6 +308,16 @@ void Menu::drawGameTitle()
 	gameTitle.setCharacterSize(80);
 	gameTitle.setPosition(sf::Vector2f(window.getSize().x / 2 - (gameTitle.getGlobalBounds().width / 2), window.getSize().y / 8 - (gameTitle.getGlobalBounds().height / 2)));
 	window.draw(gameTitle);
+
+
+	// Game version
+	sf::Text gameVersion;
+	gameVersion.setString(sf::String("v1.0"));
+	gameVersion.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	gameVersion.setColor(sf::Color(139,137,137));
+	gameVersion.setCharacterSize(15);
+	gameVersion.setPosition(sf::Vector2f(window.getSize().x  - gameVersion.getGlobalBounds().width - 10,  window.getSize().y - gameVersion.getGlobalBounds().height *2));
+	window.draw(gameVersion);
 
 }
 

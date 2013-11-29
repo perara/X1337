@@ -8,6 +8,7 @@ public:
 		CIRCLE,
 		TRIANGLE,
 		STARSHIP,
+		BOSS,
 		SHAPECOUNT
 	};
 

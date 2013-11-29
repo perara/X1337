@@ -14,7 +14,7 @@ Object(window),
 	resourceHandler(resourceHandler),
 	timeStep(timeStep)
 
-{health = 5;}
+{}
 
 
 void Shooter::setHealth(int value)
@@ -130,11 +130,12 @@ void Shooter::hitDetection()
 			{
 				setHealth(getHealth() - i->getBulletType());
 				i->setDeleted(true);
-				
+
 
 				// KILL IF DEAD
-				if(getHealth() < 0 && getType() != Shooter::ShooterType::PLAYER)
+				if(getHealth() <= 0 && getType() != Shooter::ShooterType::PLAYER)
 				{
+					resourceHandler->getSound(ResourceHandler::Sound::ENEMY_DEATH).play();
 					deleted = true;
 				}
 

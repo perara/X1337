@@ -32,7 +32,7 @@ public:
 	int getRepeat();
 	void setRepeat(int);
 	Enemy::EnemyType getEnemyType();
-
+	void setCircular(bool);
 protected:
 	int repeat;
 	void circularShoot();
@@ -40,8 +40,8 @@ protected:
 	std::queue<sf::Vector3f> path;
 	sf::Vector3f currentPath;
 	void setEnemyType(Enemy::EnemyType);
-	
-	
+	bool circular; // Weither it should move in a circular direction or not;
+
 	sf::Clock enemyClock;
 	void Enemy::shoot(int);
 
