@@ -18,7 +18,6 @@ public:
 
 	int getHealth(); // Todo should be protected
 	Shooter::ShooterType getType();
-	float playerScore;
 
 	void setValue(float value);
 	float getValue();
