@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include "Log.h"
+#include <sstream>
 
 
 Menu::Menu(sf::RenderWindow& window, GameState& state, std::unique_ptr<ResourceHandler>& resourceHandler):
@@ -26,6 +27,7 @@ void Menu::init()
 		mainMenu[Menu::Options::NEW_GAME] = "New Game";
 		//mainMenu[Menu::Options::LOAD_GAME] = "Load Existing Game";
 		//mainMenu[Menu::Options::CREDITS] = "Credits";
+		mainMenu[Menu::Options::HIGHSCORE] = "Highscore";
 		mainMenu[Menu::Options::EXIT_GAME] = "Exit Game";
 	}
 
@@ -33,6 +35,11 @@ void Menu::init()
 	{
 		stageSelect[Menu::Options::BACK] = "Back";		
 		stageSelect[Menu::Options::SELECT_STAGE] = "Select Stage";
+	}
+
+	std::map<Menu::Options, std::string> highScore;
+	{
+		highScore[Menu::Options::BACK] = "Back";		
 	}
 
 	std::map<Menu::Options, std::string> pause;
@@ -47,9 +54,12 @@ void Menu::init()
 		gameOver[Menu::Options::TO_MAIN_MENU2] = "Return to Main Menu";
 	}
 
+
+
 	optMap[GameState::MAIN_MENU] = mainMenu;
 	optMap[GameState::STAGE_SELECT] = stageSelect;
 	optMap[GameState::PAUSE] = pause;
+	optMap[GameState::HIGHSCORE] = highScore;
 	optMap[GameState::GAMEOVER] = gameOver;
 
 	loadMenuOptions();
@@ -152,6 +162,10 @@ void Menu::input(sf::Event& event)
 			this->setCurrentOption(option[state].begin()->first);
 			break;
 		case Menu::Options::LOAD_GAME:
+			break;
+		case Menu::Options::HIGHSCORE:
+			state = GameState::HIGHSCORE;
+			this->setCurrentOption(option[state].begin()->first);
 			break;
 		case Menu::Options::CREDITS:
 			break;
@@ -274,6 +288,10 @@ void Menu::draw()
 	case GameState::STAGE_SELECT:
 		drawStageSelect();
 		drawOptions(state);
+		break;
+	case GameState::HIGHSCORE:
+		drawHighScore();
+		drawOptions(state); 
 		break;
 	case GameState::PAUSE:
 		// Do nothing
@@ -401,9 +419,53 @@ void Menu::drawStageSelect()
 }
 
 /////////////////////////////////////////////
-////////////Stage Selection//////////////////
+///////////////Draw Pause////////////////////
 /////////////////////////////////////////////
 void Menu::drawPause(int xOffSet, int yOffset)
 {		drawOptions(state, xOffSet, yOffset, sf::Color::White);
+
+}
+
+
+/////////////////////////////////////////////
+/////////////Draw Highscore//////////////////
+/////////////////////////////////////////////
+void Menu::drawHighScore()
+{
+	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> hScore = resourceHandler->getHighScores();
+	int xPos = window.getSize().x / 8;
+	int yPos =  window.getSize().y / 4;
+
+	sf::Text txtScore;
+	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtScore.setString(sf::String("Stage \t Playername \t Score \t Date"));
+	txtScore.setPosition(xPos, yPos);
+
+	window.draw(txtScore);
+
+
+	for(auto & i : hScore)
+	{
+		for(auto & it : i.second)
+		{
+			std::cout << "lol" << std::endl;
+			yPos+=50;
+
+			// Score string
+			std::ostringstream strScore;
+			strScore << it->score;
+
+			// Enum Num
+			std::ostringstream strStage;
+			strStage << it->stage;
+
+			sf::Text txtScore;
+			txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+			txtScore.setString(sf::String(strStage.str() + "\t\t\t\t\t" + it->playerName + "\t\t\t\t" + strScore.str() + "\t" + it->date));
+			txtScore.setPosition(xPos, yPos);
+
+			window.draw(txtScore);
+		}
+	}
 
 }

@@ -21,6 +21,7 @@ Scene(window, resourceHandler),
 	gameOver(false)
 {
 
+
 }
 
 World::~World()
@@ -69,9 +70,14 @@ void World::process()
 			if((*i)->getDeleted())
 			{ // If the bullet is up for deletion
 				if((*i)->getType()==Shooter::ShooterType::ENEMY)
+				{
 					player->addScore((*i)->getValue());
+				}
 				else if((*i)->getType()==Shooter::ShooterType::PLAYER)
-					 gameOver=true;
+				{
+					gameOver=true;
+				}
+
 				i = objects.erase(i);
 			}
 			else

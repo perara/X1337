@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Savegame>
+	<Stages>
+		<Stage enum="0">
+			<Player>
+				<Name>Kuk</Name>
+				<Score>4199</Score>
+				<Date>21.01.13</Date>
+			</Player>
+		</Stage>
+		
+		<Stage enum="1">
+			<Player>
+				<Name>Pesa</Name>
+				<Score>52552</Score>
+				<Date>21.01.13</Date>
+			</Player>
+		</Stage>
+	</Stages>
+</Savegame>
