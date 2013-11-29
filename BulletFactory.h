@@ -2,6 +2,7 @@
 #include <SFML\Graphics\RenderWindow.hpp>
 #include <list>
 #include <map>
+#include <memory>
 #include "Bullet.h"
 
 /// <summary>
@@ -10,16 +11,17 @@
 class BulletFactory{
 public:
 
-	BulletFactory(sf::RenderWindow& window, int quantity, std::list<Bullet*>& bullets);
+	BulletFactory(sf::RenderWindow& window, int quantity, std::list<std::unique_ptr<Bullet>>& bullets, const sf::Time& timeStep);
 
-	void returnObject(Bullet* bullet);
-	std::list<Bullet*> requestBatch(int quantity, Bullet::Type type);
-	Bullet* requestObject(Bullet::Type type);
+	void returnObject(std::unique_ptr<Bullet> bullet);
+	std::list<std::unique_ptr<Bullet>> requestBatch(int quantity, Bullet::Type type);
+	std::unique_ptr<Bullet> requestObject(Bullet::Type type);
 
 protected:
 	void produceObjects(Bullet::Type type, int quantity);
-	std::list<Bullet*>& bullets;
-	std::map<Bullet::Type , std::list<Bullet*>> objects;
+	std::list<std::unique_ptr<Bullet>>& bullets;
+	std::map<Bullet::Type , std::list<std::unique_ptr<Bullet>>> objects;
 	sf::RenderWindow& window;
 	int initQuantity;
+	const sf::Time& timeStep;
 };

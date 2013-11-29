@@ -3,7 +3,6 @@
 #include "BulletFactory.h"
 #include "GameShape.h"
 #include "Log.h"
-#include "Globals.h"
 #include "ResourceHandler.h"
 
 sf::Clock clk; //TESTING PURPOSES
@@ -16,18 +15,23 @@ sf::Clock clk; //TESTING PURPOSES
 /// <param name="radius">The radius.</param>
 /// <param name="bFactory">The <see cref=BulletFactory"></param>
 /// <param name="sceneBulletListCallback">The scene object call back. This is basicly a function pointer to the corresponding world function "addObject" Reason for passing this is so we can add bullets to the Scene loop</param>
-Player::Player(sf::RenderWindow& window, sf::Vector2f pos, int radius):
-	Shooter(window)
+Player::Player(sf::RenderWindow& window, 
+			   sf::Vector2f pos, 
+			   int radius, BulletFactory& bFactory,  
+			   std::list<std::unique_ptr<Bullet>>& bullets,
+			   std::unique_ptr<ResourceHandler>& resourceHandler,
+			   const sf::Time& timeStep
+			   ):
+
+Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
 	this->setType(Shooter::ShooterType::PLAYER);
-	this->sprite = new GameShape(GameShape::CIRCLE, 10);
+	sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::CIRCLE, 10));
 	this->sprite->setPosition(pos);
 }
 
 void Player::process()
 {
-	if(!this->getInited()) return;
-
 	this->shooterProcess();
 	this->detectEdge();
 
@@ -68,7 +72,7 @@ void Player::drawStats()
 {
 	// Draw Health
 	sf::Text txtHealth;
-	txtHealth.setFont(Globals::getInstance().getResourceHandler()->getFont(ResourceHandler::Fonts::SANSATION));
+	txtHealth.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 	txtHealth.setString(sf::String("Health: "));
 	txtHealth.setCharacterSize(25);
 	txtHealth.setPosition(20,20);
@@ -79,7 +83,7 @@ void Player::drawStats()
 	{
 
 		std::shared_ptr<sf::Sprite> sprite = std::shared_ptr<sf::Sprite>(new sf::Sprite);
-		sprite->setTexture(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::HEART), true);
+		sprite->setTexture(resourceHandler->getTexture(ResourceHandler::Texture::HEART), true);
 		sprite->setPosition(heartX, 20);
 		sprite->setScale(0.05f,0.05f);
 		this->window.draw(*sprite);
@@ -95,20 +99,20 @@ void Player::input(sf::Event& event)
 {
 	/* Shoot handler */
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 100){
-		Bullet* b = this->getBulletFactory()->requestObject(Bullet::Type::standardShot);
+		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 		b->setOwner(this->getType());
-		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
-		this->getBullets()->push_back(b);
+		b->setPosition(this->sprite->getPosition().x , sprite->getPosition().y - 10);
+		getBullets().push_back(std::move(b));
 		clk.restart();
 	}
 
 	/* TEMPORARY FOR TESTING */ //TODODODODODODODODODODODOD
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && clk.getElapsedTime().asMilliseconds()){
 
-		Bullet* b = this->getBulletFactory()->requestObject(Bullet::Type::heavyShot);
+		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::heavyShot);
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
-		this->getBullets()->push_back(b);
+		getBullets().push_back(std::move(b));
 		clk.restart();
 	}
 

@@ -16,7 +16,7 @@ public:
 	GameShape(ShapeType shapeType, int radius, int pointCount = 5); // Circle
 
 	ShapeType getShapeType();
-
+	sf::Time timeStep;
 	int getRadius(); // Only valid for circle
 protected:
 	ShapeType shapeType;

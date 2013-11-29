@@ -1,5 +1,7 @@
 #pragma once
 #include "Object.h"
+#include "ResourceHandler.h"
+#include <memory>
 
 class BulletFactory;
 class Bullet;
@@ -14,14 +16,17 @@ public:
 		ENEMY
 	};
 
-	virtual void init(BulletFactory&, std::list<Bullet*>&);
 	int getHealth(); // Todo should be protected
 	Shooter::ShooterType getType();
 protected:
 
-	Shooter(sf::RenderWindow& window
-		);	
+	Shooter(sf::RenderWindow& window, 
+		BulletFactory&, 
+		std::list<std::unique_ptr<Bullet>>&,
+		std::unique_ptr<ResourceHandler>& resourceHandler,
+		const sf::Time& timeStep);	
 	int health;
+	std::unique_ptr<ResourceHandler>& resourceHandler;
 
 	/* Health Related */
 	void setHealth(int value);
@@ -36,22 +41,21 @@ protected:
 
 
 	// Bullets getter/setter
-	std::list<Bullet*>* getBullets();
-	void setBullets(std::list<Bullet*>& bullets);
+	std::list<std::unique_ptr<Bullet>>& getBullets();
+	void setBullets(std::list<std::unique_ptr<Bullet>>& bullets);
 
 	// BulletFactory Getter/Setter
-	BulletFactory* getBulletFactory();
-	void setBulletFactory(BulletFactory& bFactory);
-
-
+	BulletFactory& getBulletFactory();
+	sf::Time timeStep;
 
 
 private:
 	virtual void hitDetection() ;
 	bool circleTest(GameShape& bullet);
-	bool sat(GameShape* c1, GameShape* c2);
-	std::list<Bullet*>* bullets;
+	bool sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2);
+
 	ShooterType shooterType;
 
-	BulletFactory* bFactory;
+	std::list<std::unique_ptr<Bullet>>& bullets;
+	BulletFactory& bFactory;
 };

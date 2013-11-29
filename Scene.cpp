@@ -6,12 +6,3 @@
 void Scene::draw(){}
 void Scene::process(){}
 
-void Scene::setInited(bool init)
-{
-	this->inited = init;
-}
-
-bool Scene::getInited()
-{
-	return this->inited;
-}

@@ -4,11 +4,10 @@
 #include "BulletFactory.h"
 #include "Player.h"
 #include "Script.h"
+#include "ResourceHandler.h"
 #include <memory>
 
 
-class Shooter;
-class Bullet;
 
 
 /// <summary>
@@ -17,24 +16,24 @@ class Bullet;
 class World: public Scene{
 public:
 	std::list<std::shared_ptr<Shooter>> objects; 
-	std::list<Bullet*> bullets;
+	std::list<std::unique_ptr<Bullet>> bullets;
 
 	void addObject(std::shared_ptr<Shooter> object);
-	void addBullet(Bullet* bullet);
+	void addBullet(std::unique_ptr<Bullet> bullet);
 
 	World();
-	World(sf::RenderWindow& window);
+	~World();
+	World(sf::RenderWindow& window, 
+		std::unique_ptr<ResourceHandler>& resourceHandler,
+		const sf::Time& timeStep);
+
 	void drawStats();
 
 	virtual void draw();
 	virtual void process();
-	virtual void init();
-	virtual void init(int scriptNum);
+	virtual void init(bool demo, int  scriptNum = (int)ResourceHandler::Scripts::GAME_MENU);
 	virtual void input(sf::Event&);
-	virtual void reset();
 
-	bool isDemo();
-	void setDemo(bool);
 	BulletFactory& getBulletFactory()
 	{
 		return bFactory;
@@ -45,9 +44,8 @@ private:
 	Background bg;
 	BulletFactory bFactory;
 	Player player;
-
 	// Script pointers
 	Script script;
-
+	const sf::Time& timeStep;
 	bool demo;
 };

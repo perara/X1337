@@ -2,16 +2,18 @@
 #include "Log.h"
 #include "Object.h"
 #include "Enemy.h"
+#include "BulletFactory.h"
+#include "Bullet.h"
 
 
 
-void Script::addEnemy(std::shared_ptr<Enemy> enemy, int delay)
+void Script::addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat)
 {
-	LOGD("Adding new enemy to queue pool (Enemy#" << enemy << ")");
-	ScriptTick* tick = new ScriptTick(enemy, delay);
+	LOGD("Adding new enemy template to pool");
+	ScriptTick tick(delay, pathQueue, type, repeat);
 
 
-	this->list.push(tick);
+	enemyList.push(tick);
 
 }
 
@@ -60,25 +62,43 @@ int Script::getScriptEnumVal()
 }
 
 // Process
-void Script::process(std::list<std::shared_ptr<Shooter>>& objects)
+void Script::process(sf::RenderWindow& window,
+					 std::list<std::shared_ptr<Shooter>>& objects , 
+					 std::list<std::unique_ptr<Bullet>>& bullets,
+					 BulletFactory& bFactory,
+					 std::unique_ptr<ResourceHandler>& resourceHandler,
+					 const sf::Time& timeStep)
 {
 	// Do processing
-	if(!this->list.empty())
+	if(!enemyList.empty())
 	{
 
-		ScriptTick* e = this->list.front();
+		ScriptTick e = enemyList.front();
 		//std::cout <<this->getInit() << " and "  << this->getClock().getElapsedTime().asMilliseconds() << " and " << e->delay << std::endl;
 		if(
 			this->getInit() &&
-			this->getClock().getElapsedTime().asMilliseconds() > e->delay
+			this->getClock().getElapsedTime().asMilliseconds() > e.delay
 			)
 
 		{
-			LOGD("Spawning Enemy#" << e->enemy);
-			objects.push_back(e->enemy);
+
+			std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
+				window, 
+				e.pathQueue,
+				e.type,
+				e.repeat,
+				bFactory,
+				bullets,
+				resourceHandler,
+				timeStep));
+			LOGD("Spawning Enemy#" << e1);
 
 
-			this->list.pop();
+
+			objects.push_back(e1);
+
+
+			enemyList.pop();
 
 
 			this->getClock().restart();

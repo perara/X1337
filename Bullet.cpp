@@ -1,6 +1,5 @@
 #include "Bullet.h"
 #include "GameShape.h"
-#include "Globals.h"
 #include "Log.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -11,9 +10,10 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="type">The bullet type.</param>
-Bullet::Bullet(sf::RenderWindow& window, Bullet::Type bulletType): 
+Bullet::Bullet(sf::RenderWindow& window, Bullet::Type bulletType, const sf::Time& timeStep): 
 	Object(window),
-	bulletType(bulletType)
+	bulletType(bulletType),
+	timeStep(timeStep)
 {
 
 	this->setDeleted(false);
@@ -21,12 +21,12 @@ Bullet::Bullet(sf::RenderWindow& window, Bullet::Type bulletType):
 	this->speedY = 0;
 
 	if(Bullet::Type::standardShot == bulletType){
-		this->sprite = new GameShape(GameShape::CIRCLE, 2);
+		sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::CIRCLE, 2));
 
 	}
 
 	else if(Bullet::Type::heavyShot == bulletType)
-		this->sprite = new GameShape(GameShape::TRIANGLE, 20.0f);
+		sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::TRIANGLE, 20.0f));
 
 }
 /// <summary>
@@ -35,12 +35,12 @@ Bullet::Bullet(sf::RenderWindow& window, Bullet::Type bulletType):
 /// <returns>bool which indicates if the object is up for deletion in Scene.h's object list <see cref="Scene"> </returns>
 void Bullet::process()
 {
-	if(!deleted && this->getInited())
+	if(!deleted)
 	{
 
 		this->sprite->setPosition(
-			this->sprite->getPosition().x+(Globals::getInstance().getTimeStep().asSeconds() * speedX),
-			this->sprite->getPosition().y+(Globals::getInstance().getTimeStep().asSeconds() * speedY)); //TODO
+			this->sprite->getPosition().x+(timeStep.asSeconds() * speedX),
+			this->sprite->getPosition().y+(timeStep.asSeconds() * speedY)); //TODO
 
 		if(isOutOfBounds())
 		{
@@ -49,10 +49,6 @@ void Bullet::process()
 	}
 }
 
-void Bullet::deleteBullet(BulletFactory& bFactory)
-{
-	bFactory.returnObject(this);
-}
 bool Bullet::isOutOfBounds()
 {
 	if(this->sprite->getPosition().x > window.getSize().x || 
@@ -73,6 +69,7 @@ void Bullet::setPosition(int x, int y)
 {
 	this->sprite->setPosition(x,y);
 }
+
 void Bullet::setOwner(Shooter::ShooterType owner)
 {
 

@@ -5,16 +5,15 @@
 
 void Object::draw()
 {
-	if(this->inited)
-		this->window.draw(*this->sprite);
-	
+	this->window.draw(*this->sprite);
+
 	sf::RectangleShape();
 	sf::FloatRect bounds = this->sprite->getGlobalBounds();
 	sf::RectangleShape af(sf::Vector2f(bounds.width,bounds.height));
 	af.setPosition(bounds.left, bounds.top);
 	af.setOutlineColor(sf::Color(141,23,22,23));
 	af.setFillColor(sf::Color(255,255,255,150));
-	
+
 	this->window.draw(af);
 
 }
@@ -24,21 +23,8 @@ bool Object::getDeleted(){
 	return this->deleted;
 }
 
-bool Object::getInited()
-{
-	return this->inited;
-}
-void Object::setInited(bool init)
-{
-	this->inited = init;
-}
 
- Object::~Object()
- {
-
- }
-
-void Object::init()
+Object::~Object()
 {
-	this->setInited(true);
+
 }

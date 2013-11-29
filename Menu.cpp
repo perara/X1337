@@ -2,24 +2,24 @@
 #include "Log.h"
 
 
-
-Menu::Menu(sf::RenderWindow& window):
-	Scene(window)
+Menu::Menu(sf::RenderWindow& window, GameState& state, std::unique_ptr<ResourceHandler>& resourceHandler):
+	Scene(window, resourceHandler),
+	state(state)
 {
-	Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).play();
-	Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).setLoop(true);
 	this->init();
-
 }
 
 void Menu::reset()
 {
-	Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).stop();
-	this->setInited(false);
+	resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).stop();
 }
 
 void Menu::init()
 {
+
+	// Get script names
+	for(auto&i  : resourceHandler->getScripts()) scripts.push_back(i);
+
 
 	std::map<Menu::Options, std::string> mainMenu;
 	{
@@ -41,23 +41,27 @@ void Menu::init()
 		pause[Menu::Options::TO_MAIN_MENU] = "To Main Menu";
 	}
 
-	optMap[Globals::State::MAIN_MENU] = mainMenu;
-	optMap[Globals::State::STAGE_SELECT] = stageSelect;
-	optMap[Globals::State::PAUSE] = pause;
+	optMap[GameState::MAIN_MENU] = mainMenu;
+	optMap[GameState::STAGE_SELECT] = stageSelect;
+	optMap[GameState::PAUSE] = pause;
 
 	loadMenuOptions();
 	setStageSelectOption(1);
-	setCurrentOption(option[GlobalState].begin()->first);
-	setInited(true);
+
+	if(!option[state].empty())
+	{
+		setCurrentOption(option[state].begin()->first);
+	}
+	else
+	{
+		setCurrentOption(option[GameState::MAIN_MENU].begin()->first);
+	}
 }
 
 void Menu::process()
 {
-	if(!this->getInited())
-	{
-		LOGI("Not inited!");
-		return;
-	}
+
+
 }
 
 /////////////////////////////////////////////
@@ -76,7 +80,7 @@ void Menu::loadMenuOptions()
 		for (rit=i.second.rbegin(); rit != i.second.rend(); ++rit)
 		{
 			sf::Text txt;
-			txt.setFont(Globals::getInstance().getResourceHandler()->getFont(ResourceHandler::Fonts::SANSATION));
+			txt.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 			txt.setString(sf::String(rit->second));
 			std::cout << rit->second << std::endl;
 			txt.setCharacterSize(30);
@@ -98,15 +102,15 @@ void Menu::input(sf::Event& event)
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up )
 	{
 
-		if(currentOption  == option[GlobalState].begin()->first)
+		if(currentOption  == option[state].begin()->first)
 		{
-			currentOption = option[GlobalState].rbegin()->first;
+			currentOption = option[state].rbegin()->first;
 			LOGD("Pressed up, do nothing");
 		}
 		else
 		{
 			currentOption--;
-			LOGD("Pressed up, go down");
+			LOGD("Pressed up, go up");
 		}
 
 	}
@@ -114,15 +118,15 @@ void Menu::input(sf::Event& event)
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down )
 	{
 
-		if(currentOption == option[GlobalState].rbegin()->first)
+		if(currentOption == option[state].rbegin()->first)
 		{
-			currentOption = option[GlobalState].begin()->first;
+			currentOption = option[state].begin()->first;
 			LOGD("Pressed down, do nothing");
 		}
 		else
 		{
 			currentOption++;
-			LOGD("Pressed down, go up");
+			LOGD("Pressed down, go down");
 		}
 
 	}
@@ -134,8 +138,8 @@ void Menu::input(sf::Event& event)
 			/////////////////Main Menu///////////////////
 			/////////////////////////////////////////////
 		case Menu::Options::NEW_GAME:
-			Globals::getInstance().setState(Globals::State::STAGE_SELECT);
-			this->setCurrentOption(option[GlobalState].begin()->first);
+			state = GameState::STAGE_SELECT;
+			this->setCurrentOption(option[state].begin()->first);
 			break;
 		case Menu::Options::LOAD_GAME:
 			break;
@@ -149,24 +153,24 @@ void Menu::input(sf::Event& event)
 			///////////////Stage Select//////////////////
 			/////////////////////////////////////////////
 		case Menu::Options::SELECT_STAGE:
-			Globals::getInstance().setState(Globals::State::INIT_GAME);
-			this->setCurrentOption(option[Globals::State::PAUSE].begin()->first); // Set to pause, because we dont have options for INIT_GAME (which basicly is game)
+			state = GameState::INIT_GAME;
+			this->setCurrentOption(option[GameState::PAUSE].begin()->first); // Set to pause, because we dont have options for INIT_GAME (which basicly is game)
 			break;
 		case Menu::Options::BACK:
-			Globals::getInstance().setState(Globals::State::MAIN_MENU);
-			this->setCurrentOption(option[GlobalState].begin()->first);
+			state = GameState::MAIN_MENU;
+			this->setCurrentOption(option[state].begin()->first);
 			break;
 
 			/////////////////////////////////////////////
 			/////////////IN-GAME-Pause///////////////////
 			/////////////////////////////////////////////
 		case Menu::Options::CONTINUE_GAME:
-			Globals::getInstance().setState(Globals::State::GAME);
-			this->setCurrentOption(option[Globals::State::PAUSE].begin()->first); // Set back to Pause, since that is the only menu set we can have at this stage.
+			state = GameState::GAME;
+			this->setCurrentOption(option[GameState::PAUSE].begin()->first); // Set back to Pause, since that is the only menu set we can have at this stage.
 			break;
 		case Menu::Options::TO_MAIN_MENU:
-			Globals::getInstance().setState(Globals::State::INIT_MAIN_MENU);
-			this->setCurrentOption(option[Globals::State::MAIN_MENU].begin()->first); 
+			state = GameState::INIT_MAIN_MENU;
+			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first); 
 			break;
 
 		default:
@@ -176,7 +180,7 @@ void Menu::input(sf::Event& event)
 	}
 
 	// Do additional input for stage select (Two input handlers, horizontal + vertical
-	if(GlobalState == Globals::State::STAGE_SELECT)	stageSelectInput(event);
+	if(state == GameState::STAGE_SELECT)	stageSelectInput(event);
 
 }
 
@@ -241,24 +245,18 @@ void Menu::setStageSelectOption(int opt)
 /////////////////////////////////////////////
 void Menu::draw()
 {
-	if(!this->getInited())
-	{
-		LOGI("Not inited!");
-		return;
-	}
-
 	drawGameTitle();
-	switch(Globals::getInstance().getState())
+	switch(state)
 	{
-	case Globals::State::MAIN_MENU:
+	case GameState::MAIN_MENU:
 		drawMainMenu();
-		drawOptions(Globals::getInstance().getState());
+		drawOptions(state);
 		break;
-	case Globals::State::STAGE_SELECT:
+	case GameState::STAGE_SELECT:
 		drawStageSelect();
-		drawOptions(Globals::getInstance().getState());
+		drawOptions(state);
 		break;
-	case Globals::State::PAUSE:
+	case GameState::PAUSE:
 		// Do nothing
 		break;
 	}
@@ -274,7 +272,7 @@ void Menu::drawMainMenu()
 /////////////////////////////////////////////
 ////Draw menu options for current state//////
 /////////////////////////////////////////////
-void Menu::drawOptions(Globals::State state, int xOffset, int yOffset, sf::Color color)
+void Menu::drawOptions(GameState state, int xOffset, int yOffset, sf::Color color)
 {
 	// Draw Options
 	for(auto& i: option[state]) 
@@ -305,7 +303,7 @@ void Menu::drawGameTitle()
 	// Draw Game Title text
 	sf::Text gameTitle;
 	gameTitle.setString(sf::String("X1337"));
-	gameTitle.setFont(Globals::getInstance().getResourceHandler()->getFont(ResourceHandler::Fonts::COMICATE));
+	gameTitle.setFont(resourceHandler->getFont(ResourceHandler::Fonts::COMICATE));
 	gameTitle.setColor(sf::Color::Red);
 	gameTitle.setCharacterSize(80);
 	gameTitle.setPosition(sf::Vector2f(window.getSize().x / 2 - (gameTitle.getGlobalBounds().width / 2), window.getSize().y / 8 - (gameTitle.getGlobalBounds().height / 2)));
@@ -324,7 +322,7 @@ void Menu::drawStageSelect()
 	int cnt = count;
 
 	sf::FloatRect currentStageSelBounds; // Read as Current stage select bounds
-	for(Script& i : Globals::getInstance().getResourceHandler()->getScripts())
+	for(Script& i : scripts)
 	{
 		// Ignore Game menu script 
 		if(i.getScriptEnumVal() == ResourceHandler::Scripts::GAME_MENU)
@@ -341,7 +339,7 @@ void Menu::drawStageSelect()
 
 		// Text Under image
 		sf::Text txtName;
-		txtName.setFont(Globals::getInstance().getResourceHandler()->getFont(ResourceHandler::Fonts::SANSATION));
+		txtName.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 		txtName.setString(i.getScriptTitle());
 		txtName.setCharacterSize(20);
 		txtName.setColor(sf::Color::White);
@@ -374,6 +372,6 @@ void Menu::drawStageSelect()
 ////////////Stage Selection//////////////////
 /////////////////////////////////////////////
 void Menu::drawPause(int xOffSet, int yOffset)
-{		drawOptions(Globals::getInstance().getState(), xOffSet, yOffset, sf::Color::White);
+{		drawOptions(state, xOffSet, yOffset, sf::Color::White);
 
 }

@@ -3,19 +3,21 @@
 #include "BulletFactory.h"
 #include "Bullet.h"
 #include "Log.h"
-#include "Globals.h"
 
 Enemy::Enemy(sf::RenderWindow& window, 
 			 std::queue<sf::Vector3f> path,
-			 int type, int repeat
+			 int type, int repeat,BulletFactory& bFactory,  
+			 std::list<std::unique_ptr<Bullet>>& bullets,
+			 std::unique_ptr<ResourceHandler>& resourceHandler,
+			 const sf::Time& timeStep
 			 ):
-Shooter(window)
+Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
 	this->setType(Shooter::ShooterType::ENEMY);
 	this->pathTemplate = path; // A qeueu which should not be touched (This is used to refill old queue
 	this->enemyClock.restart();
 	this->setRepeat(repeat);
-	this->sprite = new GameShape(GameShape::STARSHIP);
+	sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::STARSHIP));
 
 	setInitPath();
 }
@@ -42,19 +44,16 @@ void Enemy::shoot(int shoot)
 {
 	if(shoot != -1)
 	{
-		Bullet* b = this->getBulletFactory()->requestObject(Bullet::Type::standardShot);
+		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
-		this->getBullets()->push_back(b);
+		getBullets().push_back(std::move(b));
 	}
 
 }
 
 void Enemy::process()
 {
-
-	if(!this->getInited()) return;
-
 	this->shooterProcess();
 
 	// Start
@@ -73,8 +72,8 @@ void Enemy::process()
 	float dy = this->path.front().y - this->currentPath.y;
 	float len = sqrtf(dx * dx + dy * dy);
 
-	dx = (dx / len) * Globals::getInstance().getTimeStep().asSeconds() * 50;
-	dy = (dy / len) * Globals::getInstance().getTimeStep().asSeconds() * 50;
+	dx = (dx / len) * timeStep.asSeconds() * 50;
+	dy = (dy / len) * timeStep.asSeconds() * 50;
 
 	if(this->enemyClock.getElapsedTime().asMilliseconds() > 400)
 	{

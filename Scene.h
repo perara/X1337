@@ -1,4 +1,5 @@
 #pragma once
+#include "ResourceHandler.h"
 #include <SFML\Graphics.hpp>
 
 /// <summary>
@@ -7,18 +8,16 @@
 class Scene
 {
 public:
-	Scene(sf::RenderWindow& window):window(window){};
+	Scene(sf::RenderWindow& window, std::unique_ptr<ResourceHandler>& resourceHandler):
+		window(window), 
+		resourceHandler(resourceHandler){};
 
 	virtual void draw() = 0;
 	virtual void process() = 0;
-	virtual void init() = 0;
 	virtual void input(sf::Event&) = 0;
-	virtual void reset() = 0; //Should also call setInit(false)
-
-	void setInited(bool);
-	bool getInited();
 
 protected:
 	sf::RenderWindow& window;
+	std::unique_ptr<ResourceHandler>& resourceHandler;
 	bool inited;
 };

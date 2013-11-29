@@ -1,13 +1,20 @@
 #pragma once
+
+
+
 #include <queue>
 #include <list>
 #include <SFML\System\Clock.hpp>
+#include <SFML\Graphics.hpp>
 #include <memory>
 
 
 class Object;
 class Shooter;
 class Enemy;
+class BulletFactory;
+class Bullet;
+class ResourceHandler;
 
 
 
@@ -16,20 +23,26 @@ class Script
 	class ScriptTick
 	{
 	public:
-		std::shared_ptr<Enemy> enemy;
 		int delay;
-		ScriptTick(std::shared_ptr<Enemy> enemy, int delay):
-			enemy(enemy),
-			delay(delay){};
+		int repeat;
+		int type;
+		std::queue<sf::Vector3f> pathQueue;
+
+		ScriptTick(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat):
+			delay(delay),
+			pathQueue(pathQueue),
+			type(type),
+			repeat(repeat){};
 	};
 
 	sf::Clock scriptClock;
-	std::queue<ScriptTick*> list;
+	std::queue<ScriptTick> enemyList;
 	bool inited;
 
 
 public:
-	void addEnemy(std::shared_ptr<Enemy> enemy, int delay);
+	Script(){};
+	void addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat);
 
 	// ScriptClock
 	sf::Clock& getClock();
@@ -40,7 +53,12 @@ public:
 	void setInit(bool);
 
 	// Process
-	void process(std::list<std::shared_ptr<Shooter>>&);
+	void process(sf::RenderWindow& window,
+		std::list<std::shared_ptr<Shooter>>& objects , 
+		std::list<std::unique_ptr<Bullet>>& bullets,
+		BulletFactory& bFactory,
+		std::unique_ptr<ResourceHandler>& resourceHandler,
+		const sf::Time& timeStep);
 
 	// Get/Set scriptName
 	std::string getScriptTitle();

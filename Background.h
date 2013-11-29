@@ -6,11 +6,12 @@
 #include <SFML\Graphics\CircleShape.hpp>
 #include <queue>
 #include <list>
+#include <memory>
 
 class Background
 {
 	std::queue<sf::Sprite> images;
-	std::list<sf::Texture*> textures;
+	std::list<std::shared_ptr<sf::Texture>> textures;
 	sf::Sprite currentImage;
 	int scrollOffset;
 	sf::RenderWindow& window;

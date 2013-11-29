@@ -5,7 +5,7 @@
 
 int main()
 {
-	GameEngine *gaym = new GameEngine();
+	GameEngine* gaym = new GameEngine();
 
 
 	while(true){};

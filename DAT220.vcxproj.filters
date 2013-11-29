@@ -37,9 +37,6 @@
     <ClCompile Include="GameEngine.cpp">
       <Filter>Source\Base Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Globals.cpp">
-      <Filter>Source\Base Classes</Filter>
-    </ClCompile>
     <ClCompile Include="Script.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -91,9 +88,6 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="GameEngine.h">
-      <Filter>Header\Base Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
       <Filter>Header\Base Classes</Filter>
     </ClInclude>
     <ClInclude Include="libs\rapidxml.hpp">

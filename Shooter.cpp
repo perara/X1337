@@ -3,8 +3,17 @@
 #include "BulletFactory.h"
 #include "Log.h"
 
-Shooter::Shooter(sf::RenderWindow& window): 
-	Object(window)
+Shooter::Shooter(sf::RenderWindow& window, 
+				 BulletFactory& bFactory,   
+				 std::list<std::unique_ptr<Bullet>>& bullets, 
+				 std::unique_ptr<ResourceHandler>& resourceHandler,
+				 const sf::Time& timeStep): 
+Object(window),
+	bullets(bullets),
+	bFactory(bFactory),
+	resourceHandler(resourceHandler),
+	timeStep(timeStep)
+
 {health = 5;}
 
 
@@ -46,7 +55,7 @@ bool Shooter::circleTest(GameShape& bullet)
 
 
 
-bool Shooter::sat(GameShape* c1, GameShape* c2)
+bool Shooter::sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2)
 {
 	int c1_tx = c1->getPosition().x;
 	int c1_ty = c1->getPosition().y;
@@ -108,24 +117,24 @@ bool Shooter::sat(GameShape* c1, GameShape* c2)
 
 void Shooter::hitDetection()
 {
-	if(!this->getBullets()->empty())
+	if(!getBullets().empty())
 	{
 		bool wasHit = false;
-		for(auto& i: *this->getBullets())
+		for(auto& i: std::move(getBullets()))
 		{
-			if(this->getType() == i->getOwner()) continue; // Dont compute bullets for your own type
+			if(getType() == i->getOwner()) continue; // Dont compute bullets for your own type
 
-			wasHit = this->sat(this->sprite, i->sprite);
-			
+			wasHit = sat(sprite, i->sprite);
+
 			if(wasHit)
 			{
 				i->setDeleted(true);
 				health = health-i->getBulletType();
 
 				// KILL IF DEAD
-				if(health < 0 && this->getType() != Shooter::ShooterType::PLAYER)
+				if(health < 0 && getType() != Shooter::ShooterType::PLAYER)
 				{
-					this->deleted = true;
+					deleted = true;
 				}
 
 			}
@@ -144,32 +153,20 @@ Shooter::ShooterType Shooter::getType()
 }
 
 
-void Shooter::init(BulletFactory& bFactory, std::list<Bullet*>& bullets)
-{
-	this->setBullets(bullets);
-	this->setBulletFactory(bFactory);
-	this->setInited(true);
-}
-
-
 // BulletFactory Getter/Setter
-BulletFactory* Shooter::getBulletFactory()
+BulletFactory& Shooter::getBulletFactory()
 {
 	return bFactory;
 }
 
-void Shooter::setBulletFactory(BulletFactory& bFactory)
-{
-	this->bFactory = &bFactory;
-}
 
 // Bullets getter/setter
-std::list<Bullet*>* Shooter::getBullets()
+std::list<std::unique_ptr<Bullet>>& Shooter::getBullets()
 {
 	return this->bullets;
 }
 
-void Shooter::setBullets(std::list<Bullet*>& bullets)
+void Shooter::setBullets(std::list<std::unique_ptr<Bullet>>& bullets)
 {
-	this->bullets = &bullets;
+	this->bullets = std::move(bullets);
 }

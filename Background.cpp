@@ -1,5 +1,4 @@
 #include "Background.h"
-#include "Globals.h"
 
 Background::Background(sf::RenderWindow& window): window(window)
 {
@@ -12,7 +11,7 @@ void Background::addBackground(sf::Texture& texture)
 	sf::Sprite sprite;
 	sprite.setColor(sf::Color(255,0,255)); // TEMP
 	sprite.scale(((float)window.getView().getSize().x / texture.getSize().x) , ((float)window.getView().getSize().y / texture.getSize().y));
-	textures.push_back(&texture);
+	textures.push_back(std::make_shared<sf::Texture>(texture));
 
 	if(currentImage.getLocalBounds().height == 0)
 	{
@@ -26,7 +25,7 @@ void Background::addBackground(sf::Texture& texture)
 
 void Background::process()
 {
-	this->draw();
+	draw();
 }
 
 void Background::draw()
@@ -35,7 +34,7 @@ void Background::draw()
 		currentImage.setTexture(*textures.front());
 		currentImage.setPosition(0,0);
 		//std::cout << "Height: " << currentImage.getLocalBounds().height << "| Width: " << currentImage.getLocalBounds().width << std::endl;
-		this->window.draw(currentImage);
+		window.draw(currentImage);
 	}
 
 }

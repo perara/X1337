@@ -1,9 +1,6 @@
 #include "GameEngine.h"
-#include "Globals.h"
-#include "World.h"
 #include "ResourceHandler.h"
 #include "Menu.h"
-
 #include <iostream>
 
 GameEngine::GameEngine():
@@ -11,12 +8,14 @@ GameEngine::GameEngine():
 	fullScreen(sf::View(sf::FloatRect(0,0,window.getSize().x,window.getSize().y))),
 	mainView (sf::View(sf::FloatRect(0,0,800,600))),
 	playerStatsView(sf::View(sf::FloatRect(0,0,300,600))),
-	menuGameDemoView(sf::View (sf::FloatRect(0,0,800,600)))
-
+	menuGameDemoView(sf::View (sf::FloatRect(0,0,800,600))),
+	resourceHandler(new ResourceHandler(window)),
+	event(sf::Event()),
+	timeStep(sf::seconds(1.0f/60.0f)) // Set timestep to 60 FPS
 
 {
 	// Window configuration
-	this->window.setFramerateLimit(120);
+	window.setFramerateLimit(120);
 
 	//************************************//
 	//*********View Declaration***********//
@@ -30,30 +29,19 @@ GameEngine::GameEngine():
 
 
 
-	// Init and set resourceHandler
-	Globals::getInstance().setResourceHandler(std::shared_ptr<ResourceHandler>(new ResourceHandler(window)));
-	Globals::getInstance().getResourceHandler()->init();
-
-	// Set timeStep to 60 fps
-	Globals::getInstance().setTimeStep(sf::seconds(1.0f/60.0f));
+	// Init resourceHandler
+	resourceHandler->init();
 
 	// Initial Game State
-	Globals::getInstance().setState(Globals::getInstance().MAIN_MENU);		// Set gamestate to Game
+	setState(GameEngine::State::INIT_MAIN_MENU);  // Set gamestate to init_main_menu
 
-	// Initialize Event
-	this->event = sf::Event();
 
 	// Set mouse properties
 	sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window); // Default mouse location
 	window.setMouseCursorVisible(false);
 
-	// Init World
-	world = std::unique_ptr<World>(new World(window));
-	world->setDemo(true);
-
-	// Init Menu
-	menu = std::unique_ptr<Menu>(new Menu(window));
-
+	// Init Menu;
+	menu = (std::unique_ptr<Menu>(new Menu(window, state, resourceHandler)));
 
 	// Start Gameloop
 	this->runGame();
@@ -66,41 +54,46 @@ void GameEngine::runGame()
 		this->pollInput(); // pollEvent
 		this->elapsedTime += this->gameClock.restart();
 
-		while(this->elapsedTime >=  Globals::getInstance().getTimeStep())
+		while(this->elapsedTime >= timeStep)
 		{
-			if(GlobalState == Globals::State::GAME)
+			if(getState() == GameState::GAME)
 			{
 				// Process Scene
 				this->world->process();
 				this->world->input(this->event); // todo should be in polLEvent
 			}
-			else if(GlobalState == Globals::INIT_GAME)
+
+			else if(getState() == GameState::INIT_GAME)
 			{
-				Globals::getInstance().getResourceHandler()->getSound(ResourceHandler::Sound::MENU_SONG).stop();
-				this->world->setDemo(false);
-				this->world->reset();
-				this->world->init(menu->getStageSelectOption());
-				Globals::getInstance().setState(Globals::State::GAME);
+				resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).stop();
+				setState(GameState::GAME);
+				world.reset(new World(window, resourceHandler, timeStep));
+				world->init(false, menu->getStageSelectOption());
 			}
-			else if(GlobalState == Globals::State::INIT_MAIN_MENU)
+
+			else if(getState() == GameState::INIT_MAIN_MENU)
 			{
-				Globals::getInstance().setState(Globals::State::MAIN_MENU);
-				std::unique_ptr<World> world = std::unique_ptr<World>(new World(window));
-				this->world->setDemo(true);
+				resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).play();
+				resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).setLoop(true);
+				setState(GameState::MAIN_MENU);
+				world.reset(new World(window, resourceHandler, timeStep));
+				world->init(true);
 			}
-			else if(GlobalState == Globals::State::MAIN_MENU  || GlobalState == Globals::State::STAGE_SELECT)
+
+			else if(getState() == GameState::MAIN_MENU  || getState() == GameState::STAGE_SELECT)
 			{
 				this->world->process();
 				this->menu->process();
+
 			}
-			this->elapsedTime -= Globals::getInstance().getTimeStep();
+			this->elapsedTime -= timeStep;
 
 		}
 
 		window.clear(sf::Color::Black);
 
 
-		if(GlobalState == Globals::State::GAME)
+		if(getState() == GameState::GAME)
 		{
 			window.setView(playerStatsView);
 			this->world->drawStats();
@@ -108,17 +101,17 @@ void GameEngine::runGame()
 			window.setView(mainView);
 			this->world->draw();
 		}
-		else if(GlobalState == Globals::State::INIT_GAME)
+		else if(getState() == GameState::INIT_GAME)
 		{
 
 		}
-		else if(GlobalState == Globals::State::MAIN_MENU || GlobalState == Globals::State::STAGE_SELECT)
+		else if(getState() == GameState::MAIN_MENU || getState() == GameState::STAGE_SELECT)
 		{
 			window.setView(fullScreen);
 			this->world->draw();
 			this->menu->draw();
 		}
-		else if(GlobalState == Globals::State::PAUSE)
+		else if(getState() == GameState::PAUSE)
 		{
 			window.setView(playerStatsView);
 			this->world->drawStats();
@@ -147,14 +140,14 @@ void GameEngine::pollInput()
 	{
 
 		/* Input event for each of the STATES */
-		if(GlobalState == Globals::State::GAME)
+		if(getState() == GameState::GAME)
 		{
-			this->menu->input(this->event);
+
 		}
-		else if(GlobalState == Globals::State::INIT_GAME)
+		else if(getState() == GameState::INIT_GAME)
 		{
 		}
-		else if(GlobalState == Globals::State::MAIN_MENU || GlobalState == Globals::State::STAGE_SELECT || GlobalState == Globals::State::PAUSE)
+		else if(getState() ==GameState::MAIN_MENU || getState() == GameState::STAGE_SELECT || getState() == GameState::PAUSE)
 		{
 			this->menu->input(this->event);
 		}
@@ -171,16 +164,33 @@ void GameEngine::pollInput()
 		if(this->event.type == sf::Event::KeyReleased)
 		{
 			if(this->event.key.code == sf::Keyboard::Escape){
-				if(GlobalState == Globals::State::GAME)
+				if(getState() == GameState::GAME)
 				{
-					Globals::getInstance().setState(Globals::State::PAUSE);
+					setState(GameState::PAUSE);
 				}
-				else if(GlobalState == Globals::State::PAUSE)
+				else if(getState() == GameState::PAUSE)
 				{
-					Globals::getInstance().setState(Globals::State::GAME);
+					setState(GameState::GAME);
 				}
 			}
 		}
 
 	}
+}
+
+// State getter/setter
+void GameEngine::setState(GameState state)
+{
+	this->state = state;
+}
+
+GameState& GameEngine::getState()
+{
+	return this->state;
+}
+
+
+std::unique_ptr<ResourceHandler>& GameEngine::getResourceHandler()
+{
+	return this->resourceHandler;
 }

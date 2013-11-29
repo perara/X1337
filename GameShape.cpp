@@ -1,6 +1,5 @@
 
 #include "GameShape.h"
-
 #include "Log.h"
 
 // Other Default

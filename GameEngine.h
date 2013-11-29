@@ -3,11 +3,11 @@
 #include <SFML\System\Time.hpp>
 #include <SFML\Graphics.hpp>
 #include <memory>
+#include "World.h"
 
-class World;
 class Menu;
 
-
+#define GameState GameEngine::State
 
 /// <summary>
 /// This is the game engine class which processes everything in the game. It holds the statemachine which decides current state.
@@ -15,6 +15,23 @@ class Menu;
 class GameEngine{
 public:
 	GameEngine();
+
+	enum State{
+		GAME, 
+		INIT_GAME,
+		INIT_MAIN_MENU,
+		STAGE_SELECT,
+		MAIN_MENU, 
+		OPTIONS, 
+		PAUSE
+	};
+
+	// State getter/setter
+	void setState(GameState state);
+	GameState& getState();
+
+	// Resource Handler getter/setter
+	std::unique_ptr<ResourceHandler>& GameEngine::getResourceHandler();
 
 private:
 	void runGame();
@@ -24,7 +41,9 @@ private:
 
 	std::unique_ptr<World> world;
 	std::unique_ptr<Menu> menu;
+	std::unique_ptr<ResourceHandler> resourceHandler;
 
+	const sf::Time timeStep;
 	sf::Time elapsedTime;
 	sf::Clock gameClock;
 	sf::Event event;
@@ -35,4 +54,6 @@ private:
 	sf::View fullScreen;
 	sf::View menuGameDemoView;
 	sf::View playerStatsView;
+
+	State state;
 };

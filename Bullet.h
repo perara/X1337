@@ -14,13 +14,12 @@ public:
 		heavyShot = 5
 	};
 
-	Bullet(sf::RenderWindow& window, Bullet::Type);
+	Bullet(sf::RenderWindow& window, Bullet::Type,  const sf::Time& timeStep);
 	void process();
 	bool isOutOfBounds();
 
 	void setPosition(int x, int y);
 	void setOwner(Shooter::ShooterType owner);
-	void deleteBullet(BulletFactory& bFactory);
 	void resetObject();
 	void setDeleted(bool deleted);
 	bool getDeleted(); 
@@ -36,4 +35,5 @@ protected:
 
 private:
 	Shooter::ShooterType owner;
+	 const sf::Time& timeStep;
 };

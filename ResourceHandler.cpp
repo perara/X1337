@@ -2,7 +2,6 @@
 #include "Log.h"
 #include "Enemy.h"
 #include <memory>
-#include "Globals.h"
 
 ResourceHandler::ResourceHandler(sf::RenderWindow& window):
 	window(window)
@@ -163,17 +162,11 @@ void ResourceHandler::loadScripts()
 
 			}
 
-			std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
-				window, 
-				pathQueue,
-				type,
-				atoi(repeat->value())));
-
 			//std::cout << e1 << std::endl;
 			std::string nameCpp(name->value()); // Convert name to CPP11 format
 			this->scripts[i.first].setScriptEnumVal(i.first);
 			this->scripts[i.first].setScriptTitle(nameCpp);
-			this->scripts[i.first].addEnemy(e1, delay);
+			this->scripts[i.first].addEnemy(delay, pathQueue, type, atoi(repeat->value()));
 
 			enemyCounter++;
 		}
@@ -202,7 +195,7 @@ Script ResourceHandler::getScriptById(int iteNum)
 {
 	// Meh method
 	int cnt = 1;
-	for(Script& i : Globals::getInstance().getResourceHandler()->getScripts())
+	for(Script& i : getScripts())
 	{
 		if (cnt == iteNum) return i;
 		cnt++;

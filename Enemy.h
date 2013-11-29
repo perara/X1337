@@ -19,7 +19,11 @@ public:
 
 	Enemy(sf::RenderWindow& window, 
 		std::queue<sf::Vector3f> path,
-		int type, int repeat);
+		int type, int repeat,
+		BulletFactory&,   
+		std::list<std::unique_ptr<Bullet>>&,
+		std::unique_ptr<ResourceHandler>& resourceHandler,
+		const sf::Time& timeStep);
 
 	~Enemy();
 

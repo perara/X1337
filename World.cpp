@@ -1,5 +1,4 @@
 #include "World.h"
-#include "Globals.h"
 #include "ResourceHandler.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -8,67 +7,48 @@
 #include "Log.h"
 #include "GameShape.h"
 
-World::World(sf::RenderWindow& window): 
-	Scene(window),
+World::World(sf::RenderWindow& window, 
+			 std::unique_ptr<ResourceHandler>& resourceHandler, 
+			 const sf::Time& timeStep): 
+Scene(window, resourceHandler),
 	bg(Background(window)),
-	bFactory(BulletFactory(window, 1000, bullets)),
-	player(Player(window, sf::Vector2f(100,250), 10))
+	bFactory(BulletFactory(window, 1000, bullets, timeStep)),
+	player(Player(window, sf::Vector2f(100,250), 10, bFactory, bullets, resourceHandler, timeStep)),
+	timeStep(timeStep)
 {
 
 }
 
-
-void World::init()
+World::~World()
 {
-	/*// Initialize Background
-	bg.addBackground(Globals::getInstance().getResourceHandler()->getTexture(ResourceHandler::Texture::BACKGROUND1));
-
-	// Initialize Player
-	if(!player.getInited()) player.init(this->bFactory, this->bullets);
-
-	std::shared_ptr<Player> pPtr = std::shared_ptr<Player>(&player);
-	if(!this->isDemo()) this->addObject(pPtr);
-
-	// Set inited to true
-	this->setInited(true);*/
-}
-void World::init(int scriptNum)
-{
-	/*// Initialize Script
-	this->script = Globals::getInstance().getResourceHandler()->getScriptById(scriptNum);
-	this->init();*/
+	LOGD("World deconstructor called");
 
 }
 
-void World::reset()
-{
 
-/*	// Delete bullets
-	for(Bullet* i : this->bullets)
-	{
-		delete i;
-	}
-	bullets.clear();
-
-	// Delete objects
-	objects.clear();*/
-}
-
-bool World::isDemo()
-{
-	return this->demo;
-}
-
-void World::setDemo(bool demo)
+void World::init(bool demo, int scriptNum)
 {
 	this->demo = demo;
-	//if(this->demo)this->script = Globals::getInstance().getResourceHandler()->getScript(ResourceHandler::Scripts::GAME_MENU);
+	if(demo)
+	{
+		this->script = resourceHandler->getScript(ResourceHandler::Scripts::GAME_MENU);
+	}
+	else
+	{
+		this->script = resourceHandler->getScriptById(scriptNum);
+
+		// Initialize Background
+		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND1));
+
+		addObject(std::make_shared<Player>(player));
+	}
+
 }
 
 void World::process()
 {
-	/*// Process loaded script
-	this->script.process(objects);
+	// Process loaded script
+	this->script.process(window, objects, bullets, bFactory, resourceHandler, timeStep);
 
 	///////////////////////////////////
 	// Object processing and cleanup //
@@ -77,14 +57,11 @@ void World::process()
 	{
 		for(std::list<std::shared_ptr<Shooter>>::iterator i = objects.begin(); i != objects.end();)
 		{
-			// Init object if its not already inited
-			if(!(*i)->getInited()) (*i)->init(bFactory, bullets);
-
 			// Process
 			(*i)->process();
 
 			// Cleanup
-			if((*i)->getDeleted() && (*i)->getInited())
+			if((*i)->getDeleted())
 			{ // If the bullet is up for deletion
 				i = objects.erase(i);
 			}
@@ -100,7 +77,7 @@ void World::process()
 	///////////////////////////////////
 	if(!bullets.empty())
 	{
-		for(std::list<Bullet*>::iterator it = bullets.begin(); it != bullets.end();)
+		for(std::list<std::unique_ptr<Bullet>>::iterator it = bullets.begin(); it != bullets.end();)
 		{
 			// Process
 			(*it)->process();
@@ -108,7 +85,7 @@ void World::process()
 			// Cleanup
 			if((*it)->getDeleted())
 			{
-				(*it)->deleteBullet(bFactory);
+				bFactory.returnObject(std::move(*it));
 				it = bullets.erase(it);
 			}
 			else
@@ -118,7 +95,6 @@ void World::process()
 		}
 
 	}
-	*/
 }
 
 void World::drawStats()
@@ -136,12 +112,10 @@ void World::addObject(std::shared_ptr<Shooter> object)
 	this->objects.push_back(object);
 }
 
-void World::addBullet(Bullet* bullet)
+void World::addBullet(std::unique_ptr<Bullet> bullet)
 {
 	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
-
-	//system("pause");
-	this->bullets.push_back(bullet);
+	this->bullets.push_back(std::move(bullet));
 }
 
 /// <summary>
@@ -149,8 +123,8 @@ void World::addBullet(Bullet* bullet)
 /// </summary>
 void World::draw()
 {
-/*	// Draw background
-	if(!this->isDemo()) bg.process(); // TODO
+	// Draw background
+	bg.process();
 
 
 	for(auto &it : bullets)
@@ -162,7 +136,7 @@ void World::draw()
 	{
 		it->draw();
 
-	}*/
+	}
 }
 
 void World::input(sf::Event& event)

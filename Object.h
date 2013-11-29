@@ -4,6 +4,7 @@
 #include <SFML\Graphics\RenderWindow.hpp>
 #include <vector>
 #include <list>
+#include <memory>
 
 class GameShape;
 class BulletFactory;
@@ -16,24 +17,17 @@ class Object
 {
 public:
 	Object();
-	Object(sf::RenderWindow & window) : window(window)
-	{
-		deleted = false;
-		inited = false;
-	};
+	Object(sf::RenderWindow & window) : window(window), deleted(false)
+	{};
 
 	virtual ~Object();
 
 	virtual void draw();
 	virtual void process();
-	GameShape* sprite;
+	std::shared_ptr<GameShape> sprite;
 	bool getDeleted();
-	bool getInited();
-	void setInited(bool);
-	virtual void init();
 
 	sf::RenderWindow& window;
 protected:
 	bool deleted;
-	bool inited;
 };
