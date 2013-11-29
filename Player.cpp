@@ -4,9 +4,11 @@
 #include "GameShape.h"
 #include "Log.h"
 #include "ResourceHandler.h"
+#include <sstream>
 
 sf::Clock normalShotClock;
 sf::Clock specialShotClock;
+sf::Clock scoreTime;
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Player"/> class.
@@ -69,6 +71,7 @@ void Player::detectEdge()
 	}
 }
 
+
 void Player::drawStats()
 {
 	// Draw Health
@@ -91,7 +94,20 @@ void Player::drawStats()
 		heartX = heartX + 35;
 	}
 
+
+	// Draw Score
+	sf::Text txtScore;
+	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	std::stringstream scrStr;
+	scrStr << scoreTime.getElapsedTime().asSeconds();//add number to the stream
+	txtScore.setString(sf::String("Score: " + scrStr.str()));
+	txtScore.setCharacterSize(25);
+	txtScore.setPosition(20,80);
+	txtScore.setColor(sf::Color::White);
+
+	
 	this->window.draw(txtHealth);
+	this->window.draw(txtScore);
 
 
 }
