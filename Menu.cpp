@@ -38,12 +38,19 @@ void Menu::init()
 	std::map<Menu::Options, std::string> pause;
 	{
 		pause[Menu::Options::CONTINUE_GAME] = "Continue";		
-		pause[Menu::Options::TO_MAIN_MENU] = "To Main Menu";
+		pause[Menu::Options::TO_MAIN_MENU] = "Return to Main Menu";
+	}
+
+	std::map<Menu::Options, std::string> gameOver;
+	{
+		gameOver[Menu::Options::RESTART_STAGE] = "Restart Game";
+		gameOver[Menu::Options::TO_MAIN_MENU2] = "Return to Main Menu";
 	}
 
 	optMap[GameState::MAIN_MENU] = mainMenu;
 	optMap[GameState::STAGE_SELECT] = stageSelect;
 	optMap[GameState::PAUSE] = pause;
+	optMap[GameState::GAMEOVER] = gameOver;
 
 	loadMenuOptions();
 	setStageSelectOption(1);
@@ -173,7 +180,19 @@ void Menu::input(sf::Event& event)
 			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first); 
 			break;
 
-		default:
+			/////////////////////////////////////////////
+			//////////IN-GAME- GAME OVER ////////////////
+			/////////////////////////////////////////////
+		case Menu::Options::RESTART_STAGE:
+			state = GameState::INIT_GAME;
+			this->setCurrentOption(option[GameState::GAMEOVER].begin()->first); // Set to pause, because we dont have options for INIT_GAME (which basicly is game)
+			break;
+		case Menu::Options::TO_MAIN_MENU2:
+			state = GameState::INIT_MAIN_MENU;
+			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first); 
+			break;
+
+			default:
 			LOGD("Missing menu action!");
 			break;
 		}
@@ -257,6 +276,9 @@ void Menu::draw()
 		drawOptions(state);
 		break;
 	case GameState::PAUSE:
+		// Do nothing
+		break;
+	case GameState::GAMEOVER:
 		// Do nothing
 		break;
 	}

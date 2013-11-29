@@ -96,6 +96,9 @@ void Player::drawStats()
 		heartX = heartX + 35;
 	}
 
+	if(health<0)
+		deleted=true;
+
 
 	// Draw Score
 	sf::Text txtScore;

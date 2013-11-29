@@ -23,7 +23,8 @@ public:
 		STAGE_SELECT,
 		MAIN_MENU, 
 		OPTIONS, 
-		PAUSE
+		PAUSE,
+		GAMEOVER
 	};
 
 	// State getter/setter

@@ -27,14 +27,11 @@ GameEngine::GameEngine():
 	playerStatsView.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 1.0f));
 	menuGameDemoView.setViewport(sf::FloatRect(0.40f, 0.40f, 0.25f, 0.25f));
 
-
-
 	// Init resourceHandler
 	resourceHandler->init();
 
 	// Initial Game State
 	setState(GameEngine::State::INIT_MAIN_MENU);  // Set gamestate to init_main_menu
-
 
 	// Set mouse properties
 	sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window); // Default mouse location
@@ -84,10 +81,8 @@ void GameEngine::runGame()
 			{
 				this->world->process();
 				this->menu->process();
-
 			}
 			this->elapsedTime -= timeStep;
-
 		}
 
 		window.clear(sf::Color::Black);
@@ -95,6 +90,8 @@ void GameEngine::runGame()
 
 		if(getState() == GameState::GAME)
 		{
+			if(world->isGameOver())
+				setState(GameState::GAMEOVER);
 			window.setView(playerStatsView);
 			this->world->drawStats();
 
@@ -127,7 +124,23 @@ void GameEngine::runGame()
 
 			this->menu->draw();
 			this->menu->drawPause(( window.getSize().y / 2),( window.getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
+		}
+		else if(getState() == GameState::GAMEOVER)
+		{
+			window.setView(playerStatsView);
+			this->world->drawStats();
 
+			window.setView(mainView);
+			this->world->draw();
+
+			window.setView(fullScreen);
+			sf::RectangleShape darkOverLay(sf::Vector2f(window.getSize()));
+			darkOverLay.setFillColor(sf::Color(0,0,0,150));
+			darkOverLay.setPosition(0,0);
+			window.draw(darkOverLay);
+
+			this->menu->draw();
+			this->menu->drawPause(( window.getSize().y / 2),( window.getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
 		}
 
 		window.display();
@@ -147,7 +160,7 @@ void GameEngine::pollInput()
 		else if(getState() == GameState::INIT_GAME)
 		{
 		}
-		else if(getState() ==GameState::MAIN_MENU || getState() == GameState::STAGE_SELECT || getState() == GameState::PAUSE)
+		else if(getState() ==GameState::MAIN_MENU || getState() == GameState::STAGE_SELECT || getState() == GameState::PAUSE || getState() == GameState::GAMEOVER)
 		{
 			this->menu->input(this->event);
 		}
