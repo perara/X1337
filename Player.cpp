@@ -5,7 +5,8 @@
 #include "Log.h"
 #include "ResourceHandler.h"
 
-sf::Clock clk; //TESTING PURPOSES
+sf::Clock normalShotClock;
+sf::Clock specialShotClock;
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Player"/> class.
@@ -79,7 +80,7 @@ void Player::drawStats()
 	txtHealth.setColor(sf::Color::White);
 
 	int heartX = 105;
-	for(int i = 0; i < this->getHealth(); i++)
+	for(int i = 0; i < getHealth(); i++)
 	{
 
 		std::shared_ptr<sf::Sprite> sprite = std::shared_ptr<sf::Sprite>(new sf::Sprite);
@@ -98,25 +99,24 @@ void Player::drawStats()
 void Player::input(sf::Event& event)
 {
 	/* Shoot handler */
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && clk.getElapsedTime().asMilliseconds() > 100){
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && normalShotClock.getElapsedTime().asMilliseconds() > 150){
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , sprite->getPosition().y - 10);
+		resourceHandler->getSound(ResourceHandler::Sound::STANDARD_SHOT).play();
+
 		getBullets().push_back(std::move(b));
-		clk.restart();
+		normalShotClock.restart();
 	}
 
-	/* TEMPORARY FOR TESTING */ //TODODODODODODODODODODODOD
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && clk.getElapsedTime().asMilliseconds()){
-
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && specialShotClock.getElapsedTime().asMilliseconds() > 1000){
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::heavyShot);
 		b->setOwner(this->getType());
 		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
+		resourceHandler->getSound(ResourceHandler::Sound::HEAVY_SHOT).play();
 		getBullets().push_back(std::move(b));
-		clk.restart();
+		specialShotClock.restart();
 	}
-
-
 
 
 	if(event.type == sf::Event::MouseMoved)

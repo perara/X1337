@@ -93,14 +93,14 @@
     <ClInclude Include="libs\rapidxml.hpp">
       <Filter>Header\Libraries</Filter>
     </ClInclude>
-    <ClInclude Include="libs\rapidxml_print.hpp">
-      <Filter>Header\Libraries</Filter>
-    </ClInclude>
     <ClInclude Include="Script.h">
       <Filter>Header\Base Classes</Filter>
     </ClInclude>
     <ClInclude Include="SliceEngine.h">
       <Filter>Header\Base Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\rapidxml_print.hpp">
+      <Filter>Header\Shooters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

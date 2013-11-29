@@ -16,14 +16,14 @@ GameShape::GameShape(GameShape::ShapeType shapeType):
 	case GameShape::ShapeType::STARSHIP:
 		this->setPointCount(8);
 
-		this->setPoint(0, sf::Vector2f(-10,0));
-		this->setPoint(1, sf::Vector2f(0,-10));
-		this->setPoint(2, sf::Vector2f(0,-20));
-		this->setPoint(3, sf::Vector2f(10,-30));
-		this->setPoint(4, sf::Vector2f(30,-30));
-		this->setPoint(5, sf::Vector2f(40,-20));
-		this->setPoint(6, sf::Vector2f(40,-10));
-		this->setPoint(7, sf::Vector2f(50,0));
+		this->setPoint(0, sf::Vector2f(-30,-10));
+		this->setPoint(1, sf::Vector2f(-20,-20));
+		this->setPoint(2, sf::Vector2f(-20,-30));
+		this->setPoint(3, sf::Vector2f(-10,-40));
+		this->setPoint(4, sf::Vector2f(10,-40));
+		this->setPoint(5, sf::Vector2f(20,-30));
+		this->setPoint(6, sf::Vector2f(20,-20));
+		this->setPoint(7, sf::Vector2f(30,-10));
 
 		break;
 	default:

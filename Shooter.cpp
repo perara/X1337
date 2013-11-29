@@ -19,11 +19,11 @@ Object(window),
 
 void Shooter::setHealth(int value)
 {
-	this->health = value;
+	health = value;
 }
 int Shooter::getHealth()
 {
-	return this->health;
+	return health;
 }
 
 void Shooter::decrementHealth()
@@ -120,7 +120,7 @@ void Shooter::hitDetection()
 	if(!getBullets().empty())
 	{
 		bool wasHit = false;
-		for(auto& i: std::move(getBullets()))
+		for(auto& i: getBullets())
 		{
 			if(getType() == i->getOwner()) continue; // Dont compute bullets for your own type
 
@@ -128,11 +128,12 @@ void Shooter::hitDetection()
 
 			if(wasHit)
 			{
+				setHealth(getHealth() - i->getBulletType());
 				i->setDeleted(true);
-				health = health-i->getBulletType();
+				
 
 				// KILL IF DEAD
-				if(health < 0 && getType() != Shooter::ShooterType::PLAYER)
+				if(getHealth() < 0 && getType() != Shooter::ShooterType::PLAYER)
 				{
 					deleted = true;
 				}

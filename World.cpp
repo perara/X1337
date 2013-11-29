@@ -13,7 +13,7 @@ World::World(sf::RenderWindow& window,
 Scene(window, resourceHandler),
 	bg(Background(window)),
 	bFactory(BulletFactory(window, 1000, bullets, timeStep)),
-	player(Player(window, sf::Vector2f(100,250), 10, bFactory, bullets, resourceHandler, timeStep)),
+	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100,250), 10, bFactory, bullets, resourceHandler, timeStep))),
 	timeStep(timeStep)
 {
 
@@ -40,7 +40,7 @@ void World::init(bool demo, int scriptNum)
 		// Initialize Background
 		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND1));
 
-		addObject(std::make_shared<Player>(player));
+		addObject(std::shared_ptr<Player>(player));
 	}
 
 }
@@ -99,7 +99,7 @@ void World::process()
 
 void World::drawStats()
 {
-	player.drawStats();
+	player->drawStats();
 }
 
 /// <summary>
@@ -141,5 +141,5 @@ void World::draw()
 
 void World::input(sf::Event& event)
 {
-	this->player.input(event);
+	this->player->input(event);
 }

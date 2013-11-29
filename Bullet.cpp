@@ -16,9 +16,7 @@ Bullet::Bullet(sf::RenderWindow& window, Bullet::Type bulletType, const sf::Time
 	timeStep(timeStep)
 {
 
-	this->setDeleted(false);
-	this->speedX = 0;
-	this->speedY = 0;
+	setDeleted(false);
 
 	if(Bullet::Type::standardShot == bulletType){
 		sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::CIRCLE, 2));
@@ -39,12 +37,12 @@ void Bullet::process()
 	{
 
 		this->sprite->setPosition(
-			this->sprite->getPosition().x+(timeStep.asSeconds() * speedX),
-			this->sprite->getPosition().y+(timeStep.asSeconds() * speedY)); //TODO
+			sprite->getPosition().x+(timeStep.asSeconds() * speedX),
+			sprite->getPosition().y+(timeStep.asSeconds() * speedY)); //TODO
 
 		if(isOutOfBounds())
 		{
-			this->setDeleted(true);
+			setDeleted(true);
 		}
 	}
 }

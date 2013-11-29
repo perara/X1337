@@ -28,9 +28,6 @@ protected:
 	int health;
 	std::unique_ptr<ResourceHandler>& resourceHandler;
 
-	/* Health Related */
-	void setHealth(int value);
-
 	void decrementHealth();
 	void incrementHealth();
 
@@ -58,4 +55,7 @@ private:
 
 	std::list<std::unique_ptr<Bullet>>& bullets;
 	BulletFactory& bFactory;
+
+		/* Health Related */
+	void setHealth(int value);
 };

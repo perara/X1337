@@ -43,7 +43,7 @@ private:
 	// Objects
 	Background bg;
 	BulletFactory bFactory;
-	Player player;
+	std::shared_ptr<Player> player;
 	// Script pointers
 	Script script;
 	const sf::Time& timeStep;

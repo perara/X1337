@@ -23,7 +23,10 @@ public:
 	{
 		SONG1,
 		MENU_SONG,
+		STANDARD_SHOT,
+		HEAVY_SHOT,
 		SOUNDCOUNT
+
 	};
 	const enum Scripts
 	{
