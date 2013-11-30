@@ -1,31 +1,14 @@
 <Savegame>
 	<Stages>
-		<Stage enum="0">
-			<Player>
-				<Name>Kuk</Name>
-				<Score>4199</Score>
-				<Date>21.01.13</Date>
-			</Player>
-			<Player>
-				<Name>ad</Name>
-				<Score>12</Score>
-				<Date>21s.01.13</Date>
-			</Player>
-		</Stage>
 		<Stage enum="1">
 			<Player>
-				<Name>Pesa</Name>
-				<Score>52552</Score>
-				<Date>21.01.13</Date>
-				<Name>Pesa</Name>
-				<Score>12</Score>
-				<Date>21.01.13</Date>
+				<Name>NO-NAME</Name>
+				<Score>1</Score>
+				<Date>N/A</Date>
 			</Player>
-		</Stage>
-		<Stage enum="2">
 			<Player>
 				<Name>NO-NAME</Name>
-				<Score>100</Score>
+				<Score>1</Score>
 				<Date>N/A</Date>
 			</Player>
 			<Player>
@@ -35,32 +18,12 @@
 			</Player>
 			<Player>
 				<Name>NO-NAME</Name>
-				<Score>500</Score>
-				<Date>N/A</Date>
-			</Player>
-			<Player>
-				<Name>NO-NAME</Name>
-				<Score>0</Score>
-				<Date>N/A</Date>
-			</Player>
-			<Player>
-				<Name>NO-NAME</Name>
 				<Score>100</Score>
 				<Date>N/A</Date>
 			</Player>
 			<Player>
 				<Name>NO-NAME</Name>
-				<Score>900</Score>
-				<Date>N/A</Date>
-			</Player>
-			<Player>
-				<Name>NO-NAME</Name>
-				<Score>4400</Score>
-				<Date>N/A</Date>
-			</Player>
-			<Player>
-				<Name>NO-NAME</Name>
-				<Score>5900</Score>
+				<Score>12000</Score>
 				<Date>N/A</Date>
 			</Player>
 			<Player>

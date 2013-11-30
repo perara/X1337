@@ -56,8 +56,9 @@ void GameEngine::runGame()
 			if(getState() == GameState::GAME)
 			{
 				// Process Scene
-				this->world->process();
 				this->world->input(this->event); // todo should be in polLEvent
+				this->world->process();
+
 			}
 
 			else if(getState() == GameState::INIT_GAME)

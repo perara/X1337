@@ -36,7 +36,7 @@ void World::init(bool demo, int scriptNum)
 	if(!hardMode)
 		player->setHealth(5);
 	else
-		player->setHealth(0);
+		player->setHealth(1);
 
 	this->demo = demo;
 	if(demo)
@@ -60,11 +60,10 @@ void World::process()
 {
 	// Process loaded script
 	bool scriptRunning = this->script.process(window, objects, bullets, bFactory, resourceHandler, timeStep);
-
 	///////////////////////////////////
 	// Object processing and cleanup //
 	///////////////////////////////////
-	if(!objects.empty() || scriptRunning)
+	if(objects.size() > 1 || scriptRunning)
 	{
 		for(std::list<std::shared_ptr<Shooter>>::iterator i = objects.begin(); i != objects.end();)
 		{
@@ -81,7 +80,8 @@ void World::process()
 				else if((*i)->getType() == Shooter::ShooterType::PLAYER)
 				{
 					gameOver = true;
-					resourceHandler->writeHighScoreScore(player->getPlayerScore(), currentScript); // Write highscore
+					int multiplier =  ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
+					resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
 				}
 
 				i = objects.erase(i);

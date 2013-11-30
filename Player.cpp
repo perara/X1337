@@ -38,7 +38,7 @@ void Player::process()
 	this->shooterProcess();
 	this->detectEdge();
 
-	if(health<=0)
+	if(health <= 0)
 	{
 		deleted=true;
 		resourceHandler->getSound(ResourceHandler::Sound::ENEMY_DEATH).play();
@@ -81,7 +81,7 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	// Draw Health
 	sf::Text txtHealth;
 	txtHealth.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-	std::string dead = ((health < 0) ? "Dead" : "");
+	std::string dead = ((health <= 0) ? "Dead" : "");
 	txtHealth.setString(sf::String("Health: " + dead));
 	txtHealth.setCharacterSize(25);
 	txtHealth.setPosition(20,20);
