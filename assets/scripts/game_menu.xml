@@ -249,7 +249,7 @@
 </Path>
 </Enemy>
 <Enemy>
-<Type>1</Type>
+<Type>3</Type>
 <Delay>10000</Delay>
 <Path>
 <_0 shoot="1" x="67" y="658"/>
@@ -272,7 +272,7 @@
 <_17 shoot="1" x="586" y="142"/>
 <_18 shoot="1" x="636" y="100"/>
 <_19 shoot="1" x="687" y="182"/>
-<_20 shoot="1" x="684" y="314"/>
+<_20 shoot="1" x="900" y="314"/>
 </Path>
 </Enemy>
 </Enemies>

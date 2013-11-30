@@ -95,6 +95,8 @@ void World::process()
 	else // Nothing more to do, game is over.
 	{
 		gameOver = true;
+		int multiplier =  ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
+		resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
 	}
 
 	///////////////////////////////////

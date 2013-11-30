@@ -473,7 +473,6 @@ void Menu::drawHighScore()
 	{
 		std::shared_ptr<HighScoreItem> item = i.second.front();
 
-			std::cout << "lol" << std::endl;
 			yPos+=50;
 
 			// Score string

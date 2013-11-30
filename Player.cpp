@@ -128,6 +128,7 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	int num = 1;
 	for(auto& i : highScoreList)
 	{
+		if(num == 10) break;
 		initY += 30;
 		std::stringstream theScore;
 		theScore << i->score;

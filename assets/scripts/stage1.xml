@@ -634,20 +634,25 @@
 <Type>3</Type>
 <Delay>5000</Delay>
 <Path>
-<_0 shoot="1" x="281" y="45"/>
-<_1 shoot="1" x="48" y="44"/>
-<_2 shoot="1" x="51" y="171"/>
-<_3 shoot="1" x="276" y="175"/>
+<_0 shoot="1" x="-8" y="76"/>
+<_1 shoot="1" x="299" y="76"/>
+<_2 shoot="1" x="324" y="177"/>
+<_3 shoot="1" x="497" y="175"/>
+<_4 shoot="1" x="525" y="75"/>
+<_5 shoot="1" x="812" y="77"/>
 </Path>
 </Enemy>
 <Enemy>
 <Type>3</Type>
-<Delay>5000</Delay>
+<Delay>0</Delay>
 <Path>
-<_0 shoot="1" x="450" y="49"/>
-<_1 shoot="1" x="794" y="49"/>
-<_2 shoot="1" x="797" y="201"/>
-<_3 shoot="1" x="456" y="202"/>
+<_0 shoot="1" x="812" y="77"/>
+<_1 shoot="1" x="525" y="75"/>
+<_2 shoot="1" x="497" y="175"/>
+<_3 shoot="1" x="324" y="177"/>
+<_4 shoot="1" x="299" y="76"/>
+<_5 shoot="1" x="-8" y="76"/>
+
 </Path>
 </Enemy>
 </Enemies>
