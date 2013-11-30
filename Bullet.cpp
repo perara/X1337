@@ -48,9 +48,9 @@ void Bullet::process()
 
 bool Bullet::isOutOfBounds()
 {
-	if(this->sprite->getPosition().x > window.getSize().x || 
+	if(this->sprite->getPosition().x > window.getView().getSize().x || 
 		this->sprite->getPosition().x < 0 || 
-		this->sprite->getPosition().y > window.getSize().y || 
+		this->sprite->getPosition().y > window.getView().getSize().y || 
 		this->sprite->getPosition().y < 0){
 			return true;
 	}else{

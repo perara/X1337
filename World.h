@@ -47,4 +47,5 @@ private:
 	const sf::Time& timeStep;
 	bool demo;
 	sf::Sound& ingameSong;
+	int currentScript;
 };

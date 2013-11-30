@@ -2,6 +2,7 @@
 #include "Log.h"
 #include "Enemy.h"
 #include <memory>
+#include <sstream>
 
 ResourceHandler::ResourceHandler(sf::RenderWindow& window):
 	window(window)
@@ -147,23 +148,99 @@ void ResourceHandler::loadHighScore()
 		int stageEnum = atoi(stage->first_attribute("enum")->value());
 
 		std::list<std::shared_ptr<HighScoreItem>> highScoreStage; // Single Stage
-		for(rapidxml::xml_node<> *player = stage->first_node(); player; player = player->next_sibling())
+		for(rapidxml::xml_node<> *player = stage->first_node("Player"); player; player = player->next_sibling())
 		{
-			player = stage->first_node("Player");
+			//player = stage->first_node("Player");
 			std::string pName = player->first_node("Name")->value();
 			float pScore = atof(player->first_node("Score")->value());
 			std::string date = player->first_node("Date")->value();
 			highScoreStage.push_back(std::shared_ptr<HighScoreItem>(new HighScoreItem((ResourceHandler::Scripts)stageEnum, pName, pScore, date)));
 		}
+
+		// Sort by score
+		highScoreStage.sort([]( std::shared_ptr<HighScoreItem> & a,  std::shared_ptr<HighScoreItem> & b) { return a->score > b->score; });
+
 		highScoreStages[(ResourceHandler::Scripts)stageEnum] = (highScoreStage);
 	}
 }
 
-void ResourceHandler::writeHighScoreScore()
+void ResourceHandler::writeHighScoreScore(int score, int scriptEnum)
 {
+	// LOAD FILE
+	rapidxml::xml_document<> doc;
+	std::ifstream theFile (highScoreFile);
+	std::vector<char> buffer((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>( ));
+	buffer.push_back('\0');
+	doc.parse<0>(&buffer[0]);
+
+	// Parse new info
+	std::stringstream scoreStr;//create a stringstream
+	scoreStr << score;//add number to the stream
+	std::string src2 = "<Player><Name>NO-NAME</Name><Score>" + scoreStr.str() + "</Score><Date>N/A</Date></Player>";
+	std::vector<char> x(src2.begin(), src2.end());
+	x.push_back( 0 ); // make it zero-terminated as per RapidXml's docs
+
+	// Enum to string
+	std::stringstream enumStr;//create a stringstream
+	enumStr << scriptEnum;//add number to the stream
+
+	std::string src3 = "<Stage enum=\""+ enumStr.str() +"\"><Player><Name>NO-NAME</Name><Score>" + scoreStr.str() + "</Score><Date>N/A</Date></Player></Stage>";
+	std::vector<char> x2(src3.begin(), src3.end());
+	x2.push_back( 0 ); // make it zero-terminated as per RapidXml's docs
 
 
+	rapidxml::xml_document<> xmlseg; // New PlayerNode
+	xmlseg.parse<0>( &x[0] );
 
+	rapidxml::xml_document<> xmlseg2; // sTAGEnODE
+	xmlseg2.parse<0>( &x2[0] );
+
+
+	// get document's first node - 'SAVEGAME' node
+	// get player's first child - 'STAGES' node
+	// get frames' first child - first 'STAGE' node
+	rapidxml::xml_node<>* nodeFrame = doc.first_node()->first_node()->first_node();
+	rapidxml::xml_node<>* searchNode = nullptr;
+
+	// Loop through all stage nodes.
+	while(nodeFrame)
+	{
+		std::stringstream ss;
+		ss << nodeFrame->first_attribute("enum")->value();
+		int enumVal;
+		ss >> enumVal;
+
+		if(enumVal == scriptEnum)
+		{
+			searchNode = nodeFrame;
+			break;
+
+		}
+		nodeFrame = nodeFrame->next_sibling();
+	}
+
+	// Check if the node with corresponding enum was found, if it was not we will create a new Stage Node
+	if(searchNode != nullptr)
+	{
+		searchNode->append_node(xmlseg.first_node());
+	}
+	else
+	{
+		doc.first_node()->first_node()->append_node(xmlseg2.first_node());
+	}
+
+	// Parse data to a string 
+	std::string data;
+	rapidxml::print(std::back_inserter(data), doc);
+
+	// Write to file (Overwrite)
+	std::ofstream file;
+	file.open(highScoreFile.c_str());
+	file << data;
+	file.close();
+
+
+	loadHighScore(); // RELOAD  XML
 }
 
 void ResourceHandler::loadScripts()

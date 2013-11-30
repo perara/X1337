@@ -26,7 +26,7 @@ Player::Player(sf::RenderWindow& window,
 			   const sf::Time& timeStep
 			   ):playerScore(0),
 
-Shooter(window, bFactory, bullets, resourceHandler, timeStep)
+			   Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
 	setHealth(5);
 	this->setType(Shooter::ShooterType::PLAYER);
@@ -39,7 +39,7 @@ void Player::process()
 	this->shooterProcess();
 	this->detectEdge();
 
-	if(health<0)
+	if(health<=0)
 	{
 		deleted=true;
 		resourceHandler->getSound(ResourceHandler::Sound::ENEMY_DEATH).play();
@@ -53,31 +53,31 @@ void Player::detectEdge()
 	/************************************************************************/
 
 	// X
-	if(this->sprite->getPosition().x - this->sprite->getRadius() <= 0)
+	if(sprite->getPosition().x - sprite->getRadius() <= 0)
 	{
-		this->sprite->setPosition(this->sprite->getRadius(), this->sprite->getPosition().y);
+		sprite->setPosition(sprite->getRadius(), sprite->getPosition().y);
 	}
 
-	if(this->sprite->getPosition().x >= window.getSize().x - this->sprite->getRadius())
+	if(sprite->getPosition().x >= window.getView().getSize().x - sprite->getRadius())
 	{
-		this->sprite->setPosition(window.getSize().x - this->sprite->getRadius(), this->sprite->getPosition().y);
+		sprite->setPosition(window.getView().getSize().x - sprite->getRadius(), sprite->getPosition().y);
 	}
 
 	// Y
-	if(this->sprite->getPosition().y - this->sprite->getRadius() <= 0)
+	if(sprite->getPosition().y - sprite->getRadius() <= 0)
 	{
-		this->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getRadius());
+		sprite->setPosition(sprite->getPosition().x, sprite->getRadius());
 	}
 
 
-	if(this->sprite->getPosition().y >= window.getSize().y - this->sprite->getRadius())
+	if(sprite->getPosition().y >= window.getView().getSize().y - sprite->getRadius())
 	{
-		this->sprite->setPosition(this->sprite->getPosition().x, window.getSize().y - this->sprite->getRadius());
+		sprite->setPosition(sprite->getPosition().x, window.getView().getSize().y - sprite->getRadius());
 	}
 }
 
 
-void Player::drawStats()
+void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 {
 	// Draw Health
 	sf::Text txtHealth;
@@ -96,7 +96,7 @@ void Player::drawStats()
 		sprite->setTexture(resourceHandler->getTexture(ResourceHandler::Texture::HEART), true);
 		sprite->setPosition(heartX, 20);
 		sprite->setScale(0.05f,0.05f);
-		this->window.draw(*sprite);
+		window.draw(*sprite);
 		heartX = heartX + 35;
 	}
 
@@ -111,8 +111,41 @@ void Player::drawStats()
 	txtScore.setColor(sf::Color::White);
 
 
-	this->window.draw(txtHealth);
-	this->window.draw(txtScore);
+	window.draw(txtHealth);
+	window.draw(txtScore);
+
+
+	// Title
+	int initY = 150;
+	sf::Text txtHighScoreTitle;
+	txtHighScoreTitle.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtHighScoreTitle.setString(sf::String("Stage highscore: "));
+	txtHighScoreTitle.setCharacterSize(25);
+	txtHighScoreTitle.setPosition(20,initY);
+	txtHighScoreTitle.setColor(sf::Color::White);
+	window.draw(txtHighScoreTitle);
+
+	// Draw Highscore for current scene
+	int num = 1;
+	for(auto& i : highScoreList)
+	{
+		initY += 30;
+		std::stringstream theScore;
+		theScore << i->score;
+
+		std::stringstream rank;
+		rank << num;
+
+		sf::Text txtHighScore;
+		txtHighScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+		txtHighScore.setString(sf::String(rank.str() + "\t" + i->playerName + "\t" + theScore.str()));
+		txtHighScore.setCharacterSize(25);
+		txtHighScore.setPosition(20,initY);
+		txtHighScore.setColor(sf::Color::White);
+		window.draw(txtHighScore);
+
+		num++;
+	}
 
 
 }
@@ -127,8 +160,8 @@ void Player::input(sf::Event& event)
 	/* Shoot handler */
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && normalShotClock.getElapsedTime().asMilliseconds() > 150){
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
-		b->setOwner(this->getType());
-		b->setPosition(this->sprite->getPosition().x , sprite->getPosition().y - 10);
+		b->setOwner(getType());
+		b->setPosition(sprite->getPosition().x , sprite->getPosition().y - 10);
 		resourceHandler->getSound(ResourceHandler::Sound::STANDARD_SHOT).play();
 
 		getBullets().push_back(std::move(b));
@@ -139,8 +172,8 @@ void Player::input(sf::Event& event)
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && specialShotClock.getElapsedTime().asMilliseconds() > 1000){
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::heavyShot);
-		b->setOwner(this->getType());
-		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
+		b->setOwner(getType());
+		b->setPosition(sprite->getPosition().x , sprite->getPosition().y - 10);
 		resourceHandler->getSound(ResourceHandler::Sound::HEAVY_SHOT).play();
 		getBullets().push_back(std::move(b));
 
@@ -152,7 +185,7 @@ void Player::input(sf::Event& event)
 	if(event.type == sf::Event::MouseMoved)
 	{
 		int current_x = sf::Mouse::getPosition(window).x, current_y = sf::Mouse::getPosition(window).y;
-		int elapsed_x = (window.getSize().x / 2) - current_x, elapsed_y = (window.getView().getSize().y / 2) - current_y;
+		int elapsed_x = (window.getView().getSize().x / 2) - current_x, elapsed_y = (window.getView().getSize().y / 2) - current_y;
 
 		if(elapsed_x != 0 || elapsed_y != 0)
 		{
@@ -160,17 +193,22 @@ void Player::input(sf::Event& event)
 			/************************************************************************/
 			/* Mouse Movement Handling                                              */
 			/************************************************************************/
-			if(this->sprite->getPosition().x > 0 && this->sprite->getPosition().x < window.getSize().x)
+			if(sprite->getPosition().x > 0 && sprite->getPosition().x < window.getView().getSize().x)
 			{
-				this->sprite->move(-elapsed_x  , 0);
+				sprite->move(-elapsed_x  , 0);
 			}
 
-			if(this->sprite->getPosition().y > 0 && this->sprite->getPosition().y < (window.getSize().y + window.getSize().y))
+			if(sprite->getPosition().y > 0 && sprite->getPosition().y < (window.getView().getSize().y + window.getView().getSize().y))
 			{
-				this->sprite->move(0, -elapsed_y);
+				sprite->move(0, -elapsed_y);
 			}
-			sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window);
+			sf::Mouse::setPosition(sf::Vector2i((window.getView().getSize().x / 2), (window.getView().getSize().y / 2)), window);
 		}
 	}
 
+}
+
+int Player::getPlayerScore()
+{
+	return playerScore;
 }

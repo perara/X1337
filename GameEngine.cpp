@@ -34,7 +34,7 @@ GameEngine::GameEngine():
 	setState(GameEngine::State::INIT_MAIN_MENU);  // Set gamestate to init_main_menu
 
 	// Set mouse properties
-	sf::Mouse::setPosition(sf::Vector2i((window.getSize().x / 2), (window.getSize().y / 2)), window); // Default mouse location
+	sf::Mouse::setPosition(sf::Vector2i((window.getView().getSize().x / 2), (window.getView().getSize().y / 2)), window); // Default mouse location
 	window.setMouseCursorVisible(false);
 
 	// Init Menu;
@@ -124,13 +124,13 @@ void GameEngine::runGame()
 			this->world->draw();
 
 			window.setView(fullScreen);
-			sf::RectangleShape darkOverLay(sf::Vector2f(window.getSize()));
+			sf::RectangleShape darkOverLay(sf::Vector2f(window.getView().getSize()));
 			darkOverLay.setFillColor(sf::Color(0,0,0,150));
 			darkOverLay.setPosition(0,0);
 			window.draw(darkOverLay);
 
 			this->menu->draw();
-			this->menu->drawPause(( window.getSize().y / 2),( window.getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
+			this->menu->drawPause(( window.getView().getSize().y / 2),( window.getView().getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
 		}
 		else if(getState() == GameState::GAMEOVER)
 		{
@@ -141,13 +141,13 @@ void GameEngine::runGame()
 			this->world->draw();
 
 			window.setView(fullScreen);
-			sf::RectangleShape darkOverLay(sf::Vector2f(window.getSize()));
+			sf::RectangleShape darkOverLay(sf::Vector2f(window.getView().getSize()));
 			darkOverLay.setFillColor(sf::Color(0,0,0,150));
 			darkOverLay.setPosition(0,0);
 			window.draw(darkOverLay);
 
 			this->menu->draw();
-			this->menu->drawPause(( window.getSize().y / 2),( window.getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
+			this->menu->drawPause(( window.getView().getSize().y / 2),( window.getView().getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
 		}
 
 		window.display();

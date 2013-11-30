@@ -26,7 +26,8 @@ public:
 	void input(sf::Event&);
 	void process();
 	void detectEdge();
-	void drawStats();
+	void drawStats(std::list<std::shared_ptr<HighScoreItem>>&);
+	int getPlayerScore();
 private:
-	float playerScore;
+	int playerScore;
 };

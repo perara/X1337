@@ -62,7 +62,7 @@ int Script::getScriptEnumVal()
 }
 
 // Process
-void Script::process(sf::RenderWindow& window,
+bool Script::process(sf::RenderWindow& window,
 					 std::list<std::shared_ptr<Shooter>>& objects , 
 					 std::list<std::unique_ptr<Bullet>>& bullets,
 					 BulletFactory& bFactory,
@@ -108,5 +108,9 @@ void Script::process(sf::RenderWindow& window,
 			this->getClock().restart();
 		}
 	}
-
+	else
+	{
+		return false; // Script is done
+	}
+	return true; // Script is still running
 }

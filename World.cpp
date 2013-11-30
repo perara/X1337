@@ -45,7 +45,7 @@ void World::init(bool demo, int scriptNum)
 		ingameSong.setLoop(true);
 		// Initialize Background
 		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND1));
-
+		currentScript = scriptNum;
 		addObject(std::shared_ptr<Player>(player));
 	}
 
@@ -54,12 +54,12 @@ void World::init(bool demo, int scriptNum)
 void World::process()
 {
 	// Process loaded script
-	this->script.process(window, objects, bullets, bFactory, resourceHandler, timeStep);
+	bool scriptRunning = this->script.process(window, objects, bullets, bFactory, resourceHandler, timeStep);
 
 	///////////////////////////////////
 	// Object processing and cleanup //
 	///////////////////////////////////
-	if(!objects.empty())
+	if(!objects.empty() || scriptRunning)
 	{
 		for(std::list<std::shared_ptr<Shooter>>::iterator i = objects.begin(); i != objects.end();)
 		{
@@ -69,13 +69,14 @@ void World::process()
 			// Cleanup
 			if((*i)->getDeleted())
 			{ // If the bullet is up for deletion
-				if((*i)->getType()==Shooter::ShooterType::ENEMY)
+				if((*i)->getType() == Shooter::ShooterType::ENEMY)
 				{
 					player->addScore((*i)->getValue());
 				}
-				else if((*i)->getType()==Shooter::ShooterType::PLAYER)
+				else if((*i)->getType() == Shooter::ShooterType::PLAYER)
 				{
-					gameOver=true;
+					gameOver = true;
+					resourceHandler->writeHighScoreScore(player->getPlayerScore(), currentScript); // Write highscore
 				}
 
 				i = objects.erase(i);
@@ -85,6 +86,10 @@ void World::process()
 				++i;
 			}
 		}
+	}
+	else // Nothing more to do, game is over.
+	{
+		gameOver = true;
 	}
 
 	///////////////////////////////////
@@ -114,7 +119,9 @@ void World::process()
 
 void World::drawStats()
 {
-	player->drawStats();
+	player->drawStats(resourceHandler->getHighScores()[(ResourceHandler::Scripts)currentScript]);
+
+
 }
 
 bool World::isGameOver()

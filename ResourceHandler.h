@@ -10,8 +10,9 @@
 #include <list>
 #include "Script.h"
 
-struct HighScoreItem
+class HighScoreItem
 {
+public: 
 	int stage;
 	std::string playerName;
 	float score;
@@ -47,8 +48,8 @@ public:
 	};
 	const enum Scripts
 	{
-		ENCOUNTER1,
 		STAGEONE,
+		ENCOUNTER1,
 		ENCOUNTER2,
 		ENCOUNTER3,
 		GAME_MENU,
@@ -76,7 +77,7 @@ public:
 	bool getInit();
 
 	// Highscore
-	void writeHighScoreScore();
+	void writeHighScoreScore(int, int);
 	void loadHighScore();
 
 	sf::Texture& getTexture(ResourceHandler::Texture);
@@ -85,8 +86,9 @@ public:
 	sf::Font& getFont(ResourceHandler::Fonts);
 	sf::Sound& getSound(ResourceHandler::Sound);
 	Script getScriptById(int iteNum);
-	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> getHighScores();
 
+	// Highscore
+	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> getHighScores();
 private:
 	void loadTextures();
 	void loadFonts();

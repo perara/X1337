@@ -53,7 +53,7 @@ public:
 	void setInit(bool);
 
 	// Process
-	void process(sf::RenderWindow& window,
+	bool process(sf::RenderWindow& window,
 		std::list<std::shared_ptr<Shooter>>& objects , 
 		std::list<std::unique_ptr<Bullet>>& bullets,
 		BulletFactory& bFactory,

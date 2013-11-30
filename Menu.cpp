@@ -93,7 +93,7 @@ void Menu::loadMenuOptions()
 	{
 
 		int x = 20 ;
-		int y = window.getSize().y - 50;
+		int y = window.getView().getSize().y - 50;
 
 
 		std::map<Menu::Options, std::string>::reverse_iterator rit;
@@ -346,7 +346,7 @@ void Menu::drawGameTitle()
 	gameTitle.setFont(resourceHandler->getFont(ResourceHandler::Fonts::COMICATE));
 	gameTitle.setColor(sf::Color::Red);
 	gameTitle.setCharacterSize(80);
-	gameTitle.setPosition(sf::Vector2f(window.getSize().x / 2 - (gameTitle.getGlobalBounds().width / 2), window.getSize().y / 8 - (gameTitle.getGlobalBounds().height / 2)));
+	gameTitle.setPosition(sf::Vector2f(window.getView().getSize().x / 2 - (gameTitle.getGlobalBounds().width / 2), window.getView().getSize().y / 8 - (gameTitle.getGlobalBounds().height / 2)));
 	window.draw(gameTitle);
 
 
@@ -356,7 +356,7 @@ void Menu::drawGameTitle()
 	gameVersion.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 	gameVersion.setColor(sf::Color(139,137,137));
 	gameVersion.setCharacterSize(15);
-	gameVersion.setPosition(sf::Vector2f(window.getSize().x  - gameVersion.getGlobalBounds().width - 10,  window.getSize().y - gameVersion.getGlobalBounds().height *2));
+	gameVersion.setPosition(sf::Vector2f(window.getView().getSize().x  - gameVersion.getGlobalBounds().width - 10,  window.getView().getSize().y - gameVersion.getGlobalBounds().height *2));
 	window.draw(gameVersion);
 
 }
@@ -433,8 +433,8 @@ void Menu::drawPause(int xOffSet, int yOffset)
 void Menu::drawHighScore()
 {
 	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> hScore = resourceHandler->getHighScores();
-	int xPos = window.getSize().x / 8;
-	int yPos =  window.getSize().y / 4;
+	int xPos = window.getView().getSize().x / 8;
+	int yPos =  window.getView().getSize().y / 4;
 
 	sf::Text txtScore;
 	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
@@ -446,26 +446,26 @@ void Menu::drawHighScore()
 
 	for(auto & i : hScore)
 	{
-		for(auto & it : i.second)
-		{
+		std::shared_ptr<HighScoreItem> item = i.second.front();
+
 			std::cout << "lol" << std::endl;
 			yPos+=50;
 
 			// Score string
 			std::ostringstream strScore;
-			strScore << it->score;
+			strScore << item->score;
 
 			// Enum Num
 			std::ostringstream strStage;
-			strStage << it->stage;
+			strStage << item->stage;
 
 			sf::Text txtScore;
 			txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-			txtScore.setString(sf::String(strStage.str() + "\t\t\t\t\t" + it->playerName + "\t\t\t\t" + strScore.str() + "\t" + it->date));
+			txtScore.setString(sf::String(strStage.str() + "\t\t\t\t\t" + item->playerName + "\t\t\t\t" + strScore.str() + "\t" + item->date));
 			txtScore.setPosition(xPos, yPos);
 
 			window.draw(txtScore);
-		}
+		
 	}
 
 }
