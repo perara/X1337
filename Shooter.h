@@ -51,7 +51,7 @@ protected:
 	const sf::Time& timeStep;
 
 	/* Health Related */
-	void setHealth(int value);
+	virtual void setHealth(int value);
 
 private:
 	virtual void hitDetection() ;

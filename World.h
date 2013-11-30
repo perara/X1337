@@ -26,7 +26,8 @@ public:
 
 	void drawStats();
 	bool isGameOver();
-
+	void setHardMode(bool hardOn);
+	bool getHardMode();
 	virtual void draw();
 	virtual void process();
 	virtual void init(bool demo, int  scriptNum = (int)ResourceHandler::Scripts::GAME_MENU);
@@ -39,12 +40,13 @@ public:
 
 private:
 	// Objects
-	bool gameOver;
 	Background bg;
 	BulletFactory bFactory;
 	std::shared_ptr<Player> player;
 	Script script;
 	const sf::Time& timeStep;
 	bool demo;
+	bool hardMode;
+	bool gameOver;
 	sf::Sound& ingameSong;
 };

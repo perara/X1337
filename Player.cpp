@@ -28,7 +28,6 @@ Player::Player(sf::RenderWindow& window,
 
 Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
-	setHealth(5);
 	this->setType(Shooter::ShooterType::PLAYER);
 	sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::CIRCLE, 10));
 	this->sprite->setPosition(pos);
@@ -120,6 +119,11 @@ void Player::drawStats()
 void Player::addScore(float score)
 {
 	playerScore+=score;
+}
+
+void Player::setHealth(int value)
+{
+	health = value;
 }
 
 void Player::input(sf::Event& event)

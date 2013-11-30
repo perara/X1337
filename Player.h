@@ -23,6 +23,7 @@ public:
 
 	void addScore(float score);
 
+	void setHealth(int value);
 	void input(sf::Event&);
 	void process();
 	void detectEdge();

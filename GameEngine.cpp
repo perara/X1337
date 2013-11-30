@@ -65,6 +65,7 @@ void GameEngine::runGame()
 				resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).stop();
 				setState(GameState::GAME);
 				world.reset(new World(window, resourceHandler, timeStep));
+				world->setHardMode(menu->getHardmodeSelected());
 				world->init(false, menu->getStageSelectOption());
 			}
 
@@ -77,7 +78,7 @@ void GameEngine::runGame()
 				world->init(true);
 			}
 
-			else if(getState() == GameState::MAIN_MENU  || getState() == GameState::STAGE_SELECT)
+			else if(getState() == GameState::MAIN_MENU  || getState() == GameState::STAGE_SELECT || getState() == GameState::DIFFICULTY_SELECT)
 			{
 				this->world->process();
 				this->menu->process();
@@ -103,9 +104,8 @@ void GameEngine::runGame()
 		}
 		else if(getState() == GameState::INIT_GAME)
 		{
-
 		}
-		else if(getState() == GameState::MAIN_MENU || getState() == GameState::STAGE_SELECT)
+		else if(getState() == GameState::MAIN_MENU || getState() == GameState::STAGE_SELECT || getState() == GameState::DIFFICULTY_SELECT)
 		{
 			window.setView(fullScreen);
 			this->world->draw();
@@ -169,6 +169,7 @@ void GameEngine::pollInput()
 		}
 		else if(getState() ==GameState::MAIN_MENU 
 			|| getState() == GameState::STAGE_SELECT 
+			|| getState() == GameState::DIFFICULTY_SELECT
 			|| getState() == GameState::PAUSE 
 			|| getState() == GameState::HIGHSCORE 
 			|| getState() == GameState::GAMEOVER)
