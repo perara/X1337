@@ -18,9 +18,9 @@ Scene(window, resourceHandler),
 	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100,250), 10, bFactory, bullets, resourceHandler, timeStep))),
 	timeStep(timeStep),
 	ingameSong(resourceHandler->getSound(ResourceHandler::Sound::INGAME)),
-	gameOver(false)
+	gameOver(false),
+	hardMode(false)
 {
-
 
 }
 
@@ -33,6 +33,11 @@ World::~World()
 
 void World::init(bool demo, int scriptNum)
 {
+	if(!hardMode)
+		player->setHealth(5);
+	else
+		player->setHealth(0);
+
 	this->demo = demo;
 	if(demo)
 	{
@@ -127,6 +132,15 @@ void World::drawStats()
 bool World::isGameOver()
 {
 	return gameOver;
+}
+
+void World::setHardMode(bool hardOn)
+{
+	hardMode=hardOn;
+}
+bool World::getHardMode()
+{
+	return hardMode;
 }
 
 /// <summary>

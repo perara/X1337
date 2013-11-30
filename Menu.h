@@ -19,6 +19,7 @@ public:
 	virtual void init();
 	virtual void input(sf::Event&);
 	virtual void reset();
+	virtual bool getHardmodeSelected();
 
 	void drawPause(int xOffSet, int yOffset); // Should be accessible to gameEngine 
 	int getStageSelectOption();
@@ -51,6 +52,10 @@ private:
 		SELECT_STAGE,
 		BACK,
 
+		// Difficulty Select opts
+		NORMAL,
+		HARD,
+
 		// In-game pause opts
 		CONTINUE_GAME,
 		TO_MAIN_MENU,
@@ -75,5 +80,6 @@ private:
 	std::map<GameState, std::map<Menu::Options, sf::Text>> option;
 	std::list<const Script> scripts;
 
+	bool hardmodeSelected;
 	GameState& state;
 };

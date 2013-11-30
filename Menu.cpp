@@ -5,7 +5,8 @@
 
 Menu::Menu(sf::RenderWindow& window, GameState& state, std::unique_ptr<ResourceHandler>& resourceHandler):
 	Scene(window, resourceHandler),
-	state(state)
+	state(state),
+	hardmodeSelected(false)
 {
 	this->init();
 }
@@ -13,6 +14,11 @@ Menu::Menu(sf::RenderWindow& window, GameState& state, std::unique_ptr<ResourceH
 void Menu::reset()
 {
 	resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).stop();
+}
+
+bool Menu::getHardmodeSelected()
+{
+	return hardmodeSelected;
 }
 
 void Menu::init()
@@ -37,6 +43,12 @@ void Menu::init()
 		stageSelect[Menu::Options::SELECT_STAGE] = "Select Stage";
 	}
 
+	std::map<Menu::Options, std::string> difficultySelect;
+	{
+		difficultySelect[Menu::Options::NORMAL] = "Normal";
+		difficultySelect[Menu::Options::HARD] = "HARD!!";
+	}
+
 	std::map<Menu::Options, std::string> highScore;
 	{
 		highScore[Menu::Options::BACK] = "Back";		
@@ -58,6 +70,7 @@ void Menu::init()
 
 	optMap[GameState::MAIN_MENU] = mainMenu;
 	optMap[GameState::STAGE_SELECT] = stageSelect;
+	optMap[GameState::DIFFICULTY_SELECT] = difficultySelect;
 	optMap[GameState::PAUSE] = pause;
 	optMap[GameState::HIGHSCORE] = highScore;
 	optMap[GameState::GAMEOVER] = gameOver;
@@ -91,10 +104,8 @@ void Menu::loadMenuOptions()
 {
 	for(auto &i : optMap) // Iterate through maps of options
 	{
-
 		int x = 20 ;
 		int y = window.getView().getSize().y - 50;
-
 
 		std::map<Menu::Options, std::string>::reverse_iterator rit;
 		for (rit=i.second.rbegin(); rit != i.second.rend(); ++rit)
@@ -109,8 +120,6 @@ void Menu::loadMenuOptions()
 			option[i.first][rit->first] = (txt);
 			y-= 50;
 		}
-
-
 	}
 }
 
@@ -177,11 +186,24 @@ void Menu::input(sf::Event& event)
 			///////////////Stage Select//////////////////
 			/////////////////////////////////////////////
 		case Menu::Options::SELECT_STAGE:
-			state = GameState::INIT_GAME;
+			state = GameState::DIFFICULTY_SELECT;
+			this->setCurrentOption(option[GameState::DIFFICULTY_SELECT].begin()->first); 
 			break;
 		case Menu::Options::BACK:
 			state = GameState::MAIN_MENU;
 			this->setCurrentOption(option[state].begin()->first);
+			break;
+
+			/////////////////////////////////////////////
+			///////////Difficulty Selection//////////////
+			/////////////////////////////////////////////
+		case Menu::Options::NORMAL:
+			hardmodeSelected=false;
+			state = GameState::INIT_GAME;
+			break;
+		case Menu::Options::HARD:
+			hardmodeSelected=true;
+			state = GameState::INIT_GAME;
 			break;
 
 			/////////////////////////////////////////////
@@ -214,7 +236,6 @@ void Menu::input(sf::Event& event)
 
 	// Do additional input for stage select (Two input handlers, horizontal + vertical
 	if(state == GameState::STAGE_SELECT)	stageSelectInput(event);
-
 }
 
 void Menu::stageSelectInput(sf::Event& event)
@@ -286,6 +307,10 @@ void Menu::draw()
 		drawOptions(state);
 		break;
 	case GameState::STAGE_SELECT:
+		drawStageSelect();
+		drawOptions(state);
+		break;
+	case GameState::DIFFICULTY_SELECT:
 		drawStageSelect();
 		drawOptions(state);
 		break;
