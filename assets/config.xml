@@ -1,37 +1,5 @@
 <Savegame>
 	<Stages>
-		<Stage enum="1">
-			<Player>
-				<Name>NO-NAME</Name>
-				<Score>1</Score>
-				<Date>N/A</Date>
-			</Player>
-			<Player>
-				<Name>NO-NAME</Name>
-				<Score>1</Score>
-				<Date>N/A</Date>
-			</Player>
-			<Player>
-				<Name>NO-NAME</Name>
-				<Score>200</Score>
-				<Date>N/A</Date>
-			</Player>
-			<Player>
-				<Name>NO-NAME</Name>
-				<Score>100</Score>
-				<Date>N/A</Date>
-			</Player>
-			<Player>
-				<Name>NO-NAME</Name>
-				<Score>12000</Score>
-				<Date>N/A</Date>
-			</Player>
-			<Player>
-				<Name>NO-NAME</Name>
-				<Score>0</Score>
-				<Date>N/A</Date>
-			</Player>
-		</Stage>
 	</Stages>
 </Savegame>
 

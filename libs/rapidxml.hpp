@@ -1096,7 +1096,7 @@ namespace rapidxml
         //! \param child Node to append.
         void append_node(xml_node<Ch> *child)
         {
-            assert(child && !child->parent() && child->type() != node_document);
+           // assert(child && !child->parent() && child->type() != node_document);
             if (first_node())
             {
                 child->m_prev_sibling = m_last_node;
