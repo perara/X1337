@@ -1,9 +1,0 @@
-diff a/ResourceHandler.cpp b/ResourceHandler.cpp	(rejected hunks)
-@@ -28,6 +28,7 @@
- 		soundList[Sound::MENU_SONG] = "assets/sound/game_menu.ogg";
- 		soundList[Sound::STANDARD_SHOT] = "assets/sound/FireOneSound.ogg";
- 		soundList[Sound::HEAVY_SHOT] = "assets/sound/FireOneSound.ogg";
-+		soundList[Sound::SHIPDEATH_DEFAULT] = "assets/sound/ExplosionSound.ogg";
- 	}
- 
- 	// Scripts

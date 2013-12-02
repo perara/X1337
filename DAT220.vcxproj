@@ -11,41 +11,38 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Background.cpp" />
-    <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="BulletFactory.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="GameEngine.cpp" />
-    <ClCompile Include="GameShape.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="ResourceHandler.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Script.cpp" />
-    <ClCompile Include="Shooter.cpp" />
-    <ClCompile Include="World.cpp" />
+    <ClInclude Include="include\Background.h" />
+    <ClInclude Include="include\Bullet.h" />
+    <ClInclude Include="include\BulletFactory.h" />
+    <ClInclude Include="include\Enemy.h" />
+    <ClInclude Include="include\GameEngine.h" />
+    <ClInclude Include="include\GameShape.h" />
+    <ClInclude Include="include\Log.h" />
+    <ClInclude Include="include\Menu.h" />
+    <ClInclude Include="include\Object.h" />
+    <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\ResourceHandler.h" />
+    <ClInclude Include="include\Scene.h" />
+    <ClInclude Include="include\Script.h" />
+    <ClInclude Include="include\Shooter.h" />
+    <ClInclude Include="include\World.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Background.h" />
-    <ClInclude Include="BulletFactory.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="GameEngine.h" />
-    <ClInclude Include="Bullet.h" />
-    <ClInclude Include="GameShape.h" />
-    <ClInclude Include="libs\rapidxml.hpp" />
-    <ClInclude Include="libs\rapidxml_print.hpp" />
-    <ClInclude Include="Log.h" />
-    <ClInclude Include="Menu.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="ResourceHandler.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="Script.h" />
-    <ClInclude Include="Shooter.h" />
-    <ClInclude Include="SliceEngine.h" />
-    <ClInclude Include="World.h" />
+    <ClCompile Include="src\Background.cpp" />
+    <ClCompile Include="src\Bullet.cpp" />
+    <ClCompile Include="src\BulletFactory.cpp" />
+    <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\GameEngine.cpp" />
+    <ClCompile Include="src\GameShape.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Menu.cpp" />
+    <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\ResourceHandler.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\Script.cpp" />
+    <ClCompile Include="src\Shooter.cpp" />
+    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7D02A864-273E-48E0-88E4-0C0115F48ED8}</ProjectGuid>
@@ -82,7 +79,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>E:\libraries\C++\pugixml-1.2\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/libs;$(ProjectDir)/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -109,6 +106,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

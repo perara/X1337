@@ -66,6 +66,11 @@
 				<Score>0</Score>
 				<Date>N/A</Date>
 			</Player>
+			<Player>
+				<Name>NO-NAME</Name>
+				<Score>0</Score>
+				<Date>N/A</Date>
+			</Player>
 		</Stage>
 		<Stage enum="2">
 			<Player>

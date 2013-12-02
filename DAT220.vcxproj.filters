@@ -1,144 +1,141 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Background.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceHandler.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>Source\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="Shooter.cpp">
-      <Filter>Source\Shooters</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source\States</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source\States</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source\Shooters</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Source\Shooters</Filter>
-    </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Source\Base Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="GameShape.cpp">
-      <Filter>Source\Base Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="GameEngine.cpp">
-      <Filter>Source\Base Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Script.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Menu.cpp">
-      <Filter>Source\States</Filter>
-    </ClCompile>
-    <ClCompile Include="BulletFactory.cpp">
-      <Filter>Source\Factory</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Log.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceHandler.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Header\States</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Header\States</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header\Shooters</Filter>
-    </ClInclude>
-    <ClInclude Include="Shooter.h">
-      <Filter>Header\Shooters</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Header\Shooters</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>Header\Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="BulletFactory.h">
-      <Filter>Header\Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Header\Base Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="GameShape.h">
-      <Filter>Header\Base Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Menu.h">
-      <Filter>Header\States</Filter>
-    </ClInclude>
-    <ClInclude Include="Background.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEngine.h">
-      <Filter>Header\Base Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="libs\rapidxml.hpp">
-      <Filter>Header\Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="Script.h">
-      <Filter>Header\Base Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="SliceEngine.h">
-      <Filter>Header\Base Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="libs\rapidxml_print.hpp">
-      <Filter>Header</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="Source">
       <UniqueIdentifier>{7eb0d83e-44e2-4a93-87d4-eb5fb071c92b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header">
       <UniqueIdentifier>{c4359e45-3e57-4296-b57f-a5258fa6a2ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header\Shooters">
-      <UniqueIdentifier>{07146d3f-f8c6-47f1-b6cd-011392000a84}</UniqueIdentifier>
+    <Filter Include="Header\Objects">
+      <UniqueIdentifier>{9e3ebb23-7319-4af3-a2eb-8afd9efb57b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header\Base Classes">
-      <UniqueIdentifier>{68d145ec-3ae0-4176-81be-f1d3fa0b1af8}</UniqueIdentifier>
+    <Filter Include="Header\Objects\Bullet">
+      <UniqueIdentifier>{d517427d-e4a2-461e-9732-17cbac04d4ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header\States">
-      <UniqueIdentifier>{c3740925-22ad-4ad0-a3c9-39b900ef6a68}</UniqueIdentifier>
+    <Filter Include="Header\Objects\Shooter">
+      <UniqueIdentifier>{f9f11b5e-869d-45f6-864d-e5b6ee88dac8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Base Classes">
-      <UniqueIdentifier>{952f98d3-9c95-4882-ac8e-629e34709793}</UniqueIdentifier>
+    <Filter Include="Header\Scene">
+      <UniqueIdentifier>{9db92f57-7714-4c9f-9843-9515bcd18c65}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\States">
-      <UniqueIdentifier>{ed8ea406-a6fe-49f4-927e-fd3f89a043b8}</UniqueIdentifier>
+    <Filter Include="Header\Engine">
+      <UniqueIdentifier>{06bfea80-0054-4ed5-88a8-96e9f48e3e23}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Shooters">
-      <UniqueIdentifier>{8af8b7f0-531a-4cbe-a879-18e3797ae325}</UniqueIdentifier>
+    <Filter Include="Header\Other">
+      <UniqueIdentifier>{45c91db4-7709-49b2-b60c-e75119c228c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Bullet">
-      <UniqueIdentifier>{25d21a93-d22f-4f83-bcd6-7890489517f5}</UniqueIdentifier>
+    <Filter Include="Source\Scene">
+      <UniqueIdentifier>{b03dd3c8-0565-4836-8538-57e1c7237c0c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header\Libraries">
-      <UniqueIdentifier>{89159793-3288-4fc2-8b7c-c08ed907094c}</UniqueIdentifier>
+    <Filter Include="Source\Objects">
+      <UniqueIdentifier>{afa7bb73-18b9-46e6-9315-3c75bc9e6180}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header\Factory">
-      <UniqueIdentifier>{a6cdcf77-fa84-418f-ae0f-4664b62beed9}</UniqueIdentifier>
+    <Filter Include="Source\Objects\Bullet">
+      <UniqueIdentifier>{e29e0eb7-1cad-4a49-b3d8-e54d0a4195e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Factory">
-      <UniqueIdentifier>{d09c5628-c9bb-4195-9dd0-13e072cbef2f}</UniqueIdentifier>
+    <Filter Include="Source\Objects\Shooter">
+      <UniqueIdentifier>{d9039d7c-c16d-4be6-968f-17b811a2bcbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Other">
+      <UniqueIdentifier>{5b9e8fce-0605-461c-977a-78cafa30d358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Engine">
+      <UniqueIdentifier>{052b910c-48da-4415-a4ba-7e055d7c14c8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Object.h">
+      <Filter>Header\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BulletFactory.h">
+      <Filter>Header\Objects\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Bullet.h">
+      <Filter>Header\Objects\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Shooter.h">
+      <Filter>Header\Objects\Shooter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Enemy.h">
+      <Filter>Header\Objects\Shooter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Player.h">
+      <Filter>Header\Objects\Shooter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Background.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scene.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\World.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Menu.h">
+      <Filter>Header\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ResourceHandler.h">
+      <Filter>Header\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Script.h">
+      <Filter>Header\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameEngine.h">
+      <Filter>Header\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameShape.h">
+      <Filter>Header\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Log.h">
+      <Filter>Header\Other</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Background.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bullet.cpp">
+      <Filter>Source\Objects\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BulletFactory.cpp">
+      <Filter>Source\Objects\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Enemy.cpp">
+      <Filter>Source\Objects\Shooter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameEngine.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameShape.cpp">
+      <Filter>Source\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>Source\Objects\Shooter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ResourceHandler.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shooter.cpp">
+      <Filter>Source\Objects\Shooter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Menu.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Object.cpp">
+      <Filter>Source\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\World.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
