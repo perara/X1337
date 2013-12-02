@@ -65,9 +65,8 @@ void GameEngine::runGame()
 			{
 				resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).stop();
 				setState(GameState::GAME);
-				world.reset(new World(window, resourceHandler, timeStep));
-				world->setHardMode(menu->getHardmodeSelected());
-				world->init(false, menu->getStageSelectOption());
+				world.reset(new World(window, resourceHandler, timeStep, false,  menu->getStageSelectOption(), menu->getHardmodeSelected() ));
+				world->playIngameSong();
 			}
 
 			else if(getState() == GameState::INIT_MAIN_MENU)
@@ -75,8 +74,8 @@ void GameEngine::runGame()
 				resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).play();
 				resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).setLoop(true);
 				setState(GameState::MAIN_MENU);
-				world.reset(new World(window, resourceHandler, timeStep));
-				world->init(true);
+				world.reset(new World(window, resourceHandler, timeStep, true, -1, false));
+				world->playIngameSong();
 			}
 
 			else if(getState() == GameState::MAIN_MENU  || getState() == GameState::STAGE_SELECT || getState() == GameState::DIFFICULTY_SELECT)

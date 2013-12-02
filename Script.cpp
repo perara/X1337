@@ -20,12 +20,12 @@ void Script::addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, int type, i
 // ScriptClock
 sf::Clock& Script::getClock()
 {
-	return this->scriptClock;
+	return scriptClock;
 }
 
 void Script::setClock(sf::Clock& clock)
 {
-	this->scriptClock = clock;
+	scriptClock = clock;
 }
 
 // Init
@@ -36,13 +36,13 @@ bool Script::getInit()
 }
 void Script::setInit(bool status)
 {
-	if(status) this->getClock().restart();
-	this->inited = status;
+	if(status) getClock().restart();
+	inited = status;
 }
 
 std::string Script::getScriptTitle()
 {
-	return this->scriptTitle;
+	return scriptTitle;
 }
 
 void Script::setScriptTitle(std::string scriptTitle)
@@ -53,12 +53,12 @@ void Script::setScriptTitle(std::string scriptTitle)
 
 void Script::setScriptEnumVal(int enumVal)
 {
-	this->scriptEnumVal = enumVal;
+	scriptEnumVal = enumVal;
 }
 
 int Script::getScriptEnumVal()
 {
-	return this->scriptEnumVal;
+	return scriptEnumVal;
 }
 
 // Process
@@ -79,7 +79,6 @@ bool Script::process(sf::RenderWindow& window,
 			this->getInit() &&
 			this->getClock().getElapsedTime().asMilliseconds() > e.delay
 			)
-
 		{
 
 			std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
@@ -92,9 +91,9 @@ bool Script::process(sf::RenderWindow& window,
 				resourceHandler,
 				timeStep));
 			if(e1->getEnemyType()==Enemy::EnemyType::REGULAR)
-				e1->setValue(100);
+				e1->setScoreValue(100);
 			else if(e1->getEnemyType()==Enemy::EnemyType::BOSS)
-				e1->setValue(500);
+				e1->setScoreValue(500);
 			LOGD("Spawning Enemy#" << e1);
 
 

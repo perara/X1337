@@ -16,12 +16,12 @@ Object(window),
 
 {}
 
-void Shooter::setValue(float value)
+void Shooter::setScoreValue(float value)
 {
 	scoreValue=value;
 }
 
-float Shooter::getValue()
+float Shooter::getScoreValue()
 {
 	return scoreValue;
 }
@@ -30,36 +30,10 @@ void Shooter::setHealth(int value)
 {
 	health = value;
 }
-int Shooter::getHealth()
+
+const int Shooter::getHealth()
 {
 	return health;
-}
-
-void Shooter::decrementHealth()
-{
-	this->health--;
-}
-
-void Shooter::incrementHealth()
-{
-	this->health++;
-}
-
-void Shooter::shooterProcess()
-{
-	this->hitDetection();
-}
-
-
-bool Shooter::circleTest(GameShape& bullet)
-{
-	int radius = this->sprite->getRadius() + bullet.getRadius();
-	const sf::Vector2f& thisPosition = this->sprite->getPosition();
-	const sf::Vector2f& bulletPosition = bullet.getPosition();
-	int xDistance = thisPosition.x - bulletPosition.x;
-	int yDistance = thisPosition.y - bulletPosition.y;
-
-	return xDistance * xDistance + yDistance * yDistance <= radius * radius;
 }
 
 
@@ -175,9 +149,4 @@ BulletFactory& Shooter::getBulletFactory()
 std::list<std::unique_ptr<Bullet>>& Shooter::getBullets()
 {
 	return this->bullets;
-}
-
-void Shooter::setBullets(std::list<std::unique_ptr<Bullet>>& bullets)
-{
-	this->bullets = std::move(bullets);
 }

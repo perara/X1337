@@ -23,11 +23,21 @@ Player::Player(sf::RenderWindow& window,
 			   int radius, BulletFactory& bFactory,  
 			   std::list<std::unique_ptr<Bullet>>& bullets,
 			   std::unique_ptr<ResourceHandler>& resourceHandler,
-			   const sf::Time& timeStep
+			   const sf::Time& timeStep,
+			   const bool hardMode
 			   ):playerScore(0),
 
 			   Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
+	if(!hardMode)
+	{
+		setHealth(5);
+	}
+	else
+	{
+		setHealth(1);
+	}
+
 	this->setType(Shooter::ShooterType::PLAYER);
 	sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::CIRCLE, 10));
 	this->sprite->setPosition(pos);
@@ -35,10 +45,10 @@ Player::Player(sf::RenderWindow& window,
 
 void Player::process()
 {
-	this->shooterProcess();
+	this->hitDetection();
 	this->detectEdge();
 
-	if(health <= 0)
+	if(getHealth() <= 0)
 	{
 		deleted=true;
 		resourceHandler->getSound(ResourceHandler::Sound::ENEMY_DEATH).play();
@@ -81,7 +91,7 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	// Draw Health
 	sf::Text txtHealth;
 	txtHealth.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-	std::string dead = ((health <= 0) ? "Dead" : "");
+	std::string dead = ((getHealth() <= 0) ? "Dead" : "");
 	txtHealth.setString(sf::String("Health: " + dead));
 	txtHealth.setCharacterSize(25);
 	txtHealth.setPosition(20,20);
@@ -155,18 +165,13 @@ void Player::addScore(float score)
 	playerScore+=score;
 }
 
-void Player::setHealth(int value)
-{
-	health = value;
-}
-
 void Player::input(sf::Event& event)
 {
 	/* Shoot handler */
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && normalShotClock.getElapsedTime().asMilliseconds() > 150){
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 		b->setOwner(getType());
-		b->setPosition(sprite->getPosition().x , sprite->getPosition().y - 10);
+		b->sprite->setPosition(sprite->getPosition().x , sprite->getPosition().y - 10);
 		resourceHandler->getSound(ResourceHandler::Sound::STANDARD_SHOT).play();
 
 		getBullets().push_back(std::move(b));
@@ -178,7 +183,7 @@ void Player::input(sf::Event& event)
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && specialShotClock.getElapsedTime().asMilliseconds() > 1000){
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::heavyShot);
 		b->setOwner(getType());
-		b->setPosition(sprite->getPosition().x , sprite->getPosition().y - 10);
+		b->sprite->setPosition(sprite->getPosition().x , sprite->getPosition().y - 10);
 		resourceHandler->getSound(ResourceHandler::Sound::HEAVY_SHOT).play();
 		getBullets().push_back(std::move(b));
 

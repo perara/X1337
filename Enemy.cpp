@@ -63,7 +63,7 @@ void Enemy::shoot(int shoot)
 	{
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 		b->setOwner(this->getType());
-		b->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
+		b->sprite->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
 		getBullets().push_back(std::move(b));
 	}
 
@@ -75,7 +75,7 @@ void Enemy::shoot(int shoot)
 		{
 			std::unique_ptr<Bullet> bs = std::move(i);
 			bs->setOwner(this->getType());
-			bs->setPosition(startX , this->sprite->getPosition().y - 10);
+			bs->sprite->setPosition(startX , this->sprite->getPosition().y - 10);
 			getBullets().push_back(std::move(bs));
 			startX+= this->sprite->getGlobalBounds().width / 10;
 		}
@@ -86,7 +86,7 @@ void Enemy::shoot(int shoot)
 
 void Enemy::process()
 {
-	this->shooterProcess();
+	this->hitDetection();
 
 	// Start
 	sf::Vector2f length;
@@ -152,17 +152,6 @@ void Enemy::process()
 }
 
 
-void Enemy::circularShoot()
-{
-	double speed = 0.1;  
-	double angle = 360 ; 
-
-	double move_x = speed * cos( angle ) - sin(angle);
-	double move_y = speed * sin( angle ) + cos(angle);
-
-	this->sprite->move(move_x,move_y);
-}
-
 int Enemy::getRepeat()
 {
 	return this->repeat;
@@ -181,10 +170,3 @@ Enemy::EnemyType Enemy::getEnemyType()
 {
 	return this->enemyType;
 }
-
-
-void Enemy::setCircular(bool circular)
-{
-	this->circular = circular;
-}
-

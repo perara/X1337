@@ -70,16 +70,15 @@ public:
 	ResourceHandler(sf::RenderWindow& window);
 	~ResourceHandler();
 
-
 	void init();
 	void draw();
-	void setInit(bool);
-	bool getInit();
 
 	// Highscore
+	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> getHighScores();
 	void writeHighScoreScore(int, int);
 	void loadHighScore();
 
+	// Getts for each of the resources
 	sf::Texture& getTexture(ResourceHandler::Texture);
 	Script getScript(ResourceHandler::Scripts);
 	std::list<Script> getScripts();
@@ -87,13 +86,14 @@ public:
 	sf::Sound& getSound(ResourceHandler::Sound);
 	Script getScriptById(int iteNum);
 
-	// Highscore
-	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> getHighScores();
 private:
 	void loadTextures();
 	void loadFonts();
 	void loadSound();
 	void loadScripts();
+
+	void setInit(bool);
+	bool getInit();
 
 	bool inited;
 	sf::RenderWindow& window;

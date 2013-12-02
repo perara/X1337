@@ -1,4 +1,3 @@
-
 #include "GameShape.h"
 #include "Log.h"
 

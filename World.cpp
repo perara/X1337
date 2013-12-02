@@ -11,17 +11,43 @@
 
 World::World(sf::RenderWindow& window, 
 			 std::unique_ptr<ResourceHandler>& resourceHandler, 
-			 const sf::Time& timeStep):
+			 const sf::Time& timeStep,
+			 const bool demo,
+			 const int scriptNum,
+			 const bool hardMode):
 Scene(window, resourceHandler),
 	bg(Background(window)),
 	bFactory(BulletFactory(window, 1000, bullets, timeStep)),
-	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100,250), 10, bFactory, bullets, resourceHandler, timeStep))),
 	timeStep(timeStep),
 	ingameSong(resourceHandler->getSound(ResourceHandler::Sound::INGAME)),
 	gameOver(false),
-	hardMode(false)
+	hardMode(hardMode),
+	demo(demo),
+	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100,250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode)))
 {
 
+	if(demo)
+	{
+		script = resourceHandler->getScript(ResourceHandler::Scripts::GAME_MENU);
+	}
+	else
+	{
+		script = resourceHandler->getScriptById(scriptNum);
+		// Initialize Background
+		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND1));
+		currentScript = scriptNum;
+		addObject(std::shared_ptr<Player>(player));
+	}
+
+}
+
+void World::playIngameSong() // Workaround <.<
+{
+	if(!demo)
+	{
+		ingameSong.play();
+		ingameSong.setLoop(true);
+	}
 }
 
 World::~World()
@@ -33,33 +59,13 @@ World::~World()
 
 void World::init(bool demo, int scriptNum)
 {
-	if(!hardMode)
-		player->setHealth(5);
-	else
-		player->setHealth(1);
-
-	this->demo = demo;
-	if(demo)
-	{
-		this->script = resourceHandler->getScript(ResourceHandler::Scripts::GAME_MENU);
-	}
-	else
-	{
-		this->script = resourceHandler->getScriptById(scriptNum);
-		ingameSong.play();
-		ingameSong.setLoop(true);
-		// Initialize Background
-		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND1));
-		currentScript = scriptNum;
-		addObject(std::shared_ptr<Player>(player));
-	}
 
 }
 
 void World::process()
 {
 	// Process loaded script
-	bool scriptRunning = this->script.process(window, objects, bullets, bFactory, resourceHandler, timeStep);
+	bool scriptRunning = script.process(window, objects, bullets, bFactory, resourceHandler, timeStep);
 	///////////////////////////////////
 	// Object processing and cleanup //
 	///////////////////////////////////
@@ -75,7 +81,7 @@ void World::process()
 			{ // If the bullet is up for deletion
 				if((*i)->getType() == Shooter::ShooterType::ENEMY)
 				{
-					player->addScore((*i)->getValue());
+					player->addScore((*i)->getScoreValue());
 				}
 				else if((*i)->getType() == Shooter::ShooterType::PLAYER)
 				{
@@ -96,7 +102,7 @@ void World::process()
 	{
 		gameOver = true;
 		int multiplier =  ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
-		resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
+		if(currentScript != -1 ) resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
 	}
 
 	///////////////////////////////////
@@ -134,15 +140,6 @@ void World::drawStats()
 bool World::isGameOver()
 {
 	return gameOver;
-}
-
-void World::setHardMode(bool hardOn)
-{
-	hardMode=hardOn;
-}
-bool World::getHardMode()
-{
-	return hardMode;
 }
 
 /// <summary>
@@ -187,4 +184,9 @@ void World::draw()
 void World::input(sf::Event& event)
 {
 	this->player->input(event);
+}
+
+const bool World::getHardMode()
+{
+	return hardMode;
 }

@@ -100,7 +100,7 @@
       <Filter>Header\Base Classes</Filter>
     </ClInclude>
     <ClInclude Include="libs\rapidxml_print.hpp">
-      <Filter>Header\Shooters</Filter>
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

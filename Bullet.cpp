@@ -57,15 +57,6 @@ bool Bullet::isOutOfBounds()
 		return false;
 	}
 }
-/// <summary>
-/// Sets the position of the bullet.
-/// </summary>
-/// <param name="x">Sets x position.</param>
-/// <param name="y">Sets y position</param>
-void Bullet::setPosition(int x, int y)
-{
-	this->sprite->setPosition(x,y);
-}
 
 void Bullet::setOwner(Shooter::ShooterType owner)
 {
@@ -85,16 +76,6 @@ void Bullet::setOwner(Shooter::ShooterType owner)
 
 
 	this->owner = owner;
-}
-
-void Bullet::setDeleted(bool val)
-{
-	this->deleted = val;
-}
-
-bool Bullet::getDeleted()
-{
-	return this->deleted;
 }
 
 void Bullet::resetObject()

@@ -18,17 +18,16 @@ public:
 		BulletFactory&,   
 		std::list<std::unique_ptr<Bullet>>&,
 		std::unique_ptr<ResourceHandler>& resourceHandler,
-		const sf::Time& timeStep
+		const sf::Time& timeStep,
+		const bool hardmode
 		);
 
-	void addScore(float score);
-
-	void setHealth(int value);
-	void input(sf::Event&);
-	void process();
-	void detectEdge();
+	void addScore(float score); // Adds a X sum to player's score
+	void input(sf::Event&); // Input handler for player
+	virtual void process();
 	void drawStats(std::list<std::shared_ptr<HighScoreItem>>&);
 	int getPlayerScore();
 private:
 	int playerScore;
+	void detectEdge();
 };

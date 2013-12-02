@@ -1,7 +1,6 @@
 #include "Object.h"
 #include "Log.h"
 #include "GameShape.h"
-#include <SFML\Graphics\RectangleShape.hpp>
 
 void Object::draw()
 {
@@ -21,6 +20,11 @@ void Object::process(){}
 
 bool Object::getDeleted(){
 	return this->deleted;
+}
+
+void Object::setDeleted(bool del)
+{
+	deleted = del;
 }
 
 

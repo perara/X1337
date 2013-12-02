@@ -5,7 +5,7 @@
 /// <summary>
 /// This class represents a bullet in the game, these bullets will be handled by BulletFactory.h
 /// </summary>
-class Bullet :  public Object
+class Bullet : public Object
 {
 public:
 
@@ -15,27 +15,25 @@ public:
 	};
 
 	Bullet(sf::RenderWindow& window, Bullet::Type,  const sf::Time& timeStep);
-	void process();
-	bool isOutOfBounds();
 
-	void setPosition(int x, int y);
-	void setOwner(Shooter::ShooterType owner);
+	virtual void process();
+
 	void resetObject();
-	void setDeleted(bool deleted);
-	bool getDeleted(); 
-
-	Bullet::Type getBulletType();
-
-
 
 	Shooter::ShooterType getOwner();
-protected:
+	void setOwner(Shooter::ShooterType owner);	
+	
+	Bullet::Type getBulletType();
+
+private:	
+
 	Bullet::Type bulletType;
+	Shooter::ShooterType owner;
+
 	int speedX;
 	int speedY;
-	bool deleted;
 
-private:
-	Shooter::ShooterType owner;
-	 const sf::Time& timeStep;
+	const sf::Time& timeStep;
+
+	bool isOutOfBounds();
 };

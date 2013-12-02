@@ -42,7 +42,7 @@ void ResourceHandler::init()
 		scriptList[Scripts::STAGEONE] = "assets/scripts/stage1.xml";
 		scriptList[Scripts::ENCOUNTER1] = "assets/scripts/encounterDemo.xml";
 		scriptList[Scripts::ENCOUNTER2] = "assets/scripts/encounter.xml";
-		scriptList[Scripts::ENCOUNTER3] = "assets/scripts/encounter.xml";
+		scriptList[Scripts::ENCOUNTER3] = "assets/scripts/encounter1.xml";
 		scriptList[Scripts::GAME_MENU] = "assets/scripts/game_menu.xml";
 		scriptList[Scripts::DRIT] = "assets/scripts/drit.xml";
 		scriptList[Scripts::DRIT1] = "assets/scripts/drit1.xml";

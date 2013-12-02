@@ -16,11 +16,12 @@ public:
 		ENEMY
 	};
 
-	int getHealth(); // Todo should be protected
+	// ShooterType getter
 	Shooter::ShooterType getType();
 
-	void setValue(float value);
-	float getValue();
+	// The Worth of this shooter getter/setter
+	void setScoreValue(float);
+	float getScoreValue();
 protected:
 
 	Shooter(sf::RenderWindow& window, 
@@ -28,40 +29,41 @@ protected:
 		std::list<std::unique_ptr<Bullet>>&,
 		std::unique_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep);	
-	int health;
-
+	// Resource Handler reference
 	std::unique_ptr<ResourceHandler>& resourceHandler;
 
-	void decrementHealth();
-	void incrementHealth();
 
-
-	/* Processing */
-	virtual void shooterProcess();
-
+	// Set the type of this shooter (Enemy || Player)
 	void setType(Shooter::ShooterType);
-
 
 	// Bullets getter/setter
 	std::list<std::unique_ptr<Bullet>>& getBullets();
-	void setBullets(std::list<std::unique_ptr<Bullet>>& bullets);
 
-	// BulletFactory Getter/Setter
-	BulletFactory& getBulletFactory();
+	// Game Timestep flow
 	const sf::Time& timeStep;
 
-	/* Health Related */
-	virtual void setHealth(int value);
+	// BulletFactory Getter
+	BulletFactory& getBulletFactory();
 
+	// Hit Detection processor
+	virtual void hitDetection();
+
+	// Getters setters for health
+	void setHealth(int value);
+	const int getHealth(); // Todo should be protected
 private:
-	virtual void hitDetection() ;
-	bool circleTest(GameShape& bullet);
+	int health;
+
+	// Hyperplane separation theorem for hit detection
 	bool sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2);
-	float scoreValue;
+
+	// Shooter type (Player || Enemy)
 	ShooterType shooterType;
 
+	// References to bullets and bulletfactory
 	std::list<std::unique_ptr<Bullet>>& bullets;
 	BulletFactory& bFactory;
 
-
+	// Shooter's Worth (Value)
+	float scoreValue;
 };

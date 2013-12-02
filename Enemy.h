@@ -6,7 +6,6 @@
 /// <summary>
 /// The player class represents the enemy
 /// </summary>
-
 class Enemy : public Shooter
 {
 public:
@@ -24,29 +23,30 @@ public:
 		std::list<std::unique_ptr<Bullet>>&,
 		std::unique_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep);
-
 	~Enemy();
 
 
-	void process();
-	int getRepeat();
-	void setRepeat(int);
+	virtual void process();
 	Enemy::EnemyType getEnemyType();
-	void setCircular(bool);
-protected:
-	int repeat;
-	void circularShoot();
-	std::queue<sf::Vector3f> pathTemplate;
-	std::queue<sf::Vector3f> path;
-	sf::Vector3f currentPath;
-	void setEnemyType(Enemy::EnemyType);
-	bool circular; // Weither it should move in a circular direction or not;
-
-	sf::Clock enemyClock;
-	void Enemy::shoot(int);
 
 private:
-	Enemy::EnemyType enemyType;
+	// Weither to repeat path ro not
+	int repeat;
+	int getRepeat(); 
+	void setRepeat(int);
+
+	std::queue<sf::Vector3f> pathTemplate; // Original Path (Which is the one loaded at start)
+	std::queue<sf::Vector3f> path; // Path which is under progress
 	void setInitPath();
-	float scoreValue;
+	sf::Vector3f currentPath;
+
+	// Clock for enemy shoot speed
+	sf::Clock enemyClock;
+
+	// Shoot function
+	void shoot(int);
+
+	// Variable for this enemy's type
+	Enemy::EnemyType enemyType;
+	void setEnemyType(Enemy::EnemyType);
 };

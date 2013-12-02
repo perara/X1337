@@ -19,7 +19,7 @@ public:
 	ShapeType getShapeType();
 	sf::Time timeStep;
 	int getRadius(); // Only valid for circle
-protected:
+private:
 	ShapeType shapeType;
 	void setCircleShape(double radius, sf::Vector2f center);
 	void setTriangleShape(float size);

@@ -13,21 +13,19 @@
 /// </summary>
 class World: public Scene{
 public:
-	std::list<std::shared_ptr<Shooter>> objects; 
-	std::list<std::unique_ptr<Bullet>> bullets;
 
-	void addObject(std::shared_ptr<Shooter> object);
-	void addBullet(std::unique_ptr<Bullet> bullet);
 	World();
 	~World();
 	World(sf::RenderWindow& window, 
 		std::unique_ptr<ResourceHandler>& resourceHandler,
-		const sf::Time& timeStep);
+		const sf::Time& timeStep,
+		const bool demo,
+		const int scriptNum,
+		const bool hardMode);
 
 	void drawStats();
 	bool isGameOver();
-	void setHardMode(bool hardOn);
-	bool getHardMode();
+
 	virtual void draw();
 	virtual void process();
 	virtual void init(bool demo, int  scriptNum = (int)ResourceHandler::Scripts::GAME_MENU);
@@ -38,16 +36,28 @@ public:
 		return bFactory;
 	};
 
+	void playIngameSong(); // Workaround since song wont play from constructor
 private:
 	// Objects
+	Script script;
 	Background bg;
 	BulletFactory bFactory;
+	sf::Sound& ingameSong;
 	std::shared_ptr<Player> player;
-	Script script;
+
 	const sf::Time& timeStep;
 	bool demo;
-	bool hardMode;
+
+	const bool getHardMode();
+	const bool hardMode;
+
 	bool gameOver;
-	sf::Sound& ingameSong;
+
 	int currentScript;
+
+	std::list<std::shared_ptr<Shooter>> objects; 
+	std::list<std::unique_ptr<Bullet>> bullets;
+
+	void addObject(std::shared_ptr<Shooter> object);
+	void addBullet(std::unique_ptr<Bullet> bullet);
 };

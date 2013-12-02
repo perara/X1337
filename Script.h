@@ -1,22 +1,14 @@
 #pragma once
-
-
-
 #include <queue>
 #include <list>
-#include <SFML\System\Clock.hpp>
 #include <SFML\Graphics.hpp>
 #include <memory>
 
 
-class Object;
 class Shooter;
-class Enemy;
 class BulletFactory;
 class Bullet;
 class ResourceHandler;
-
-
 
 class Script
 {
