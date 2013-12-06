@@ -27,9 +27,14 @@ void ResourceHandler::init()
 
 	// Textures
 	{
-		textureList[Texture::BACKGROUND1]  = "assets/sprites/bg1.jpg";
-		textureList[Texture::HEART]  = "assets/sprites/heart.png";
-		textureList[Texture::MITT]  = "assets/sprites/mitt-romney.png";
+		textureList[Texture::HEART] = "assets/sprites/heart.png";
+		textureList[Texture::MITT] = "assets/sprites/mitt-romney.png";
+		textureList[Texture::PLAYER_SHIP] = "assets/sprites/player_ship.png";
+		textureList[Texture::ENEMY_SHIP] = "assets/sprites/enemy_ship.png";
+		textureList[Texture::BOSS] = "assets/sprites/boss.png";
+		textureList[Texture::HEAVY_SHOT_TEXTURE] = "assets/sprites/heavy_shot.jpg";
+		textureList[Texture::BOSS_DEATHSTAR_TEXTURE] = "assets/sprites/deathStar.png";
+		textureList[Texture::CHUBBY_SHIP_TEXTURE] = "assets/sprites/chubby.png";
 	}
 
 	// Sounds
@@ -40,20 +45,17 @@ void ResourceHandler::init()
 		soundList[Sound::HEAVY_SHOT] = "assets/sound/FireOneSound.ogg";
 		soundList[Sound::ENEMY_DEATH] = "assets/sound/ExplosionSound.ogg";
 		soundList[Sound::INGAME] = "assets/sound/in-game.ogg";
+		soundList[Sound::DEATH_STAR_THEME] = "assets/sound/death_star_theme.ogg";
 	}
 
 	// Scripts
 	{
-		scriptList[Scripts::STAGEONE] = "assets/scripts/stage1.xml";
-		scriptList[Scripts::ENCOUNTER1] = "assets/scripts/encounterDemo.xml";
-		scriptList[Scripts::ENCOUNTER2] = "assets/scripts/encounter.xml";
-		scriptList[Scripts::ENCOUNTER3] = "assets/scripts/encounter1.xml";
+		scriptList[Scripts::STAGE_ONE] = "assets/scripts/stage1.xml";
+		scriptList[Scripts::STAGE_TWO] = "assets/scripts/stage2.xml";
 		scriptList[Scripts::GAME_MENU] = "assets/scripts/game_menu.xml";
-		scriptList[Scripts::DRIT] = "assets/scripts/drit.xml";
-		scriptList[Scripts::DRIT1] = "assets/scripts/drit1.xml";
-		scriptList[Scripts::DRIT2] = "assets/scripts/drit2.xml";
-		scriptList[Scripts::DRIT3] = "assets/scripts/drit3.xml";
 
+		scriptList[Scripts::DEATH_STAR] = "assets/scripts/test1.xml";
+		scriptList[Scripts::TEST2] = "assets/scripts/test2.xml";
 	}
 
 	// Fonts

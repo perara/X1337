@@ -2,9 +2,10 @@
 #include "Log.h"
 
 // Other Default
-GameShape::GameShape(GameShape::ShapeType shapeType):
-	shapeType(shapeType)
+GameShape::GameShape(GameShape::ShapeType shapeType) :
+shapeType(shapeType)
 {
+	float scale = 0.50f;
 
 	switch (shapeType)
 	{
@@ -13,18 +14,31 @@ GameShape::GameShape(GameShape::ShapeType shapeType):
 		setTriangleShape(20);
 		break;
 	case GameShape::ShapeType::STARSHIP:
-		this->setPointCount(8);
-
-		this->setPoint(0, sf::Vector2f(-30,-10));
-		this->setPoint(1, sf::Vector2f(-20,-20));
-		this->setPoint(2, sf::Vector2f(-20,-30));
-		this->setPoint(3, sf::Vector2f(-10,-40));
-		this->setPoint(4, sf::Vector2f(10,-40));
-		this->setPoint(5, sf::Vector2f(20,-30));
-		this->setPoint(6, sf::Vector2f(20,-20));
-		this->setPoint(7, sf::Vector2f(30,-10));
-
+		this->setPointCount(11);
+		this->setPoint(0, sf::Vector2f(-20, -10));
+		this->setPoint(1, sf::Vector2f(-30, -10));
+		this->setPoint(2, sf::Vector2f(-20, -20));
+		this->setPoint(3, sf::Vector2f(-20, -30));
+		this->setPoint(4, sf::Vector2f(-10, -40));
+		this->setPoint(5, sf::Vector2f(10, -40));
+		this->setPoint(6, sf::Vector2f(20, -30));
+		this->setPoint(7, sf::Vector2f(20, -20));
+		this->setPoint(8, sf::Vector2f(30, -10));
+		this->setPoint(9, sf::Vector2f(20, -10));
 		break;
+	case GameShape::ShapeType::PLAYER_SHIP:
+		this->setPointCount(9);
+		this->setPoint(0, sf::Vector2f(0, -20)* scale);
+		this->setPoint(1, sf::Vector2f(-20, 5)* scale);
+		this->setPoint(2, sf::Vector2f(-20, 25)* scale);
+		this->setPoint(3, sf::Vector2f(-10, 25)* scale);
+		this->setPoint(4, sf::Vector2f(-4, 15)* scale);
+		this->setPoint(5, sf::Vector2f(4, 15)* scale);
+		this->setPoint(6, sf::Vector2f(10, 25)* scale);
+		this->setPoint(7, sf::Vector2f(20, 25)* scale);
+		this->setPoint(8, sf::Vector2f(20, 5)* scale);
+		break;
+
 	case GameShape::ShapeType::BOSS:
 		this->setPointCount(8);
 		setCircleShape(80, sf::Vector2f(0, 0));
@@ -80,9 +94,9 @@ GameShape::ShapeType GameShape::getShapeType()
 
 void GameShape::setTriangleShape(float size)
 {
-	this->setPoint(0, sf::Vector2f(-0.5,0)*size);
-	this->setPoint(1, sf::Vector2f(0.5,0)*size);
-	this->setPoint(2, sf::Vector2f(0,-1)*size);
+	this->setPoint(0, sf::Vector2f(-0.5, 0)*size);
+	this->setPoint(1, sf::Vector2f(0.5, 0)*size);
+	this->setPoint(2, sf::Vector2f(0, -1)*size);
 
 }
 

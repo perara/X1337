@@ -9,6 +9,7 @@ public:
 		TRIANGLE,
 		STARSHIP,
 		BOSS,
+		PLAYER_SHIP,
 		SHAPECOUNT
 	};
 

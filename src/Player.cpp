@@ -39,7 +39,10 @@ Player::Player(sf::RenderWindow& window,
 	}
 
 	this->setType(Shooter::ShooterType::PLAYER);
-	sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::CIRCLE, 10));
+	sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::ShapeType::PLAYER_SHIP));
+	sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::PLAYER_SHIP));
+	sprite->setOutlineThickness(1);
+	sprite->setOutlineColor(sf::Color::Cyan);
 	this->sprite->setPosition(pos);
 }
 

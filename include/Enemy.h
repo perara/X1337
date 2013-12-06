@@ -11,8 +11,10 @@ class Enemy : public Shooter
 public:
 	const enum EnemyType
 	{
-		REGULAR,
-		BOSS,
+		REGULAR = 1,
+		CHUBBY = 2,
+		BOSS = 3,
+		DEATHSTAR = 4,
 		SHOOTERTYPECOUNT
 	};
 
