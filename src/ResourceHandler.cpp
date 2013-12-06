@@ -38,6 +38,9 @@ void ResourceHandler::init()
 		textureList[Texture::HEAVY_SHOT_TEXTURE] = "assets/sprites/heavy_shot.jpg";
 		textureList[Texture::BOSS_DEATHSTAR_TEXTURE] = "assets/sprites/deathStar.png";
 		textureList[Texture::CHUBBY_SHIP_TEXTURE] = "assets/sprites/chubby.png";
+
+		textureList[Texture::AUDIO_ON] = "assets/sprites/audio-on.png";
+		textureList[Texture::AUDIO_OFF] = "assets/sprites/audio-off.png";
 	}
 
 	// Sounds
@@ -435,6 +438,15 @@ sf::Sound& ResourceHandler::getSound(ResourceHandler::Sound query)
 {
 	return this->sounds[query];
 }
+
+void ResourceHandler::muteSound(bool mute)
+{
+	for (auto& i : sounds)
+	{
+		(mute) ? i.setVolume(0) : i.setVolume(100);
+	}
+}
+
 
 std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> ResourceHandler::getHighScores()
 {

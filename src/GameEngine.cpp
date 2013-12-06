@@ -115,10 +115,9 @@ void GameEngine::runGame()
 		{
 			menu->draw();
 		}
-		else if(getState() == GameState::PAUSE)
-		{
-			window.setView(playerStatsView);
-			this->world->drawStats();
+		window.setView(playerStatsView);
+		this->world->drawStats();
+		this->drawMute();
 
 			window.setView(mainView);
 			this->world->draw();
@@ -186,19 +185,25 @@ void GameEngine::pollInput()
 
 
 		/* GENERAL Key Events*/
-		if(this->event.type == sf::Event::KeyReleased)
+		if (this->event.type == sf::Event::KeyReleased)
 		{
-			if(this->event.key.code == sf::Keyboard::Escape){
-				if(getState() == GameState::GAME)
+			if (this->event.key.code == sf::Keyboard::Escape){
+				if (getState() == GameState::GAME)
 				{
 					setState(GameState::PAUSE);
 				}
-				else if(getState() == GameState::PAUSE)
+				else if (getState() == GameState::PAUSE)
 				{
 					setState(GameState::GAME);
 
 				}
 				menu->updateCurrentOption();
+			}
+
+			else if (this->event.key.code == sf::Keyboard::M) // Sound mute button
+			{
+				mute = !mute;
+				resourceHandler->muteSound(mute);
 			}
 		}
 
@@ -220,4 +225,30 @@ GameState& GameEngine::getState()
 std::unique_ptr<ResourceHandler>& GameEngine::getResourceHandler()
 {
 	return this->resourceHandler;
+}
+
+void GameEngine::drawMute()
+{
+	// Kinda bad pracice to reinitialize these on each frame. But for readability ill have it since 
+	// since i basicly have "unlimited" power
+	sf::Text txtMute;
+	txtMute.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtMute.setString("m");
+	txtMute.setColor(sf::Color(139, 137, 137));
+	txtMute.setCharacterSize(15);
+	txtMute.setPosition(window.getView().getSize().x - 100, window.getView().getSize().y - 24);
+	window.draw(txtMute);
+
+	sf::Sprite sprMute;
+	if (mute)
+	{
+		sprMute.setTexture(resourceHandler->getTexture(ResourceHandler::Texture::AUDIO_OFF));
+	}
+	else
+	{
+		sprMute.setTexture(resourceHandler->getTexture(ResourceHandler::Texture::AUDIO_ON));
+	}
+	sprMute.setScale(0.20f, 0.20f);
+	sprMute.setPosition(txtMute.getPosition().x + 25, txtMute.getPosition().y);
+	window.draw(sprMute);
 }

@@ -17,16 +17,15 @@ public:
 	GameEngine();
 
 	enum State{
-		GAME, 
+		GAME,
 		INIT_GAME,
 		INIT_MAIN_MENU,
 		STAGE_SELECT,
 		DIFFICULTY_SELECT,
-		MAIN_MENU, 
-		OPTIONS, 
-
+		MAIN_MENU,
+		OPTIONS,
+		CREDITS,
 		HIGHSCORE,
-
 		PAUSE,
 		GAMEOVER
 
@@ -42,7 +41,13 @@ public:
 private:
 	void runGame();
 	void gameLoop();
-	void pollInput();
+
+	void process();
+	void draw();
+	void input();
+
+	void drawMute(); // Function which draws the mute icon
+
 	sf::RenderWindow window;
 
 	std::unique_ptr<World> world;
@@ -53,7 +58,7 @@ private:
 	sf::Time elapsedTime;
 	sf::Clock gameClock;
 	sf::Event event;
-
+	bool mute; // State of the sound
 
 	// VIEWS
 	sf::View mainView;
