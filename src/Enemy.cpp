@@ -76,27 +76,70 @@ Enemy::~Enemy(){
 
 void Enemy::shoot(int shoot)
 {
-	if(shoot != -1)
+	if (shoot != -1 && shoot != 0)
 	{
-		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
-		b->setOwner(this->getType());
-		b->sprite->setPosition(this->sprite->getPosition().x , this->sprite->getPosition().y - 10);
-		getBullets().push_back(std::move(b));
-	}
-
-	if(getEnemyType() == Enemy::EnemyType::BOSS)
-	{
-		std::list<std::unique_ptr<Bullet>> bat = getBulletFactory().requestBatch(10, Bullet::Type::standardShot);
-		int startX = (this->sprite->getPosition().x) - (this->sprite->getGlobalBounds().width / 2);
-		for(auto& i : bat)
+		if (getEnemyType() == Enemy::EnemyType::REGULAR)
 		{
-			std::unique_ptr<Bullet> bs = std::move(i);
-			bs->setOwner(this->getType());
-			bs->sprite->setPosition(startX , this->sprite->getPosition().y - 10);
-			getBullets().push_back(std::move(bs));
-			startX+= this->sprite->getGlobalBounds().width / 10;
-		}
+			std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
+			b->setOwner(this->getType());
+			b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y - 10);
+			getBullets().push_back(std::move(b));
 
+		}
+		else if (getEnemyType() == Enemy::EnemyType::CHUBBY)
+		{
+			std::list<std::unique_ptr<Bullet>> bat = getBulletFactory().requestBatch(3, Bullet::Type::standardShot);
+			int startX = (this->sprite->getPosition().x) - (this->sprite->getGlobalBounds().width / 2) + 10;
+
+			for (auto& i : bat)
+			{
+				std::unique_ptr<Bullet> bs = std::move(i);
+				bs->setOwner(this->getType());
+				bs->sprite->setPosition(startX, this->sprite->getPosition().y - 10);
+				getBullets().push_back(std::move(bs));
+				startX += this->sprite->getGlobalBounds().width / 4;
+			}
+
+		}
+		else if (getEnemyType() == Enemy::EnemyType::BOSS)
+		{
+			std::list<std::unique_ptr<Bullet>> bat = getBulletFactory().requestBatch(10, Bullet::Type::standardShot);
+			int startX = (this->sprite->getPosition().x) - (this->sprite->getGlobalBounds().width / 2);
+
+			for (auto& i : bat)
+			{
+				std::unique_ptr<Bullet> bs = std::move(i);
+				bs->setOwner(this->getType());
+				bs->sprite->setPosition(startX, this->sprite->getPosition().y - 10);
+				getBullets().push_back(std::move(bs));
+				startX += this->sprite->getGlobalBounds().width / 10;
+			}
+
+		}
+		else if (getEnemyType() == Enemy::EnemyType::DEATHSTAR)
+		{
+			// Circular shoot pattern
+			if (shoot == 3) // Special attack
+			{
+				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
+				b->setOwner(this->getType());
+				b->setSpeed(sf::Vector2f(0.0f, 350.0f));
+				b->sprite->setFillColor(sf::Color::Green);
+				b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y - 10);
+				getBullets().push_back(std::move(b));
+			}
+			else
+			{
+				for (int i = 0; i < 360; i += 2)
+				{
+					std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
+					b->setOwner(this->getType());
+					b->setRotation(i, sf::Vector2f(150, 150));
+					b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
+					getBullets().push_back(std::move(b));
+				}
+			}
+		}
 	}
 
 }
@@ -124,14 +167,22 @@ void Enemy::process()
 	dx = (dx / len) * timeStep.asSeconds() * 50;
 	dy = (dy / len) * timeStep.asSeconds() * 50;
 
-	if(this->enemyClock.getElapsedTime().asMilliseconds() > 400)
+	// Normal Shoot processing
+	if (this->enemyClock.getElapsedTime().asMilliseconds() > 400)
 	{
 		this->shoot(this->currentPath.z);
 		this->enemyClock.restart();
 	}
 
-	if(
-		currentPosition.x < length.x || 
+	// Special Cases shoot processing (Like deathstar lazer)
+	if (this->currentPath.z == 3) // check if its a special case (4 is special attack for deathstar)
+	{
+		this->shoot(this->currentPath.z);
+	}
+
+
+	if (
+		currentPosition.x < length.x ||
 		currentPosition.y < length.y
 		)
 	{
@@ -152,7 +203,10 @@ void Enemy::process()
 		//std::cout << currentPath.x << ","<< currentPath.y << "->" << this->path->front().x << "," << this->path->front().y << std::endl;
 		if (path.size() > 1)
 		{
+			currentPath = path.front();
 			path.pop();
+
+
 		}
 		else
 		{

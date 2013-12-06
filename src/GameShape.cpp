@@ -123,7 +123,8 @@ void GameShape::setCircleShape(double radius, sf::Vector2f center)
 int GameShape::getRadius(){
 	if (this->shapeType == GameShape::ShapeType::CIRCLE){
 		return this->properties["radius"];
-	}else{
-		return -1;
+	}
+	else{
+		return this->getGlobalBounds().width / 2;
 	}
 }

@@ -8,14 +8,16 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="quantity">Input of the initial quantity the Factory should have at initialization.</param>
-BulletFactory::BulletFactory(sf::RenderWindow& window, 
-							 int quantity, 
-							 std::list<std::unique_ptr<Bullet>>& bullets, 
-							 const sf::Time& timeStep): 
-initQuantity(quantity), 
+BulletFactory::BulletFactory(sf::RenderWindow& window,
+	int quantity,
+	std::list<std::unique_ptr<Bullet>>& bullets,
+	const sf::Time& timeStep,
+	std::unique_ptr<ResourceHandler>& resourceHandler) :
+	initQuantity(quantity),
 	window(window),
 	bullets(bullets),
-	timeStep(timeStep)
+	timeStep(timeStep),
+	resourceHandler(resourceHandler)
 {
 
 	produceObjects(Bullet::Type::standardShot, quantity);  //TODO, implement TYPES
@@ -31,7 +33,7 @@ void BulletFactory::produceObjects(Bullet::Type type, int quantity)
 {
 	for (int i = 0; i < quantity; i++)
 	{
-		std::unique_ptr<Bullet>  b = std::unique_ptr<Bullet>(new Bullet(window, type, timeStep));
+		std::unique_ptr<Bullet>  b = std::unique_ptr<Bullet>(new Bullet(window, type, timeStep, resourceHandler));
 
 		this->objects[type].push_back(std::move(b));
 

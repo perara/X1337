@@ -23,6 +23,7 @@ void ResourceHandler::init()
 {
 	// Define Resources
 	// HIGHSCORE
+	creditsFilePath = "assets/credits.xml";
 	highScoreFile = "assets/config.xml";
 
 	// Textures
@@ -45,12 +46,13 @@ void ResourceHandler::init()
 
 	// Sounds
 	{
-		soundList[Sound::SONG1]  = "assets/sound/a.ogg";
+		soundList[Sound::SONG1] = "assets/sound/a.ogg";
 		soundList[Sound::MENU_SONG] = "assets/sound/game_menu.ogg";
 		soundList[Sound::STANDARD_SHOT] = "assets/sound/FireOneSound.ogg";
 		soundList[Sound::HEAVY_SHOT] = "assets/sound/FireOneSound.ogg";
 		soundList[Sound::ENEMY_DEATH] = "assets/sound/ExplosionSound.ogg";
 		soundList[Sound::INGAME] = "assets/sound/in-game.ogg";
+		soundList[Sound::COUNTDOWN] = "assets/sound/countdown.ogg";
 		soundList[Sound::DEATH_STAR_THEME] = "assets/sound/death_star_theme.ogg";
 	}
 
@@ -391,9 +393,24 @@ void ResourceHandler::loadCredits()
 	}
 }
 
+std::map<std::string, std::list<std::string>> ResourceHandler::getCredits()
+{
+	return creditsMap;
 }
 
+std::string ResourceHandler::getDateTime()
+{
+	std::chrono::system_clock::time_point p = std::chrono::system_clock::now();
+	std::time_t t = std::chrono::system_clock::to_time_t(p);
+	char buff[32];
+	ctime_s(buff, sizeof(buff), &t);
+	return buff;
+}
 
+std::string ResourceHandler::getUserName()
+{
+	return this->userName;
+}
 
 /*
 GETTERS

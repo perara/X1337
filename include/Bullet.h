@@ -14,18 +14,19 @@ public:
 		heavyShot = 5
 	};
 
-	Bullet(sf::RenderWindow& window, Bullet::Type,  const sf::Time& timeStep);
+	Bullet(sf::RenderWindow& window, Bullet::Type, const sf::Time& timeStep, std::unique_ptr<ResourceHandler>& resourceHandler);
 
 	virtual void process();
 
 	void resetObject();
 
 	Shooter::ShooterType getOwner();
-	void setOwner(Shooter::ShooterType owner);	
-	
+	void setOwner(Shooter::ShooterType owner);
+	void setRotation(int degree, sf::Vector2f speed);
 	Bullet::Type getBulletType();
+	void setSpeed(sf::Vector2f);
 
-private:	
+private:
 
 	Bullet::Type bulletType;
 	Shooter::ShooterType owner;
@@ -36,4 +37,6 @@ private:
 	const sf::Time& timeStep;
 
 	bool isOutOfBounds();
+
+	int deg; // Degree on bullet rotation
 };

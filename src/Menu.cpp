@@ -3,13 +3,15 @@
 #include <sstream>
 
 
-Menu::Menu(sf::RenderWindow& window, GameState& state, std::unique_ptr<ResourceHandler>& resourceHandler):
-	Scene(window, resourceHandler),
-	state(state),
-	hardmodeSelected(false)
+Menu::Menu(sf::RenderWindow& window, GameState& state, std::unique_ptr<ResourceHandler>& resourceHandler) :
+Scene(window, resourceHandler),
+state(state),
+hardmodeSelected(false)
 {
 	this->init();
 }
+void Menu::process(){}
+
 
 void Menu::reset()
 {
@@ -25,21 +27,21 @@ void Menu::init()
 {
 
 	// Get script names
-	for(auto&i  : resourceHandler->getScripts()) scripts.push_back(i);
+	for (auto&i : resourceHandler->getScripts()) scripts.push_back(i);
 
 
 	std::map<Menu::Options, std::string> mainMenu;
 	{
 		mainMenu[Menu::Options::NEW_GAME] = "New Game";
 		//mainMenu[Menu::Options::LOAD_GAME] = "Load Existing Game";
-		//mainMenu[Menu::Options::CREDITS] = "Credits";
 		mainMenu[Menu::Options::HIGHSCORE] = "Highscore";
+		mainMenu[Menu::Options::CREDITS] = "Credits";
 		mainMenu[Menu::Options::EXIT_GAME] = "Exit Game";
 	}
 
 	std::map<Menu::Options, std::string> stageSelect;
 	{
-		stageSelect[Menu::Options::BACK] = "Back";		
+		stageSelect[Menu::Options::BACK] = "Back";
 		stageSelect[Menu::Options::SELECT_STAGE] = "Select Stage";
 	}
 
@@ -51,12 +53,12 @@ void Menu::init()
 
 	std::map<Menu::Options, std::string> highScore;
 	{
-		highScore[Menu::Options::BACK] = "Back";		
+		highScore[Menu::Options::BACK] = "Back";
 	}
 
 	std::map<Menu::Options, std::string> pause;
 	{
-		pause[Menu::Options::CONTINUE_GAME] = "Continue";		
+		pause[Menu::Options::CONTINUE_GAME] = "Continue";
 		pause[Menu::Options::TO_MAIN_MENU] = "Return to Main Menu";
 	}
 
@@ -67,18 +69,22 @@ void Menu::init()
 	}
 
 
-
+	// Create each of the state indexes and places options in the map
 	optMap[GameState::MAIN_MENU] = mainMenu;
 	optMap[GameState::STAGE_SELECT] = stageSelect;
 	optMap[GameState::DIFFICULTY_SELECT] = difficultySelect;
 	optMap[GameState::PAUSE] = pause;
 	optMap[GameState::HIGHSCORE] = highScore;
+	optMap[GameState::CREDITS] = highScore; // Use the same as highscore, we only need "Back"
 	optMap[GameState::GAMEOVER] = gameOver;
 
+	// Load all of the options
 	loadMenuOptions();
+
+	// Set default stage select to 1
 	setStageSelectOption(1);
 
-	if(!option[state].empty())
+	if (!option[state].empty())
 	{
 		setCurrentOption(option[state].begin()->first);
 	}
@@ -92,33 +98,28 @@ void Menu::updateCurrentOption()
 {
 	this->setCurrentOption(option[state].begin()->first);
 }
-
-void Menu::process()
-{
-}
-
 /////////////////////////////////////////////
 ////Preload the menu options into a map//////
 /////////////////////////////////////////////
 void Menu::loadMenuOptions()
 {
-	for(auto &i : optMap) // Iterate through maps of options
+	for (auto &i : optMap) // Iterate through maps of options
 	{
-		int x = 20 ;
+		int x = 20;
 		int y = window.getView().getSize().y - 50;
 
 		std::map<Menu::Options, std::string>::reverse_iterator rit;
-		for (rit=i.second.rbegin(); rit != i.second.rend(); ++rit)
+		for (rit = i.second.rbegin(); rit != i.second.rend(); ++rit)
 		{
 			sf::Text txt;
 			txt.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 			txt.setString(sf::String(rit->second));
 			LOGD(rit->second);
 			txt.setCharacterSize(30);
-			txt.setPosition(20,y);
-			txt.setColor(sf::Color(139,137,137));
+			txt.setPosition(20, y);
+			txt.setColor(sf::Color(139, 137, 137));
 			option[i.first][rit->first] = (txt);
-			y-= 50;
+			y -= 50;
 		}
 	}
 }
@@ -128,10 +129,10 @@ void Menu::loadMenuOptions()
 /////////////////////////////////////////////
 void Menu::input(sf::Event& event)
 {
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up )
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
 	{
 
-		if(currentOption  == option[state].begin()->first)
+		if (currentOption == option[state].begin()->first)
 		{
 			currentOption = option[state].rbegin()->first;
 			LOGD("Pressed up, do nothing");
@@ -144,10 +145,10 @@ void Menu::input(sf::Event& event)
 
 	}
 
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down )
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
 	{
 
-		if(currentOption == option[state].rbegin()->first)
+		if (currentOption == option[state].rbegin()->first)
 		{
 			currentOption = option[state].begin()->first;
 			LOGD("Pressed down, do nothing");
@@ -159,9 +160,12 @@ void Menu::input(sf::Event& event)
 		}
 
 	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Return )
+	// Each of the switch cases below is which action state that should be set whenever a user clicks enter on the selected 
+	// menu choice. Lets say the user selects EXIT_GAME, we then want to exit the game. This is general for all menu's, hence
+	// the mess.
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Return)
 	{
-		switch(currentOption)
+		switch (currentOption)
 		{
 			/////////////////////////////////////////////
 			/////////////////Main Menu///////////////////
@@ -177,6 +181,8 @@ void Menu::input(sf::Event& event)
 			this->setCurrentOption(option[state].begin()->first);
 			break;
 		case Menu::Options::CREDITS:
+			state = GameState::CREDITS;
+			this->setCurrentOption(option[state].begin()->first);
 			break;
 		case Menu::Options::EXIT_GAME:
 			exit(EXIT_SUCCESS);
@@ -187,7 +193,7 @@ void Menu::input(sf::Event& event)
 			/////////////////////////////////////////////
 		case Menu::Options::SELECT_STAGE:
 			state = GameState::DIFFICULTY_SELECT;
-			this->setCurrentOption(option[GameState::DIFFICULTY_SELECT].begin()->first); 
+			this->setCurrentOption(option[GameState::DIFFICULTY_SELECT].begin()->first);
 			break;
 		case Menu::Options::BACK:
 			state = GameState::MAIN_MENU;
@@ -198,11 +204,11 @@ void Menu::input(sf::Event& event)
 			///////////Difficulty Selection//////////////
 			/////////////////////////////////////////////
 		case Menu::Options::NORMAL:
-			hardmodeSelected=false;
+			hardmodeSelected = false;
 			state = GameState::INIT_GAME;
 			break;
 		case Menu::Options::HARD:
-			hardmodeSelected=true;
+			hardmodeSelected = true;
 			state = GameState::INIT_GAME;
 			break;
 
@@ -214,7 +220,7 @@ void Menu::input(sf::Event& event)
 			break;
 		case Menu::Options::TO_MAIN_MENU:
 			state = GameState::INIT_MAIN_MENU;
-			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first); 
+			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first);
 			break;
 
 			/////////////////////////////////////////////
@@ -225,26 +231,26 @@ void Menu::input(sf::Event& event)
 			break;
 		case Menu::Options::TO_MAIN_MENU2:
 			state = GameState::INIT_MAIN_MENU;
-			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first); 
+			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first);
 			break;
 
-			default:
+		default:
 			LOGD("Missing menu action!");
 			break;
 		}
 	}
 
 	// Do additional input for stage select (Two input handlers, horizontal + vertical
-	if(state == GameState::STAGE_SELECT)	stageSelectInput(event);
+	if (state == GameState::STAGE_SELECT)	stageSelectInput(event);
 }
 
 void Menu::stageSelectInput(sf::Event& event)
 {
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left )
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
 	{
-		LOGD ("Current Stage selected: " << getStageSelectOption());
+		LOGD("Current Stage selected: " << getStageSelectOption());
 
-		if(getStageSelectOption() == 1)
+		if (getStageSelectOption() == 1)
 		{
 			setStageSelectOption(numStages);
 		}
@@ -254,11 +260,11 @@ void Menu::stageSelectInput(sf::Event& event)
 		}
 
 	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right )
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
 	{
-		LOGD ("Current Stage selected: " << getStageSelectOption());
+		LOGD("Current Stage selected: " << getStageSelectOption());
 
-		if(getStageSelectOption() == numStages)
+		if (getStageSelectOption() == numStages)
 		{
 			setStageSelectOption(1);
 		}
@@ -300,7 +306,7 @@ void Menu::setStageSelectOption(int opt)
 void Menu::draw()
 {
 	drawGameTitle();
-	switch(state)
+	switch (state)
 	{
 	case GameState::MAIN_MENU:
 		drawMainMenu();
@@ -323,6 +329,10 @@ void Menu::draw()
 		break;
 	case GameState::GAMEOVER:
 		// Do nothing
+		break;
+	case GameState::CREDITS:
+		drawCredits();
+		drawOptions(state);
 		break;
 	}
 }
@@ -421,10 +431,10 @@ void Menu::drawStageSelect()
 		txtName.setPosition(frame.getPosition().x, frame.getPosition().y + frame.getSize().y);
 		window.draw(txtName);
 
-		if(getStageSelectOption() == cnt) currentStageSelBounds = txtName.getGlobalBounds(); // Get current selected stage's text bounds
+		if (getStageSelectOption() == cnt) currentStageSelBounds = txtName.getGlobalBounds(); // Get current selected stage's text bounds
 
 		count++;
-		if(count % 4 == 1)
+		if (count % 4 == 1)
 		{
 			count = 1;
 			yMult++;
@@ -441,6 +451,53 @@ void Menu::drawStageSelect()
 	window.draw(sh);
 }
 
+/////////////////////////////////////////////
+///////////Credits draw function/////////////
+/////////////////////////////////////////////
+void Menu::drawCredits()
+{
+	// Draw Simple credits
+
+	std::map<std::string, std::list<std::string>> credMap = resourceHandler->getCredits();
+
+	int startX = window.getView().getSize().x / 2;
+	int startY = window.getView().getSize().y / 4;
+
+	// Iterate though all of the credits categories
+	for (auto& credCats : credMap)
+	{
+
+		sf::Text txtCredCat;
+		txtCredCat.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+		txtCredCat.setString(credCats.first);
+		txtCredCat.setCharacterSize(30);
+		txtCredCat.setColor(sf::Color::White);
+		txtCredCat.setPosition(startX - (txtCredCat.getGlobalBounds().width / 2), startY);
+		window.draw(txtCredCat);
+		startY += 40;
+
+		// Iterate through all of the credits for each of the categories
+		for (std::string & credIt : credCats.second)
+		{
+			sf::Text txtCred;
+			txtCred.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+			txtCred.setString(credIt);
+			txtCred.setCharacterSize(20);
+			txtCred.setColor(sf::Color::White);
+			txtCred.setPosition(startX - (txtCred.getGlobalBounds().width / 2), startY);
+			window.draw(txtCred);
+			startY += 25;
+		}
+
+	}
+
+	/*sf::Text txtCredits;
+	txtCredits.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtCredits.setString(i.getScriptTitle());
+	txtCredits.setCharacterSize(20);
+	txtCredits.setColor(sf::Color::White);
+	txtCredits.setPosition(frame.getPosition().x, frame.getPosition().y + frame.getSize().y);
+	window.draw(txtName);*/
 
 }
 
@@ -448,7 +505,8 @@ void Menu::drawStageSelect()
 ///////////////Draw Pause////////////////////
 /////////////////////////////////////////////
 void Menu::drawPause(int xOffSet, int yOffset)
-{		drawOptions(state, xOffSet, yOffset, sf::Color::White);
+{
+	drawOptions(state, xOffSet, yOffset, sf::Color::White);
 
 }
 
@@ -460,7 +518,7 @@ void Menu::drawHighScore()
 {
 	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> hScore = resourceHandler->getHighScores();
 	int xPos = window.getView().getSize().x / 8;
-	int yPos =  window.getView().getSize().y / 4;
+	int yPos = window.getView().getSize().y / 4;
 
 	sf::Text txtScore;
 	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
@@ -470,27 +528,27 @@ void Menu::drawHighScore()
 	window.draw(txtScore);
 
 
-	for(auto & i : hScore)
+	for (auto & i : hScore)
 	{
 		std::shared_ptr<HighScoreItem> item = i.second.front();
 
-			yPos+=50;
+		yPos += 50;
 
-			// Score string
-			std::ostringstream strScore;
-			strScore << item->score;
+		// Score string
+		std::ostringstream strScore;
+		strScore << item->score;
 
-			// Enum Num
-			std::ostringstream strStage;
-			strStage << item->stage;
+		// Enum Num
+		std::ostringstream strStage;
+		strStage << item->stage;
 
-			sf::Text txtScore;
-			txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-			txtScore.setString(sf::String(strStage.str() + "\t\t\t\t\t" + item->playerName + "\t\t\t\t" + strScore.str() + "\t" + item->date));
-			txtScore.setPosition(xPos, yPos);
+		sf::Text txtScore;
+		txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+		txtScore.setString(sf::String(strStage.str() + "\t\t\t\t\t" + item->playerName + "\t\t\t\t" + strScore.str() + "\t" + item->date));
+		txtScore.setPosition(xPos, yPos);
 
-			window.draw(txtScore);
-		
+		window.draw(txtScore);
+
 	}
 
 }

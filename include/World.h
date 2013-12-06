@@ -21,28 +21,32 @@ public:
 		const sf::Time& timeStep,
 		const bool demo,
 		const int scriptNum,
-		const bool hardMode);
+		const bool hardMode,
+		sf::Sound& ingameSong);
 
 	void drawStats();
 	bool isGameOver();
 
 	virtual void draw();
 	virtual void process();
-	virtual void init(bool demo, int  scriptNum = (int)ResourceHandler::Scripts::GAME_MENU);
 	virtual void input(sf::Event&);
+
+	void startSound();
+	void stopSound();
 
 	BulletFactory& getBulletFactory()
 	{
 		return bFactory;
 	};
 
-	void playIngameSong(); // Workaround since song wont play from constructor
+	sf::Sound& ingameSong; // Game song which loops.
 private:
 	// Objects
 	Script script;
 	Background bg;
 	BulletFactory bFactory;
-	sf::Sound& ingameSong;
+
+	sf::Sound& countdownSong; // Countdown for game start
 	std::shared_ptr<Player> player;
 
 	const sf::Time& timeStep;

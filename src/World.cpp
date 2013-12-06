@@ -9,65 +9,70 @@
 
 
 
-World::World(sf::RenderWindow& window, 
-			 std::unique_ptr<ResourceHandler>& resourceHandler, 
-			 const sf::Time& timeStep,
-			 const bool demo,
-			 const int scriptNum,
-			 const bool hardMode):
-Scene(window, resourceHandler),
+World::World(sf::RenderWindow& window,
+	std::unique_ptr<ResourceHandler>& resourceHandler,
+	const sf::Time& timeStep,
+	const bool demo,
+	const int scriptNum,
+	const bool hardMode,
+	sf::Sound& ingameSong)
+	:
+	Scene(window, resourceHandler),
 	bg(Background(window)),
-	bFactory(BulletFactory(window, 1000, bullets, timeStep)),
+	bFactory(BulletFactory(window, 1000, bullets, timeStep, resourceHandler)),
 	timeStep(timeStep),
-	ingameSong(resourceHandler->getSound(ResourceHandler::Sound::INGAME)),
+	countdownSong(resourceHandler->getSound(ResourceHandler::Sound::COUNTDOWN)),
+	ingameSong(ingameSong),
 	gameOver(false),
 	hardMode(hardMode),
 	demo(demo),
-	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100,250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode)))
+	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100, 250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode)))
 {
-
 	if (demo)
 	{
 		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND2), false);
 		script = resourceHandler->getScript(ResourceHandler::Scripts::GAME_MENU);
+		ingameSong.play();
 	}
 	else
 	{
 		script = resourceHandler->getScriptById(scriptNum);
 		// Initialize Background
-		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND1));
+		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND3), true);
 		currentScript = scriptNum;
 		addObject(std::shared_ptr<Player>(player));
+		countdownSong.play();
 	}
+	startSound();
 
-}
-
-void World::playIngameSong() // Workaround <.<
-{
-	if(!demo)
-	{
-		ingameSong.play();
-		ingameSong.setLoop(true);
-	}
 }
 
 World::~World()
 {
-	ingameSong.stop();
 	LOGD("World deconstructor called");
-
 }
 
-void World::init(bool demo, int scriptNum)
+void World::startSound()
 {
+	ingameSong.play();
+}
 
+void World::stopSound()
+{
+	if (countdownSong.getStatus() != 0) countdownSong.stop();
+	if (ingameSong.getStatus() != 0) ingameSong.stop();
 }
 
 void World::process()
 {
-	// Process loaded script
-	bool scriptRunning = script.process(window, objects, bullets, bFactory, resourceHandler, timeStep);
 	bg.process();
+
+	// Process the loaded script IF countdown is done and its not a demo (Demo dont have countdown)
+	bool scriptRunning;
+	(countdownSong.getStatus() != 0 && !demo) ?
+		scriptRunning = true :
+		scriptRunning = script.process(window, objects, bullets, bFactory, resourceHandler, timeStep);
+
 	///////////////////////////////////
 	// Object processing and cleanup //
 	///////////////////////////////////
@@ -181,6 +186,18 @@ void World::draw()
 		it->draw();
 	}
 
+	// Draw "Prepare Text"
+	if (countdownSong.getStatus() != 0 && !demo)
+	{
+		sf::Text txtPrep;
+		txtPrep.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+		txtPrep.setCharacterSize(50);
+		txtPrep.setString("Prepare for game!");
+		txtPrep.setColor(sf::Color::White);
+		txtPrep.setPosition((
+			window.getView().getSize().x / 2) - (txtPrep.getGlobalBounds().width / 2),
+			(window.getView().getSize().y / 2) - (txtPrep.getGlobalBounds().height));
+		window.draw(txtPrep);
 	}
 }
 
