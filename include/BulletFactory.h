@@ -20,7 +20,7 @@ public:
 private:
 	void produceObjects(Bullet::Type type, int quantity);
 	std::list<std::unique_ptr<Bullet>>& bullets;
-	std::map<Bullet::Type , std::list<std::unique_ptr<Bullet>>> objects;
+	std::map<Bullet::Type, std::list<std::unique_ptr<Bullet>>> objects;
 	sf::RenderWindow& window;
 	int initQuantity;
 	const sf::Time& timeStep;

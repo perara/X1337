@@ -20,7 +20,7 @@ class Script
 		int type;
 		std::queue<sf::Vector3f> pathQueue;
 
-		ScriptTick(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat):
+		ScriptTick(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat) :
 			delay(delay),
 			pathQueue(pathQueue),
 			type(type),
@@ -46,7 +46,7 @@ public:
 
 	// Process
 	bool process(sf::RenderWindow& window,
-		std::list<std::shared_ptr<Shooter>>& objects , 
+		std::list<std::shared_ptr<Shooter>>& objects,
 		std::list<std::unique_ptr<Bullet>>& bullets,
 		BulletFactory& bFactory,
 		std::unique_ptr<ResourceHandler>& resourceHandler,

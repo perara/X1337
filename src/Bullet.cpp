@@ -33,13 +33,14 @@ Bullet::Bullet(sf::RenderWindow& window, Bullet::Type bulletType, const sf::Time
 /// <returns>bool which indicates if the object is up for deletion in Scene.h's object list <see cref="Scene"> </returns>
 void Bullet::process()
 {
-	if(!deleted)
+	if (!deleted)
 	{
 		this->sprite->setPosition(
 			sprite->getPosition().x+(timeStep.asSeconds() * speedX),
 			sprite->getPosition().y+(timeStep.asSeconds() * speedY)); //TODO
 
-		if(isOutOfBounds())
+
+		if (isOutOfBounds())
 		{
 			setDeleted(true);
 		}
@@ -48,12 +49,13 @@ void Bullet::process()
 
 bool Bullet::isOutOfBounds()
 {
-	if(this->sprite->getPosition().x > window.getView().getSize().x || 
-		this->sprite->getPosition().x < 0 || 
-		this->sprite->getPosition().y > window.getView().getSize().y || 
+	if (this->sprite->getPosition().x > window.getView().getSize().x ||
+		this->sprite->getPosition().x < 0 ||
+		this->sprite->getPosition().y > window.getView().getSize().y ||
 		this->sprite->getPosition().y < 0){
-			return true;
-	}else{
+		return true;
+	}
+	else{
 		return false;
 	}
 }
@@ -61,10 +63,10 @@ bool Bullet::isOutOfBounds()
 void Bullet::setOwner(Shooter::ShooterType owner)
 {
 
-	if(owner == Shooter::ShooterType::PLAYER)
+	if (owner == Shooter::ShooterType::PLAYER)
 	{
 		this->speedX = 0;
-		this->speedY = -250;
+		this->speedY = -350;
 	}
 	else
 	{

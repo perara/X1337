@@ -4,31 +4,31 @@
 #include "Bullet.h"
 #include "Log.h"
 
-Enemy::Enemy(sf::RenderWindow& window, 
-			 std::queue<sf::Vector3f> path,
-			 int type, int repeat,BulletFactory& bFactory,  
-			 std::list<std::unique_ptr<Bullet>>& bullets,
-			 std::unique_ptr<ResourceHandler>& resourceHandler,
-			 const sf::Time& timeStep
-			 ):
-Shooter(window, bFactory, bullets, resourceHandler, timeStep)
+Enemy::Enemy(sf::RenderWindow& window,
+	std::queue<sf::Vector3f> path,
+	int type, int repeat, BulletFactory& bFactory,
+	std::list<std::unique_ptr<Bullet>>& bullets,
+	std::unique_ptr<ResourceHandler>& resourceHandler,
+	const sf::Time& timeStep
+	) :
+	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
 	this->setType(Shooter::ShooterType::ENEMY);
 	this->pathTemplate = path; // A qeueu which should not be touched (This is used to refill old queue
 	this->enemyClock.restart();
 	this->setRepeat(repeat);
-	if(type == 1) // REGULAR
+	if (type == 1) // REGULAR
 	{
 		setHealth(2);
 		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::STARSHIP));
 		this->setEnemyType(Enemy::EnemyType::REGULAR);
 	}
-	else if(type == 2)
+	else if (type == 2) // Chubby Mob
 	{
 
 
 	}
-	else if(type == 3) // BOSS
+	else if (type == 3) // BOSS
 	{
 		setHealth(250);
 		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::BOSS));
@@ -47,7 +47,7 @@ void Enemy::setInitPath()
 	this->currentPath = this->path.front();
 	this->path.pop();
 
-	this->sprite->setPosition(currentPath.x , currentPath.y);
+	this->sprite->setPosition(currentPath.x, currentPath.y);
 
 
 }
@@ -119,29 +119,29 @@ void Enemy::process()
 		)
 	{
 
-		if(currentPosition.x < length.x)
+		if (currentPosition.x < length.x)
 		{
-			this->sprite->move(dx ,0 );
+			this->sprite->move(dx, 0);
 		}
 
-		if(currentPosition.y < length.y)
+		if (currentPosition.y < length.y)
 		{
-			this->sprite->move(0 ,dy );
+			this->sprite->move(0, dy);
 		}
 
 	}
 	else
 	{
 		//std::cout << currentPath.x << ","<< currentPath.y << "->" << this->path->front().x << "," << this->path->front().y << std::endl;
-		if(path.size() > 1)
+		if (path.size() > 1)
 		{
 			path.pop();
 		}
 		else
 		{
-			LOGD("Enemy#" << this <<" delete flag set");
+			LOGD("Enemy#" << this << " delete flag set");
 			this->deleted = true;
-			if(this->getRepeat() == 1){
+			if (this->getRepeat() == 1){
 				setInitPath();
 			}
 

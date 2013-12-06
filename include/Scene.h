@@ -8,8 +8,8 @@
 class Scene
 {
 public:
-	Scene(sf::RenderWindow& window, std::unique_ptr<ResourceHandler>& resourceHandler):
-		window(window), 
+	Scene(sf::RenderWindow& window, std::unique_ptr<ResourceHandler>& resourceHandler) :
+		window(window),
 		resourceHandler(resourceHandler){};
 
 	virtual void draw() = 0;

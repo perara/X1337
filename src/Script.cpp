@@ -36,7 +36,7 @@ bool Script::getInit()
 }
 void Script::setInit(bool status)
 {
-	if(status) getClock().restart();
+	if (status) getClock().restart();
 	inited = status;
 }
 
@@ -63,26 +63,26 @@ int Script::getScriptEnumVal()
 
 // Process
 bool Script::process(sf::RenderWindow& window,
-					 std::list<std::shared_ptr<Shooter>>& objects , 
-					 std::list<std::unique_ptr<Bullet>>& bullets,
-					 BulletFactory& bFactory,
-					 std::unique_ptr<ResourceHandler>& resourceHandler,
-					 const sf::Time& timeStep)
+	std::list<std::shared_ptr<Shooter>>& objects,
+	std::list<std::unique_ptr<Bullet>>& bullets,
+	BulletFactory& bFactory,
+	std::unique_ptr<ResourceHandler>& resourceHandler,
+	const sf::Time& timeStep)
 {
 	// Do processing
-	if(!enemyList.empty())
+	if (!enemyList.empty())
 	{
 
 		ScriptTick e = enemyList.front();
 		//std::cout <<this->getInit() << " and "  << this->getClock().getElapsedTime().asMilliseconds() << " and " << e->delay << std::endl;
-		if(
+		if (
 			this->getInit() &&
 			this->getClock().getElapsedTime().asMilliseconds() > e.delay
 			)
 		{
 
 			std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
-				window, 
+				window,
 				e.pathQueue,
 				e.type,
 				e.repeat,
@@ -90,9 +90,9 @@ bool Script::process(sf::RenderWindow& window,
 				bullets,
 				resourceHandler,
 				timeStep));
-			if(e1->getEnemyType()==Enemy::EnemyType::REGULAR)
+			if (e1->getEnemyType() == Enemy::EnemyType::REGULAR)
 				e1->setScoreValue(100);
-			else if(e1->getEnemyType()==Enemy::EnemyType::BOSS)
+			else if (e1->getEnemyType() == Enemy::EnemyType::BOSS)
 				e1->setScoreValue(500);
 			LOGD("Spawning Enemy#" << e1);
 

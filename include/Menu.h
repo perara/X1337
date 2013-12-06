@@ -8,7 +8,7 @@
 #include <list>
 
 
-class Menu: public Scene{
+class Menu : public Scene{
 public:
 
 	Menu(sf::RenderWindow& window, GameState& state, std::unique_ptr<ResourceHandler>& resourceHandler);
@@ -31,7 +31,7 @@ private:
 	// Draw Functions
 	void drawStageSelect();
 	void drawMainMenu();
-	void drawOptions(GameState, int xOffset = 0, int yOffset = 0, sf::Color color = sf::Color(139,137,137));
+	void drawOptions(GameState, int xOffset = 0, int yOffset = 0, sf::Color color = sf::Color(139, 137, 137));
 	void drawGameTitle();
 	void drawHighScore();
 

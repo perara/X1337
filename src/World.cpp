@@ -26,7 +26,7 @@ Scene(window, resourceHandler),
 	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100,250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode)))
 {
 
-	if(demo)
+	if (demo)
 	{
 		script = resourceHandler->getScript(ResourceHandler::Scripts::GAME_MENU);
 	}
@@ -69,24 +69,24 @@ void World::process()
 	///////////////////////////////////
 	// Object processing and cleanup //
 	///////////////////////////////////
-	if(objects.size() > 1 || scriptRunning)
+	if (objects.size() > 1 || scriptRunning)
 	{
-		for(std::list<std::shared_ptr<Shooter>>::iterator i = objects.begin(); i != objects.end();)
+		for (std::list<std::shared_ptr<Shooter>>::iterator i = objects.begin(); i != objects.end();)
 		{
 			// Process
 			(*i)->process();
 
 			// Cleanup
-			if((*i)->getDeleted())
+			if ((*i)->getDeleted())
 			{ // If the bullet is up for deletion
-				if((*i)->getType() == Shooter::ShooterType::ENEMY)
+				if ((*i)->getType() == Shooter::ShooterType::ENEMY)
 				{
 					player->addScore((*i)->getScoreValue());
 				}
-				else if((*i)->getType() == Shooter::ShooterType::PLAYER)
+				else if ((*i)->getType() == Shooter::ShooterType::PLAYER)
 				{
 					gameOver = true;
-					int multiplier =  ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
+					int multiplier = ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
 					resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
 				}
 
@@ -101,22 +101,22 @@ void World::process()
 	else // Nothing more to do, game is over.
 	{
 		gameOver = true;
-		int multiplier =  ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
-		if(currentScript != -1 ) resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
+		int multiplier = ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
+		if (currentScript != -1) resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
 	}
 
 	///////////////////////////////////
 	// Bullet processing and cleanup //
 	///////////////////////////////////
-	if(!bullets.empty())
+	if (!bullets.empty())
 	{
-		for(std::list<std::unique_ptr<Bullet>>::iterator it = bullets.begin(); it != bullets.end();)
+		for (std::list<std::unique_ptr<Bullet>>::iterator it = bullets.begin(); it != bullets.end();)
 		{
 			// Process
 			(*it)->process();
 
 			// Cleanup
-			if((*it)->getDeleted())
+			if ((*it)->getDeleted())
 			{
 				bFactory.returnObject(std::move(*it));
 				it = bullets.erase(it);
@@ -169,14 +169,15 @@ void World::draw()
 	bg.process();
 
 
-	for(auto &it : bullets)
+	for (auto &it : bullets)
 	{
 		it->draw();
 	}
 
-	for(auto &it : objects)
+	for (auto &it : objects)
 	{
 		it->draw();
+	}
 
 	}
 }

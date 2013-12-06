@@ -316,7 +316,7 @@ void Menu::draw()
 		break;
 	case GameState::HIGHSCORE:
 		drawHighScore();
-		drawOptions(state); 
+		drawOptions(state);
 		break;
 	case GameState::PAUSE:
 		// Do nothing
@@ -340,7 +340,7 @@ void Menu::drawMainMenu()
 void Menu::drawOptions(GameState state, int xOffset, int yOffset, sf::Color color)
 {
 	// Draw Options
-	for(auto& i: option[state]) 
+	for (auto& i : option[state])
 	{
 		i.second.move(xOffset, yOffset); // Move 'x' offset and 'y' offset
 		i.second.setColor(color);
@@ -352,9 +352,9 @@ void Menu::drawOptions(GameState state, int xOffset, int yOffset, sf::Color colo
 	// Draw Option overlay
 	sf::FloatRect pos = option[state][(Menu::Options)currentOption].getGlobalBounds();
 	sf::RectangleShape sh;
-	sh.setFillColor(sf::Color(255,255,255,150));
+	sh.setFillColor(sf::Color(255, 255, 255, 150));
 	sh.setSize(sf::Vector2f(pos.width + 20, pos.height / 2));
-	sh.setPosition(pos.left - 10 + xOffset,pos.top + (pos.height / 4) + yOffset);
+	sh.setPosition(pos.left - 10 + xOffset, pos.top + (pos.height / 4) + yOffset);
 	window.draw(sh);
 }
 
@@ -379,9 +379,9 @@ void Menu::drawGameTitle()
 	sf::Text gameVersion;
 	gameVersion.setString(sf::String("v1.0"));
 	gameVersion.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-	gameVersion.setColor(sf::Color(139,137,137));
+	gameVersion.setColor(sf::Color(139, 137, 137));
 	gameVersion.setCharacterSize(15);
-	gameVersion.setPosition(sf::Vector2f(window.getView().getSize().x  - gameVersion.getGlobalBounds().width - 10,  window.getView().getSize().y - gameVersion.getGlobalBounds().height *2));
+	gameVersion.setPosition(sf::Vector2f(window.getView().getSize().x - gameVersion.getGlobalBounds().width - 10, window.getView().getSize().y - gameVersion.getGlobalBounds().height * 2));
 	window.draw(gameVersion);
 
 }
@@ -391,25 +391,25 @@ void Menu::drawGameTitle()
 /////////////////////////////////////////////
 void Menu::drawStageSelect()
 {
-	sf::Vector2f frameStartPos((window.getView().getSize().x/4) - 60 , window.getView().getSize().y / 4);
+	sf::Vector2f frameStartPos((window.getView().getSize().x / 4) - 60, window.getView().getSize().y / 4);
 	int yMult = 1;
 	int count = 1;
 	int cnt = count;
 
 	sf::FloatRect currentStageSelBounds; // Read as Current stage select bounds
-	for(Script& i : scripts)
+	for (Script& i : scripts)
 	{
 		// Ignore Game menu script 
-		if(i.getScriptEnumVal() == ResourceHandler::Scripts::GAME_MENU)
+		if (i.getScriptEnumVal() == ResourceHandler::Scripts::GAME_MENU)
 		{
 			cnt++;
 			continue;
 		}
 
 		// Image display
-		sf::RectangleShape frame(sf::Vector2f(window.getView().getSize().x / 8,window.getView().getSize().y / 8));
-		frame.setFillColor(sf::Color(53,24,52));
-		frame.setPosition((frameStartPos.x * count) ,frameStartPos.y * yMult);
+		sf::RectangleShape frame(sf::Vector2f(window.getView().getSize().x / 8, window.getView().getSize().y / 8));
+		frame.setFillColor(sf::Color(53, 24, 52));
+		frame.setPosition((frameStartPos.x * count), frameStartPos.y * yMult);
 		window.draw(frame);
 
 		// Text Under image
@@ -435,10 +435,11 @@ void Menu::drawStageSelect()
 
 	// Draw Stage select overlay
 	sf::RectangleShape sh = sf::RectangleShape();
-	sh.setFillColor(sf::Color(255,255,255,150));
+	sh.setFillColor(sf::Color(255, 255, 255, 150));
 	sh.setSize(sf::Vector2f(currentStageSelBounds.width + 20, currentStageSelBounds.height / 2));
-	sh.setPosition(currentStageSelBounds.left - 10,currentStageSelBounds.top + (currentStageSelBounds.height / 4));
+	sh.setPosition(currentStageSelBounds.left - 10, currentStageSelBounds.top + (currentStageSelBounds.height / 4));
 	window.draw(sh);
+}
 
 
 }

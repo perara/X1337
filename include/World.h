@@ -11,12 +11,12 @@
 /// <summary>
 /// World is the place where all encounters in game happen. It keeps record of the player, enemies and bullets. This is rendered and processed via the Scene inheritance.
 /// </summary>
-class World: public Scene{
+class World : public Scene{
 public:
 
 	World();
 	~World();
-	World(sf::RenderWindow& window, 
+	World(sf::RenderWindow& window,
 		std::unique_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep,
 		const bool demo,
@@ -55,7 +55,7 @@ private:
 
 	int currentScript;
 
-	std::list<std::shared_ptr<Shooter>> objects; 
+	std::list<std::shared_ptr<Shooter>> objects;
 	std::list<std::unique_ptr<Bullet>> bullets;
 
 	void addObject(std::shared_ptr<Shooter> object);

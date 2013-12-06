@@ -6,7 +6,7 @@
 class BulletFactory;
 class Bullet;
 
-class Shooter: public Object
+class Shooter : public Object
 {
 public:
 
@@ -24,11 +24,11 @@ public:
 	float getScoreValue();
 protected:
 
-	Shooter(sf::RenderWindow& window, 
-		BulletFactory&, 
+	Shooter(sf::RenderWindow& window,
+		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
 		std::unique_ptr<ResourceHandler>& resourceHandler,
-		const sf::Time& timeStep);	
+		const sf::Time& timeStep);
 	// Resource Handler reference
 	std::unique_ptr<ResourceHandler>& resourceHandler;
 

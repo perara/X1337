@@ -12,7 +12,7 @@ void Object::draw()
 	af.setPosition(bounds.left, bounds.top);
 	af.setOutlineColor(sf::Color(141,23,22,23));
 	af.setFillColor(sf::Color(255,255,255,150));
-	
+
 	this->window.draw(af);*/
 
 }

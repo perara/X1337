@@ -16,10 +16,10 @@ public:
 		SHOOTERTYPECOUNT
 	};
 
-	Enemy(sf::RenderWindow& window, 
+	Enemy(sf::RenderWindow& window,
 		std::queue<sf::Vector3f> path,
 		int type, int repeat,
-		BulletFactory&,   
+		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
 		std::unique_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep);
@@ -32,7 +32,7 @@ public:
 private:
 	// Weither to repeat path ro not
 	int repeat;
-	int getRepeat(); 
+	int getRepeat();
 	void setRepeat(int);
 
 	std::queue<sf::Vector3f> pathTemplate; // Original Path (Which is the one loaded at start)

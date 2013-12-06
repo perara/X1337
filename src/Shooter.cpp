@@ -3,12 +3,12 @@
 #include "BulletFactory.h"
 #include "Log.h"
 
-Shooter::Shooter(sf::RenderWindow& window, 
-				 BulletFactory& bFactory,   
-				 std::list<std::unique_ptr<Bullet>>& bullets, 
-				 std::unique_ptr<ResourceHandler>& resourceHandler,
-				 const sf::Time& timeStep): 
-Object(window),
+Shooter::Shooter(sf::RenderWindow& window,
+	BulletFactory& bFactory,
+	std::list<std::unique_ptr<Bullet>>& bullets,
+	std::unique_ptr<ResourceHandler>& resourceHandler,
+	const sf::Time& timeStep) :
+	Object(window),
 	bullets(bullets),
 	bFactory(bFactory),
 	resourceHandler(resourceHandler),
@@ -18,7 +18,7 @@ Object(window),
 
 void Shooter::setScoreValue(float value)
 {
-	scoreValue=value;
+	scoreValue = value;
 }
 
 float Shooter::getScoreValue()
@@ -53,7 +53,7 @@ bool Shooter::sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2)
 	int c2_faces = c2->getPointCount();
 
 	//For each of the points in c1
-	for(int i = 0; i < c1_faces; i++)
+	for (int i = 0; i < c1_faces; i++)
 	{
 		// Get point from iterator
 		float fx = c1->getPoint(i).x - c1->getPoint((i + 1) % c1_faces).x;
@@ -74,7 +74,7 @@ bool Shooter::sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2)
 		float c2_min = FLT_MAX, c2_max = -FLT_MAX;
 
 		//Project every point in c1 on the axis and store min and max
-		for(int j = 0; j < c1_faces; j++)
+		for (int j = 0; j < c1_faces; j++)
 		{
 			float c1_proj = (ax * (c1->getPoint(j).x + c1_tx) + ay * (c1->getPoint(j).y + c1_ty)) / (ax * ax + ay * ay);
 			c1_min = std::min(c1_proj, c1_min);
@@ -82,7 +82,7 @@ bool Shooter::sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2)
 		}
 
 		//Project every point in c2 on the axis and store min and max
-		for(int j = 0; j < c2_faces; j++)
+		for (int j = 0; j < c2_faces; j++)
 		{
 			float c2_proj = (ax * (c2->getPoint(j).x + c2_tx) + ay * (c2->getPoint(j).y + c2_ty)) / (ax * ax + ay * ay);
 			c2_min = std::min(c2_proj, c2_min);
@@ -90,7 +90,7 @@ bool Shooter::sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2)
 		}
 
 		//Return if the projections do not overlap
-		if(!(c1_max >= c2_min && c1_min <= c2_max))
+		if (!(c1_max >= c2_min && c1_min <= c2_max))
 			ret = false; //return false;
 	}
 
@@ -100,23 +100,23 @@ bool Shooter::sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2)
 
 void Shooter::hitDetection()
 {
-	if(!getBullets().empty())
+	if (!getBullets().empty())
 	{
 		bool wasHit = false;
-		for(auto& i: getBullets())
+		for (auto& i : getBullets())
 		{
-			if(getType() == i->getOwner()) continue; // Dont compute bullets for your own type
+			if (getType() == i->getOwner()) continue; // Dont compute bullets for your own type
 
 			wasHit = sat(sprite, i->sprite);
 
-			if(wasHit)
+			if (wasHit)
 			{
 				setHealth(getHealth() - i->getBulletType());
 				i->setDeleted(true);
 
 
 				// KILL IF DEAD
-				if(getHealth() <= 0 && getType() != Shooter::ShooterType::PLAYER)
+				if (getHealth() <= 0 && getType() != Shooter::ShooterType::PLAYER)
 				{
 					resourceHandler->getSound(ResourceHandler::Sound::ENEMY_DEATH).play();
 					deleted = true;

@@ -12,10 +12,10 @@ class Bullet;
 class Player : public Shooter
 {
 public:
-	Player(sf::RenderWindow& window, 
-		sf::Vector2f pos, 
+	Player(sf::RenderWindow& window,
+		sf::Vector2f pos,
 		int radius,
-		BulletFactory&,   
+		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
 		std::unique_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep,

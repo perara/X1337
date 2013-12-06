@@ -6,7 +6,7 @@ GameShape::GameShape(GameShape::ShapeType shapeType):
 	shapeType(shapeType)
 {
 
-	switch(shapeType)
+	switch (shapeType)
 	{
 	case GameShape::ShapeType::TRIANGLE:
 		this->setPointCount(3);
@@ -26,8 +26,8 @@ GameShape::GameShape(GameShape::ShapeType shapeType):
 
 		break;
 	case GameShape::ShapeType::BOSS:
-		this->setPointCount(20);
-		setCircleShape(80, sf::Vector2f(0,0));
+		this->setPointCount(8);
+		setCircleShape(80, sf::Vector2f(0, 0));
 
 		break;
 	default:
@@ -38,10 +38,10 @@ GameShape::GameShape(GameShape::ShapeType shapeType):
 }
 
 // Triangle
-GameShape::GameShape(GameShape::ShapeType shapeType, float size):
-	shapeType(shapeType)
+GameShape::GameShape(GameShape::ShapeType shapeType, float size) :
+shapeType(shapeType)
 {
-	switch(shapeType)
+	switch (shapeType)
 	{
 	case GameShape::ShapeType::TRIANGLE:
 		this->setPointCount(3);
@@ -57,15 +57,15 @@ GameShape::GameShape(GameShape::ShapeType shapeType, float size):
 
 
 /* Circle or shapes with radius */
-GameShape::GameShape(GameShape::ShapeType shapeType, int radius, int pointCount):
-	shapeType(shapeType)
+GameShape::GameShape(GameShape::ShapeType shapeType, int radius, int pointCount) :
+shapeType(shapeType)
 {
-	switch(shapeType)
+	switch (shapeType)
 	{
 	case GameShape::ShapeType::CIRCLE:
 		this->setPointCount(pointCount);
 		this->properties["radius"] = radius;
-		setCircleShape(radius, sf::Vector2f(0,0)); // TODO
+		setCircleShape(radius, sf::Vector2f(0, 0)); // TODO
 		break;
 	};
 
@@ -107,7 +107,7 @@ void GameShape::setCircleShape(double radius, sf::Vector2f center)
 
 // Returns radius of a shape, -1 if shape is not a circle (not valid for radius)
 int GameShape::getRadius(){
-	if(this->shapeType  == GameShape::ShapeType::CIRCLE){
+	if (this->shapeType == GameShape::ShapeType::CIRCLE){
 		return this->properties["radius"];
 	}else{
 		return -1;

@@ -1,5 +1,6 @@
 #include "BulletFactory.h"
 #include "Log.h"
+#include "ResourceHandler.h";
 
 
 /// <summary>
@@ -26,9 +27,9 @@ initQuantity(quantity),
 /// </summary>
 /// <param name="type">The type.</param>
 /// <param name="quantity">The quantity.</param>
-void BulletFactory::produceObjects(Bullet::Type type,int quantity)
+void BulletFactory::produceObjects(Bullet::Type type, int quantity)
 {
-	for(int i = 0; i < quantity; i++)
+	for (int i = 0; i < quantity; i++)
 	{
 		std::unique_ptr<Bullet>  b = std::unique_ptr<Bullet>(new Bullet(window, type, timeStep));
 
@@ -60,7 +61,7 @@ std::list<std::unique_ptr<Bullet>> BulletFactory::requestBatch(int quantity, Bul
 /// <returns>Returns a single Bullet*</returns>
 std::unique_ptr<Bullet> BulletFactory::requestObject(Bullet::Type type)
 {
-	if(objects[type].size() < 50)
+	if (objects[type].size() < 50)
 	{
 		produceObjects(type, initQuantity * 0.20); //Increase the size by 20%
 	}
