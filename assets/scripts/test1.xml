@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Script>
+<Name encounter="1">DEATHSTAR 9</Name>
+<Repeat>1</Repeat>
+<Enemies>
+<Enemy>
+<Type>4</Type>
+<Delay>200</Delay>
+<Path>
+<_0 shoot="3" x="-12" y="94"/>
+<_1 shoot="3" x="240" y="51"/>
+<_2 shoot="3" x="324" y="69"/>
+<_3 shoot="1" x="475" y="62"/>
+<_4 shoot="1" x="585" y="115"/>
+<_5 shoot="1" x="682" y="230"/>
+<_6 shoot="0" x="651" y="361"/>
+<_7 shoot="1" x="532" y="280"/>
+<_8 shoot="1" x="529" y="195"/>
+<_9 shoot="3" x="374" y="233"/>
+<_10 shoot="3" x="336" y="173"/>
+<_11 shoot="1" x="175" y="305"/>
+<_12 shoot="1" x="92" y="305"/>
+<_13 shoot="1" x="-14" y="95"/>
+</Path>
+</Enemy>
+</Enemies>
+</Script>
+
