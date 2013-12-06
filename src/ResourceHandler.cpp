@@ -3,9 +3,14 @@
 #include "Enemy.h"
 #include <memory>
 #include <sstream>
+#include <Windows.h>
+#include <chrono>
+#include <ctime>
 
-ResourceHandler::ResourceHandler(sf::RenderWindow& window):
-	window(window)
+
+
+ResourceHandler::ResourceHandler(sf::RenderWindow& window) :
+window(window)
 {
 	this->setInit(false);
 }
@@ -64,6 +69,8 @@ void ResourceHandler::init()
 	this->loadSound();
 	this->loadScripts();
 	this->loadHighScore();
+	this->loadUserName();
+	this->loadCredits();
 
 
 
@@ -73,7 +80,7 @@ void ResourceHandler::init()
 void ResourceHandler::loadFonts()
 {
 	// Load Fonts
-	for(auto& i : fontList)
+	for (auto& i : fontList)
 	{
 		if (fonts[i.first].loadFromFile(i.second)){
 			LOGD("Font loaded: " << i.second);
@@ -87,11 +94,10 @@ void ResourceHandler::loadFonts()
 }
 
 
-
 void ResourceHandler::loadTextures()
 {
 	// Load Textures
-	for(auto& i : textureList)
+	for (auto& i : textureList)
 	{
 
 		if (textures[i.first].loadFromFile(i.second)){
@@ -108,7 +114,7 @@ void ResourceHandler::loadTextures()
 void ResourceHandler::loadSound()
 {
 	// Load sounds
-	for(auto& i: soundList)
+	for (auto& i : soundList)
 	{
 
 		std::shared_ptr<sf::SoundBuffer> buf = std::shared_ptr<sf::SoundBuffer>(new sf::SoundBuffer());
@@ -127,184 +133,255 @@ void ResourceHandler::loadSound()
 
 void ResourceHandler::loadHighScore()
 {
-	std::ifstream theFile (highScoreFile);
-	std::vector<char> buffer((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>());
-	buffer.push_back('\0');
+	// Read XML file raw (Create file Stream)
+	std::ifstream fileStream(highScoreFile);
 
-	rapidxml::xml_document<> doc;
-
-	// Parse XML file
-	doc.parse<0>(&buffer[0]);
-
-	// Root Node
-	rapidxml::xml_node<> *root = doc.first_node("Savegame");
-
-	// Parse Paths
-	rapidxml::xml_node<> *stages = root->first_node("Stages");
-
-	//Stages nodes
-	for (rapidxml::xml_node<> *stage = stages->first_node(); stage; stage = stage->next_sibling())
+	if (fileStream.good())
 	{
-		int stageEnum = atoi(stage->first_attribute("enum")->value());
+		// Load XML and parse it
+		pugi::xml_document doc;
+		pugi::xml_parse_result result = doc.load(fileStream);
 
-		std::list<std::shared_ptr<HighScoreItem>> highScoreStage; // Single Stage
-		for(rapidxml::xml_node<> *player = stage->first_node("Player"); player; player = player->next_sibling())
+		// If XML was parsed successfully without errors
+		if (result)
 		{
-			//player = stage->first_node("Player");
-			std::string pName = player->first_node("Name")->value();
-			float pScore = atof(player->first_node("Score")->value());
-			std::string date = player->first_node("Date")->value();
-			highScoreStage.push_back(std::shared_ptr<HighScoreItem>(new HighScoreItem((ResourceHandler::Scripts)stageEnum, pName, pScore, date)));
+			// Fetch the root node
+			pugi::xml_node root = doc.child("Savegame");
+
+			// Iterate though all stages
+			for (pugi::xml_node node : root.child("Stages").children())
+			{
+				// Highscore list for "this" (node) stage
+				std::list<std::shared_ptr<HighScoreItem>> highScoreStage;
+
+				// Get the stage enum from attribute
+				int sEnum = atoi(node.attribute("enum").value());
+
+				// Iterate through all players in the stage
+				for (pugi::xml_node recNode : node.children())
+				{
+					// Fetch each of the player details for the highscore record
+					std::string pName = recNode.child("Name").child_value();
+					float pScore = atof(recNode.child("Score").child_value());
+					std::string pDate = recNode.child("Date").child_value();
+					highScoreStage.push_back(std::shared_ptr<HighScoreItem>(
+						new HighScoreItem((ResourceHandler::Scripts)sEnum, pName, pScore, pDate)));
+				}
+
+				// Sort by score (ASC) then add to highScoreMap
+				highScoreStage.sort([](std::shared_ptr<HighScoreItem> & a, std::shared_ptr<HighScoreItem> & b) { return a->score > b->score; });
+				highScoreStages[(ResourceHandler::Scripts)sEnum] = (highScoreStage);
+			}
 		}
-
-		// Sort by score
-		highScoreStage.sort([]( std::shared_ptr<HighScoreItem> & a,  std::shared_ptr<HighScoreItem> & b) { return a->score > b->score; });
-
-		highScoreStages[(ResourceHandler::Scripts)stageEnum] = (highScoreStage);
+		else
+		{
+			LOGD("Error description: " << result.description() << "\n");
+		}
 	}
 }
 
 void ResourceHandler::writeHighScoreScore(int score, int scriptEnum)
 {
-	// LOAD FILE
-	rapidxml::xml_document<> doc;
-	std::ifstream theFile (highScoreFile);
-	std::vector<char> buffer((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>( ));
-	buffer.push_back('\0');
-	doc.parse<0>(&buffer[0]);
+	// Read XML file raw (Create file Stream)
+	std::ifstream fileStream(highScoreFile);
 
-	// Parse new info
-	std::stringstream scoreStr;//create a stringstream
-	scoreStr << score;//add number to the stream
-	std::string src2 = "<Player><Name>NO-NAME</Name><Score>" + scoreStr.str() + "</Score><Date>N/A</Date></Player>";
-	std::vector<char> x(src2.begin(), src2.end());
-	x.push_back( 0 ); // make it zero-terminated as per RapidXml's docs
-
-	// Enum to string
-	std::stringstream enumStr;//create a stringstream
-	enumStr << scriptEnum;//add number to the stream
-
-	std::string src3 = "<Stage enum=\""+ enumStr.str() +"\"><Player><Name>NO-NAME</Name><Score>" + scoreStr.str() + "</Score><Date>N/A</Date></Player></Stage>";
-	std::vector<char> x2(src3.begin(), src3.end());
-	x2.push_back( 0 ); // make it zero-terminated as per RapidXml's docs
-
-
-	rapidxml::xml_document<> xmlseg; // New PlayerNode
-	xmlseg.parse<0>( &x[0] );
-
-	rapidxml::xml_document<> xmlseg2; // sTAGEnODE
-	xmlseg2.parse<0>( &x2[0] );
-
-
-	// get document's first node - 'SAVEGAME' node
-	// get player's first child - 'STAGES' node
-	// get frames' first child - first 'STAGE' node
-	rapidxml::xml_node<>* nodeFrame = doc.first_node()->first_node()->first_node();
-	rapidxml::xml_node<>* searchNode = nullptr;
-
-	// Loop through all stage nodes.
-	while(nodeFrame)
+	if (fileStream.good())
 	{
-		std::stringstream ss;
-		ss << nodeFrame->first_attribute("enum")->value();
-		int enumVal;
-		ss >> enumVal;
+		// Load XML and parse it
+		pugi::xml_document doc;
+		pugi::xml_parse_result result = doc.load(fileStream);
 
-		if(enumVal == scriptEnum)
+		// If XML was parsed successfully without errors
+		if (result)
 		{
-			searchNode = nodeFrame;
-			break;
+			// Fetch the root node
+			pugi::xml_node root = doc.child("Savegame").child("Stages");
 
+			// Find the correct Stage
+			pugi::xml_node stage = root.find_child_by_attribute("Stage", "enum", std::to_string(scriptEnum).c_str());
+
+			// Check if the node handle is null or not
+			if (stage.empty())
+			{
+				// If it was not found we create a new node with the value we wanted,
+				root.append_child("Stage").append_attribute("enum").set_value(std::to_string(scriptEnum).c_str());
+
+				// Trying to set stage again...
+				stage = root.find_child_by_attribute("Stage", "enum", std::to_string(scriptEnum).c_str());
+			}
+
+
+			// Create a new node for the highscore record
+			pugi::xml_node highScoreNode = stage.append_child("Player");
+
+			//#######################################//
+			//#Creation flow is the following:		#//
+			//#1. Create main child X				#//
+			//#2. Create a text child				#//
+			//#3. set the value of the text child	#//
+			//#######################################//
+			// Create Name Node
+			highScoreNode
+				.append_child("Name")
+				.append_child(pugi::node_pcdata)
+				.set_value(getUserName().c_str());
+
+			// Create Score Node
+			highScoreNode
+				.append_child("Score")
+				.append_child(pugi::node_pcdata)
+				.set_value(std::to_string(score).c_str());
+
+			// Create Date Node
+			highScoreNode
+				.append_child("Date")
+				.append_child(pugi::node_pcdata)
+				.set_value(getDateTime().c_str());
+
+			//doc.print(std::cout, "", pugi::format_raw);
+			//std::cout << std::endl;
+			doc.save_file(highScoreFile.c_str());
 		}
-		nodeFrame = nodeFrame->next_sibling();
+		else
+		{
+			LOGD("Error description: " << result.description() << "\n");
+		}
 	}
-
-	// Check if the node with corresponding enum was found, if it was not we will create a new Stage Node
-	if(searchNode != nullptr)
-	{
-		searchNode->append_node(xmlseg.first_node());
-	}
-	else
-	{
-		doc.first_node()->first_node()->append_node(xmlseg2.first_node());
-	}
-
-	// Parse data to a string 
-	std::string data;
-	rapidxml::print(std::back_inserter(data), doc);
-
-	// Write to file (Overwrite)
-	std::ofstream file;
-	file.open(highScoreFile.c_str());
-	file << data;
-	file.close();
-
-
 	loadHighScore(); // RELOAD  XML
 }
 
 void ResourceHandler::loadScripts()
 {
 	// Load Scripts
-	for(auto& i : scriptList)
+	for (auto& i : scriptList)
 	{
-		std::ifstream theFile (i.second);
-		std::vector<char> buffer((std::istreambuf_iterator<char>(theFile)), std::istreambuf_iterator<char>());
-		buffer.push_back('\0');
+		// Read XML file raw (Create file Stream)
+		std::ifstream fileStream(i.second);
 
-		rapidxml::xml_document<> doc;
-
-		// Parse XML file
-		doc.parse<0>(&buffer[0]);
-
-		// Root Node
-		rapidxml::xml_node<> *root = doc.first_node("Script");
-
-		// Root Node
-		rapidxml::xml_node<> *node = root->first_node("Enemies");
-
-		// Get repeat node
-		rapidxml::xml_node<> *repeat = root->first_node("Repeat");
-
-		// Get name node
-		rapidxml::xml_node<> *name = root->first_node("Name");
-		LOGD(name->value());
-
-		int enemyCounter = 0; // Counter
-
-		// Enemy X
-		for (rapidxml::xml_node<> *enemy = node->first_node(); enemy; enemy = enemy->next_sibling())
+		if (fileStream.good())
 		{
-			std::queue<sf::Vector3f> pathQueue = std::queue<sf::Vector3f>();
+			// Load XML and parse it
+			pugi::xml_document doc;
+			pugi::xml_parse_result result = doc.load(fileStream);
 
-
-			int type = atoi(enemy->first_node("Type")->value());
-			int delay = atoi(enemy->first_node("Delay")->value());
-
-			// Parse Paths
-			rapidxml::xml_node<> *node = enemy->first_node("Path");
-			for (rapidxml::xml_node<> *child = node->first_node(); child; child = child->next_sibling())
+			// If XML was parsed successfully without errors
+			if (result)
 			{
-				int x = atoi(child->first_attribute("x")->value());
-				int y = atoi(child->first_attribute("y")->value());
-				int shoot = atoi(child->first_attribute("shoot")->value());
+				// Set the root node
+				pugi::xml_node root = doc.child("Script");
 
-				// Push path into queue
-				pathQueue.push(sf::Vector3f(x,y,shoot));
+				int scriptRepeat = atoi(root.child("Repeat").child_value());
+				std::string scriptName = root.child("Name").child_value();
 
+
+				// Create a log counter
+				int counter = 0;
+
+				// Loop through each of the enemies
+				for (pugi::xml_node node : root.child("Enemies").children("Enemy"))
+				{
+					// Create a queue for the path
+					std::queue<sf::Vector3f> pathQueue = std::queue<sf::Vector3f>();
+
+					// Retrieve enemy type and delay data
+					int eType = atoi(node.child("Type").child_value());
+					int eDelay = atoi(node.child("Delay").child_value());
+
+					// Retrieve each of the Paths
+					for (pugi::xml_node path : node.child("Path").children())
+					{
+						// Convert string to integer
+						int x = atoi(path.attribute("x").value());
+						int y = atoi(path.attribute("y").value());
+						int shoot = atoi(path.attribute("shoot").value());
+
+						// Push path into the queue
+						pathQueue.push(sf::Vector3f(x, y, shoot));
+					}
+
+					// Add enemy to script
+					this->scripts[i.first].addEnemy(eDelay, pathQueue, eType, scriptRepeat);
+					counter++;
+				}
+
+				// Set enum and Script title, then set status to initialized
+				this->scripts[i.first].setScriptEnumVal(i.first);
+				this->scripts[i.first].setScriptTitle(scriptName);
+				this->scripts[i.first].setInit(true);
+
+				// Consider script for loaded
+				LOGD(i.first << " was successfully loaded. " << counter << "enemies was queued.");
+			}
+			else
+				// Handle a error message on exception
+			{
+				LOGD("Error description: " << result.description() << "\n");
+			}
+		}
+	}
+}
+
+void ResourceHandler::loadUserName()
+{
+#define INFO_BUFFER_SIZE 32767
+	TCHAR  infoBuf[INFO_BUFFER_SIZE];
+	DWORD  bufCharCount = INFO_BUFFER_SIZE;
+
+	// Get and display the user name.
+	GetUserName(infoBuf, &bufCharCount);
+
+	char ch[260];
+	char DefChar = ' ';
+	WideCharToMultiByte(CP_ACP, 0, infoBuf, -1, ch, 260, &DefChar, NULL);
+
+	//A std:string  using the char* constructor.
+	std::string ss(ch);
+
+	this->userName = ch;
+}
+
+void ResourceHandler::loadCredits()
+{
+	std::ifstream fileStream(creditsFilePath);
+
+	if (fileStream.good())
+	{
+		// Load XML and parse it
+		pugi::xml_document doc;
+		pugi::xml_parse_result result = doc.load(fileStream);
+
+		// If XML was parsed successfully without errors
+		if (result)
+		{
+			// Get the root node
+			pugi::xml_node root = doc.child("Credits");
+
+			// Loop through each of the credits
+			for (pugi::xml_node node : root.children())
+			{
+				// Create a empty list for names to be credited.
+				std::list<std::string> credNames;
+
+				// Iterate through all of the names in a credit category
+				for (pugi::xml_node dataNode : node.children())
+				{
+					// Push credited name into list
+					credNames.push_back(dataNode.child_value());
+				}
+
+				// Add the list to map index.
+				creditsMap[node.name()] = credNames;
 			}
 
-			//std::cout << e1 << std::endl;
-			std::string nameCpp(name->value()); // Convert name to CPP11 format
-			this->scripts[i.first].setScriptEnumVal(i.first);
-			this->scripts[i.first].setScriptTitle(nameCpp);
-			this->scripts[i.first].addEnemy(delay, pathQueue, type, atoi(repeat->value()));
-
-			enemyCounter++;
+		}
+		else
+			// Handle a error message on exception
+		{
+			LOGD("Error description: " << result.description() << "\n");
 		}
 
-		this->scripts[i.first].setInit(true); // Set script init to true
 	}
+}
 
 }
 
@@ -327,7 +404,7 @@ Script ResourceHandler::getScriptById(int iteNum)
 {
 	// Meh method
 	int cnt = 1;
-	for(Script& i : getScripts())
+	for (Script& i : getScripts())
 	{
 		if (cnt == iteNum) return i;
 		cnt++;
@@ -337,7 +414,7 @@ Script ResourceHandler::getScriptById(int iteNum)
 std::list<Script> ResourceHandler::getScripts()
 {
 	std::list<Script> ret;
-	for(Script i : scripts)
+	for (Script i : scripts)
 	{
 		ret.push_back(i);
 	}
@@ -376,8 +453,8 @@ void ResourceHandler::draw()
 	label.setFont(this->getFont(ResourceHandler::COMICATE));
 	label.setString(sf::String("Loading... Please Wait!"));
 	label.setPosition(
-		window.getView().getCenter().x  -  (label.getGlobalBounds().width / 2) , 
-		window.getView().getCenter().y /2 - (label.getGlobalBounds().height / 2));
+		window.getView().getCenter().x - (label.getGlobalBounds().width / 2),
+		window.getView().getCenter().y / 2 - (label.getGlobalBounds().height / 2));
 	label.setColor(sf::Color::White);
 
 

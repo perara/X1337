@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "rapidxml.hpp"
-#include "rapidxml_print.hpp"
+#define PUGIXML_HEADER_ONLY
+#include "pugixml.hpp"
+#include "pugixml.cpp"
 #include <fstream>
 #include <memory>
 #include <map>
@@ -12,16 +13,16 @@
 
 class HighScoreItem
 {
-public: 
+public:
 	int stage;
 	std::string playerName;
 	float score;
 	std::string date;
 
 	// Construct
-	HighScoreItem(int stage, std::string playerName, 
-		float score, 
-		std::string date): stage(stage), playerName(playerName), score(score), date(date){};
+	HighScoreItem(int stage, std::string playerName,
+		float score,
+		std::string date) : stage(stage), playerName(playerName), score(score), date(date){};
 };
 
 class ResourceHandler
@@ -30,8 +31,18 @@ public:
 	const enum Texture
 	{
 		BACKGROUND1,
+		BACKGROUND2,
+		BACKGROUND3,
 		HEART,
 		MITT,
+		BOSS,
+		PLAYER_SHIP,
+		ENEMY_SHIP,
+		HEAVY_SHOT_TEXTURE,
+		BOSS_DEATHSTAR_TEXTURE,
+		CHUBBY_SHIP_TEXTURE,
+		AUDIO_ON,
+		AUDIO_OFF,
 		TEXTURECOUNT
 	};
 
@@ -42,21 +53,20 @@ public:
 		STANDARD_SHOT,
 		HEAVY_SHOT,
 		ENEMY_DEATH,
+		COUNTDOWN,
 		INGAME,
+		DEATH_STAR_THEME,
 		SOUNDCOUNT
 
 	};
 	const enum Scripts
 	{
-		STAGEONE,
-		ENCOUNTER1,
-		ENCOUNTER2,
-		ENCOUNTER3,
+		STAGE_ONE,
+		STAGE_TWO,
+		DEATH_STAR,
+		TEST2,
 		GAME_MENU,
-		DRIT,
-		DRIT1,
-		DRIT2,
-		DRIT3,
+
 		SCRIPTSCOUNT
 	};
 
@@ -84,13 +94,19 @@ public:
 	std::list<Script> getScripts();
 	sf::Font& getFont(ResourceHandler::Fonts);
 	sf::Sound& getSound(ResourceHandler::Sound);
+	void muteSound(bool mute);
 	Script getScriptById(int iteNum);
+	std::string getUserName();
+	std::string getDateTime();
+	std::map<std::string, std::list<std::string>>  getCredits();
 
 private:
 	void loadTextures();
 	void loadFonts();
 	void loadSound();
 	void loadScripts();
+	void loadUserName();
+	void loadCredits();
 
 	void setInit(bool);
 	bool getInit();
@@ -118,4 +134,11 @@ private:
 	// Highscore
 	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> highScoreStages; // All stages
 	std::string highScoreFile;
+
+	// Username
+	std::string userName;
+
+	// Credits
+	std::string creditsFilePath;
+	std::map<std::string, std::list<std::string>> creditsMap;
 };
