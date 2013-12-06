@@ -28,6 +28,7 @@ Scene(window, resourceHandler),
 
 	if (demo)
 	{
+		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND2), false);
 		script = resourceHandler->getScript(ResourceHandler::Scripts::GAME_MENU);
 	}
 	else
@@ -66,6 +67,7 @@ void World::process()
 {
 	// Process loaded script
 	bool scriptRunning = script.process(window, objects, bullets, bFactory, resourceHandler, timeStep);
+	bg.process();
 	///////////////////////////////////
 	// Object processing and cleanup //
 	///////////////////////////////////
@@ -166,7 +168,7 @@ void World::addBullet(std::unique_ptr<Bullet> bullet)
 void World::draw()
 {
 	// Draw background
-	bg.process();
+	bg.draw();
 
 
 	for (auto &it : bullets)

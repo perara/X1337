@@ -27,6 +27,9 @@ void ResourceHandler::init()
 
 	// Textures
 	{
+		textureList[Texture::BACKGROUND1] = "assets/sprites/bg1.jpg";
+		textureList[Texture::BACKGROUND2] = "assets/sprites/bg2.jpg";
+		textureList[Texture::BACKGROUND3] = "assets/sprites/bg3.jpg";
 		textureList[Texture::HEART] = "assets/sprites/heart.png";
 		textureList[Texture::MITT] = "assets/sprites/mitt-romney.png";
 		textureList[Texture::PLAYER_SHIP] = "assets/sprites/player_ship.png";
