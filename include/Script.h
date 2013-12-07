@@ -3,6 +3,7 @@
 #include <list>
 #include <SFML\Graphics.hpp>
 #include <memory>
+#include "Powerup.h"
 
 
 class Shooter;
@@ -47,6 +48,7 @@ public:
 	// Process
 	bool process(sf::RenderWindow& window,
 		std::list<std::shared_ptr<Shooter>>& objects,
+		std::list<std::shared_ptr<Powerup>>& powerups,
 		std::list<std::unique_ptr<Bullet>>& bullets,
 		BulletFactory& bFactory,
 		std::unique_ptr<ResourceHandler>& resourceHandler,

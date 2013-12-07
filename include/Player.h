@@ -1,6 +1,6 @@
 #pragma once
 #include "Shooter.h"
-
+#include "Powerup.h"
 
 class BulletFactory;
 class Bullet;
@@ -27,6 +27,7 @@ public:
 	virtual void process();
 	void drawStats(std::list<std::shared_ptr<HighScoreItem>>&);
 	int getPlayerScore();
+	void powerUp(Powerup::PowerUpType);
 private:
 	int playerScore;
 	void detectEdge();

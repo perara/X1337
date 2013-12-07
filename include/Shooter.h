@@ -50,12 +50,9 @@ protected:
 
 	// Getters setters for health
 	void setHealth(int value);
-	const int getHealth(); // Todo should be protected
+	const int getHealth();
 private:
 	int health;
-
-	// Hyperplane separation theorem for hit detection
-	bool sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2);
 
 	// Shooter type (Player || Enemy)
 	ShooterType shooterType;

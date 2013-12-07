@@ -15,6 +15,8 @@ public:
 		CHUBBY = 2,
 		BOSS = 3,
 		DEATHSTAR = 4,
+
+		POWERUP_HEALTH = -10,
 		SHOOTERTYPECOUNT
 	};
 

@@ -23,6 +23,14 @@
 <_13 shoot="1" x="-14" y="95"/>
 </Path>
 </Enemy>
+
+<Enemy>
+<Type>-10</Type>
+<Delay>2000</Delay>
+<Path>
+<_0 shoot="3" x="500" y="0"/>
+</Path>
+</Enemy>
 </Enemies>
 </Script>
 

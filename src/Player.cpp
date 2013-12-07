@@ -233,3 +233,12 @@ int Player::getPlayerScore()
 {
 	return playerScore;
 }
+
+void Player::powerUp(Powerup::PowerUpType powType)
+{
+	if (powType == Powerup::PowerUpType::HEALTH_INCREMENT)
+	{
+		setHealth(getHealth() + 1);
+	}
+
+}

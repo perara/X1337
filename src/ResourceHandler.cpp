@@ -54,6 +54,7 @@ void ResourceHandler::init()
 		soundList[Sound::INGAME] = "assets/sound/in-game.ogg";
 		soundList[Sound::COUNTDOWN] = "assets/sound/countdown.ogg";
 		soundList[Sound::DEATH_STAR_THEME] = "assets/sound/death_star_theme.ogg";
+		soundList[Sound::PICKUP_HEALTH] = "assets/sound/health_pickup.wav";
 	}
 
 	// Scripts

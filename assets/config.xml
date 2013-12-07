@@ -350,6 +350,12 @@
 				<Date>Fri Dec 06 16:19:58 2013
 </Date>
 			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>0</Score>
+				<Date>Sat Dec 07 14:42:08 2013
+</Date>
+			</Player>
 		</Stage>
 		<Stage enum="8">
 			<Player>
@@ -627,6 +633,54 @@
 				<Name>PerArne</Name>
 				<Score>0</Score>
 				<Date>Fri Dec 06 16:19:05 2013
+</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>0</Score>
+				<Date>Sat Dec 07 14:41:40 2013
+</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>0</Score>
+				<Date>Sat Dec 07 15:31:43 2013
+</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>0</Score>
+				<Date>Sat Dec 07 15:44:19 2013
+</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>0</Score>
+				<Date>Sat Dec 07 16:16:16 2013
+</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>0</Score>
+				<Date>Sat Dec 07 16:24:30 2013
+</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>0</Score>
+				<Date>Sat Dec 07 16:24:47 2013
+</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>0</Score>
+				<Date>Sat Dec 07 16:24:54 2013
+</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>0</Score>
+				<Date>Sat Dec 07 16:25:21 2013
 </Date>
 			</Player>
 		</Stage>

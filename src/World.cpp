@@ -71,7 +71,7 @@ void World::process()
 	bool scriptRunning;
 	(countdownSong.getStatus() != 0 && !demo) ?
 		scriptRunning = true :
-		scriptRunning = script.process(window, objects, bullets, bFactory, resourceHandler, timeStep);
+		scriptRunning = script.process(window, objects, powerups, bullets, bFactory, resourceHandler, timeStep);
 
 	///////////////////////////////////
 	// Object processing and cleanup //
@@ -133,8 +133,40 @@ void World::process()
 				++it;
 			}
 		}
-
 	}
+
+	///////////////////////////////////
+	// Powerup processing and cleanup //
+	///////////////////////////////////
+	if (!powerups.empty())
+	{
+
+		for (std::list<std::shared_ptr<Powerup>>::iterator it = powerups.begin(); it != powerups.end();)
+		{
+			// Process
+			(*it)->process();
+
+			// Check if player and powerup collide
+			bool collision = (*it)->hitDetection(player);
+
+			// Collision happened, the power up was set to deleted and actions will now happen inside this if clause
+			if (collision)
+			{
+				player->powerUp((*it)->getPowerUpType());
+			}
+
+			// Cleanup
+			if ((*it)->getDeleted())
+			{
+				it = powerups.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
+
 }
 
 void World::drawStats()
@@ -175,13 +207,20 @@ void World::draw()
 	// Draw background
 	bg.draw();
 
-
+	// Bullets 
 	for (auto &it : bullets)
 	{
 		it->draw();
 	}
 
+	// Players and enemies
 	for (auto &it : objects)
+	{
+		it->draw();
+	}
+
+	// Power Ups
+	for (auto& it : powerups)
 	{
 		it->draw();
 	}

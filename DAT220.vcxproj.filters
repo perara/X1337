@@ -43,6 +43,12 @@
     <Filter Include="Source\Engine">
       <UniqueIdentifier>{052b910c-48da-4415-a4ba-7e055d7c14c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\Objects\Powerup">
+      <UniqueIdentifier>{b32be093-b484-460c-b705-eeb2696da4ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Objects\Powerup">
+      <UniqueIdentifier>{ce1ee0a4-1320-434b-8fe1-fcc7df486327}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Object.h">
@@ -90,6 +96,9 @@
     <ClInclude Include="include\Log.h">
       <Filter>Header\Other</Filter>
     </ClInclude>
+    <ClInclude Include="include\Powerup.h">
+      <Filter>Header\Objects\Powerup</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -136,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="src\World.cpp">
       <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Powerup.cpp">
+      <Filter>Source\Objects\Powerup</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

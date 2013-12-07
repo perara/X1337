@@ -6,7 +6,7 @@
 #include "Script.h"
 #include "ResourceHandler.h"
 #include <memory>
-
+#include "Powerup.h"
 
 /// <summary>
 /// World is the place where all encounters in game happen. It keeps record of the player, enemies and bullets. This is rendered and processed via the Scene inheritance.
@@ -61,6 +61,7 @@ private:
 
 	std::list<std::shared_ptr<Shooter>> objects;
 	std::list<std::unique_ptr<Bullet>> bullets;
+	std::list<std::shared_ptr<Powerup>> powerups;
 
 	void addObject(std::shared_ptr<Shooter> object);
 	void addBullet(std::unique_ptr<Bullet> bullet);

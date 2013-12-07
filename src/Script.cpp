@@ -6,7 +6,6 @@
 #include "Bullet.h"
 
 
-
 void Script::addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat)
 {
 	LOGD("Adding new enemy template to pool");
@@ -64,6 +63,7 @@ int Script::getScriptEnumVal()
 // Process
 bool Script::process(sf::RenderWindow& window,
 	std::list<std::shared_ptr<Shooter>>& objects,
+	std::list<std::shared_ptr<Powerup>>& powerups,
 	std::list<std::unique_ptr<Bullet>>& bullets,
 	BulletFactory& bFactory,
 	std::unique_ptr<ResourceHandler>& resourceHandler,
@@ -81,20 +81,25 @@ bool Script::process(sf::RenderWindow& window,
 			)
 		{
 
-			std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
-				window,
-				e.pathQueue,
-				e.type,
-				e.repeat,
-				bFactory,
-				bullets,
-				resourceHandler,
-				timeStep));
-			LOGD("Spawning Enemy#" << e1);
-
-
-
-			objects.push_back(e1);
+			if (e.type > 0)
+			{
+				std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
+					window,
+					e.pathQueue,
+					e.type,
+					e.repeat,
+					bFactory,
+					bullets,
+					resourceHandler,
+					timeStep));
+				LOGD("Spawning Enemy#" << e1);
+				objects.push_back(e1);
+			}
+			else // This means the type is less that 0, 0 and below is powerUps
+			{
+				std::shared_ptr<Powerup> p1 = std::shared_ptr<Powerup>(new Powerup(window, e.pathQueue.front(), e.type, resourceHandler, timeStep));
+				powerups.push_back(p1);
+			}
 
 
 			enemyList.pop();
