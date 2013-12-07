@@ -28,7 +28,8 @@ public:
 		std::unique_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep);
 	~Enemy();
-
+	// Virtual draw function.
+	virtual void draw();
 
 	virtual void process();
 	Enemy::EnemyType getEnemyType();

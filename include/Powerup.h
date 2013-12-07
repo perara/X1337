@@ -17,7 +17,8 @@ public:
 
 	const enum PowerUpType
 	{
-		HEALTH_INCREMENT = -10
+		HEALTH_INCREMENT = -10,
+		PULSATING_GUN = -11
 	};
 
 

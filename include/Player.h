@@ -31,4 +31,12 @@ public:
 private:
 	int playerScore;
 	void detectEdge();
+	void processPowerUps();
+
+	// Timers and such for power ups
+	sf::Clock pwrUpClock;
+
+	// Pulsate
+	bool pulsateGun;
+	sf::Clock pulseClock;
 };

@@ -25,7 +25,9 @@ Player::Player(sf::RenderWindow& window,
 	std::unique_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep,
 	const bool hardMode
-	) :playerScore(0),
+	) :
+	playerScore(0),
+	pulsateGun(false),
 
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
@@ -50,12 +52,41 @@ void Player::process()
 {
 	this->hitDetection();
 	this->detectEdge();
+	this->processPowerUps();
 
 	if (getHealth() <= 0)
 	{
 		deleted = true;
 		resourceHandler->getSound(ResourceHandler::Sound::ENEMY_DEATH).play();
 	}
+}
+
+// This function process a activated power
+void Player::processPowerUps()
+{
+	// Temporary Pulsegun
+	if (pulsateGun && pwrUpClock.getElapsedTime().asSeconds() < 6)
+	{
+
+		if (pulseClock.getElapsedTime().asMilliseconds() > 1000)
+		{
+			for (int i = 1; i < 20; i += 1)
+			{
+				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
+				b->setOwner(this->getType());
+				b->setRotation(i, sf::Vector2f(150, 150));
+				b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
+				getBullets().push_back(std::move(b));
+			}
+			pulseClock.restart();
+		}
+	}
+	else
+	{
+		pulsateGun = false;
+	}
+
+
 }
 
 void Player::detectEdge()
@@ -239,6 +270,12 @@ void Player::powerUp(Powerup::PowerUpType powType)
 	if (powType == Powerup::PowerUpType::HEALTH_INCREMENT)
 	{
 		setHealth(getHealth() + 1);
+	}
+	if (powType == Powerup::PowerUpType::PULSATING_GUN)
+	{
+		pulsateGun = true;
+		pwrUpClock.restart();
+		pulseClock.restart();
 	}
 
 }

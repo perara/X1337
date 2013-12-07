@@ -22,6 +22,7 @@ public:
 	// The Worth of this shooter getter/setter
 	void setScoreValue(float);
 	float getScoreValue();
+
 protected:
 
 	Shooter(sf::RenderWindow& window,
@@ -51,8 +52,12 @@ protected:
 	// Getters setters for health
 	void setHealth(int value);
 	const int getHealth();
+	const int getStartHealth();
+	void setStartHealth(int value);
+
 private:
 	int health;
+	int startHealth;
 
 	// Shooter type (Player || Enemy)
 	ShooterType shooterType;

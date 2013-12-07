@@ -31,6 +31,18 @@ void Shooter::setHealth(int value)
 	health = value;
 }
 
+void Shooter::setStartHealth(int value)
+{
+	this->startHealth = value;
+}
+
+
+const int Shooter::getStartHealth()
+{
+	return startHealth;
+}
+
+
 const int Shooter::getHealth()
 {
 	return health;

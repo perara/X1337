@@ -20,6 +20,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 	if (type == 1) // REGULAR
 	{
 		setHealth(2);
+		setStartHealth(2);
 		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::STARSHIP));
 		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::ENEMY_SHIP));
 		this->setEnemyType(Enemy::EnemyType::REGULAR);
@@ -28,6 +29,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 	else if (type == 2) // Chubby Mob
 	{
 		setHealth(10);
+		setStartHealth(10);
 		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 40, 30));
 		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::CHUBBY_SHIP_TEXTURE));
 		this->setEnemyType(Enemy::EnemyType::CHUBBY);
@@ -37,6 +39,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 	else if (type == 3) // BOSS
 	{
 		setHealth(250);
+		setStartHealth(250);
 		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::BOSS));
 		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::BOSS));
 		this->setEnemyType(Enemy::EnemyType::BOSS);
@@ -46,6 +49,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 	else if (type == 4) // Umbasta boss
 	{
 		setHealth(750);
+		setStartHealth(750);
 		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 80, 30));
 		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::BOSS_DEATHSTAR_TEXTURE));
 		this->setEnemyType(Enemy::EnemyType::DEATHSTAR);
@@ -75,6 +79,42 @@ void Enemy::setInitPath()
 
 Enemy::~Enemy(){
 	LOGD("Deconstructor called for: Enemy#" << this);
+}
+
+
+void Enemy::draw()
+{
+	this->window.draw(*this->sprite);
+
+
+	// Show enemy health bar
+	if (getType() == ShooterType::ENEMY)
+	{
+		float percent = (100.0f / getStartHealth()) * getHealth();
+		float barWidth = (this->sprite->getGlobalBounds().width) / 100.0f;
+
+		sf::RectangleShape healthBar;
+		healthBar.setSize(sf::Vector2f((barWidth * percent) / 2, 2));
+		healthBar.setPosition(
+			this->sprite->getGlobalBounds().left + (barWidth * 25),
+			this->sprite->getGlobalBounds().top - 5);
+		healthBar.setFillColor(sf::Color::Green);
+		window.draw(healthBar);
+
+		/*std::cout << "Percent: " <<percent << std::endl;
+		std::cout << "Bar width: " << barWidth << std::endl;
+		std::cout << "Global bounds: " << this->sprite->getGlobalBounds().width << std::endl;
+		std::cout << "START: " << getStartHealth() << std::endl;
+		std::cout << "HEALTH: " << getHealth() << std::endl;*/
+	}
+
+	/*sf::FloatRect bounds = this->sprite->getGlobalBounds();
+	sf::RectangleShape af(sf::Vector2f(bounds.width,bounds.height));
+	af.setPosition(bounds.left, bounds.top);
+	af.setOutlineColor(sf::Color(141,23,22,23));
+	af.setFillColor(sf::Color(255,255,255,150));
+	this->window.draw(af);*/
+
 }
 
 
