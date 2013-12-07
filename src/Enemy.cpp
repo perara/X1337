@@ -23,6 +23,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::STARSHIP));
 		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::ENEMY_SHIP));
 		this->setEnemyType(Enemy::EnemyType::REGULAR);
+		this->setScoreValue(100);
 	}
 	else if (type == 2) // Chubby Mob
 	{
@@ -30,6 +31,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 40, 30));
 		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::CHUBBY_SHIP_TEXTURE));
 		this->setEnemyType(Enemy::EnemyType::CHUBBY);
+		this->setScoreValue(250);
 
 	}
 	else if (type == 3) // BOSS
@@ -38,6 +40,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::BOSS));
 		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::BOSS));
 		this->setEnemyType(Enemy::EnemyType::BOSS);
+		this->setScoreValue(500);
 
 	}
 	else if (type == 4) // Umbasta boss
@@ -46,6 +49,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 80, 30));
 		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::BOSS_DEATHSTAR_TEXTURE));
 		this->setEnemyType(Enemy::EnemyType::DEATHSTAR);
+		this->setScoreValue(12000);
 	}
 
 #ifdef _DEBUG
