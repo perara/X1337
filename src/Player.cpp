@@ -100,16 +100,24 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	txtHealth.setPosition(20, 20);
 	txtHealth.setColor(sf::Color::White);
 
+	int heartY = 20;
 	int heartX = 105;
-	for (int i = 0; i < getHealth(); i++)
+	for (int i = 1; i <= getHealth(); i++)
 	{
 
 		std::shared_ptr<sf::Sprite> sprite = std::shared_ptr<sf::Sprite>(new sf::Sprite);
 		sprite->setTexture(resourceHandler->getTexture(ResourceHandler::Texture::HEART), true);
-		sprite->setPosition(heartX, 20);
+		sprite->setPosition(heartX, heartY);
 		sprite->setScale(0.05f, 0.05f);
 		window.draw(*sprite);
-		heartX = heartX + 35;
+		heartX += 35;
+
+		if (i % 5 == 0)
+		{
+			heartY += sprite->getGlobalBounds().height;
+			heartX = 105;
+		}
+
 	}
 
 	// Draw Score
