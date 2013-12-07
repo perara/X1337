@@ -36,7 +36,5 @@ private:
 
 	const sf::Time& timeStep;
 
-	bool isOutOfBounds();
-
 	int deg; // Degree on bullet rotation
 };

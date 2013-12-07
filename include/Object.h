@@ -19,8 +19,12 @@ public:
 	std::shared_ptr<GameShape> sprite;
 	bool getDeleted();
 	void setDeleted(bool);
+	bool isOutOfBounds();
 
 	sf::RenderWindow& window;
 protected:
 	bool deleted;
+
+	// Hyperplane separation theorem for hit detection
+	bool sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2);
 };

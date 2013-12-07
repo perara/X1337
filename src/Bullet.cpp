@@ -76,18 +76,6 @@ void Bullet::setRotation(int degree, sf::Vector2f speed)
 }
 
 
-bool Bullet::isOutOfBounds()
-{
-	if (this->sprite->getPosition().x > window.getView().getSize().x ||
-		this->sprite->getPosition().x < 0 ||
-		this->sprite->getPosition().y > window.getView().getSize().y ||
-		this->sprite->getPosition().y < 0){
-		return true;
-	}
-	else{
-		return false;
-	}
-}
 
 void Bullet::setOwner(Shooter::ShooterType owner)
 {
