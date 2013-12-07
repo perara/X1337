@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Script>
-<Name encounter="1">DEATHSTAR 9</Name>
+<Name encounter="1">DEATHSTAR</Name>
 <Repeat>1</Repeat>
 <Enemies>
 <Enemy>
@@ -27,6 +27,89 @@
 <Enemy>
 <Type>-11</Type>
 <Delay>2000</Delay>
+<Path>
+<_0 shoot="3" x="500" y="0"/>
+</Path>
+</Enemy>
+
+<Enemy>
+<Type>-10</Type>
+<Delay>30000</Delay>
+<Path>
+<_0 shoot="3" x="300" y="0"/>
+</Path>
+</Enemy>
+
+<Enemy>
+<Type>-11</Type>
+<Delay>10000</Delay>
+<Path>
+<_0 shoot="3" x="500" y="0"/>
+</Path>
+</Enemy>
+
+<Enemy>
+<Type>-10</Type>
+<Delay>30000</Delay>
+<Path>
+<_0 shoot="3" x="300" y="0"/>
+</Path>
+</Enemy>
+
+<Enemy>
+<Type>-11</Type>
+<Delay>10000</Delay>
+<Path>
+<_0 shoot="3" x="500" y="0"/>
+</Path>
+</Enemy>
+
+
+<Enemy>
+<Type>-10</Type>
+<Delay>30000</Delay>
+<Path>
+<_0 shoot="3" x="300" y="0"/>
+</Path>
+</Enemy>
+
+<Enemy>
+<Type>-11</Type>
+<Delay>10000</Delay>
+<Path>
+<_0 shoot="3" x="500" y="0"/>
+</Path>
+</Enemy>
+
+
+<Enemy>
+<Type>-10</Type>
+<Delay>30000</Delay>
+<Path>
+<_0 shoot="3" x="300" y="0"/>
+</Path>
+</Enemy>
+
+<Enemy>
+<Type>-11</Type>
+<Delay>10000</Delay>
+<Path>
+<_0 shoot="3" x="500" y="0"/>
+</Path>
+</Enemy>
+
+
+<Enemy>
+<Type>-10</Type>
+<Delay>30000</Delay>
+<Path>
+<_0 shoot="3" x="300" y="0"/>
+</Path>
+</Enemy>
+
+<Enemy>
+<Type>-11</Type>
+<Delay>10000</Delay>
 <Path>
 <_0 shoot="3" x="500" y="0"/>
 </Path>

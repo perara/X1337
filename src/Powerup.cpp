@@ -18,8 +18,16 @@ Powerup::Powerup(
 	speedX(0),
 	speedY(150)
 {
-	sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 20, 20));
-	sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::HEART));
+	if (type == Powerup::PowerUpType::HEALTH_INCREMENT)
+	{
+		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 10,20));
+		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::HEALTH_KIT));
+	}
+	else if (type == Powerup::PowerUpType::PULSATING_GUN)
+	{
+		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 20, 20));
+		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::PULSE_GUN));
+	}
 	sprite->setPosition(startPoint.x, startPoint.y);
 }
 

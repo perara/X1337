@@ -10,6 +10,7 @@ public:
 		STARSHIP,
 		BOSS,
 		PLAYER_SHIP,
+		SQUARE,
 		SHAPECOUNT
 	};
 

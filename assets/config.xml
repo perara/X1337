@@ -14,6 +14,26 @@
 				<Date>Sat Dec 07 18:12:00 2013
 </Date>
 			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>0</Score>
+				<Date>Sat Dec 07 18:35:41 2013
+</Date>
+			</Player>
+		</Stage>
+		<Stage enum="2">
+			<Player>
+				<Name>PerArne</Name>
+				<Score>6750</Score>
+				<Date>Sat Dec 07 18:39:34 2013
+</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>6500</Score>
+				<Date>Sat Dec 07 18:40:13 2013
+</Date>
+			</Player>
 		</Stage>
 	</Stages>
 </Savegame>

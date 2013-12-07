@@ -42,6 +42,9 @@ void ResourceHandler::init()
 
 		textureList[Texture::AUDIO_ON] = "assets/sprites/audio-on.png";
 		textureList[Texture::AUDIO_OFF] = "assets/sprites/audio-off.png";
+		textureList[Texture::HEALTH_KIT] = "assets/sprites/health-kit.jpg";
+		textureList[Texture::PULSE_GUN] = "assets/sprites/pulse-gun.png";
+
 	}
 
 	// Sounds
