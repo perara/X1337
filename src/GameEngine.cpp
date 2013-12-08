@@ -208,6 +208,7 @@ void GameEngine::input()
 		if (this->event.type == sf::Event::Closed)
 		{
 			this->window.close();
+			exit(EXIT_SUCCESS);
 		}
 
 

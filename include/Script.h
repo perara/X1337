@@ -28,18 +28,17 @@ class Script
 			repeat(repeat){};
 	};
 
-	sf::Clock scriptClock;
+	sf::Clock enemyClock;
+	sf::Clock powerupClock;
 	std::queue<ScriptTick> enemyList;
+	std::queue<ScriptTick> powerupList;
 	bool inited;
 
 
 public:
 	Script(){};
 	void addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat);
-
-	// ScriptClock
-	sf::Clock& getClock();
-	void setClock(sf::Clock&);
+	void addPowerUp(int delay, sf::Vector3f spawnPoint, int type, int repeat);
 
 	// Init
 	bool getInit();

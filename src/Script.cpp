@@ -11,20 +11,20 @@ void Script::addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, int type, i
 	LOGD("Adding new enemy template to pool");
 	ScriptTick tick(delay, pathQueue, type, repeat);
 
-
 	enemyList.push(tick);
 
+
 }
 
-// ScriptClock
-sf::Clock& Script::getClock()
+void Script::addPowerUp(int delay, sf::Vector3f spawnPoint, int type, int repeat)
 {
-	return scriptClock;
-}
+	std::queue<sf::Vector3f> queue;
+	queue.push(spawnPoint);
 
-void Script::setClock(sf::Clock& clock)
-{
-	scriptClock = clock;
+	LOGD("Adding new powerUp template to pool");
+	ScriptTick tick(delay, queue, type, repeat);
+	powerupList.push(tick);
+
 }
 
 // Init
@@ -35,7 +35,12 @@ bool Script::getInit()
 }
 void Script::setInit(bool status)
 {
-	if (status) getClock().restart();
+	if (status)
+	{
+		enemyClock.restart();
+		powerupClock.restart();
+	}
+
 	inited = status;
 }
 
@@ -69,48 +74,89 @@ bool Script::process(sf::RenderWindow& window,
 	std::unique_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep)
 {
-	// Do processing
+	//####################################//
+	//######Enemy script processing#######//
+	//####################################//
+
 	if (!enemyList.empty())
 	{
-
+		// Get enemy in front of queue
 		ScriptTick e = enemyList.front();
-		//std::cout <<this->getInit() << " and "  << this->getClock().getElapsedTime().asMilliseconds() << " and " << e->delay << std::endl;
-		if (
-			this->getInit() &&
-			this->getClock().getElapsedTime().asMilliseconds() > e.delay
-			)
+		if (this->getInit() &&
+			enemyClock.getElapsedTime().asMilliseconds() > e.delay)
 		{
+			LOGD("Spawning Enemy#" << e1);
 
-			if (e.type > 0)
-			{
-				std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
-					window,
-					e.pathQueue,
-					e.type,
-					e.repeat,
-					bFactory,
-					bullets,
-					resourceHandler,
-					timeStep));
-				LOGD("Spawning Enemy#" << e1);
-				objects.push_back(e1);
-			}
-			else // This means the type is less that 0, 0 and below is powerUps
-			{
-				std::shared_ptr<Powerup> p1 = std::shared_ptr<Powerup>(new Powerup(window, e.pathQueue.front(), e.type, resourceHandler, timeStep));
-				powerups.push_back(p1);
-			}
+			// Create a new enemy with the information provided by the script tick
+			std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
+				window,
+				e.pathQueue,
+				e.type,
+				e.repeat,
+				bFactory,
+				bullets,
+				resourceHandler,
+				timeStep));
 
+			// Push enemy to the objects list (from world)
+			objects.push_back(e1);
 
+			// Pop the garbage scripttick
 			enemyList.pop();
 
-
-			this->getClock().restart();
+			// Reset the clock
+			enemyClock.restart();
 		}
+	}
+
+
+	//####################################//
+	//######Enemy script processing#######//
+	//####################################//
+	if (!powerupList.empty())
+	{
+
+		// Create a new script tick of the powerup
+		ScriptTick pwrUp = powerupList.front();
+		// Check weither the clock has move enough
+		if (this->getInit() &&
+			powerupClock.getElapsedTime().asMilliseconds() > pwrUp.delay)
+		{
+
+			// Create a new powerup
+
+			sf::Vector3f path = pwrUp.pathQueue.front();
+
+			(path.x == -1) ? path.x = rand() % window.getSize().x + 1 : path.x;
+			(path.y == -1) ? path.y = rand() % window.getSize().y + 1 : path.y;
+
+			std::shared_ptr<Powerup> p1 = std::shared_ptr<Powerup>(
+				new Powerup(window, path, pwrUp.type, resourceHandler, timeStep));
+
+			// Push the powerup 
+			powerups.push_back(p1);
+
+			// Pop snd push from/to queue
+			powerupList.pop();
+
+			if (pwrUp.repeat == 1)
+			{
+				powerupList.push(pwrUp);
+			}
+
+			// Reset the clock
+			powerupClock.restart();
+		}
+
+	}
+
+
+	if (enemyList.empty())
+	{
+		return false; // Script is done (no enemies will spawn)
 	}
 	else
 	{
-		return false; // Script is done
+		return true; // Script is still running
 	}
-	return true; // Script is still running
 }

@@ -154,9 +154,7 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	// Draw Score
 	sf::Text txtScore;
 	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-	std::stringstream scrStr;
-	scrStr << playerScore;//add number to the stream
-	txtScore.setString(sf::String("Score: " + scrStr.str()));
+	txtScore.setString(sf::String("Score: " + std::to_string((int)playerScore)));
 	txtScore.setCharacterSize(25);
 	txtScore.setPosition(20, 80);
 	txtScore.setColor(sf::Color::White);
@@ -177,26 +175,21 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	window.draw(txtHighScoreTitle);
 
 	// Draw Highscore for current scene
-	int num = 1;
+	int rank = 1;
 	for (auto& i : highScoreList)
 	{
-		if (num == 10) break;
+		if (rank == 10) break;
 		initY += 30;
-		std::stringstream theScore;
-		theScore << i->score;
-
-		std::stringstream rank;
-		rank << num;
 
 		sf::Text txtHighScore;
 		txtHighScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-		txtHighScore.setString(sf::String(rank.str() + "\t" + i->playerName + "\t" + theScore.str()));
+		txtHighScore.setString(sf::String(std::to_string((int)rank) + "\t" + i->playerName + "\t" + std::to_string((int)i->score)));
 		txtHighScore.setCharacterSize(25);
 		txtHighScore.setPosition(20, initY);
 		txtHighScore.setColor(sf::Color::White);
 		window.draw(txtHighScore);
 
-		num++;
+		rank++;
 	}
 
 

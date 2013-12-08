@@ -534,17 +534,9 @@ void Menu::drawHighScore()
 
 		yPos += 50;
 
-		// Score string
-		std::ostringstream strScore;
-		strScore << item->score;
-
-		// Enum Num
-		std::ostringstream strStage;
-		strStage << item->stage;
-
 		sf::Text txtScore;
 		txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-		txtScore.setString(sf::String(strStage.str() + "\t\t\t\t\t" + item->playerName + "\t\t\t\t" + strScore.str() + "\t" + item->date));
+		txtScore.setString(sf::String(std::to_string((int)item->stage) + "\t\t\t\t\t" + item->playerName + "\t\t\t\t" + std::to_string((int)item->score) + "\t" + item->date));
 		txtScore.setPosition(xPos, yPos);
 
 		window.draw(txtScore);

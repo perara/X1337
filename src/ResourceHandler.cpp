@@ -291,7 +291,9 @@ void ResourceHandler::loadScripts()
 				// Create a log counter
 				int counter = 0;
 
-				// Loop through each of the enemies
+				///////////////////////////////////////
+				// Loop through each of the enemies////
+				///////////////////////////////////////
 				for (pugi::xml_node node : root.child("Enemies").children("Enemy"))
 				{
 					// Create a queue for the path
@@ -317,14 +319,35 @@ void ResourceHandler::loadScripts()
 					this->scripts[i.first].addEnemy(eDelay, pathQueue, eType, scriptRepeat);
 					counter++;
 				}
+				LOGD(i.first << " was successfully loaded. " << counter << "enemies was queued.");
+
+				///////////////////////////////////////
+				// Loop through each of the power ups////
+				///////////////////////////////////////
+				counter = 0;
+				for (pugi::xml_node node : root.child("PowerUps").children("PowerUp"))
+				{
+
+					// Retrieve powerup type and delay data
+					int pwrType = atoi(node.child("Type").child_value());
+					int pwrDelay = atoi(node.child("Delay").child_value());
+					int pwrRepeat = atoi(node.child("Repeat").child_value());
+					int pwrX = atoi(node.child("Path").attribute("x").value());
+					int pwrY = atoi(node.child("Path").attribute("y").value());
+					sf::Vector3f path(pwrX, pwrY, 0);
+
+					// Add powerup to script
+					this->scripts[i.first].addPowerUp(pwrDelay, path, pwrType, pwrRepeat);
+					counter++;
+				}
+				LOGD(i.first << " was successfully loaded. " << counter << "powerups was queued.");
 
 				// Set enum and Script title, then set status to initialized
 				this->scripts[i.first].setScriptEnumVal(i.first);
 				this->scripts[i.first].setScriptTitle(scriptName);
 				this->scripts[i.first].setInit(true);
 
-				// Consider script for loaded
-				LOGD(i.first << " was successfully loaded. " << counter << "enemies was queued.");
+
 			}
 			else
 				// Handle a error message on exception
