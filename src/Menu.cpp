@@ -131,6 +131,7 @@ void Menu::input(sf::Event& event)
 {
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
 	{
+		resourceHandler->getSound(ResourceHandler::Sound::MENU_CLICK).play();
 
 		if (currentOption == option[state].begin()->first)
 		{
@@ -147,7 +148,7 @@ void Menu::input(sf::Event& event)
 
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
 	{
-
+		resourceHandler->getSound(ResourceHandler::Sound::MENU_CLICK).play();
 		if (currentOption == option[state].rbegin()->first)
 		{
 			currentOption = option[state].begin()->first;
@@ -165,6 +166,8 @@ void Menu::input(sf::Event& event)
 	// the mess.
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Return)
 	{
+		resourceHandler->getSound(ResourceHandler::Sound::MENU_RETURN).play();
+
 		switch (currentOption)
 		{
 			/////////////////////////////////////////////
