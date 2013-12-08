@@ -94,7 +94,10 @@ void World::process()
 				{
 					gameOver = true;
 					int multiplier = ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
-					resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
+					if (player->getPlayerScore() > 0)
+					{
+						resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
+					}
 				}
 
 				i = objects.erase(i);
