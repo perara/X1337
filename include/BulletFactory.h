@@ -13,22 +13,34 @@ class ResourceHandler;
 class BulletFactory{
 public:
 
-	BulletFactory(sf::RenderWindow& window, 
-		int quantity, 
-		std::list<std::unique_ptr<Bullet>>& bullets, 
-		const sf::Time& timeStep, 
+	BulletFactory(sf::RenderWindow& window,
+		int quantity,
+		std::list<std::unique_ptr<Bullet>>& bullets,
+		const sf::Time& timeStep,
 		std::shared_ptr<ResourceHandler>& resourceHandler);
 
-	void returnObject(std::unique_ptr<Bullet> bullet);
+	// Returners
+	void returnObject(std::unique_ptr<Bullet>& bullet);
+
+	// Requesters
 	std::list<std::unique_ptr<Bullet>> requestBatch(int quantity, Bullet::Type type);
 	std::unique_ptr<Bullet> requestObject(Bullet::Type type);
 
 private:
-	void produceObjects(Bullet::Type type, int quantity);
-	std::list<std::unique_ptr<Bullet>>& bullets;
-	std::map<Bullet::Type, std::list<std::unique_ptr<Bullet>>> objects;
-	sf::RenderWindow& window;
+	// Initial quantity of the Bullet Factory
 	int initQuantity;
+
+	// Producers
+	void produceObjects(Bullet::Type type, int quantity);
+
+	// Bullet list from World.cpp
+	std::list<std::unique_ptr<Bullet>>& bullets;
+
+	// Bullet FACTORY objects
+	std::map<Bullet::Type, std::list<std::unique_ptr<Bullet>>> objects;
+
+	// Dependency injected
+	sf::RenderWindow& window;
 	const sf::Time& timeStep;
 	std::shared_ptr<ResourceHandler>& resourceHandler;
 };

@@ -17,9 +17,9 @@ public:
 	GameShape(ShapeType shapeType); // Other
 	GameShape(GameShape::ShapeType shapeType, float size); // Triangle
 	GameShape(ShapeType shapeType, int radius, int pointCount = 5); // Circle
-
+	
 	ShapeType getShapeType();
-	sf::Time timeStep;
+
 	int getRadius(); // Only valid for circle
 private:
 	ShapeType shapeType;

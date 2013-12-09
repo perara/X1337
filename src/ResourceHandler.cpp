@@ -9,16 +9,26 @@
 
 
 
+/// <summary>
+/// Initializes a new instance of the <see cref="ResourceHandler"/> class.
+/// </summary>
+/// <param name="window">The window.</param>
 ResourceHandler::ResourceHandler(sf::RenderWindow& window) :
 window(window)
 {
 	this->setInit(false);
 }
 
+/// <summary>
+/// Finalizes an instance of the <see cref="ResourceHandler"/> class.
+/// </summary>
 ResourceHandler::~ResourceHandler()
 {
 }
 
+/// <summary>
+/// Initializes the resource handler.
+/// </summary>
 void ResourceHandler::init()
 {
 	// Define Resources
@@ -78,7 +88,7 @@ void ResourceHandler::init()
 		fontList[Fonts::SANSATION] = "assets/fonts/sansation.ttf";
 	}
 
-
+	// Load each of the resources
 	this->loadFonts();
 	this->draw();
 	this->loadTextures();
@@ -88,11 +98,13 @@ void ResourceHandler::init()
 	this->loadUserName();
 	this->loadCredits();
 
-
-
+	// Set initialization to true.
 	this->setInit(true);
 }
 
+/// <summary>
+/// Loads the fonts.
+/// </summary>
 void ResourceHandler::loadFonts()
 {
 	// Load Fonts
@@ -110,6 +122,9 @@ void ResourceHandler::loadFonts()
 }
 
 
+/// <summary>
+/// Loads the textures.
+/// </summary>
 void ResourceHandler::loadTextures()
 {
 	// Load Textures
@@ -127,6 +142,9 @@ void ResourceHandler::loadTextures()
 	}
 }
 
+/// <summary>
+/// Loads the sound.
+/// </summary>
 void ResourceHandler::loadSound()
 {
 	// Load sounds
@@ -147,6 +165,9 @@ void ResourceHandler::loadSound()
 	}
 }
 
+/// <summary>
+/// Loads the high score.
+/// </summary>
 void ResourceHandler::loadHighScore()
 {
 	// Read XML file raw (Create file Stream)
@@ -196,6 +217,11 @@ void ResourceHandler::loadHighScore()
 	}
 }
 
+/// <summary>
+/// Writes the high score score.
+/// </summary>
+/// <param name="score">The score.</param>
+/// <param name="scriptEnum">The script enum.</param>
 void ResourceHandler::writeHighScoreScore(int score, int scriptEnum)
 {
 	// Read XML file raw (Create file Stream)
@@ -266,6 +292,9 @@ void ResourceHandler::writeHighScoreScore(int score, int scriptEnum)
 	loadHighScore(); // RELOAD  XML
 }
 
+/// <summary>
+/// Loads the scripts.
+/// </summary>
 void ResourceHandler::loadScripts()
 {
 	// Load Scripts
@@ -360,6 +389,9 @@ void ResourceHandler::loadScripts()
 	}
 }
 
+/// <summary>
+/// Loads the name of the user. This is restricted to windows only
+/// </summary>
 void ResourceHandler::loadUserName()
 {
 #define INFO_BUFFER_SIZE 32767
@@ -379,6 +411,9 @@ void ResourceHandler::loadUserName()
 	this->userName = ch;
 }
 
+/// <summary>
+/// Loads the credits.
+/// </summary>
 void ResourceHandler::loadCredits()
 {
 	std::ifstream fileStream(creditsFilePath);
@@ -422,11 +457,19 @@ void ResourceHandler::loadCredits()
 	}
 }
 
+/// <summary>
+/// Gets the credits.
+/// </summary>
+/// <returns>Map with all credits</returns>
 std::map<std::string, std::list<std::string>> ResourceHandler::getCredits()
 {
 	return creditsMap;
 }
 
+/// <summary>
+/// Gets the date time.
+/// </summary>
+/// <returns>Returns current date</returns>
 std::string ResourceHandler::getDateTime()
 {
 	std::chrono::system_clock::time_point p = std::chrono::system_clock::now();
@@ -436,24 +479,41 @@ std::string ResourceHandler::getDateTime()
 	return buff;
 }
 
+/// <summary>
+/// Returns the player username (Computer name)
+/// </summary>
+/// <returns>The player's name</returns>
 std::string ResourceHandler::getUserName()
 {
 	return this->userName;
 }
 
-/*
-GETTERS
-*/
+
+/// <summary>
+/// Gets the texture.
+/// </summary>
+/// <param name="res">The resource.</param>
+/// <returns>Returns a texure reference</returns>
 sf::Texture& ResourceHandler::getTexture(ResourceHandler::Texture res)
 {
 	return this->textures[res];
 }
 
+/// <summary>
+/// Gets the script.
+/// </summary>
+/// <param name="query">The query.</param>
+/// <returns>Returns a script copy</returns>
 Script ResourceHandler::getScript(ResourceHandler::Scripts query)
 {
 	return this->scripts[query];
 }
 
+/// <summary>
+/// Gets the script by an identifier. (Enum)
+/// </summary>
+/// <param name="iteNum">The ite number.</param>
+/// <returns>A script</returns>
 Script ResourceHandler::getScriptById(int iteNum)
 {
 	// Meh method
@@ -465,6 +525,10 @@ Script ResourceHandler::getScriptById(int iteNum)
 	}
 }
 
+/// <summary>
+/// Gets all of the scripts.
+/// </summary>
+/// <returns>A list with scripts (all scripts)</returns>
 std::list<Script> ResourceHandler::getScripts()
 {
 	std::list<Script> ret;
@@ -475,16 +539,30 @@ std::list<Script> ResourceHandler::getScripts()
 	return ret;
 }
 
+/// <summary>
+/// Gets the font.
+/// </summary>
+/// <param name="query">The query.</param>
+/// <returns>Font reference</returns>
 sf::Font& ResourceHandler::getFont(ResourceHandler::Fonts query)
 {
 	return this->fonts[query];
 }
 
+/// <summary>
+/// Gets the sound.
+/// </summary>
+/// <param name="query">The query.</param>
+/// <returns>Sound reference</returns>
 sf::Sound& ResourceHandler::getSound(ResourceHandler::Sound query)
 {
 	return this->sounds[query];
 }
 
+/// <summary>
+/// Mutes all of the sound.
+/// </summary>
+/// <param name="mute">The mute variable (true/false)</param>
 void ResourceHandler::muteSound(bool mute)
 {
 	for (auto& i : sounds)
@@ -494,22 +572,37 @@ void ResourceHandler::muteSound(bool mute)
 }
 
 
+/// <summary>
+/// Gets the high scores.
+/// </summary>
+/// <returns>map with all highscores</returns>
 std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> ResourceHandler::getHighScores()
 {
 	return this->highScoreStages;
 }
 
 
+/// <summary>
+/// Gets the init value
+/// </summary>
+/// <returns>init flag</returns>
 bool ResourceHandler::getInit()
 {
 	return this->inited;
 }
 
+/// <summary>
+/// Sets the init flag
+/// </summary>
+/// <param name="init">The init flag</param>
 void ResourceHandler::setInit(bool init)
 {
 	this->inited = init;
 }
 
+/// <summary>
+/// Draws the resource handler (loading state).
+/// </summary>
 void ResourceHandler::draw()
 {
 	sf::Text label;

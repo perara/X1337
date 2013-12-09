@@ -4,6 +4,17 @@
 #include "Bullet.h"
 #include "Log.h"
 
+/// <summary>
+/// Initializes a new instance of the <see cref="Enemy"/> class.
+/// </summary>
+/// <param name="window">The window.</param>
+/// <param name="path">The path.</param>
+/// <param name="type">The type.</param>
+/// <param name="repeat">The repeat.</param>
+/// <param name="bFactory">The b factory.</param>
+/// <param name="bullets">The bullets.</param>
+/// <param name="resourceHandler">The resource handler.</param>
+/// <param name="timeStep">The time step.</param>
 Enemy::Enemy(sf::RenderWindow& window,
 	std::queue<sf::Vector3f> path,
 	int type, int repeat, BulletFactory& bFactory,
@@ -11,12 +22,17 @@ Enemy::Enemy(sf::RenderWindow& window,
 	std::shared_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep
 	) :
+	pathTemplate(path), // Const, not to be changed (The template is copyed when a path is over in repeat mode)
+	repeat(repeat),
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
-	this->setType(Shooter::ShooterType::ENEMY);
-	this->pathTemplate = path; // A qeueu which should not be touched (This is used to refill old queue
+	// Start the enemy clock
 	this->enemyClock.restart();
-	this->setRepeat(repeat);
+
+	// Sets the type of the Shooter to enemy
+	this->shooterType = Shooter::ShooterType::ENEMY;
+
+	// Check which type the enemy is, from this we determine, health, total health , score value and textures,
 	if (type == 1) // REGULAR
 	{
 		setHealth(2);
@@ -64,10 +80,13 @@ Enemy::Enemy(sf::RenderWindow& window,
 	setInitPath();
 }
 
+/// <summary>
+/// Resets the path with use of the pathTemplate. And then sets current path to the first value in the queue.
+/// </summary>
 void Enemy::setInitPath()
 {
 
-	this->deleted = false;
+	setDeleted(false);
 	this->path = pathTemplate;
 	this->currentPath = this->path.front();
 	this->path.pop();
@@ -77,36 +96,35 @@ void Enemy::setInitPath()
 
 }
 
+/// <summary>
+/// Finalizes an instance of the <see cref="Enemy"/> class.
+/// </summary>
 Enemy::~Enemy(){
 	LOGD("Deconstructor called for: Enemy#" << this);
 }
 
 
+/// <summary>
+/// Draws the enemy
+/// </summary>
 void Enemy::draw()
 {
+	// Draw Enemy
 	this->window.draw(*this->sprite);
 
 
-	// Show enemy health bar
-	if (getType() == ShooterType::ENEMY)
-	{
-		float percent = (100.0f / getStartHealth()) * getHealth();
-		float barWidth = (this->sprite->getGlobalBounds().width) / 100.0f;
+	// Calculates the health bar percentage
+	float percent = (100.0f / getStartHealth()) * getHealth();
+	float barWidth = (this->sprite->getGlobalBounds().width) / 100.0f;
 
-		sf::RectangleShape healthBar;
-		healthBar.setSize(sf::Vector2f((barWidth * percent) / 2, 2));
-		healthBar.setPosition(
-			this->sprite->getGlobalBounds().left + (barWidth * 25),
-			this->sprite->getGlobalBounds().top - 5);
-		healthBar.setFillColor(sf::Color::Green);
-		window.draw(healthBar);
-
-		/*std::cout << "Percent: " <<percent << std::endl;
-		std::cout << "Bar width: " << barWidth << std::endl;
-		std::cout << "Global bounds: " << this->sprite->getGlobalBounds().width << std::endl;
-		std::cout << "START: " << getStartHealth() << std::endl;
-		std::cout << "HEALTH: " << getHealth() << std::endl;*/
-	}
+	// Draws the health bar
+	sf::RectangleShape healthBar;
+	healthBar.setSize(sf::Vector2f((barWidth * percent) / 2, 2));
+	healthBar.setPosition(
+		this->sprite->getGlobalBounds().left + (barWidth * 25),
+		this->sprite->getGlobalBounds().top - 5);
+	healthBar.setFillColor(sf::Color::Green);
+	window.draw(healthBar);
 
 	/*sf::FloatRect bounds = this->sprite->getGlobalBounds();
 	sf::RectangleShape af(sf::Vector2f(bounds.width,bounds.height));
@@ -118,23 +136,40 @@ void Enemy::draw()
 }
 
 
+/// <summary>
+/// Enemy shoot handler
+/// </summary>
+/// <param name="shoot">Which type of shot it is.</param>
 void Enemy::shoot(int shoot)
 {
+	// SHOOT -1 = undefined (no shooting)
+	// SHOOT 0 = undefined (no shooting)
+	// SHOOT 3  = SPECIAL ATTACK
+	// SHOOT 1 = Normal attack which differ depending on the enemy
+
+	// Check if shooting is of.
 	if (shoot != -1 && shoot != 0)
 	{
+
+		// Check if its a regular enemy
 		if (getEnemyType() == Enemy::EnemyType::REGULAR)
 		{
+			// Gets a bullet and set the appropriate data, then push to the bulletlist
 			std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 			b->setOwner(this->getType());
 			b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y - 10);
 			getBullets().push_back(std::move(b));
 
 		}
+
+		// Check if its a Chubby enemy
 		else if (getEnemyType() == Enemy::EnemyType::CHUBBY)
 		{
+			// Retrieve 3 bullets and defines a start position for the bullet.
 			std::list<std::unique_ptr<Bullet>> bat = getBulletFactory().requestBatch(3, Bullet::Type::standardShot);
 			int startX = (this->sprite->getPosition().x) - (this->sprite->getGlobalBounds().width / 2) + 10;
 
+			// Iterate through the bullet request , set properties and push back to bullet list
 			for (auto& i : bat)
 			{
 				std::unique_ptr<Bullet> bs = std::move(i);
@@ -145,11 +180,16 @@ void Enemy::shoot(int shoot)
 			}
 
 		}
+
+		// Check if its a BOSS enemy
 		else if (getEnemyType() == Enemy::EnemyType::BOSS)
 		{
+
+			// Gets a bullet and set the appropriate data, then push to the bulletlist
 			std::list<std::unique_ptr<Bullet>> bat = getBulletFactory().requestBatch(10, Bullet::Type::standardShot);
 			int startX = (this->sprite->getPosition().x) - (this->sprite->getGlobalBounds().width / 2);
 
+			// Iterate through the bullet request , set properties and push back to bullet list
 			for (auto& i : bat)
 			{
 				std::unique_ptr<Bullet> bs = std::move(i);
@@ -160,9 +200,11 @@ void Enemy::shoot(int shoot)
 			}
 
 		}
+
+		// Check if its a DEATHSTAR enemy
 		else if (getEnemyType() == Enemy::EnemyType::DEATHSTAR)
 		{
-			// Circular shoot pattern
+
 			if (shoot == 3) // Special attack
 			{
 				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
@@ -172,6 +214,8 @@ void Enemy::shoot(int shoot)
 				b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y - 10);
 				getBullets().push_back(std::move(b));
 			}
+
+			// Circular shoot pattern
 			else
 			{
 				for (int i = 0; i < 360; i += 2)
@@ -185,9 +229,11 @@ void Enemy::shoot(int shoot)
 			}
 		}
 	}
-
 }
 
+/// <summary>
+/// Processes this instance.
+/// </summary>
 void Enemy::process()
 {
 	this->hitDetection();
@@ -203,11 +249,12 @@ void Enemy::process()
 	currentPosition.y = abs(this->currentPath.y - this->sprite->getPosition().y);
 
 
-
+	// The difference between the goto and the current position
 	float dx = this->path.front().x - this->currentPath.x;
 	float dy = this->path.front().y - this->currentPath.y;
 	float len = sqrtf(dx * dx + dy * dy);
 
+	// Dfeines the speed of the enemy
 	dx = (dx / len) * timeStep.asSeconds() * 50;
 	dy = (dy / len) * timeStep.asSeconds() * 50;
 
@@ -219,12 +266,12 @@ void Enemy::process()
 	}
 
 	// Special Cases shoot processing (Like deathstar lazer)
-	if (this->currentPath.z == 3) // check if its a special case (4 is special attack for deathstar)
+	if (this->currentPath.z == 3) // check if its a special case (3 is special attack for deathstar)
 	{
 		this->shoot(this->currentPath.z);
 	}
 
-
+	// Check if the enemy has reached a path point or not ( move him if not)
 	if (
 		currentPosition.x < length.x ||
 		currentPosition.y < length.y
@@ -242,20 +289,25 @@ void Enemy::process()
 		}
 
 	}
+
+	// ENemy has travelled the path, get a new one
 	else
 	{
-		//std::cout << currentPath.x << ","<< currentPath.y << "->" << this->path->front().x << "," << this->path->front().y << std::endl;
+		
+		// Check if there is any other paths to go
 		if (path.size() > 1)
 		{
 			currentPath = path.front();
 			path.pop();
-
-
 		}
+
+		// If there is no paths to go.
 		else
 		{
 			LOGD("Enemy#" << this << " delete flag set");
-			this->deleted = true;
+			setDeleted(true);
+
+			// If the enemy has repeat option on, reinit it.
 			if (this->getRepeat() == 1){
 				setInitPath();
 			}
@@ -267,20 +319,28 @@ void Enemy::process()
 }
 
 
+/// <summary>
+/// Gets the repeat.
+/// </summary>
+/// <returns>Repeat flag</returns>
 int Enemy::getRepeat()
 {
 	return this->repeat;
 }
-void Enemy::setRepeat(int rep)
-{
-	this->repeat = rep;
-}
 
+/// <summary>
+/// Sets the type of the enemy.
+/// </summary>
+/// <param name="type">The enemy type.</param>
 void Enemy::setEnemyType(Enemy::EnemyType type)
 {
 	this->enemyType = type;
 }
 
+/// <summary>
+/// Gets the type of the enemy.
+/// </summary>
+/// <returns>Returns the enemy type</returns>
 Enemy::EnemyType Enemy::getEnemyType()
 {
 	return this->enemyType;

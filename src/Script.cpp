@@ -6,16 +6,29 @@
 #include "Bullet.h"
 
 
+/// <summary>
+/// Adds a enemy to the script queue
+/// </summary>
+/// <param name="delay">The delay.</param>
+/// <param name="pathQueue">The path queue.</param>
+/// <param name="type">The type.</param>
+/// <param name="repeat">The repeat.</param>
 void Script::addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat)
 {
 	LOGD("Adding new enemy template to pool");
 	ScriptTick tick(delay, pathQueue, type, repeat);
-
 	enemyList.push(tick);
 
 
 }
 
+/// <summary>
+/// Adds a power up item to the powerup queue..
+/// </summary>
+/// <param name="delay">The delay.</param>
+/// <param name="spawnPoint">The spawn point.</param>
+/// <param name="type">The type.</param>
+/// <param name="repeat">The repeat.</param>
 void Script::addPowerUp(int delay, sf::Vector3f spawnPoint, int type, int repeat)
 {
 	std::queue<sf::Vector3f> queue;
@@ -27,12 +40,20 @@ void Script::addPowerUp(int delay, sf::Vector3f spawnPoint, int type, int repeat
 
 }
 
-// Init
+
+/// <summary>
+/// Retrieve the init status
+/// </summary>
+/// <returns>init flag</returns>
 bool Script::getInit()
 {
 	return this->inited;
 
 }
+/// <summary>
+/// Sets the initialization status
+/// </summary>
+/// <param name="status">Status flag</param>
 void Script::setInit(bool status)
 {
 	if (status)
@@ -44,28 +65,55 @@ void Script::setInit(bool status)
 	inited = status;
 }
 
+/// <summary>
+/// Returns the script title.
+/// </summary>
+/// <returns>Script status</returns>
 std::string Script::getScriptTitle()
 {
 	return scriptTitle;
 }
 
+/// <summary>
+/// Sets the script title.
+/// </summary>
+/// <param name="scriptTitle">The script title.</param>
 void Script::setScriptTitle(std::string scriptTitle)
 {
 	this->scriptTitle = scriptTitle;
 }
 
 
+/// <summary>
+/// Sets the script enum value.
+/// </summary>
+/// <param name="enumVal">The enum value.</param>
 void Script::setScriptEnumVal(int enumVal)
 {
 	scriptEnumVal = enumVal;
 }
 
+/// <summary>
+/// Gets the script enum value.
+/// </summary>
+/// <returns>The script enumeration value (defined in the xml) </returns>
 int Script::getScriptEnumVal()
 {
 	return scriptEnumVal;
 }
 
 // Process
+/// <summary>
+/// Processed the script. It takes in all neccsary items in order to process it correctly
+/// </summary>
+/// <param name="window">The window.</param>
+/// <param name="objects">The objects.</param>
+/// <param name="powerups">The powerups.</param>
+/// <param name="bullets">The bullets.</param>
+/// <param name="bFactory">The b factory.</param>
+/// <param name="resourceHandler">The resource handler.</param>
+/// <param name="timeStep">The time step.</param>
+/// <returns></returns>
 bool Script::process(sf::RenderWindow& window,
 	std::list<std::shared_ptr<Shooter>>& objects,
 	std::list<std::shared_ptr<Powerup>>& powerups,
@@ -77,7 +125,6 @@ bool Script::process(sf::RenderWindow& window,
 	//####################################//
 	//######Enemy script processing#######//
 	//####################################//
-
 	if (!enemyList.empty())
 	{
 		// Get enemy in front of queue
@@ -124,7 +171,6 @@ bool Script::process(sf::RenderWindow& window,
 		{
 
 			// Create a new powerup
-
 			sf::Vector3f path = pwrUp.pathQueue.front();
 
 			(path.x == -1) ? path.x = rand() % window.getSize().x + 1 : path.x;
@@ -149,7 +195,6 @@ bool Script::process(sf::RenderWindow& window,
 		}
 
 	}
-
 
 	if (enemyList.empty())
 	{

@@ -22,13 +22,18 @@ public:
 		const bool hardmode
 		);
 
-	void addScore(float score); // Adds a X sum to player's score
-	void input(sf::Event&); // Input handler for player
+
+	virtual void input(sf::Event&); // Input handler for player
 	virtual void process();
+
+	void addScore(float score); // Adds a X sum to player's score
 	void drawStats(std::list<std::shared_ptr<HighScoreItem>>&);
+	
 	int getPlayerScore();
+
 	void powerUp(Powerup::PowerUpType);
 private:
+
 	int playerScore;
 	void detectEdge();
 	void processPowerUps();

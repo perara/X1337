@@ -12,6 +12,7 @@ public:
 		window(window),
 		resourceHandler(resourceHandler){};
 
+	// Pure virtuals
 	virtual void draw() = 0;
 	virtual void process() = 0;
 	virtual void input(sf::Event&) = 0;

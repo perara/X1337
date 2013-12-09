@@ -28,19 +28,19 @@ public:
 		std::shared_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep);
 	~Enemy();
+
 	// Virtual draw function.
 	virtual void draw();
-
 	virtual void process();
+
 	Enemy::EnemyType getEnemyType();
 
 private:
 	// Weither to repeat path ro not
 	int repeat;
 	int getRepeat();
-	void setRepeat(int);
 
-	std::queue<sf::Vector3f> pathTemplate; // Original Path (Which is the one loaded at start)
+	const std::queue<sf::Vector3f> pathTemplate; // Original Path (Which is the one loaded at start)
 	std::queue<sf::Vector3f> path; // Path which is under progress
 	void setInitPath();
 	sf::Vector3f currentPath;

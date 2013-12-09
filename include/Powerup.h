@@ -14,13 +14,11 @@ This enemy will not be able to shoot.*/
 class Powerup : public Object
 {
 public:
-
 	const enum PowerUpType
 	{
 		HEALTH_INCREMENT = -10,
 		PULSATING_GUN = -11
 	};
-
 
 	Powerup(
 	sf::RenderWindow& window,
@@ -30,16 +28,22 @@ public:
 	const sf::Time& timeStep
 	);
 
-	void process();
+	virtual void process();
+
 	bool hitDetection(std::shared_ptr<Player>&);
+
 	Powerup::PowerUpType getPowerUpType();
 
 private:
 	int speedX;
 	int speedY;
+
 	const sf::Time& timeStep;
+
 	void doAction(std::shared_ptr<Player>& player);
+
 	Powerup::PowerUpType type;
+
 	std::shared_ptr<ResourceHandler>& resourceHandler;
 
 };

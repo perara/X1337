@@ -9,7 +9,6 @@ class Bullet;
 class Shooter : public Object
 {
 public:
-
 	const enum ShooterType
 	{
 		PLAYER,
@@ -33,10 +32,6 @@ protected:
 	// Resource Handler reference
 	std::shared_ptr<ResourceHandler>& resourceHandler;
 
-
-	// Set the type of this shooter (Enemy || Player)
-	void setType(Shooter::ShooterType);
-
 	// Bullets getter/setter
 	std::list<std::unique_ptr<Bullet>>& getBullets();
 
@@ -55,12 +50,12 @@ protected:
 	const int getStartHealth();
 	void setStartHealth(int value);
 
+	// Shooter type (Player || Enemy)
+	ShooterType shooterType;
+
 private:
 	int health;
 	int startHealth;
-
-	// Shooter type (Player || Enemy)
-	ShooterType shooterType;
 
 	// References to bullets and bulletfactory
 	std::list<std::unique_ptr<Bullet>>& bullets;

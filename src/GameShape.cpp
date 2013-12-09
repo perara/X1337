@@ -2,11 +2,17 @@
 #include "Log.h"
 
 // Other Default
+/// <summary>
+/// Initializes a new instance of the <see cref="GameShape"/> class.
+/// </summary>
+/// <param name="shapeType">Type of the shape constructed</param>
 GameShape::GameShape(GameShape::ShapeType shapeType) :
 shapeType(shapeType)
 {
+	// Scale value for the size, this may be moved the the constructor.
 	float scale = 0.50f;
 
+	// Defines each of the polygons for each for the shapes.
 	switch (shapeType)
 	{
 	case GameShape::ShapeType::TRIANGLE:
@@ -38,11 +44,9 @@ shapeType(shapeType)
 		this->setPoint(7, sf::Vector2f(20, 25)* scale);
 		this->setPoint(8, sf::Vector2f(20, 5)* scale);
 		break;
-
 	case GameShape::ShapeType::BOSS:
 		this->setPointCount(8);
 		setCircleShape(80, sf::Vector2f(0, 0));
-
 		break;
 	default:
 		LOGE("There is no shapetype defined for this constructor which maches your type");
@@ -52,6 +56,11 @@ shapeType(shapeType)
 }
 
 // Triangle
+/// <summary>
+/// Initializes a new instance of the <see cref="GameShape"/> class.
+/// </summary>
+/// <param name="shapeType">Define shape type for the shape.</param>
+/// <param name="size">Defines a size for the size (scale)</param>
 GameShape::GameShape(GameShape::ShapeType shapeType, float size) :
 shapeType(shapeType)
 {
@@ -71,6 +80,12 @@ shapeType(shapeType)
 
 
 /* Circle or shapes with radius */
+/// <summary>
+/// Initializes a new instance of the <see cref="GameShape"/> class. (circle)
+/// </summary>
+/// <param name="shapeType">Shape definiton, this is usually a circle for this constructor..</param>
+/// <param name="radius">The Circle radius</param>
+/// <param name="pointCount">The point count (polygon).</param>
 GameShape::GameShape(GameShape::ShapeType shapeType, int radius, int pointCount) :
 shapeType(shapeType)
 {
@@ -87,11 +102,19 @@ shapeType(shapeType)
 }
 
 
+/// <summary>
+/// Returns the shapetype for current shape.
+/// </summary>
+/// <returns>Shape yupe</returns>
 GameShape::ShapeType GameShape::getShapeType()
 {
 	return shapeType;
 }
 
+/// <summary>
+/// Sets the shape to a triangle shape.
+/// </summary>
+/// <param name="size">Scale Value</param>
 void GameShape::setTriangleShape(float size)
 {
 	this->setPoint(0, sf::Vector2f(-0.5, 0)*size);
@@ -101,6 +124,11 @@ void GameShape::setTriangleShape(float size)
 }
 
 
+/// <summary>
+/// Defines this shapes as a circle
+/// </summary>
+/// <param name="radius">Circle radius</param>
+/// <param name="center">Center of the circle.</param>
 void GameShape::setCircleShape(double radius, sf::Vector2f center)
 {
 	float PI = 3.14159265358979323846;
@@ -119,7 +147,10 @@ void GameShape::setCircleShape(double radius, sf::Vector2f center)
 
 }
 
-// Returns radius of a shape, -1 if shape is not a circle (not valid for radius)
+/// <summary>
+/// Gets the radius.
+/// </summary>
+/// <returns>Returns radius of a shape, -1 if shape is not a circle (not valid for radius)</returns>
 int GameShape::getRadius(){
 	if (this->shapeType == GameShape::ShapeType::CIRCLE){
 		return this->properties["radius"];

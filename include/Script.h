@@ -28,6 +28,7 @@ class Script
 			repeat(repeat){};
 	};
 
+
 	sf::Clock enemyClock;
 	sf::Clock powerupClock;
 	std::queue<ScriptTick> enemyList;

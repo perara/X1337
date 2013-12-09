@@ -8,7 +8,6 @@
 class Bullet : public Object
 {
 public:
-
 	const enum Type {
 		standardShot = 1,
 		heavyShot = 5
@@ -18,8 +17,10 @@ public:
 
 	virtual void process();
 
+	// Bullet Resetter
 	void resetObject();
 
+	// Setters/Getters for properties
 	Shooter::ShooterType getOwner();
 	void setOwner(Shooter::ShooterType owner);
 	void setRotation(int degree, sf::Vector2f speed);
@@ -27,14 +28,12 @@ public:
 	void setSpeed(sf::Vector2f);
 
 private:
-
 	Bullet::Type bulletType;
 	Shooter::ShooterType owner;
 
 	int speedX;
 	int speedY;
+	int deg; // Degree on bullet rotation
 
 	const sf::Time& timeStep;
-
-	int deg; // Degree on bullet rotation
 };

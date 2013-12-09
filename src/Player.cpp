@@ -6,18 +6,32 @@
 #include "ResourceHandler.h"
 #include <sstream>
 
+/// <summary>
+/// The normal shot clock
+/// </summary>
 sf::Clock normalShotClock;
+
+/// <summary>
+/// The special shot clock
+/// </summary>
 sf::Clock specialShotClock;
+
+/// <summary>
+/// The score time
+/// </summary>
 float scoreTime;
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Player"/> class.
 /// </summary>
-/// <param name="window">The render window.</param>
-/// <param name="pos">The initial startposition of the player</param>
+/// <param name="window">The window.</param>
+/// <param name="pos">The position.</param>
 /// <param name="radius">The radius.</param>
-/// <param name="bFactory">The <see cref=BulletFactory"></param>
-/// <param name="sceneBulletListCallback">The scene object call back. This is basicly a function pointer to the corresponding world function "addObject" Reason for passing this is so we can add bullets to the Scene loop</param>
+/// <param name="bFactory">The b factory.</param>
+/// <param name="bullets">The bullets.</param>
+/// <param name="resourceHandler">The resource handler.</param>
+/// <param name="timeStep">The time step.</param>
+/// <param name="hardMode">The hard mode.</param>
 Player::Player(sf::RenderWindow& window,
 	sf::Vector2f pos,
 	int radius, BulletFactory& bFactory,
@@ -25,12 +39,15 @@ Player::Player(sf::RenderWindow& window,
 	std::shared_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep,
 	const bool hardMode
-	) :
+	)
+	:
 	playerScore(0),
 	pulsateGun(false),
 
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
+
+	// Checks if its hardmode, sets the health correspondingly.
 	if (!hardMode)
 	{
 		setHealth(5);
@@ -40,7 +57,10 @@ Player::Player(sf::RenderWindow& window,
 		setHealth(1);
 	}
 
-	this->setType(Shooter::ShooterType::PLAYER);
+	// Set the shape type
+	this->shooterType = Shooter::ShooterType::PLAYER;
+
+	// Define the shape for the player
 	sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::ShapeType::PLAYER_SHIP));
 	sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::PLAYER_SHIP));
 	sprite->setOutlineThickness(1);
@@ -48,6 +68,9 @@ Player::Player(sf::RenderWindow& window,
 	this->sprite->setPosition(pos);
 }
 
+/// <summary>
+/// Processes this instance.
+/// </summary>
 void Player::process()
 {
 	this->hitDetection();
@@ -56,31 +79,40 @@ void Player::process()
 
 	if (getHealth() <= 0)
 	{
-		deleted = true;
+		setDeleted(true);
 		resourceHandler->getSound(ResourceHandler::Sound::ENEMY_DEATH).play();
 	}
 }
 
-// This function process a activated power
+/// <summary>
+/// This function process a activated power
+/// </summary>
 void Player::processPowerUps()
 {
-	// Temporary Pulsegun
+	// Temporary Pulsegun powerup (lasts 6 seconds)
 	if (pulsateGun && pwrUpClock.getElapsedTime().asSeconds() < 6)
 	{
 
+		// Check if the clock  has elapsed 1 second
 		if (pulseClock.getElapsedTime().asMilliseconds() > 1000)
 		{
+
+			// Creates a circular bullet pattern.
 			for (int i = 1; i < 20; i += 1)
 			{
+
+				// Gets a bullet, sets the owner to this, sets the bullet rotation, sets the bullet position, pushes the bullet to the bullet list.
 				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 				b->setOwner(this->getType());
 				b->setRotation(i, sf::Vector2f(150, 150));
 				b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
 				getBullets().push_back(std::move(b));
 			}
+
 			pulseClock.restart();
 		}
 	}
+	// Time is up! deactivate the pulse gun
 	else
 	{
 		pulsateGun = false;
@@ -89,13 +121,15 @@ void Player::processPowerUps()
 
 }
 
+/// <summary>
+/// Check if the player hits an edge.
+/// </summary>
 void Player::detectEdge()
 {
-	/************************************************************************/
-	/* Game Bounds Collision test                                           */
-	/************************************************************************/
-
-	// X
+	//###################################//
+	//####Game Bounds Collision Test#####//
+	//###################################//
+	//##X AXIS
 	if (sprite->getPosition().x - sprite->getRadius() <= 0)
 	{
 		sprite->setPosition(sprite->getRadius(), sprite->getPosition().y);
@@ -106,12 +140,11 @@ void Player::detectEdge()
 		sprite->setPosition(window.getView().getSize().x - sprite->getRadius(), sprite->getPosition().y);
 	}
 
-	// Y
+	//## Y AXIS
 	if (sprite->getPosition().y - sprite->getRadius() <= 0)
 	{
 		sprite->setPosition(sprite->getPosition().x, sprite->getRadius());
 	}
-
 
 	if (sprite->getPosition().y >= window.getView().getSize().y - sprite->getRadius())
 	{
@@ -120,6 +153,10 @@ void Player::detectEdge()
 }
 
 
+/// <summary>
+/// Draws the highscore stats, this function runs in the secondary view.
+/// </summary>
+/// <param name="highScoreList">The high score list as a reference</param>
 void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 {
 	// Draw Health
@@ -131,18 +168,25 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	txtHealth.setPosition(20, 20);
 	txtHealth.setColor(sf::Color::White);
 
+	// Sets initial heart location
 	int heartY = 20;
 	int heartX = 105;
+
+	// Iterate each of the "healths", and display hearts
 	for (int i = 1; i <= getHealth(); i++)
 	{
 
+		// Draw a heart
 		std::shared_ptr<sf::Sprite> sprite = std::shared_ptr<sf::Sprite>(new sf::Sprite);
 		sprite->setTexture(resourceHandler->getTexture(ResourceHandler::Texture::HEART), true);
 		sprite->setPosition(heartX, heartY);
 		sprite->setScale(0.05f, 0.05f);
 		window.draw(*sprite);
+
+		// Append the width of an haeart to the X position
 		heartX += 35;
 
+		// Whenever it reaches the 5th element, append hearts Y position and reset the X pos.
 		if (i % 5 == 0)
 		{
 			heartY += sprite->getGlobalBounds().height;
@@ -150,6 +194,7 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 		}
 
 	}
+	window.draw(txtHealth);
 
 	// Draw Score
 	sf::Text txtScore;
@@ -158,13 +203,10 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	txtScore.setCharacterSize(25);
 	txtScore.setPosition(20, 80);
 	txtScore.setColor(sf::Color::White);
-
-
-	window.draw(txtHealth);
 	window.draw(txtScore);
 
 
-	// Title
+	// Draw the stage highscore title
 	int initY = 150;
 	sf::Text txtHighScoreTitle;
 	txtHighScoreTitle.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
@@ -195,34 +237,54 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 
 }
 
+/// <summary>
+/// Adds to the score.
+/// </summary>
+/// <param name="score">The score.</param>
 void Player::addScore(float score)
 {
 	playerScore += score;
 }
 
+/// <summary>
+/// Inputs the specified event.
+/// </summary>
+/// <param name="event">The event.</param>
 void Player::input(sf::Event& event)
 {
-	/* Shoot handler */
+	// Player's left mouse click shoot handler
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && normalShotClock.getElapsedTime().asMilliseconds() > 150){
+		
+		// Request a standard bullet and sets the appropriate data
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 		b->setOwner(getType());
 		b->sprite->setPosition(sprite->getPosition().x, sprite->getPosition().y - 10);
+
+		// Play shoot sound
 		resourceHandler->getSound(ResourceHandler::Sound::STANDARD_SHOT).play();
 
+		// Push the bullet to the bullet list
 		getBullets().push_back(std::move(b));
 
-		if (getHealth() > 0) scoreTime += 1;
+		// Restart the clock
 		normalShotClock.restart();
 	}
 
+	// Player's right mouse click shoot handler
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && specialShotClock.getElapsedTime().asMilliseconds() > 1000){
+
+		// Request a heavy shot bullet and set the appropriate data
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::heavyShot);
 		b->setOwner(getType());
 		b->sprite->setPosition(sprite->getPosition().x, sprite->getPosition().y - 10);
-		resourceHandler->getSound(ResourceHandler::Sound::HEAVY_SHOT).play();
-		getBullets().push_back(std::move(b));
 
-		if (getHealth() > 0) scoreTime += 1;
+		// Play shoot sound
+		resourceHandler->getSound(ResourceHandler::Sound::HEAVY_SHOT).play();
+
+		// Push the bullet to the bullet list
+		getBullets().push_back(std::move(b));
+	
+		// Restart the clock
 		specialShotClock.restart();
 	}
 
@@ -235,36 +297,50 @@ void Player::input(sf::Event& event)
 		if (elapsed_x != 0 || elapsed_y != 0)
 		{
 
-			/************************************************************************/
-			/* Mouse Movement Handling                                              */
-			/************************************************************************/
+			//###################################//
+			//#####Mouse Movement Handleing######//
+			//###################################//
+			//## X axis
 			if (sprite->getPosition().x > 0 && sprite->getPosition().x < window.getView().getSize().x)
 			{
 				sprite->move(-elapsed_x, 0);
 			}
 
+			// ## Y axis
 			if (sprite->getPosition().y > 0 && sprite->getPosition().y < (window.getView().getSize().y + window.getView().getSize().y))
 			{
 				sprite->move(0, -elapsed_y);
 			}
+			
 			sf::Mouse::setPosition(sf::Vector2i((window.getView().getSize().x / 2), (window.getView().getSize().y / 2)), window);
 		}
 	}
 
 }
 
+/// <summary>
+/// Gets the player score.
+/// </summary>
+/// <returns>integer with the player score</returns>
 int Player::getPlayerScore()
 {
 	return playerScore;
 }
 
+/// <summary>
+/// Function for activating a power up
+/// </summary>
+/// <param name="powType">Type of the powwer up to activate</param>
 void Player::powerUp(Powerup::PowerUpType powType)
 {
+	// Health Pack Powerup
 	if (powType == Powerup::PowerUpType::HEALTH_INCREMENT)
 	{
 		setHealth(getHealth() + 1);
 	}
-	if (powType == Powerup::PowerUpType::PULSATING_GUN)
+
+	// Pulsating gun Powerup
+	else if (powType == Powerup::PowerUpType::PULSATING_GUN)
 	{
 		pulsateGun = true;
 		pwrUpClock.restart();

@@ -8,14 +8,12 @@
 #include <memory>
 #include "Powerup.h"
 
-/// <summary>
-/// World is the place where all encounters in game happen. It keeps record of the player, enemies and bullets. This is rendered and processed via the Scene inheritance.
-/// </summary>
+
 class World : public Scene{
 public:
 
+	// Constructor and Deconstructor
 	World();
-	~World();
 	World(sf::RenderWindow& window,
 		std::shared_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep,
@@ -23,38 +21,32 @@ public:
 		const int scriptNum,
 		const bool hardMode,
 		sf::Sound& ingameSong);
+	~World();
 
-	void drawStats();
-	bool isGameOver();
-
+	// Virtuals (Derived from Scene)
 	virtual void draw();
 	virtual void process();
 	virtual void input(sf::Event&);
 
+	void drawStats(); // Draw Player stats
+	bool isGameOver(); 
 	void startSound();
 	void stopSound();
 
-	BulletFactory& getBulletFactory()
-	{
-		return bFactory;
-	};
-
-	sf::Sound& ingameSong; // Game song which loops.
 private:
-	// Objects
 	Script script;
 	Background bg;
 	BulletFactory bFactory;
-
-	sf::Sound& countdownSong; // Countdown for game start
 	std::shared_ptr<Player> player;
 
-	const sf::Time& timeStep;
-	bool demo;
+	sf::Sound& ingameSong; // In-game sound
+	sf::Sound& countdownSong; // Countdown for game start
 
-	const bool getHardMode();
+
+	const sf::Time timeStep;
+
 	const bool hardMode;
-
+	const bool demo;	
 	bool gameOver;
 
 	int currentScript;
@@ -62,7 +54,4 @@ private:
 	std::list<std::shared_ptr<Shooter>> objects;
 	std::list<std::unique_ptr<Bullet>> bullets;
 	std::list<std::shared_ptr<Powerup>> powerups;
-
-	void addObject(std::shared_ptr<Shooter> object);
-	void addBullet(std::unique_ptr<Bullet> bullet);
 };

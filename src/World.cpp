@@ -52,7 +52,7 @@ World::World(sf::RenderWindow& window,
 		currentScript = scriptNum;
 
 		// Aditionally adds the player and starts the countdown soundtrack
-		addObject(std::shared_ptr<Player>(player));
+		this->objects.push_back(std::shared_ptr<Player>(player));
 		countdownSong.play();
 	}
 
@@ -130,7 +130,7 @@ void World::process()
 					gameOver = true;
 
 					// Checks if the playerscore higher than 0 and writes to the Highscore.
-					int multiplier = ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
+					int multiplier = ((hardMode) ? 2 : 1); // Hardmode multiplier.
 					if (player->getPlayerScore() > 0)
 					{
 						resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
@@ -153,7 +153,7 @@ void World::process()
 		gameOver = true;
 
 		// Writes to the Highscore.
-		int multiplier = ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
+		int multiplier = (hardMode ? 2 : 1); // Hardmode multiplier.
 		if (currentScript != -1) resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
 	}
 
@@ -244,28 +244,6 @@ bool World::isGameOver()
 }
 
 /// <summary>
-/// Adds a object to the scene
-/// </summary>
-/// <param name="object">The object thats requested for addition</param>
-void World::addObject(std::shared_ptr<Shooter> object)
-{
-	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
-	this->objects.push_back(object);
-}
-
-/// <summary>
-/// Adds a bullet to the bullet list
-/// </summary>
-/// <param name="bullet">The bullet.</param>
-void World::addBullet(std::unique_ptr<Bullet> bullet)
-{
-	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
-	this->bullets.push_back(std::move(bullet));
-}
-
-
-
-/// <summary>
 /// Draws all scene objects
 /// </summary>
 void World::draw()
@@ -315,11 +293,3 @@ void World::input(sf::Event& event)
 	this->player->input(event);
 }
 
-/// <summary>
-/// Gets hard mode flag
-/// </summary>
-/// <returns></returns>
-const bool World::getHardMode()
-{
-	return hardMode;
-}

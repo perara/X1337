@@ -13,14 +13,17 @@ public:
 
 	Menu(sf::RenderWindow& window, GameState& state, std::shared_ptr<ResourceHandler>& resourceHandler);
 
+	// Scene virtuals
 	virtual void draw();
-	virtual void updateCurrentOption();
 	virtual void process();
-	virtual void init();
 	virtual void input(sf::Event&);
-	virtual void reset();
-	virtual bool getHardmodeSelected();
 
+
+
+	void init();
+	void reset();
+	bool getHardmodeSelected();
+	void updateCurrentOption();
 	void drawPause(int xOffSet, int yOffset); // Should be accessible to gameEngine 
 	int getStageSelectOption();
 private:
@@ -47,7 +50,7 @@ private:
 		HIGHSCORE,
 		CREDITS,
 		EXIT_GAME,
-		
+
 		LOAD_GAME,
 
 		// Stage Select opts
