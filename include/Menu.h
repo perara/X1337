@@ -7,7 +7,9 @@
 #include <map>
 #include <list>
 
-
+/// <summary>
+/// A class which is called by GameEngine. This class serves the menu for the whole application. It is based on GameState
+/// </summary>
 class Menu : public Scene{
 public:
 

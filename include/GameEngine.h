@@ -10,12 +10,13 @@ class Menu;
 #define GameState GameEngine::State
 
 /// <summary>
-/// This is the game engine class which processes everything in the game. It holds the statemachine which decides current state.
+/// GameEngine runs the game. This class serves a game loop which runs until game end. All state is handler in this class.
 /// </summary>
 class GameEngine{
 public:
 	GameEngine();
 
+	/// State Enumerable which contains all possible states for the GameEngine, World and Menu.
 	enum State{
 		GAME,
 		INIT_GAME,

@@ -8,7 +8,9 @@
 #include <memory>
 #include "Powerup.h"
 
-
+/// <summary>
+/// World class is a construction which runs Script and Player. It has a Input, Process, and Draw Function for this purpose.
+/// </summary>
 class World : public Scene{
 public:
 

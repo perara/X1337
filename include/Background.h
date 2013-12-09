@@ -8,6 +8,9 @@
 #include <list>
 #include <memory>
 
+/// <summary>
+/// Background is used in World, and has it purpose to display and/or animate the background
+/// </summary>
 class Background
 {
 public:

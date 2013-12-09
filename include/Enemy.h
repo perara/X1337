@@ -4,11 +4,13 @@
 
 
 /// <summary>
-/// The player class represents the enemy
+/// Enemy is represented as a shooter. Each of the Enemy object is a unique enemy.
 /// </summary>
 class Enemy : public Shooter
 {
 public:
+
+	/// Enumerable which contains all EnemyType 's implemented into the game.
 	const enum EnemyType
 	{
 		REGULAR = 1,

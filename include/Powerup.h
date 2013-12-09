@@ -9,11 +9,14 @@ class Bullet;
 class Player;
 class BulletFactory;
 
-/* Reason for PowerUP beeing an enemy is movement.
-This enemy will not be able to shoot.*/
+/// <summary>
+/// Powerup is used widely in Script. This class creates a instance of a PowerUp which is later displayed on the screen by a PowerUp list in World
+/// </summary>
 class Powerup : public Object
 {
 public:
+
+	/// PowerUpType is an enumerable which contains current implemented Powerup 's 
 	const enum PowerUpType
 	{
 		HEALTH_INCREMENT = -10,
