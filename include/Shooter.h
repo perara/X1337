@@ -60,7 +60,10 @@ protected:
 	/// Shooter type (Player || Enemy)
 	ShooterType shooterType;
 
+	/// Godmode variable
+	bool godMode;
 private:
+
 	/// Integer value which describes Shooter 's current health
 	int health;
 

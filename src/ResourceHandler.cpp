@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include <chrono>
 #include <ctime>
+#include <iomanip> // put_time
 
 
 
@@ -476,7 +477,10 @@ std::string ResourceHandler::getDateTime()
 	std::time_t t = std::chrono::system_clock::to_time_t(p);
 	char buff[32];
 	ctime_s(buff, sizeof(buff), &t);
-	return buff;
+
+	std::stringstream ss;
+	ss << std::put_time(std::localtime(&t), "%y-%m-%d %X");
+	return ss.str();
 }
 
 /// <summary>

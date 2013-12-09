@@ -33,15 +33,16 @@ public:
 
 	void powerUp(Powerup::PowerUpType);
 private:
-
+	/// The player score
 	int playerScore;
 	void detectEdge();
 	void processPowerUps();
 
-	// Timers and such for power ups
+	/// Timers and such for power ups
 	sf::Clock pwrUpClock;
 
-	// Pulsate
+	/// Pulsate
 	bool pulsateGun;
+	/// Pulsate clock
 	sf::Clock pulseClock;
 };

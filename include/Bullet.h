@@ -25,7 +25,7 @@ public:
 	// Setters/Getters for properties
 	Shooter::ShooterType getOwner();
 	void setOwner(Shooter::ShooterType owner);
-	void setRotation(int degree, sf::Vector2f speed);
+	void setRotation(float degree, sf::Vector2f speed);
 	Bullet::Type getBulletType();
 	void setSpeed(sf::Vector2f);
 
@@ -35,7 +35,7 @@ private:
 
 	int speedX;
 	int speedY;
-	int deg; // Degree on bullet rotation
+	float deg; // Degree on bullet rotation
 
 	const sf::Time& timeStep;
 };

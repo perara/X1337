@@ -20,7 +20,8 @@ Shooter::Shooter(sf::RenderWindow& window,
 	bullets(bullets),
 	bFactory(bFactory),
 	resourceHandler(resourceHandler),
-	timeStep(timeStep)
+	timeStep(timeStep),
+	godMode(false)
 
 {}
 
@@ -48,6 +49,7 @@ float Shooter::getScoreValue()
 /// <param name="value">The health value to set it to.</param>
 void Shooter::setHealth(int value)
 {
+	if (godMode) return;
 	health = value;
 }
 
@@ -96,6 +98,11 @@ void Shooter::hitDetection()
 		{
 			// Ignore collision detections if the type is same as the bullet owner type
 			if (getType() == i->getOwner()) continue;
+
+			// Checks if the bullet is to far away to be able to the ship
+			int distDx = abs(sprite->getPosition().x - i->sprite->getPosition().x);
+			int distDy = abs(sprite->getPosition().y - i->sprite->getPosition().y);
+			if (!(distDx + 5 < sprite->getGlobalBounds().width) || !(distDy + 5 < sprite->getGlobalBounds().width)) continue;
 
 			// Do collision detection
 			wasHit = sat(sprite, i->sprite);

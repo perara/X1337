@@ -288,6 +288,15 @@ void Player::input(sf::Event& event)
 		specialShotClock.restart();
 	}
 
+	if (event.type == sf::Event::KeyReleased)
+	{
+		// IF COMMA is clicked
+		if (event.key.code == sf::Keyboard::Comma) // Sound mute button
+		{
+			std::cout << godMode << std::endl;
+			godMode = !godMode;
+		}
+	}
 
 	if (event.type == sf::Event::MouseMoved)
 	{
@@ -315,7 +324,6 @@ void Player::input(sf::Event& event)
 			sf::Mouse::setPosition(sf::Vector2i((window.getView().getSize().x / 2), (window.getView().getSize().y / 2)), window);
 		}
 	}
-
 }
 
 /// <summary>

@@ -84,7 +84,7 @@ void Bullet::setSpeed(sf::Vector2f speed)
 /// </summary>
 /// <param name="degree">The degree of the bullet</param>
 /// <param name="speed">The speed. of the bullet</param>
-void Bullet::setRotation(int degree, sf::Vector2f speed)
+void Bullet::setRotation(float degree, sf::Vector2f speed)
 {
 	deg = degree;
 	speedX = speed.x;
