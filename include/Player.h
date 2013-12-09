@@ -7,7 +7,7 @@ class Bullet;
 
 
 /// <summary>
-/// The player class represents the player
+/// The Player class represents the player. The Player derived from Shooter which is common for both Enemy and Player
 /// </summary>
 class Player : public Shooter
 {

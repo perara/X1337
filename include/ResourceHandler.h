@@ -11,23 +11,38 @@
 #include <list>
 #include "Script.h"
 
+/// <summary>
+/// This class keeps a record a highscore item, this is used in the ResourceHandler
+/// </summary>
 class HighScoreItem
 {
 public:
+	/// Integer which describe the stage this HighScoreItem belongs to
 	int stage;
+
+	/// Contains the Playername for current HighScoreItem
 	std::string playerName;
+
+	/// Contains the score achieved for this HighScoreItem
 	float score;
+
+	/// Contains the date for when this HighScoreItem was obtained (Written in ResourceHandler)
 	std::string date;
 
-	// Construct
+	/// Constructor
 	HighScoreItem(int stage, std::string playerName,
 		float score,
 		std::string date) : stage(stage), playerName(playerName), score(score), date(date){};
 };
 
+/// <summary>
+/// The ResourceHandler loads all of the appropriate resources into the game. this is first used in World .
+/// </summary>
 class ResourceHandler
 {
 public:
+
+	/// Texture enumerable which contains all resource "Links" its used to access the resource
 	const enum Texture
 	{
 		BACKGROUND1,
@@ -48,6 +63,7 @@ public:
 		TEXTURECOUNT
 	};
 
+	/// Sound enumerable which contains all resource "Links" its used to access the resource
 	const enum Sound
 	{
 		SONG1,
@@ -64,6 +80,8 @@ public:
 		SOUNDCOUNT
 
 	};
+
+	/// Scripts enumerable which contains all resource "Links" its used to access the resource
 	const enum Scripts
 	{
 		STAGE_ONE,
@@ -75,6 +93,7 @@ public:
 		SCRIPTSCOUNT
 	};
 
+	/// Fonts enumerable which contains all resource "Links" its used to access the resource
 	const enum Fonts
 	{
 		COMICATE,

@@ -11,6 +11,9 @@ class BulletFactory;
 class Bullet;
 class ResourceHandler;
 
+/// <summary>
+/// The script class defines a script loaded from file. It is widely used in the ResourceHandler
+/// </summary>
 class Script
 {
 	class ScriptTick

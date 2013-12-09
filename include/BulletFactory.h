@@ -8,7 +8,7 @@
 class ResourceHandler;
 
 /// <summary>
-/// This is a factory which produces a set amount of bullets and then serves when requested. This class can also serve multiple bullets in a batch.
+/// This is a factory which produces a set amount of bullets and then serves when requested. This class can serve multiple Bullet (s) in a batch.
 /// </summary>
 class BulletFactory{
 public:

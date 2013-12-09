@@ -3,19 +3,23 @@
 #include "ResourceHandler.h";
 
 
+
 /// <summary>
 /// Initializes a new instance of the <see cref="BulletFactory"/> class.
 /// </summary>
-/// <param name="window">The render window.</param>
-/// <param name="quantity">Input of the initial quantity the Factory should have at initialization.</param>
+/// <param name="window">The window.</param>
+/// <param name="quantity">The quantity.</param>
+/// <param name="bullets">The bullets.</param>
+/// <param name="timeStep">The time step.</param>
+/// <param name="resourceHandler">The resource handler.</param>
 BulletFactory::BulletFactory(sf::RenderWindow& window,
 	int quantity,
 	std::list<std::unique_ptr<Bullet>>& bullets,
 	const sf::Time& timeStep,
 	std::shared_ptr<ResourceHandler>& resourceHandler) :
-	initQuantity(quantity),
+	initQuantity(quantity), 
 	window(window),
-	bullets(bullets),
+	bullets(bullets), 
 	timeStep(timeStep),
 	resourceHandler(resourceHandler)
 {

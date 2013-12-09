@@ -1,9 +1,14 @@
 #include <SFML\Graphics.hpp>
 #include <map>
 
+/// <summary>
+/// GameShape is a class which is derived from sf::ConvexShape, this class can represent all convex shapes.
+/// </summary>
 class GameShape : public sf::ConvexShape
 {
 public:
+
+	/// ShapeType is an enumerable which contains all of the defined convex shapes in the GameShape implementation
 	const enum ShapeType{
 		CIRCLE,
 		TRIANGLE,

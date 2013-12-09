@@ -6,9 +6,14 @@
 class BulletFactory;
 class Bullet;
 
+/// <summary>
+/// Shooter is a class which a movable  Object  dervies from.
+/// </summary>
 class Shooter : public Object
 {
 public:
+
+	/// An enumration which describes the ShooterType
 	const enum ShooterType
 	{
 		PLAYER,
@@ -24,18 +29,20 @@ public:
 
 protected:
 
+	/// Shooter Constructor which takes in required parameters for the class to work.
 	Shooter(sf::RenderWindow& window,
 		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
 		std::shared_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep);
-	// Resource Handler reference
+
+	/// Resource Handler reference originating from GameEngine
 	std::shared_ptr<ResourceHandler>& resourceHandler;
 
 	// Bullets getter/setter
 	std::list<std::unique_ptr<Bullet>>& getBullets();
 
-	// Game Timestep flow
+	/// Timestep variable originating from GameEngine 
 	const sf::Time& timeStep;
 
 	// BulletFactory Getter
@@ -50,17 +57,22 @@ protected:
 	const int getStartHealth();
 	void setStartHealth(int value);
 
-	// Shooter type (Player || Enemy)
+	/// Shooter type (Player || Enemy)
 	ShooterType shooterType;
 
 private:
+	/// Integer value which describes Shooter 's current health
 	int health;
+
+	/// Integer which describes startHealth and the totalHealth (since the Shooter starts with 100% health)
 	int startHealth;
 
-	// References to bullets and bulletfactory
+	/// Reference to the Bullet list which originates from World.h (World)
 	std::list<std::unique_ptr<Bullet>>& bullets;
+
+	/// BulletFactory reference which originates from World.h (World)
 	BulletFactory& bFactory;
 
-	// Shooter's Worth (Value)
+	/// Shooter 's score value, this value determines the point gain when an Shooter dies (ie Player kills Enemy)
 	float scoreValue;
 };

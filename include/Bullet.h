@@ -3,11 +3,13 @@
 #include "Shooter.h"
 
 /// <summary>
-/// This class represents a bullet in the game, these bullets will be handled by BulletFactory.h
+/// This class represents a bullet in the game, these bullets will be handled by the BulletFactory
 /// </summary>
 class Bullet : public Object
 {
 public:
+
+	/// Defines the Bullet Type in an enumerable. This is all implemented bullets in the Game.
 	const enum Type {
 		standardShot = 1,
 		heavyShot = 5
