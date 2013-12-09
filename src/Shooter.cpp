@@ -6,7 +6,7 @@
 Shooter::Shooter(sf::RenderWindow& window,
 	BulletFactory& bFactory,
 	std::list<std::unique_ptr<Bullet>>& bullets,
-	std::unique_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep) :
 	Object(window),
 	bullets(bullets),

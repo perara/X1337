@@ -251,7 +251,7 @@ GameState& GameEngine::getState()
 }
 
 
-std::unique_ptr<ResourceHandler>& GameEngine::getResourceHandler()
+std::shared_ptr<ResourceHandler>& GameEngine::getResourceHandler()
 {
 	return this->resourceHandler;
 }

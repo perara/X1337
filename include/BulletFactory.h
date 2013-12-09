@@ -17,7 +17,7 @@ public:
 		int quantity, 
 		std::list<std::unique_ptr<Bullet>>& bullets, 
 		const sf::Time& timeStep, 
-		std::unique_ptr<ResourceHandler>& resourceHandler);
+		std::shared_ptr<ResourceHandler>& resourceHandler);
 
 	void returnObject(std::unique_ptr<Bullet> bullet);
 	std::list<std::unique_ptr<Bullet>> requestBatch(int quantity, Bullet::Type type);
@@ -30,5 +30,5 @@ private:
 	sf::RenderWindow& window;
 	int initQuantity;
 	const sf::Time& timeStep;
-	std::unique_ptr<ResourceHandler>& resourceHandler;
+	std::shared_ptr<ResourceHandler>& resourceHandler;
 };

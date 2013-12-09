@@ -22,7 +22,7 @@ Player::Player(sf::RenderWindow& window,
 	sf::Vector2f pos,
 	int radius, BulletFactory& bFactory,
 	std::list<std::unique_ptr<Bullet>>& bullets,
-	std::unique_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep,
 	const bool hardMode
 	) :

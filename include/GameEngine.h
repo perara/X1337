@@ -36,7 +36,7 @@ public:
 	GameState& getState();
 
 	// Resource Handler getter/setter
-	std::unique_ptr<ResourceHandler>& GameEngine::getResourceHandler();
+	std::shared_ptr<ResourceHandler>& GameEngine::getResourceHandler();
 
 private:
 	void runGame();
@@ -52,7 +52,7 @@ private:
 
 	std::unique_ptr<World> world;
 	std::unique_ptr<Menu> menu;
-	std::unique_ptr<ResourceHandler> resourceHandler;
+	std::shared_ptr<ResourceHandler> resourceHandler;
 
 	const sf::Time timeStep;
 	sf::Time elapsedTime;

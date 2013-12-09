@@ -9,8 +9,18 @@
 
 
 
+/// <summary>
+/// Initializes a new instance of the <see cref="World"/> class.
+/// </summary>
+/// <param name="window">The render window</param>
+/// <param name="resourceHandler">The resource handler.</param>
+/// <param name="timeStep">The time step which is set constant in the game engine</param>
+/// <param name="demo">The demo flag, which is determined by the state world is initiated from</param>
+/// <param name="scriptNum">Which script should be runned in this world instance</param>
+/// <param name="hardMode">Weither its hardmode or not.</param>
+/// <param name="ingameSong">Selected ingame sound</param>
 World::World(sf::RenderWindow& window,
-	std::unique_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep,
 	const bool demo,
 	const int scriptNum,
@@ -32,42 +42,59 @@ World::World(sf::RenderWindow& window,
 	{
 		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND2), false);
 		script = resourceHandler->getScript(ResourceHandler::Scripts::GAME_MENU);
+		currentScript = scriptNum;
 		ingameSong.play();
 	}
 	else
 	{
-		script = resourceHandler->getScriptById(scriptNum);
-		// Initialize Background
 		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND3), true);
+		script = resourceHandler->getScriptById(scriptNum);
 		currentScript = scriptNum;
+
+		// Aditionally adds the player and starts the countdown soundtrack
 		addObject(std::shared_ptr<Player>(player));
 		countdownSong.play();
 	}
-	startSound();
 
+	// Runs the sounds (Had to be done frome seperate function for some reason, (dies in the constructor?)
+	startSound();
 }
 
+/// <summary>
+/// Finalizes an instance of the <see cref="World"/> class.
+/// </summary>
 World::~World()
 {
 	LOGD("World deconstructor called");
 }
 
+/// <summary>
+/// Starts the sound.
+/// </summary>
 void World::startSound()
 {
 	ingameSong.play();
 }
 
+/// <summary>
+/// Stops the sound.
+/// </summary>
 void World::stopSound()
 {
+	// Check weither the songs are playing or not. If a song is playing, we stop them.
 	if (countdownSong.getStatus() != 0) countdownSong.stop();
 	if (ingameSong.getStatus() != 0) ingameSong.stop();
 }
 
+/// <summary>
+/// Processes this instance.
+/// </summary>
 void World::process()
 {
+	// Process the background
 	bg.process();
 
-	// Process the loaded script IF countdown is done and its not a demo (Demo dont have countdown)
+	// Process the loaded script IF countdown is done and its not a demo (Demo does not have countdown)
 	bool scriptRunning;
 	(countdownSong.getStatus() != 0 && !demo) ?
 		scriptRunning = true :
@@ -80,26 +107,37 @@ void World::process()
 	{
 		for (std::list<std::shared_ptr<Shooter>>::iterator i = objects.begin(); i != objects.end();)
 		{
-			// Process
+			// Process the object (Player and enemy)
 			(*i)->process();
 
-			// Cleanup
+
+			///////////////////////////////////
+			////////////CLEANUP////////////////
+			///////////////////////////////////
+			// Checks if the object's delete flag is set
 			if ((*i)->getDeleted())
-			{ // If the bullet is up for deletion
+			{
+				// Checks if the object is a enemy
 				if ((*i)->getType() == Shooter::ShooterType::ENEMY)
 				{
+					// Increment the score value of the enemy
 					player->addScore((*i)->getScoreValue());
 				}
+				// Checks if the object is a player
 				else if ((*i)->getType() == Shooter::ShooterType::PLAYER)
 				{
+					// Sets gameOver flag
 					gameOver = true;
+
+					// Checks if the playerscore higher than 0 and writes to the Highscore.
 					int multiplier = ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
 					if (player->getPlayerScore() > 0)
 					{
 						resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
 					}
-				}
 
+				}
+				// Delete the object from the list and continiue looping
 				i = objects.erase(i);
 			}
 			else
@@ -108,9 +146,13 @@ void World::process()
 			}
 		}
 	}
-	else // Nothing more to do, game is over.
+	// Nothing more to do, game is over.
+	else 
 	{
+		// Sets gameOver flag;
 		gameOver = true;
+
+		// Writes to the Highscore.
 		int multiplier = ((getHardMode()) ? 2 : 1); // Hardmode multiplier.
 		if (currentScript != -1) resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
 	}
@@ -122,17 +164,24 @@ void World::process()
 	{
 		for (std::list<std::unique_ptr<Bullet>>::iterator it = bullets.begin(); it != bullets.end();)
 		{
-			// Process
+			// Process the bullets
 			(*it)->process();
 
-			// Cleanup
+			///////////////////////////////////
+			////////////CLEANUP////////////////
+			///////////////////////////////////
+			// Checks if the delete flag is set for the bullet
 			if ((*it)->getDeleted())
 			{
+				// Return the bullet to the bullet factory
 				bFactory.returnObject(std::move(*it));
+
+				// Delete the pointer from the list and set the iterator
 				it = bullets.erase(it);
 			}
 			else
 			{
+				// Increment the iterator
 				++it;
 			}
 		}
@@ -146,7 +195,7 @@ void World::process()
 
 		for (std::list<std::shared_ptr<Powerup>>::iterator it = powerups.begin(); it != powerups.end();)
 		{
-			// Process
+			// Process the power ups
 			(*it)->process();
 
 			// Check if player and powerup collide
@@ -158,7 +207,10 @@ void World::process()
 				player->powerUp((*it)->getPowerUpType());
 			}
 
-			// Cleanup
+			///////////////////////////////////
+			////////////CLEANUP////////////////
+			///////////////////////////////////
+			// Checks if the powerups's delete flag is set
 			if ((*it)->getDeleted())
 			{
 				it = powerups.erase(it);
@@ -172,6 +224,9 @@ void World::process()
 
 }
 
+/// <summary>
+/// Draws the player stats. (Tunneled function because of alternative view)
+/// </summary>
 void World::drawStats()
 {
 	player->drawStats(resourceHandler->getHighScores()[(ResourceHandler::Scripts)currentScript]);
@@ -179,6 +234,10 @@ void World::drawStats()
 
 }
 
+/// <summary>
+/// Determines whether [is game over].
+/// </summary>
+/// <returns></returns>
 bool World::isGameOver()
 {
 	return gameOver;
@@ -194,6 +253,10 @@ void World::addObject(std::shared_ptr<Shooter> object)
 	this->objects.push_back(object);
 }
 
+/// <summary>
+/// Adds a bullet to the bullet list
+/// </summary>
+/// <param name="bullet">The bullet.</param>
 void World::addBullet(std::unique_ptr<Bullet> bullet)
 {
 	//LOGD("Object#" << object << " | Object Size: " << this->objects.size());
@@ -243,11 +306,19 @@ void World::draw()
 	}
 }
 
+/// <summary>
+/// Inputs handler for world, tunelled to the appropriate places)
+/// </summary>
+/// <param name="event">The event.</param>
 void World::input(sf::Event& event)
 {
 	this->player->input(event);
 }
 
+/// <summary>
+/// Gets hard mode flag
+/// </summary>
+/// <returns></returns>
 const bool World::getHardMode()
 {
 	return hardMode;

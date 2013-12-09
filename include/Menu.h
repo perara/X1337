@@ -11,7 +11,7 @@
 class Menu : public Scene{
 public:
 
-	Menu(sf::RenderWindow& window, GameState& state, std::unique_ptr<ResourceHandler>& resourceHandler);
+	Menu(sf::RenderWindow& window, GameState& state, std::shared_ptr<ResourceHandler>& resourceHandler);
 
 	virtual void draw();
 	virtual void updateCurrentOption();

@@ -50,7 +50,7 @@ public:
 		std::list<std::shared_ptr<Powerup>>& powerups,
 		std::list<std::unique_ptr<Bullet>>& bullets,
 		BulletFactory& bFactory,
-		std::unique_ptr<ResourceHandler>& resourceHandler,
+		std::shared_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep);
 
 	// Get/Set scriptName

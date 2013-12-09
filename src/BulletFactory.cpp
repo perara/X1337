@@ -12,7 +12,7 @@ BulletFactory::BulletFactory(sf::RenderWindow& window,
 	int quantity,
 	std::list<std::unique_ptr<Bullet>>& bullets,
 	const sf::Time& timeStep,
-	std::unique_ptr<ResourceHandler>& resourceHandler) :
+	std::shared_ptr<ResourceHandler>& resourceHandler) :
 	initQuantity(quantity),
 	window(window),
 	bullets(bullets),

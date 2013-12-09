@@ -14,7 +14,7 @@ public:
 		heavyShot = 5
 	};
 
-	Bullet(sf::RenderWindow& window, Bullet::Type, const sf::Time& timeStep, std::unique_ptr<ResourceHandler>& resourceHandler);
+	Bullet(sf::RenderWindow& window, Bullet::Type, const sf::Time& timeStep, std::shared_ptr<ResourceHandler>& resourceHandler);
 
 	virtual void process();
 

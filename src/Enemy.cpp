@@ -8,7 +8,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 	std::queue<sf::Vector3f> path,
 	int type, int repeat, BulletFactory& bFactory,
 	std::list<std::unique_ptr<Bullet>>& bullets,
-	std::unique_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep
 	) :
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)

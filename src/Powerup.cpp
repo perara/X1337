@@ -8,7 +8,7 @@ Powerup::Powerup(
 	sf::RenderWindow& window,
 	sf::Vector3f startPoint,
 	int type,
-	std::unique_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep
 	) :
 	resourceHandler(resourceHandler),

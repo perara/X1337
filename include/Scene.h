@@ -8,7 +8,7 @@
 class Scene
 {
 public:
-	Scene(sf::RenderWindow& window, std::unique_ptr<ResourceHandler>& resourceHandler) :
+	Scene(sf::RenderWindow& window, std::shared_ptr<ResourceHandler>& resourceHandler) :
 		window(window),
 		resourceHandler(resourceHandler){};
 
@@ -18,6 +18,6 @@ public:
 
 protected:
 	sf::RenderWindow& window;
-	std::unique_ptr<ResourceHandler>& resourceHandler;
+	std::shared_ptr<ResourceHandler>& resourceHandler;
 	bool inited;
 };

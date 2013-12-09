@@ -28,10 +28,10 @@ protected:
 	Shooter(sf::RenderWindow& window,
 		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
-		std::unique_ptr<ResourceHandler>& resourceHandler,
+		std::shared_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep);
 	// Resource Handler reference
-	std::unique_ptr<ResourceHandler>& resourceHandler;
+	std::shared_ptr<ResourceHandler>& resourceHandler;
 
 
 	// Set the type of this shooter (Enemy || Player)

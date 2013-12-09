@@ -2,10 +2,14 @@
 #include "Log.h"
 #include "GameShape.h"
 
+/// <summary>
+/// Draws this Object.
+/// </summary>
 void Object::draw()
 {
 	this->window.draw(*this->sprite);
 
+	// Bounding boxes.
 	/*sf::RectangleShape();
 	sf::FloatRect bounds = this->sprite->getGlobalBounds();
 	sf::RectangleShape af(sf::Vector2f(bounds.width,bounds.height));
@@ -16,20 +20,36 @@ void Object::draw()
 	this->window.draw(af);*/
 
 }
+/// <summary>
+/// Processes the object
+/// </summary>
 void Object::process(){}
 
+/// <summary>
+/// Get the deleted flag
+/// </summary>
+/// <returns>Returns bool with deleted status</returns>
 bool Object::getDeleted(){
 	return this->deleted;
 }
 
+/// <summary>
+/// Sets the deleted flag
+/// </summary>
+/// <param name="del">The delete flag</param>
 void Object::setDeleted(bool del)
 {
 	deleted = del;
 }
 
 
+/// <summary>
+/// Determines whether [is out of bounds].
+/// </summary>
+/// <returns></returns>
 bool Object::isOutOfBounds()
 {
+	// Checks weither a object is out of bounds (out of screen)
 	if (this->sprite->getPosition().x > window.getView().getSize().x ||
 		this->sprite->getPosition().x < 0 ||
 		this->sprite->getPosition().y > window.getView().getSize().y ||
@@ -41,11 +61,20 @@ bool Object::isOutOfBounds()
 	}
 }
 
+/// <summary>
+/// Finalizes an instance of the <see cref="Object"/> class.
+/// </summary>
 Object::~Object()
 {
-
+	LOGD("Object Deconstructor called");
 }
 
+/// <summary>
+/// Superplan Axis Theorem, this function takes in two game shapes and checks if they collide. This only works on CONVEX polygons.
+/// </summary>
+/// <param name="c1">First GameShape.</param>
+/// <param name="c2">Second GameShape</param>
+/// <returns>Intersection flag (intersects or not)</returns>
 bool Object::sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2)
 {
 	int c1_tx = c1->getPosition().x;

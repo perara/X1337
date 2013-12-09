@@ -17,7 +17,7 @@ public:
 		int radius,
 		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
-		std::unique_ptr<ResourceHandler>& resourceHandler,
+		std::shared_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep,
 		const bool hardmode
 		);

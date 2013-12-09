@@ -17,7 +17,7 @@ public:
 	World();
 	~World();
 	World(sf::RenderWindow& window,
-		std::unique_ptr<ResourceHandler>& resourceHandler,
+		std::shared_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep,
 		const bool demo,
 		const int scriptNum,

@@ -3,33 +3,53 @@
 #include <sstream>
 
 
-Menu::Menu(sf::RenderWindow& window, GameState& state, std::unique_ptr<ResourceHandler>& resourceHandler) :
+Menu::Menu(sf::RenderWindow& window, GameState& state, std::shared_ptr<ResourceHandler>& resourceHandler) :
+/// <summary>
+/// Initializes a new instance of the <see cref="Menu"/> class.
+/// </summary>
+/// <param name="window">The window.</param>
+/// <param name="state">The state.</param>
+/// <param name="resourceHandler">The resource handler.</param>
 Scene(window, resourceHandler),
 state(state),
 hardmodeSelected(false)
 {
 	this->init();
 }
+/// <summary>
+/// Processes this instance.
+/// </summary>
 void Menu::process(){}
 
 
+/// <summary>
+/// Resets the menu instance
+/// </summary>
 void Menu::reset()
 {
+	// Stop Menu song
 	resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).stop();
 }
 
+/// <summary>
+/// Return the value selected on the menu weither hardmode was selected. 
+/// </summary>
+/// <returns>bool if hardmode is selected</returns>
 bool Menu::getHardmodeSelected()
 {
 	return hardmodeSelected;
 }
 
+/// <summary>
+/// Initializes the menu, This defines all of the Menu options in maps and adds this to an map .
+/// </summary>
 void Menu::init()
 {
 
-	// Get script names
+	// Retrieve all script names
 	for (auto&i : resourceHandler->getScripts()) scripts.push_back(i);
 
-
+	// Construct the "Main Options" map
 	std::map<Menu::Options, std::string> mainMenu;
 	{
 		mainMenu[Menu::Options::NEW_GAME] = "New Game";
@@ -39,29 +59,34 @@ void Menu::init()
 		mainMenu[Menu::Options::EXIT_GAME] = "Exit Game";
 	}
 
+	// Construct the "Stage select Options" map
 	std::map<Menu::Options, std::string> stageSelect;
 	{
 		stageSelect[Menu::Options::BACK] = "Back";
 		stageSelect[Menu::Options::SELECT_STAGE] = "Select Stage";
 	}
 
+	// Construct the "Difficulty Options" map
 	std::map<Menu::Options, std::string> difficultySelect;
 	{
 		difficultySelect[Menu::Options::NORMAL] = "Normal";
 		difficultySelect[Menu::Options::HARD] = "HARD!!";
 	}
 
+	// Construct the "High Score Options" map
 	std::map<Menu::Options, std::string> highScore;
 	{
 		highScore[Menu::Options::BACK] = "Back";
 	}
 
+	// Construct the "Pause Options" map
 	std::map<Menu::Options, std::string> pause;
 	{
 		pause[Menu::Options::CONTINUE_GAME] = "Continue";
 		pause[Menu::Options::TO_MAIN_MENU] = "Return to Main Menu";
 	}
 
+	// Construct the "Game Over Options" map
 	std::map<Menu::Options, std::string> gameOver;
 	{
 		gameOver[Menu::Options::RESTART_STAGE] = "Restart Game";
@@ -84,6 +109,7 @@ void Menu::init()
 	// Set default stage select to 1
 	setStageSelectOption(1);
 
+	// Checks weither current state has any options, if it does not, we set current option to the main menu.
 	if (!option[state].empty())
 	{
 		setCurrentOption(option[state].begin()->first);
@@ -94,6 +120,9 @@ void Menu::init()
 	}
 }
 
+/// <summary>
+/// Updates the current option.
+/// </summary>
 void Menu::updateCurrentOption()
 {
 	this->setCurrentOption(option[state].begin()->first);
@@ -101,6 +130,9 @@ void Menu::updateCurrentOption()
 /////////////////////////////////////////////
 ////Preload the menu options into a map//////
 /////////////////////////////////////////////
+/// <summary>
+/// Loads the menu options into the option map.
+/// </summary>
 void Menu::loadMenuOptions()
 {
 	for (auto &i : optMap) // Iterate through maps of options
@@ -124,11 +156,17 @@ void Menu::loadMenuOptions()
 	}
 }
 
-/////////////////////////////////////////////
-//////////Input handler for menu/////////////
-/////////////////////////////////////////////
+/// <summary>
+/// Input handler for menu. all events is handler here.
+/// </summary>
+/// <param name="event">The event</param>
+/// ///////////////////////////////////////////
+/// ////////Input handler for menu/////////////
+/// ///////////////////////////////////////////
 void Menu::input(sf::Event& event)
 {
+
+	// Handler for when clicking the UP key
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
 	{
 		resourceHandler->getSound(ResourceHandler::Sound::MENU_CLICK).play();
@@ -146,6 +184,7 @@ void Menu::input(sf::Event& event)
 
 	}
 
+	// Handler for when clicking the DOWN key
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
 	{
 		resourceHandler->getSound(ResourceHandler::Sound::MENU_CLICK).play();
@@ -161,6 +200,7 @@ void Menu::input(sf::Event& event)
 		}
 
 	}
+
 	// Each of the switch cases below is which action state that should be set whenever a user clicks enter on the selected 
 	// menu choice. Lets say the user selects EXIT_GAME, we then want to exit the game. This is general for all menu's, hence
 	// the mess.
@@ -247,8 +287,13 @@ void Menu::input(sf::Event& event)
 	if (state == GameState::STAGE_SELECT)	stageSelectInput(event);
 }
 
+/// <summary>
+/// Input handler for stage select.
+/// </summary>
+/// <param name="event">The event object</param>
 void Menu::stageSelectInput(sf::Event& event)
 {
+	// Handler for when clicking the LEFT key
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
 	{
 		LOGD("Current Stage selected: " << getStageSelectOption());
@@ -263,6 +308,8 @@ void Menu::stageSelectInput(sf::Event& event)
 		}
 
 	}
+
+	// Handler for when clicking the RIGHT key
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
 	{
 		LOGD("Current Stage selected: " << getStageSelectOption());
@@ -284,20 +331,36 @@ void Menu::stageSelectInput(sf::Event& event)
 //////////////////////////////////////////////
 //Getter/Setter for current option variables//
 //////////////////////////////////////////////
+/// <summary>
+/// Gets the currently selected option.
+/// </summary>
+/// <returns>Option as INT</returns>
 int Menu::getCurrentOption()
 {
 	return this->currentOption;
 }
 
+/// <summary>
+/// Sets the current selected option to the opt int
+/// </summary>
+/// <param name="opt">The option which is required selected</param>
 void Menu::setCurrentOption(int opt)
 {
 	this->currentOption = opt;
 }
 
+/// <summary>
+/// Gets the stage select option.
+/// </summary>
+/// <returns>Returns the selected value on stage</returns>
 int Menu::getStageSelectOption()
 {
 	return this->stageSelectOption;
 }
+/// <summary>
+/// Sets the stage select option.
+/// </summary>
+/// <param name="opt">The option which is required selected</param>
 void Menu::setStageSelectOption(int opt)
 {
 	this->stageSelectOption = opt;
@@ -306,9 +369,15 @@ void Menu::setStageSelectOption(int opt)
 /////////////////////////////////////////////
 ///////Draw implementation for Menu//////////
 /////////////////////////////////////////////
+/// <summary>
+/// Draws the menu
+/// </summary>
 void Menu::draw()
 {
+	// Draws the game title
 	drawGameTitle();
+
+	// A switch case which determine which menu is to be drawed.
 	switch (state)
 	{
 	case GameState::MAIN_MENU:
@@ -343,6 +412,9 @@ void Menu::draw()
 /////////////////////////////////////////////
 //////////Main menu draw function////////////
 /////////////////////////////////////////////
+/// <summary>
+/// Draws the main menu.
+/// </summary>
 void Menu::drawMainMenu()
 {
 }
@@ -350,9 +422,16 @@ void Menu::drawMainMenu()
 /////////////////////////////////////////////
 ////Draw menu options for current state//////
 /////////////////////////////////////////////
+/// <summary>
+/// Draws all of the options for based on state.
+/// </summary>
+/// <param name="state">Current selected state..</param>
+/// <param name="xOffset">The x offset position</param>
+/// <param name="yOffset">The y offset position</param>
+/// <param name="color">The color on the option</param>
 void Menu::drawOptions(GameState state, int xOffset, int yOffset, sf::Color color)
 {
-	// Draw Options
+	// Draw options
 	for (auto& i : option[state])
 	{
 		i.second.move(xOffset, yOffset); // Move 'x' offset and 'y' offset
@@ -376,6 +455,9 @@ void Menu::drawOptions(GameState state, int xOffset, int yOffset, sf::Color colo
 /////////////////////////////////////////////
 ///////////////Game title////////////////////
 /////////////////////////////////////////////
+/// <summary>
+/// Draws the game title.
+/// </summary>
 void Menu::drawGameTitle()
 {
 	// Draw Game Title text
@@ -402,14 +484,22 @@ void Menu::drawGameTitle()
 /////////////////////////////////////////////
 ////////////Stage Selection//////////////////
 /////////////////////////////////////////////
+/// <summary>
+/// Draws the stage select.
+/// </summary>
 void Menu::drawStageSelect()
 {
+	// Finds where the first frame should be drawed,
 	sf::Vector2f frameStartPos((window.getView().getSize().x / 4) - 60, window.getView().getSize().y / 4);
+
+	// Counter, and y multiplier for the frames ( this is increased when an modulo X is reached)
 	int yMult = 1;
 	int count = 1;
 	int cnt = count;
 
 	sf::FloatRect currentStageSelBounds; // Read as Current stage select bounds
+
+	// Get each of the script names
 	for (Script& i : scripts)
 	{
 		// Ignore Game menu script 
@@ -436,6 +526,8 @@ void Menu::drawStageSelect()
 
 		if (getStageSelectOption() == cnt) currentStageSelBounds = txtName.getGlobalBounds(); // Get current selected stage's text bounds
 
+		// This checks if the the frame width is reached (4 in a row)
+		// If it is we increment the multiplier to reach next line
 		count++;
 		if (count % 4 == 1)
 		{
@@ -457,19 +549,22 @@ void Menu::drawStageSelect()
 /////////////////////////////////////////////
 ///////////Credits draw function/////////////
 /////////////////////////////////////////////
+/// <summary>
+/// Draws the credits.
+/// </summary>
 void Menu::drawCredits()
 {
 	// Draw Simple credits
-
 	std::map<std::string, std::list<std::string>> credMap = resourceHandler->getCredits();
 
+	// Start positions
 	int startX = window.getView().getSize().x / 2;
 	int startY = window.getView().getSize().y / 4;
 
 	// Iterate though all of the credits categories
 	for (auto& credCats : credMap)
 	{
-
+		// Draw the category
 		sf::Text txtCredCat;
 		txtCredCat.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 		txtCredCat.setString(credCats.first);
@@ -482,6 +577,7 @@ void Menu::drawCredits()
 		// Iterate through all of the credits for each of the categories
 		for (std::string & credIt : credCats.second)
 		{
+			// Draw credit text.
 			sf::Text txtCred;
 			txtCred.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 			txtCred.setString(credIt);
@@ -494,19 +590,16 @@ void Menu::drawCredits()
 
 	}
 
-	/*sf::Text txtCredits;
-	txtCredits.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-	txtCredits.setString(i.getScriptTitle());
-	txtCredits.setCharacterSize(20);
-	txtCredits.setColor(sf::Color::White);
-	txtCredits.setPosition(frame.getPosition().x, frame.getPosition().y + frame.getSize().y);
-	window.draw(txtName);*/
-
 }
 
 /////////////////////////////////////////////
 ///////////////Draw Pause////////////////////
 /////////////////////////////////////////////
+/// <summary>
+/// Draws the pause.
+/// </summary>
+/// <param name="xOffSet">The x offset.</param>
+/// <param name="yOffset">The y offset.</param>
 void Menu::drawPause(int xOffSet, int yOffset)
 {
 	drawOptions(state, xOffSet, yOffset, sf::Color::White);
@@ -517,33 +610,37 @@ void Menu::drawPause(int xOffSet, int yOffset)
 /////////////////////////////////////////////
 /////////////Draw Highscore//////////////////
 /////////////////////////////////////////////
+/// <summary>
+/// Draws the high score.
+/// </summary>
 void Menu::drawHighScore()
 {
+	// Get all of the highscores (Bad practice, needs work. Should not retrieve every frame)
 	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> hScore = resourceHandler->getHighScores();
+
+	// Determine the start y and x pos
 	int xPos = window.getView().getSize().x / 8;
 	int yPos = window.getView().getSize().y / 4;
 
+	// Draw the score header
 	sf::Text txtScore;
 	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 	txtScore.setString(sf::String("Stage \t Playername \t Score \t Date"));
 	txtScore.setPosition(xPos, yPos);
-
 	window.draw(txtScore);
 
-
+	// Draw each of top 1 highscores
 	for (auto & i : hScore)
 	{
 		std::shared_ptr<HighScoreItem> item = i.second.front();
-
 		yPos += 50;
 
+		// Draw the text
 		sf::Text txtScore;
 		txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 		txtScore.setString(sf::String(std::to_string((int)item->stage) + "\t\t\t\t\t" + item->playerName + "\t\t\t\t" + std::to_string((int)item->score) + "\t" + item->date));
 		txtScore.setPosition(xPos, yPos);
-
 		window.draw(txtScore);
-
 	}
 
 }

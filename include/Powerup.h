@@ -26,7 +26,7 @@ public:
 	sf::RenderWindow& window,
 	sf::Vector3f startPoint,
 	int type,
-	std::unique_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep
 	);
 
@@ -40,6 +40,6 @@ private:
 	const sf::Time& timeStep;
 	void doAction(std::shared_ptr<Player>& player);
 	Powerup::PowerUpType type;
-	std::unique_ptr<ResourceHandler>& resourceHandler;
+	std::shared_ptr<ResourceHandler>& resourceHandler;
 
 };

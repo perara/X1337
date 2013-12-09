@@ -10,7 +10,7 @@
 /// </summary>
 /// <param name="window">The render window.</param>
 /// <param name="type">The bullet type.</param>
-Bullet::Bullet(sf::RenderWindow& window, Bullet::Type bulletType, const sf::Time& timeStep, std::unique_ptr<ResourceHandler>& resourceHandler) :
+Bullet::Bullet(sf::RenderWindow& window, Bullet::Type bulletType, const sf::Time& timeStep, std::shared_ptr<ResourceHandler>& resourceHandler) :
 Object(window),
 bulletType(bulletType),
 timeStep(timeStep),
