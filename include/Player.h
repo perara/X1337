@@ -28,7 +28,7 @@ public:
 
 	void addScore(float score); // Adds a X sum to player's score
 	void drawStats(std::list<std::shared_ptr<HighScoreItem>>&);
-	
+
 	int getPlayerScore();
 
 	void powerUp(Powerup::PowerUpType);

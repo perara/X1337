@@ -147,7 +147,7 @@ void World::process()
 		}
 	}
 	// Nothing more to do, game is over.
-	else 
+	else
 	{
 		// Sets gameOver flag;
 		gameOver = true;

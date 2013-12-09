@@ -5,7 +5,7 @@
 /// Initializes a new instance of the <see cref="Background"/> class.
 /// </summary>
 /// <param name="window">The window.</param>
-Background::Background(sf::RenderWindow& window) : 
+Background::Background(sf::RenderWindow& window) :
 window(window),
 slide(false){}
 
@@ -57,7 +57,7 @@ void Background::process()
 		// Move both images down a paxel.
 		primary.move(0, 1);
 		secondary.move(0, 1);
-		
+
 		// Checks if the image has reached out of bounds position
 		if (secondary.getGlobalBounds().top >= secondary.getGlobalBounds().height)
 		{

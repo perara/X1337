@@ -293,7 +293,7 @@ void Enemy::process()
 	// ENemy has travelled the path, get a new one
 	else
 	{
-		
+
 		// Check if there is any other paths to go
 		if (path.size() > 1)
 		{

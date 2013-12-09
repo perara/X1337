@@ -12,12 +12,12 @@ class Background
 {
 public:
 	Background(sf::RenderWindow& window);
-	
+
 	void addBackground(sf::Texture&, bool);
 	void process();
 	void draw();
 
-private:	
+private:
 	sf::RenderWindow& window;
 
 	std::queue<sf::Sprite> images;
@@ -25,7 +25,7 @@ private:
 
 	sf::Sprite primary;
 	sf::Sprite secondary;
-	
+
 	int scrollOffset;
 	bool slide;
 };

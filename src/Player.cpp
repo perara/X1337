@@ -254,7 +254,7 @@ void Player::input(sf::Event& event)
 {
 	// Player's left mouse click shoot handler
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && normalShotClock.getElapsedTime().asMilliseconds() > 150){
-		
+
 		// Request a standard bullet and sets the appropriate data
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 		b->setOwner(getType());
@@ -283,7 +283,7 @@ void Player::input(sf::Event& event)
 
 		// Push the bullet to the bullet list
 		getBullets().push_back(std::move(b));
-	
+
 		// Restart the clock
 		specialShotClock.restart();
 	}
@@ -311,7 +311,7 @@ void Player::input(sf::Event& event)
 			{
 				sprite->move(0, -elapsed_y);
 			}
-			
+
 			sf::Mouse::setPosition(sf::Vector2i((window.getView().getSize().x / 2), (window.getView().getSize().y / 2)), window);
 		}
 	}
