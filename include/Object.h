@@ -21,7 +21,7 @@ public:
 	std::shared_ptr<GameShape> sprite;
 
 	virtual void draw();
-	virtual void process();
+	virtual void process() = 0;
 protected:
 	bool isOutOfBounds();
 
