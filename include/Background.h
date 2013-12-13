@@ -31,4 +31,9 @@ private:
 
 	int scrollOffset;
 	bool slide;
+
+	/// Variables which is used to create a rainbow color on the background.
+	int r;
+	int g;
+	int b;
 };

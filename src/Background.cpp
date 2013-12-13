@@ -1,13 +1,17 @@
 #include "Background.h"
 #include "Log.h"
 
+
 /// <summary>
 /// Initializes a new instance of the <see cref="Background"/> class.
 /// </summary>
 /// <param name="window">The window.</param>
 Background::Background(sf::RenderWindow& window) :
-window(window),
-slide(false){}
+	window(window),
+	r(255),
+	g(0),
+	b(0),
+	slide(false){}
 
 
 /// <summary>
@@ -55,8 +59,39 @@ void Background::process()
 	if (slide)
 	{
 		// Move both images down a paxel.
-		primary.move(0, 1);
-		secondary.move(0, 1);
+		primary.move(0, 2);
+		secondary.move(0, 2);
+
+		/// Set colors to current iteration color" 
+		primary.setColor(sf::Color(r,g,b));
+		secondary.setColor(sf::Color(r,g,b));
+
+		/// Iterate over the rainbow (Lol way to do it )
+		if ( r == 255 && g < 255 && b == 0 )
+		{
+			g++;
+		}
+		if ( g == 255 && r > 0 && b == 0 )
+		{
+			r--;
+		}
+		if ( g == 255 && b < 255 && r == 0 )
+		{
+			b++;
+		}
+		if ( b == 255 && g > 0 && r == 0 )
+		{
+			g--;
+		}
+		if ( b == 255 && r < 255 && g == 0 )
+		{
+			r++;
+		}
+		if ( r == 255 && b > 0 && g == 0 )
+		{
+			b--;
+		}
+
 
 		// Checks if the image has reached out of bounds position
 		if (secondary.getGlobalBounds().top >= secondary.getGlobalBounds().height)

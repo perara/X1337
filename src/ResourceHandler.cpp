@@ -48,6 +48,7 @@ void ResourceHandler::init()
 		textureList[Texture::ENEMY_SHIP] = "assets/sprites/enemy_ship.png";
 		textureList[Texture::BOSS] = "assets/sprites/boss.png";
 		textureList[Texture::HEAVY_SHOT_TEXTURE] = "assets/sprites/heavy_shot.jpg";
+		textureList[Texture::REGULAR_BULLET_1] = "assets/sprites/regular_bullet_1.png";
 		textureList[Texture::BOSS_DEATHSTAR_TEXTURE] = "assets/sprites/deathStar.png";
 		textureList[Texture::CHUBBY_SHIP_TEXTURE] = "assets/sprites/chubby.png";
 

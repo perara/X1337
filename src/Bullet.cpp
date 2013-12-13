@@ -24,6 +24,7 @@ deg(-1) // Set rotation as -1 while not inited.
 	// Define the bullet texutres as a standard shot
 	if (Bullet::Type::standardShot == bulletType){
 		sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::CIRCLE, 3, 10));
+		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::REGULAR_BULLET_1));
 	}
 
 	// Define the bullet textures as a heavy shot 
