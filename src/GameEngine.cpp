@@ -16,7 +16,7 @@ timeStep(sf::seconds(1.0f / 240.f)), // Set timestep to 60 FPS
 // Declare all of the views
 fullScreen(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y))),
 mainView(sf::View(sf::FloatRect(0, 0, 800, 600))),
-playerStatsView(sf::View(sf::FloatRect(0, 0, 300, 600))),
+playerStatsView(sf::View(sf::FloatRect(0, 0, 800, 30))),
 menuGameDemoView(sf::View(sf::FloatRect(0, 0, 800, 600))),
 
 // Create a new Resource Handler (smart_ptr)
@@ -36,8 +36,8 @@ state(GameEngine::State::INIT_MAIN_MENU)
 	fullScreen.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
 	window.setView(fullScreen);
 
-	mainView.setViewport(sf::FloatRect(0, 0, 0.75f, 1));
-	playerStatsView.setViewport(sf::FloatRect(0.75f, 0, 0.25f, 1.0f));
+	mainView.setViewport(sf::FloatRect(0, 0, 1, 0.95f));
+	playerStatsView.setViewport(sf::FloatRect(0, 0.95f, 1.0f, 0.05f));
 	menuGameDemoView.setViewport(sf::FloatRect(0.40f, 0.40f, 0.25f, 0.25f));
 
 	// Init resourceHandler

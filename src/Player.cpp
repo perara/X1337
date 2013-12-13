@@ -33,15 +33,15 @@ float scoreTime;
 /// <param name="timeStep">The time step.</param>
 /// <param name="hardMode">The hard mode.</param>
 Player::Player(sf::RenderWindow& window,
-	sf::Vector2f pos,
-	int radius, BulletFactory& bFactory,
-	std::list<std::unique_ptr<Bullet>>& bullets,
-	std::shared_ptr<ResourceHandler>& resourceHandler,
-	const sf::Time& timeStep,
-	const bool hardMode
-	)
-	:
-	playerScore(0),
+			   sf::Vector2f pos,
+			   int radius, BulletFactory& bFactory,
+			   std::list<std::unique_ptr<Bullet>>& bullets,
+			   std::shared_ptr<ResourceHandler>& resourceHandler,
+			   const sf::Time& timeStep,
+			   const bool hardMode
+			   )
+			   :
+playerScore(0),
 	pulsateGun(false),
 
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
@@ -163,14 +163,14 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	sf::Text txtHealth;
 	txtHealth.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 	std::string dead = ((getHealth() <= 0) ? "Dead" : "");
-	txtHealth.setString(sf::String("Health: " + dead));
+	txtHealth.setString(sf::String(dead));
 	txtHealth.setCharacterSize(25);
-	txtHealth.setPosition(20, 20);
+	txtHealth.setPosition(0, 0);
 	txtHealth.setColor(sf::Color::White);
 
 	// Sets initial heart location
-	int heartY = 20;
-	int heartX = 105;
+	int heartY = 0;
+	int heartX = 5;
 
 	// Iterate each of the "healths", and display hearts
 	for (int i = 1; i <= getHealth(); i++)
@@ -185,14 +185,6 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 
 		// Append the width of an haeart to the X position
 		heartX += 35;
-
-		// Whenever it reaches the 5th element, append hearts Y position and reset the X pos.
-		if (i % 5 == 0)
-		{
-			heartY += sprite->getGlobalBounds().height;
-			heartX = 105;
-		}
-
 	}
 	window.draw(txtHealth);
 
@@ -201,38 +193,34 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 	txtScore.setString(sf::String("Score: " + std::to_string((int)playerScore)));
 	txtScore.setCharacterSize(25);
-	txtScore.setPosition(20, 80);
+	txtScore.setPosition(heartX + 10 + txtHealth.getGlobalBounds().width, 0);
 	txtScore.setColor(sf::Color::White);
 	window.draw(txtScore);
 
 
 	// Draw the stage highscore title
-	int initY = 150;
+	int initY = 0;
 	sf::Text txtHighScoreTitle;
 	txtHighScoreTitle.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-	txtHighScoreTitle.setString(sf::String("Stage highscore: "));
+	txtHighScoreTitle.setString(sf::String("HS: "));
 	txtHighScoreTitle.setCharacterSize(25);
-	txtHighScoreTitle.setPosition(20, initY);
+	txtHighScoreTitle.setPosition(txtScore.getPosition().x + txtScore.getGlobalBounds().width + 10, initY);
 	txtHighScoreTitle.setColor(sf::Color::White);
 	window.draw(txtHighScoreTitle);
 
-	// Draw Highscore for current scene
-	int rank = 1;
-	for (auto& i : highScoreList)
+	// Draw top 1
+	if(!highScoreList.empty())
 	{
-		if (rank == 10) break;
-		initY += 30;
-
+		std::shared_ptr<HighScoreItem> i = highScoreList.front();
 		sf::Text txtHighScore;
 		txtHighScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-		txtHighScore.setString(sf::String(std::to_string((int)rank) + "\t" + i->playerName + "\t" + std::to_string((int)i->score)));
+		txtHighScore.setString(sf::String(i->playerName + ": " + std::to_string((int)i->score)));
 		txtHighScore.setCharacterSize(25);
-		txtHighScore.setPosition(20, initY);
+		txtHighScore.setPosition(txtHighScoreTitle.getPosition().x + txtHighScoreTitle.getGlobalBounds().width, initY);
 		txtHighScore.setColor(sf::Color::White);
 		window.draw(txtHighScore);
-
-		rank++;
 	}
+
 
 
 }
@@ -344,7 +332,7 @@ void Player::powerUp(Powerup::PowerUpType powType)
 	// Health Pack Powerup
 	if (powType == Powerup::PowerUpType::HEALTH_INCREMENT)
 	{
-		setHealth(getHealth() + 1);
+		if(getHealth() > getStartHealth())(getHealth() + 1);
 	}
 
 	// Pulsating gun Powerup
