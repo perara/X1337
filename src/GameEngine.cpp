@@ -11,6 +11,8 @@ GameEngine::GameEngine() :
 window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize),
 timeStep(sf::seconds(1.0f / 240.f)), // Set timestep to 60 FPS
 
+
+
 // Declare all of the views
 fullScreen(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y))),
 mainView(sf::View(sf::FloatRect(0, 0, 800, 600))),
