@@ -59,8 +59,8 @@ void Background::process()
 	if (slide)
 	{
 		// Move both images down a paxel.
-		primary.move(0, 2);
-		secondary.move(0, 2);
+		primary.move(0, 1);
+		secondary.move(0, 1);
 
 		/// Set colors to current iteration color" 
 		primary.setColor(sf::Color(r,g,b));

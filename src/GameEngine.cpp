@@ -9,7 +9,7 @@
 GameEngine::GameEngine() :
 // Declare the Window
 window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize),
-timeStep(sf::seconds(1.0f / 60.0f)), // Set timestep to 60 FPS
+timeStep(sf::seconds(1.0f / 240.f)), // Set timestep to 60 FPS
 
 // Declare all of the views
 fullScreen(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y))),
@@ -26,7 +26,7 @@ mute(false),
 state(GameEngine::State::INIT_MAIN_MENU)
 {
 	// Window configuration
-	window.setFramerateLimit(120);
+	//window.setFramerateLimit(120);
 
 	//####################################//
 	//#########View Declaration###########//
