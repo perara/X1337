@@ -7,46 +7,6 @@
 				<Score>200</Score>
 				<Date>2013-12-09 20:04:34</Date>
 			</Player>
-			<Player>
-				<Name>PerArne</Name>
-				<Score>200</Score>
-				<Date>13-12-09 20:05:29</Date>
-			</Player>
-			<Player>
-				<Name>PerArne</Name>
-				<Score>700</Score>
-				<Date>13-12-09 20:05:42</Date>
-			</Player>
-			<Player>
-				<Name>PerArne</Name>
-				<Score>2900</Score>
-				<Date>13-12-13 22:52:56</Date>
-			</Player>
-			<Player>
-				<Name>PerArne</Name>
-				<Score>1400</Score>
-				<Date>13-12-13 23:01:06</Date>
-			</Player>
-			<Player>
-				<Name>PerArne</Name>
-				<Score>5500</Score>
-				<Date>13-12-13 23:08:41</Date>
-			</Player>
-			<Player>
-				<Name>PerArne</Name>
-				<Score>5100</Score>
-				<Date>13-12-13 23:20:07</Date>
-			</Player>
-			<Player>
-				<Name>PerArne</Name>
-				<Score>5700</Score>
-				<Date>13-12-13 23:21:08</Date>
-			</Player>
-			<Player>
-				<Name>PerArne</Name>
-				<Score>600</Score>
-				<Date>13-12-14 01:28:13</Date>
-			</Player>
 		</Stage>
 		<Stage enum="2">
 			<Player>
@@ -54,10 +14,12 @@
 				<Score>6500</Score>
 				<Date>13-12-13 23:10:08</Date>
 			</Player>
+		</Stage>
+		<Stage enum="4">
 			<Player>
 				<Name>PerArne</Name>
-				<Score>2500</Score>
-				<Date>13-12-13 23:10:22</Date>
+				<Score>100</Score>
+				<Date>13-12-14 22:34:27</Date>
 			</Player>
 		</Stage>
 	</Stages>

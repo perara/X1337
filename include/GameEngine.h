@@ -28,7 +28,11 @@ public:
 		CREDITS,
 		HIGHSCORE,
 		PAUSE,
-		GAMEOVER
+		GAMEOVER,
+
+
+		GAMEWIN,
+		INIT_NEXT_STAGE,
 
 	};
 
@@ -65,7 +69,7 @@ private:
 	sf::View mainView;
 	sf::View fullScreen;
 	sf::View menuGameDemoView;
-	sf::View playerStatsView;
+	sf::View playerBar;
 
 	State state;
 };

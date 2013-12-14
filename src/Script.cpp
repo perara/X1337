@@ -118,12 +118,12 @@ int Script::getScriptEnumVal()
 /// <param name="timeStep">The time step.</param>
 /// <returns></returns>
 bool Script::process(sf::RenderWindow& window,
-	std::list<std::shared_ptr<Shooter>>& objects,
-	std::list<std::shared_ptr<Powerup>>& powerups,
-	std::list<std::unique_ptr<Bullet>>& bullets,
-	BulletFactory& bFactory,
-	std::shared_ptr<ResourceHandler>& resourceHandler,
-	const sf::Time& timeStep)
+					 std::list<std::shared_ptr<Shooter>>& objects,
+					 std::list<std::shared_ptr<Powerup>>& powerups,
+					 std::list<std::unique_ptr<Bullet>>& bullets,
+					 BulletFactory& bFactory,
+					 std::shared_ptr<ResourceHandler>& resourceHandler,
+					 const sf::Time& timeStep)
 {
 	//####################################//
 	//######Enemy script processing#######//
@@ -208,4 +208,32 @@ bool Script::process(sf::RenderWindow& window,
 	{
 		return true; // Script is still running
 	}
+}
+
+/// <summary>
+/// Sets the audio description string
+/// </summary>
+/// <param name="audioDesc">The audio description string name (Mapped in ResourceHandler)</param>
+void Script::setAudioDesc(std::string audioDesc)
+{
+	this->audioDesc = audioDesc;
+}
+
+/// <summary>
+/// Gets the audio description string
+/// </summary>
+/// <returns>The audio description string name (Mapped in ResourceHandler)</returns>
+std::string Script::getAudioDesc()
+{
+	return this->audioDesc;
+}
+
+void Script::setLore(std::string lore)
+{
+	this->lore = lore;
+}
+
+std::string Script::getLore()
+{
+	return this->lore;
 }

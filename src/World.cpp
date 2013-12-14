@@ -33,7 +33,7 @@ World::World(sf::RenderWindow& window,
 	timeStep(timeStep),
 	countdownSong(resourceHandler->getSound(ResourceHandler::Sound::MUSIC_COUNTDOWN)),
 	ingameSong(ingameSong),
-	gameOver(false),
+	gameOver(0),
 	hardMode(hardMode),
 	demo(demo),
 	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100, 250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode)))
@@ -127,7 +127,7 @@ void World::process()
 				else if ((*i)->getType() == Shooter::ShooterType::PLAYER)
 				{
 					// Sets gameOver flag
-					gameOver = true;
+					gameOver = 1;
 
 					// Checks if the playerscore higher than 0 and writes to the Highscore.
 					int multiplier = ((hardMode) ? 2 : 1); // Hardmode multiplier.
@@ -150,7 +150,7 @@ void World::process()
 	else
 	{
 		// Sets gameOver flag;
-		gameOver = true;
+		gameOver = 2;
 
 		// Writes to the Highscore.
 		int multiplier = (hardMode ? 2 : 1); // Hardmode multiplier.
@@ -235,10 +235,10 @@ void World::drawStats()
 }
 
 /// <summary>
-/// Determines whether [is game over].
+/// Determines whether [is game over]. 0= not game over, 1 = game over, 2 = game over and winning
 /// </summary>
 /// <returns></returns>
-bool World::isGameOver()
+int World::isGameOver()
 {
 	return gameOver;
 }

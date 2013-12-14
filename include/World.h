@@ -31,7 +31,7 @@ public:
 	virtual void input(sf::Event&);
 
 	void drawStats(); // Draw Player stats
-	bool isGameOver();
+	int isGameOver();
 	void startSound();
 	void stopSound();
 
@@ -49,7 +49,7 @@ private:
 
 	const bool hardMode;
 	const bool demo;
-	bool gameOver;
+	int gameOver;
 
 	int currentScript;
 

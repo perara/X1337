@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Script>
-  <Name encounter="1">Stage 2</Name>
+  <Name encounter="1">The Council</Name>
   <Repeat>1</Repeat>
   <Enemies>
     <Enemy>
@@ -444,4 +444,9 @@
       <Path x="-1" y="0"></Path>
   </PowerUp>
 </PowerUps>
+
+<Story>
+	<Intro>stage2_intro_story</Intro>
+	<Lore>You find yourself inside enemy territory after killing The Twins.\nThe density of enemies is high, and you must carefully -\nplan your way through the enemy forces.\nYou are still questioning the origin of all the hostiles\n\nYour Mission:\n- Kill more enemies\n- Kill The Council</Lore>
+</Story>
 </Script>

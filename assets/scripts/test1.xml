@@ -48,5 +48,10 @@
     </Path>
   </PowerUp>
 </PowerUps>
+
+<Story>
+	<Intro>stage3_intro_story</Intro>
+	<Lore>You slayed the council and are now in the hotzone inside the enemy territory.\nYou learn that the leader sits inside the Death Star close to you.\nYou are engaged into battle with Death Star in\nan epic fighth for your life!\n\nYour Mission:\n- Kill Death Star!</Lore>
+</Story>
 </Script>
 

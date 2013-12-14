@@ -30,7 +30,8 @@ class Script
 			pathQueue(pathQueue),
 			emoteQueue(emoteQueue),
 			type(type),
-			repeat(repeat){};
+			repeat(repeat)
+			{};
 	};
 
 
@@ -42,7 +43,9 @@ class Script
 
 
 public:
-	Script(){};
+	Script():
+	audioDesc("null")
+	{};
 	void addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat);
 	void addPowerUp(int delay, sf::Vector3f spawnPoint, int type, int repeat);
 
@@ -59,13 +62,25 @@ public:
 		std::shared_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep);
 
-	// Get/Set scriptName
+	/// Setter and getter for the title of the script (Defined in the xml file)
 	std::string getScriptTitle();
 	void setScriptTitle(std::string);
+
+	/// Setter and getter for the enum value set in ResourceHandler
 	void setScriptEnumVal(int);
 	int getScriptEnumVal();
+
+	/// Setter and getter for Audio description of the script
+	void setAudioDesc(std::string);	
+	std::string getAudioDesc();
+
+	/// Setter and getter for the Lore string
+	void setLore(std::string);
+	std::string getLore();
 private:
 	std::string scriptTitle;
+	std::string audioDesc;
+	std::string lore;
 	int scriptEnumVal;
 
 };

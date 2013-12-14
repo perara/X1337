@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Script>
-  <Name encounter="1">Stage 1</Name>
+  <Name encounter="1">Twins</Name>
   <Repeat>1</Repeat>
   <Enemies>
     <Enemy>
@@ -655,5 +655,10 @@
       </Path>
     </Enemy>
   </Enemies>
+  <Story>
+	<Intro>stage1_intro_story</Intro>
+	<Lore>You are a lonely ship sailing in space minding your own business.\nSuddenly hostile ships approach you.\nYou are forced to fight your way further into space to survive!\n\nYour Mission:\n- Kill enemies\n- Kill The Twins</Lore>
+</Story>
+  
 </Script>
 

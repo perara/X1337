@@ -1,19 +1,24 @@
 #include "Menu.h"
 #include "Log.h"
 #include <sstream>
+#include <stdlib.h>     /* srand, rand */
 
 
 Menu::Menu(sf::RenderWindow& window, GameState& state, std::shared_ptr<ResourceHandler>& resourceHandler) :
-/// <summary>
-/// Initializes a new instance of the <see cref="Menu"/> class.
-/// </summary>
-/// <param name="window">The window.</param>
-/// <param name="state">The state.</param>
-/// <param name="resourceHandler">The resource handler.</param>
-Scene(window, resourceHandler),
-state(state),
-hardmodeSelected(false)
+	/// <summary>
+	/// Initializes a new instance of the <see cref="Menu"/> class.
+	/// </summary>
+	/// <param name="window">The window.</param>
+	/// <param name="state">The state.</param>
+	/// <param name="resourceHandler">The resource handler.</param>
+	Scene(window, resourceHandler),
+	state(state),
+	hardmodeSelected(false)
 {
+	// Set a random seed and set random MODTID
+	std::srand(std::time(0));
+	messageOfTheDayId =  std::rand() % resourceHandler->getMOTDSize();
+
 	this->init();
 }
 /// <summary>
@@ -63,7 +68,7 @@ void Menu::init()
 	std::map<Menu::Options, std::string> stageSelect;
 	{
 		stageSelect[Menu::Options::BACK] = "Back";
-		stageSelect[Menu::Options::SELECT_STAGE] = "Select Stage";
+		stageSelect[Menu::Options::STAGE_SELECT] = "Select Stage";
 	}
 
 	// Construct the "Difficulty Options" map
@@ -93,6 +98,14 @@ void Menu::init()
 		gameOver[Menu::Options::TO_MAIN_MENU2] = "Return to Main Menu";
 	}
 
+	// Construct the "Win game Options" map
+	std::map<Menu::Options, std::string> gameWin;
+	{
+		gameWin[Menu::Options::NEXT_STAGE] = "Next Stage";
+		gameWin[Menu::Options::RESTART_STAGE_2] = "Restart Game";
+		gameWin[Menu::Options::TO_MAIN_MENU_3] = "Return to Main Menu";
+	}
+
 
 	// Create each of the state indexes and places options in the map
 	optMap[GameState::MAIN_MENU] = mainMenu;
@@ -102,6 +115,7 @@ void Menu::init()
 	optMap[GameState::HIGHSCORE] = highScore;
 	optMap[GameState::CREDITS] = highScore; // Use the same as highscore, we only need "Back"
 	optMap[GameState::GAMEOVER] = gameOver;
+	optMap[GameState::GAMEWIN] = gameWin;
 
 	// Load all of the options
 	loadMenuOptions();
@@ -123,10 +137,11 @@ void Menu::init()
 /// <summary>
 /// Updates the current option.
 /// </summary>
-void Menu::updateCurrentOption()
+void Menu::resetCurrentOption()
 {
 	this->setCurrentOption(option[state].begin()->first);
 }
+
 /////////////////////////////////////////////
 ////Preload the menu options into a map//////
 /////////////////////////////////////////////
@@ -234,7 +249,7 @@ void Menu::input(sf::Event& event)
 			/////////////////////////////////////////////
 			///////////////Stage Select//////////////////
 			/////////////////////////////////////////////
-		case Menu::Options::SELECT_STAGE:
+		case Menu::Options::STAGE_SELECT:
 			state = GameState::DIFFICULTY_SELECT;
 			this->setCurrentOption(option[GameState::DIFFICULTY_SELECT].begin()->first);
 			break;
@@ -277,6 +292,23 @@ void Menu::input(sf::Event& event)
 			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first);
 			break;
 
+
+			/////////////////////////////////////////////
+			//////////IN-GAME- WINNING GAME /////////////
+			/////////////////////////////////////////////
+		case Menu::Options::RESTART_STAGE_2:
+			state = GameState::INIT_GAME;
+			break;
+		case Menu::Options::NEXT_STAGE:
+			state = GameState::INIT_NEXT_STAGE;
+			break;
+		case Menu::Options::TO_MAIN_MENU_3:
+			state = GameState::INIT_MAIN_MENU;
+			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first);
+			break;
+
+
+
 		default:
 			LOGD("Missing menu action!");
 			break;
@@ -293,38 +325,48 @@ void Menu::input(sf::Event& event)
 /// <param name="event">The event object</param>
 void Menu::stageSelectInput(sf::Event& event)
 {
-	// Handler for when clicking the LEFT key
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
+	if(event.type == sf::Event::KeyPressed)
 	{
-		LOGD("Current Stage selected: " << getStageSelectOption());
-
-		if (getStageSelectOption() == 1)
+		// Handler for when clicking the LEFT key
+		if (event.key.code == sf::Keyboard::Left)
 		{
-			setStageSelectOption(numStages);
-		}
-		else
-		{
-			setStageSelectOption(getStageSelectOption() - 1);
+			LOGD("Current Stage selected: " << getStageSelectOption());
+
+			// Stop the sound
+			resourceHandler->getSoundByEmoteName(scripts[getStageSelectOption()-1].getAudioDesc()).stop();
+			if (getStageSelectOption() == 1)
+			{
+				setStageSelectOption(numStages);
+			}
+			else
+			{
+				setStageSelectOption(getStageSelectOption() - 1);
+			}
+
+			// Start the description story sound
+			resourceHandler->getSoundByEmoteName(scripts[getStageSelectOption()-1].getAudioDesc()).play();
 		}
 
+		// Handler for when clicking the RIGHT key
+		else if (event.key.code == sf::Keyboard::Right)
+		{
+			LOGD("Current Stage selected: " << getStageSelectOption());
+
+			// Stop the sound
+			resourceHandler->getSoundByEmoteName(scripts[getStageSelectOption()-1].getAudioDesc()).stop();
+			if (getStageSelectOption() == numStages)
+			{
+				setStageSelectOption(1);
+			}
+			else
+			{
+				setStageSelectOption(getStageSelectOption() + 1);
+			}
+
+			// Start the description story sound
+			resourceHandler->getSoundByEmoteName(scripts[getStageSelectOption()-1].getAudioDesc()).play();
+		}
 	}
-
-	// Handler for when clicking the RIGHT key
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
-	{
-		LOGD("Current Stage selected: " << getStageSelectOption());
-
-		if (getStageSelectOption() == numStages)
-		{
-			setStageSelectOption(1);
-		}
-		else
-		{
-			setStageSelectOption(getStageSelectOption() + 1);
-		}
-	}
-
-
 }
 
 
@@ -363,6 +405,9 @@ int Menu::getStageSelectOption()
 /// <param name="opt">The option which is required selected</param>
 void Menu::setStageSelectOption(int opt)
 {
+	// If its on MAX already,do nothing.
+	if(opt == numStages + 1) return;
+
 	this->stageSelectOption = opt;
 }
 
@@ -401,6 +446,8 @@ void Menu::draw()
 		break;
 	case GameState::GAMEOVER:
 		// Do nothing
+		break;
+	case GameState::GAMEWIN:
 		break;
 	case GameState::CREDITS:
 		drawCredits();
@@ -468,6 +515,15 @@ void Menu::drawGameTitle()
 	gameTitle.setCharacterSize(80);
 	gameTitle.setPosition(sf::Vector2f(window.getView().getSize().x / 2 - (gameTitle.getGlobalBounds().width / 2), window.getView().getSize().y / 8 - (gameTitle.getGlobalBounds().height / 2)));
 	window.draw(gameTitle);
+
+	sf::Text gameSlogan;
+	gameSlogan.setString(sf::String(resourceHandler->getMessageOfTheDay(messageOfTheDayId)));
+	gameSlogan.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	gameSlogan.setColor(sf::Color(135,64,64));
+	gameSlogan.rotate(1);
+	gameSlogan.setCharacterSize(20);
+	gameSlogan.setPosition(gameTitle.getPosition().x, gameTitle.getPosition().y + 80);
+	window.draw(gameSlogan);
 
 
 	// Game version
@@ -544,6 +600,28 @@ void Menu::drawStageSelect()
 	sh.setSize(sf::Vector2f(currentStageSelBounds.width + 20, currentStageSelBounds.height / 2));
 	sh.setPosition(currentStageSelBounds.left - 10, currentStageSelBounds.top + (currentStageSelBounds.height / 4));
 	window.draw(sh);
+
+	// Draw Stage Story (LORE)
+	sf::Text loreTitle;
+	loreTitle.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	loreTitle.setStyle(sf::Text::Style::Underlined);
+	loreTitle.setPosition(frameStartPos.x + 120,frameStartPos.y + 250);
+	loreTitle.setString("Lore");
+	window.draw(loreTitle);
+
+	sf::Text loreText;
+	loreText.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	loreText.setCharacterSize(15);
+	loreText.setColor(sf::Color(173,255,47));
+	loreText.setPosition(loreTitle.getPosition().x, loreTitle.getPosition().y + loreTitle.getGlobalBounds().height + 20);
+	loreText.setString((scripts[getStageSelectOption()-1].getLore() == "null") ? 
+		"No Lore" : 
+	evaluateSpecialChars(scripts[getStageSelectOption()-1].getLore()));
+
+	window.draw(loreText);
+
+
+
 }
 
 /////////////////////////////////////////////
@@ -643,4 +721,56 @@ void Menu::drawHighScore()
 		window.draw(txtScore);
 	}
 
+}
+
+
+
+/////////////////////////////////////////////
+/////////////Util CLASSES////////////////////
+/////////////////////////////////////////////
+/// <summary>
+/// Function which fixes \n \t etc, Source https://en.sfml-dev.org/forums/index.php?topic=7829.0
+/// </summary>
+/// <param name="string">The string.</param>
+/// <returns>string formatted correctly</returns>
+sf::String Menu::evaluateSpecialChars(sf::String string)
+{
+	sf::String tmp;
+
+	std::size_t i = 0;
+	while(i < string.getSize())
+	{
+		sf::Uint32 c = string[i];
+
+		if(c == '\\')
+		{
+			i++;
+			sf::Uint32 n = string[i];
+
+			switch(n)
+			{
+			case '\\':
+				tmp += n;
+				break;
+			case 'n':
+				tmp += '\n';
+				break;
+			case 't':
+				tmp += '\t';
+				break;
+			default:
+				std::cerr << "Error: invalid special char found : " << c << n << std::endl;
+			}
+		}
+		else
+			tmp += c;
+
+		i++;
+	}
+	return tmp;
+}
+
+void Menu::setMessageOfTheDayId(int num)
+{
+	this->messageOfTheDayId = num;
 }

@@ -41,20 +41,21 @@ Player::Player(sf::RenderWindow& window,
 			   const bool hardMode
 			   )
 			   :
-playerScore(0),
+	playerScore(0),
 	pulsateGun(false),
 
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
-
 	// Checks if its hardmode, sets the health correspondingly.
 	if (!hardMode)
 	{
 		setHealth(5);
+		startHealth = 5;
 	}
 	else
 	{
 		setHealth(1);
+		startHealth = 1;
 	}
 
 	// Set the shape type
@@ -159,6 +160,13 @@ void Player::detectEdge()
 /// <param name="highScoreList">The high score list as a reference</param>
 void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 {
+	// Draw Background
+	sf::RectangleShape barBg;
+	barBg.setSize(window.getView().getSize());
+	barBg.setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::PLAYER_BAR));
+	barBg.setFillColor(sf::Color(178,34,34));
+	window.draw(barBg);
+
 	// Draw Health
 	sf::Text txtHealth;
 	txtHealth.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
@@ -244,8 +252,8 @@ void Player::input(sf::Event& event)
 	// IF COMMA is clicked
 	if (event.key.code == sf::Keyboard::Comma && event.type == sf::Event::KeyReleased) // Sound mute button
 	{
-		std::cout << godMode << std::endl;
-		godMode = !godMode;
+	std::cout << godMode << std::endl;
+	godMode = !godMode;
 	}*/
 
 	// Player's left mouse click shoot handler
@@ -331,7 +339,10 @@ void Player::powerUp(Powerup::PowerUpType powType)
 	// Health Pack Powerup
 	if (powType == Powerup::PowerUpType::HEALTH_INCREMENT)
 	{
-		if(getHealth() > getStartHealth())(getHealth() + 1);
+		if(getHealth() < getStartHealth())
+		{
+			setHealth(getHealth() + 1);
+		}
 	}
 
 	// Pulsating gun Powerup

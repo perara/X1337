@@ -20,9 +20,7 @@ Shooter::Shooter(sf::RenderWindow& window,
 	bullets(bullets),
 	bFactory(bFactory),
 	resourceHandler(resourceHandler),
-	timeStep(timeStep),
-	godMode(false)
-
+	timeStep(timeStep)
 {}
 
 /// <summary>
@@ -49,7 +47,6 @@ float Shooter::getScoreValue()
 /// <param name="value">The health value to set it to.</param>
 void Shooter::setHealth(int value)
 {
-	if (godMode) return;
 	health = value;
 }
 

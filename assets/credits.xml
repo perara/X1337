@@ -1,13 +1,16 @@
 <Credits>
-	<Author>
-		<Name>Per-Arne Andersen</Name>
-	</Author>
-	
 	<Thanks>
 		<Name>Christian Auby</Name>
+		<Name>Jeanette Andersen Rasmussen</Name>
+		<Name>Morten Goodwin</Name>
+		<Name>Rune Borge Kalleberg</Name>
 	</Thanks>
 	
 	<Special-Thanks>
 		<Name>SFML IRC Channel</Name>
+		<Name>zagabar (SFML)</Name>
+		<Name>_Dbug_</Name>
+		<Name>eXpl0it3r</Name>
+		<Name>http://www.freesound.org/</Name>
 	</Special-Thanks>
 </Credits>

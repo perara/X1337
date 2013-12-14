@@ -7,25 +7,25 @@
 /// Initializes a new instance of the <see cref="GameEngine"/> class.
 /// </summary>
 GameEngine::GameEngine() :
-// Declare the Window
-window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize),
-timeStep(sf::seconds(1.0f / 240.f)), // Set timestep to 60 FPS
+	// Declare the Window
+	window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize),
+	timeStep(sf::seconds(1.0f / 240.f)), // Set timestep to 60 FPS
 
 
 
-// Declare all of the views
-fullScreen(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y))),
-mainView(sf::View(sf::FloatRect(0, 0, 800, 600))),
-playerStatsView(sf::View(sf::FloatRect(0, 0, 800, 30))),
-menuGameDemoView(sf::View(sf::FloatRect(0, 0, 800, 600))),
+	// Declare all of the views
+	fullScreen(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y))),
+	mainView(sf::View(sf::FloatRect(0, 0, 800, 600))),
+	playerBar(sf::View(sf::FloatRect(0, 0, 800, 30))),
+	menuGameDemoView(sf::View(sf::FloatRect(0, 0, 800, 600))),
 
-// Create a new Resource Handler (smart_ptr)
-resourceHandler(new ResourceHandler(window)),
+	// Create a new Resource Handler (smart_ptr)
+	resourceHandler(new ResourceHandler(window)),
 
-event(sf::Event()),
-mute(false),
+	event(sf::Event()),
+	mute(false),
 
-state(GameEngine::State::INIT_MAIN_MENU)
+	state(GameEngine::State::INIT_MAIN_MENU)
 {
 	// Window configuration
 	//window.setFramerateLimit(120);
@@ -37,7 +37,7 @@ state(GameEngine::State::INIT_MAIN_MENU)
 	window.setView(fullScreen);
 
 	mainView.setViewport(sf::FloatRect(0, 0, 1, 0.95f));
-	playerStatsView.setViewport(sf::FloatRect(0, 0.95f, 1.0f, 0.05f));
+	playerBar.setViewport(sf::FloatRect(0, 0.95f, 1.0f, 0.05f));
 	menuGameDemoView.setViewport(sf::FloatRect(0.40f, 0.40f, 0.25f, 0.25f));
 
 	// Init resourceHandler
@@ -93,24 +93,32 @@ void GameEngine::draw()
 	// Game States
 	if (getState() == GameState::GAME)
 	{
-		if (world->isGameOver())
-		{
-			setState(GameState::GAMEOVER);
-			menu->updateCurrentOption();
-		}
-		window.setView(playerStatsView);
+		window.setView(playerBar);
 		this->world->drawStats();
 		this->drawMute();
 
 		window.setView(mainView);
 		this->world->draw();
+
+		// CHECK IF IT IS GAME OVER or GAME WIN
+		if (world->isGameOver() == 1)
+		{
+			setState(GameState::GAMEOVER);
+			menu->resetCurrentOption();
+		}
+		else if(world->isGameOver() == 2)
+		{
+			setState(GameState::GAMEWIN);
+			menu->resetCurrentOption();
+		}
 	}
 
 	// Pause And Game Over state
 	else if (getState() == GameState::PAUSE ||
-		getState() == GameState::GAMEOVER)
+		getState() == GameState::GAMEOVER ||
+		getState() == GameState::GAMEWIN)
 	{
-		window.setView(playerStatsView);
+		window.setView(playerBar);
 		this->world->drawStats();
 
 		window.setView(mainView);
@@ -123,7 +131,13 @@ void GameEngine::draw()
 		window.draw(darkOverLay);
 
 		this->menu->draw();
-		this->menu->drawPause((window.getView().getSize().y / 2), (window.getView().getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
+
+		// Draw the Game Over with the following offset
+		if(getState() == GameState::GAMEWIN)
+			this->menu->drawPause((window.getView().getSize().x / 3), 100 + (window.getView().getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
+		if(getState() == GameState::PAUSE || getState() == GameState::GAMEOVER)
+			this->menu->drawPause((window.getView().getSize().x / 3), (window.getView().getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
+
 	}
 
 	// Menu states
@@ -175,10 +189,20 @@ void GameEngine::process()
 			resourceHandler->getSound(ResourceHandler::Sound::MUSIC_DEATH_STAR_THEME) :
 			resourceHandler->getSound(ResourceHandler::Sound::MUSIC_INGAME)));
 	}
+	else if (getState() == GameState::INIT_NEXT_STAGE)
+	{
+		menu->setStageSelectOption(menu->getStageSelectOption() + 1);
+		setState(GameState::INIT_GAME);
+	}
 
 	// Process the Main menu initialization
 	else if (getState() == GameState::INIT_MAIN_MENU)
 	{
+		// set new MOTD in the menu header
+		std::srand(std::time(0));
+		menu->setMessageOfTheDayId(std::rand() % resourceHandler->getMOTDSize());
+
+
 		setState(GameState::MAIN_MENU);
 
 		// Checks if the world exists, stops sound if so
@@ -228,6 +252,7 @@ void GameEngine::input()
 			|| getState() == GameState::PAUSE
 			|| getState() == GameState::HIGHSCORE
 			|| getState() == GameState::GAMEOVER
+			|| getState() == GameState::GAMEWIN
 			|| getState() == GameState::CREDITS)
 		{
 			this->menu->input(this->event);
@@ -260,7 +285,7 @@ void GameEngine::input()
 				}
 
 				// Uodate current option according to the state
-				menu->updateCurrentOption();
+				menu->resetCurrentOption();
 			}
 
 			// IF m is clicked

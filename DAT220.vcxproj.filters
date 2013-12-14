@@ -60,9 +60,6 @@
     <ClInclude Include="include\Bullet.h">
       <Filter>Header\Objects\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="include\Shooter.h">
-      <Filter>Header\Objects\Shooter</Filter>
-    </ClInclude>
     <ClInclude Include="include\Enemy.h">
       <Filter>Header\Objects\Shooter</Filter>
     </ClInclude>
@@ -98,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="include\Powerup.h">
       <Filter>Header\Objects\Powerup</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Shooter.h">
+      <Filter>Header\Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -45,11 +45,9 @@ public:
 	/// Texture enumerable which contains all resource "Links" its used to access the resource
 	const enum Texture
 	{
-		BACKGROUND1,
 		BACKGROUND2,
 		BACKGROUND3,
 		HEART,
-		MITT,
 		BOSS,
 		PLAYER_SHIP,
 		ENEMY_SHIP,
@@ -61,6 +59,8 @@ public:
 		PULSE_GUN,
 		HEALTH_KIT,
 		REGULAR_BULLET_1,
+		PLAYER_BAR,
+
 		TEXTURECOUNT
 	};
 
@@ -78,6 +78,7 @@ public:
 		FX_PICKUP_HEALTH,
 		FX_MENU_CLICK,
 		FX_MENU_RETURN,
+		FX_ERROR,
 
 		EMOTE_DEATHSTAR_GREET,
 		EMOTE_DEATHSTAR_PERIODIC_1,
@@ -85,6 +86,10 @@ public:
 		EMOTE_DEATHSTAR_PERIODIC_3,
 		EMOTE_DEATHSTAR_PERIODIC_4,
 		EMOTE_DEATHSTAR_DEATH,
+
+		STORY_DEATHSTAR_INTRO,
+		STORY_TWINS_INTRO,
+		STORY_COUNCIL_INTRO,
 
 		SOUNDCOUNT
 
@@ -134,6 +139,9 @@ public:
 	std::string getDateTime();
 	std::map<std::string, std::list<std::string>>  getCredits();
 
+	std::string getMessageOfTheDay(int);
+	int getMOTDSize();
+
 
 private:
 	void loadTextures();
@@ -159,7 +167,7 @@ private:
 	std::list<std::shared_ptr<sf::SoundBuffer>> sBufferList;
 
 	// Emotes
-	std::map<std::string, ResourceHandler::Sound> emoteList;
+	std::map<std::string, ResourceHandler::Sound> musicStringList;
 
 	// Scripts
 	std::map<Scripts, std::string> scriptList;
@@ -179,4 +187,7 @@ private:
 	// Credits
 	std::string creditsFilePath;
 	std::map<std::string, std::list<std::string>> creditsMap;
+
+	// Message of the day (below game title);
+	std::vector<std::string> messageOfTheDay;
 };

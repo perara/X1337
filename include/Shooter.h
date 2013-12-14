@@ -60,15 +60,13 @@ protected:
 	/// Shooter type (Player || Enemy)
 	ShooterType shooterType;
 
-	/// Godmode variable
-	bool godMode;
+	/// Integer which describes startHealth and the totalHealth (since the Shooter starts with 100% health)
+	int startHealth;
+
 private:
 
 	/// Integer value which describes Shooter 's current health
 	int health;
-
-	/// Integer which describes startHealth and the totalHealth (since the Shooter starts with 100% health)
-	int startHealth;
 
 	/// Reference to the Bullet list which originates from World.h (World)
 	std::list<std::unique_ptr<Bullet>>& bullets;

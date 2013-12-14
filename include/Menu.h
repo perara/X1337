@@ -25,9 +25,11 @@ public:
 	void init();
 	void reset();
 	bool getHardmodeSelected();
-	void updateCurrentOption();
+	void resetCurrentOption();
 	void drawPause(int xOffSet, int yOffset); // Should be accessible to gameEngine 
 	int getStageSelectOption();
+	void setStageSelectOption(int);
+	void setMessageOfTheDayId(int);
 private:
 	// Loaders
 	void loadMenuOptions();
@@ -56,7 +58,7 @@ private:
 		LOAD_GAME,
 
 		// Stage Select opts
-		SELECT_STAGE,
+		STAGE_SELECT,
 		BACK,
 
 		// Difficulty Select opts
@@ -67,9 +69,14 @@ private:
 		CONTINUE_GAME,
 		TO_MAIN_MENU,
 
-		// In-game game over opts
+		// In-game gameover opts
 		RESTART_STAGE,
 		TO_MAIN_MENU2,
+
+		// Win game Options
+		NEXT_STAGE,
+		RESTART_STAGE_2,
+		TO_MAIN_MENU_3,
 
 		MENU_OPT_COUNT
 	};
@@ -80,13 +87,15 @@ private:
 
 	int numStages; // This describes number of stages
 	int stageSelectOption; // Current selected stage option
-	void setStageSelectOption(int);
+	int messageOfTheDayId; //Current message of the day id (From ResourceHandler)
 
 	// Option lists
 	std::map<GameState, std::map<Menu::Options, std::string>> optMap;
 	std::map<GameState, std::map<Menu::Options, sf::Text>> option;
-	std::list<const Script> scripts;
+	std::vector<const Script> scripts;
 
 	bool hardmodeSelected;
 	GameState& state;
+
+	sf::String evaluateSpecialChars(sf::String string);
 };

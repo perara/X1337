@@ -40,11 +40,9 @@ void ResourceHandler::init()
 
 	// Textures
 	{
-		textureList[Texture::BACKGROUND1] = "assets/sprites/bg1.jpg";
 		textureList[Texture::BACKGROUND2] = "assets/sprites/bg2.jpg";
 		textureList[Texture::BACKGROUND3] = "assets/sprites/bg3.jpg";
 		textureList[Texture::HEART] = "assets/sprites/heart.png";
-		textureList[Texture::MITT] = "assets/sprites/mitt-romney.png";
 		textureList[Texture::PLAYER_SHIP] = "assets/sprites/player_ship.png";
 		textureList[Texture::ENEMY_SHIP] = "assets/sprites/enemy_ship.png";
 		textureList[Texture::BOSS] = "assets/sprites/boss.png";
@@ -57,6 +55,7 @@ void ResourceHandler::init()
 		textureList[Texture::AUDIO_OFF] = "assets/sprites/audio-off.png";
 		textureList[Texture::HEALTH_KIT] = "assets/sprites/health-kit.jpg";
 		textureList[Texture::PULSE_GUN] = "assets/sprites/pulse-gun.png";
+		textureList[Texture::PLAYER_BAR] = "assets/sprites/player-bar.png";
 
 	}
 
@@ -72,6 +71,7 @@ void ResourceHandler::init()
 		soundList[Sound::FX_PICKUP_HEALTH] = "assets/sound/health_pickup.wav";
 		soundList[Sound::FX_MENU_CLICK] = "assets/sound/menu_click.ogg";
 		soundList[Sound::FX_MENU_RETURN] = "assets/sound/menu_return.ogg";
+		soundList[Sound::FX_ERROR] = "assets/sound/fx_error.wav";
 
 		soundList[Sound::EMOTE_DEATHSTAR_GREET] = "assets/sound/emote_death_star_greet.ogg";
 		soundList[Sound::EMOTE_DEATHSTAR_DEATH] = "assets/sound/emote_death_star_death.ogg";
@@ -79,16 +79,29 @@ void ResourceHandler::init()
 		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_2] = "assets/sound/emote_death_star_periodic_2.ogg";
 		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_3] = "assets/sound/emote_death_star_periodic_3.ogg";
 		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_4] = "assets/sound/emote_death_star_periodic_4.ogg";
+
+		soundList[Sound::STORY_DEATHSTAR_INTRO] = "assets/sound/story_death_star_intro.ogg";
+		soundList[Sound::STORY_TWINS_INTRO] = "assets/sound/story_stage1_intro.ogg";
+		soundList[Sound::STORY_COUNCIL_INTRO] = "assets/sound/story_stage2_intro.ogg";
 	}
 
-	// EMOTE MAP
+	// String to Sound relation map
 	{
-		emoteList["deathstar_greet"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_GREET;
-		emoteList["deathstar_periodic_1"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_1;
-		emoteList["deathstar_periodic_2"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_2;
-		emoteList["deathstar_periodic_3"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_3;
-		emoteList["deathstar_periodic_4"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_4;
-		emoteList["deathstar_death"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_DEATH;
+		// ERROR MESSAGE
+		musicStringList["null"] = ResourceHandler::Sound::FX_ERROR;
+
+		// STORY
+		musicStringList["stage3_intro_story"] = ResourceHandler::Sound::STORY_DEATHSTAR_INTRO;
+		musicStringList["stage2_intro_story"] = ResourceHandler::Sound::STORY_COUNCIL_INTRO;
+		musicStringList["stage1_intro_story"] = ResourceHandler::Sound::STORY_TWINS_INTRO;
+
+		// EMOTES
+		musicStringList["deathstar_greet"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_GREET;
+		musicStringList["deathstar_periodic_1"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_1;
+		musicStringList["deathstar_periodic_2"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_2;
+		musicStringList["deathstar_periodic_3"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_3;
+		musicStringList["deathstar_periodic_4"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_4;
+		musicStringList["deathstar_death"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_DEATH;
 	}
 
 
@@ -106,6 +119,17 @@ void ResourceHandler::init()
 	{
 		fontList[Fonts::COMICATE] = "assets/fonts/COMICATE.ttf";
 		fontList[Fonts::SANSATION] = "assets/fonts/sansation.ttf";
+	}
+
+	// Message of the day 
+	{
+		messageOfTheDay.push_back("Its only a game!");
+		messageOfTheDay.push_back("Spacesailor 3.0!");
+		messageOfTheDay.push_back("Shooting everyday");
+		messageOfTheDay.push_back("Bullets bullets bullets");
+		messageOfTheDay.push_back("Dodging dem blue balls");
+		messageOfTheDay.push_back("Green is the color!");
+		messageOfTheDay.push_back("Dodgy dodgy!");
 	}
 
 	// Load each of the resources
@@ -423,6 +447,19 @@ void ResourceHandler::loadScripts()
 				}
 				LOGD(i.first << " was successfully loaded. " << counter << "powerups was queued.");
 
+				// Fetch Story
+				pugi::xml_node story = root.child("Story");
+				std::string storyIntro = "null";
+				std::string lore = "null";
+				if(!story.empty())
+				{
+					storyIntro = story.child("Intro").child_value();
+					lore = story.child("Lore").child_value();
+				}
+				this->scripts[i.first].setLore(lore);
+				this->scripts[i.first].setAudioDesc(storyIntro);
+
+
 				// Set enum and Script title, then set status to initialized
 				this->scripts[i.first].setScriptEnumVal(i.first);
 				this->scripts[i.first].setScriptTitle(scriptName);
@@ -620,9 +657,11 @@ sf::Sound& ResourceHandler::getSound(ResourceHandler::Sound query)
 /// <returns>Sound reference</returns>
 sf::Sound& ResourceHandler::getSoundByEmoteName(std::string emote)
 {
-
-	std::cout << emote << std::endl;
-	return this->sounds[emoteList[emote]];
+	if(emote == "null")
+	{
+		LOGE("Error: Missing emote/sound");
+	}
+	return this->sounds[musicStringList[emote]];
 }
 
 /// <summary>
@@ -664,6 +703,25 @@ bool ResourceHandler::getInit()
 void ResourceHandler::setInit(bool init)
 {
 	this->inited = init;
+}
+
+/// <summary>
+/// Gets the message of the day.
+/// </summary>
+/// <param name="">Random id for message of the day</param>
+/// <returns>The message of the day</returns>
+std::string ResourceHandler::getMessageOfTheDay(int modt)
+{
+	return this->messageOfTheDay[modt];
+}
+
+/// <summary>
+/// Gets the size of the motd vector
+/// </summary>
+/// <returns>Size of the MODT vector</returns>
+int ResourceHandler::getMOTDSize()
+{
+	return this->messageOfTheDay.size();
 }
 
 /// <summary>
