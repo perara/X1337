@@ -11,6 +11,7 @@
 /// </summary>
 /// <param name="delay">The delay.</param>
 /// <param name="pathQueue">The path queue.</param>
+/// <param name="emoteQueue">A queue which contains emoteNames. This is a sorted list</param>
 /// <param name="type">The type.</param>
 /// <param name="repeat">The repeat.</param>
 void Script::addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat)

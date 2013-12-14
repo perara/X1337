@@ -47,7 +47,7 @@ void Menu::init()
 {
 
 	// Retrieve all script names
-	for (auto&i : resourceHandler->getScripts()) scripts.push_back(i);
+	for (auto&i : resourceHandler->getScripts(true)) scripts.push_back(i);
 
 	// Construct the "Main Options" map
 	std::map<Menu::Options, std::string> mainMenu;

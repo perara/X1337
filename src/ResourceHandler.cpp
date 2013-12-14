@@ -571,7 +571,7 @@ Script ResourceHandler::getScriptById(int iteNum)
 {
 	// Meh method
 	int cnt = 1;
-	for (Script& i : getScripts())
+	for (Script& i : getScripts(true))
 	{
 		if (cnt == iteNum) return i;
 		cnt++;
@@ -582,12 +582,13 @@ Script ResourceHandler::getScriptById(int iteNum)
 /// Gets all of the scripts.
 /// </summary>
 /// <returns>A list with scripts (all scripts)</returns>
-std::list<Script> ResourceHandler::getScripts()
+std::list<Script> ResourceHandler::getScripts(bool encounterOnly)
 {
 	std::list<Script> ret;
 	for (Script i : scripts)
 	{
-		ret.push_back(i);
+		if(i.getScriptEnumVal() != ResourceHandler::Scripts::GAME_MENU)
+			ret.push_back(i);
 	}
 	return ret;
 }
@@ -612,6 +613,11 @@ sf::Sound& ResourceHandler::getSound(ResourceHandler::Sound query)
 	return this->sounds[query];
 }
 
+/// <summary>
+/// Gets the sound by the emote name. This emote name origins from the ResourceHandler initial construction of the emoteMap
+/// </summary>
+/// <param name="emote">The emote name to use in order to retrieve the sound.</param>
+/// <returns>Sound reference</returns>
 sf::Sound& ResourceHandler::getSoundByEmoteName(std::string emote)
 {
 

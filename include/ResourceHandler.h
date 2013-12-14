@@ -124,7 +124,7 @@ public:
 	// Getts for each of the resources
 	sf::Texture& getTexture(ResourceHandler::Texture);
 	Script getScript(ResourceHandler::Scripts);
-	std::list<Script> getScripts();
+	std::list<Script> getScripts(bool);
 	sf::Font& getFont(ResourceHandler::Fonts);
 	sf::Sound& getSound(ResourceHandler::Sound);
 	sf::Sound& getSoundByEmoteName(std::string);

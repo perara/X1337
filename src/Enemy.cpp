@@ -8,6 +8,7 @@
 /// </summary>
 /// <param name="window">The window.</param>
 /// <param name="path">The path.</param>
+/// <param name="emoteQueue">The emote queue specifies the queue of emotes loaded from script.</param>
 /// <param name="type">The type.</param>
 /// <param name="repeat">The repeat.</param>
 /// <param name="bFactory">The b factory.</param>
