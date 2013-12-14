@@ -3,7 +3,6 @@
 #include "BulletFactory.h"
 #include "Bullet.h"
 #include "Log.h"
-
 /// <summary>
 /// Initializes a new instance of the <see cref="Enemy"/> class.
 /// </summary>
@@ -26,6 +25,7 @@ Enemy::Enemy(sf::RenderWindow& window,
 pathTemplate(path), // Const, not to be changed (The template is copyed when a path is over in repeat mode)
 	emoteQueue(emoteQueue),
 	repeat(repeat),
+	secondRot(0),
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
 	// Start the enemy clock
@@ -222,25 +222,27 @@ void Enemy::shoot(int shoot)
 				{
 					std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 					b->setOwner(this->getType());
-					b->setRotation(i, sf::Vector2f(150, 150));
+					b->setRotation(i + secondRot, sf::Vector2f(150, 150));
 					b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
 					getBullets().push_back(std::move(b));
+					
 				}
+				
+				// randomize 2nd degree rotation
+				if(rand() % 2 == 0)
+					secondRot += 230;
+				else
+					secondRot -= 190;
+
 			}
 		}
 	}
 }
 
-/// <summary>
-/// Processes this instance.
-/// </summary>
-void Enemy::process()
+void Enemy::emotes()
 {
-	this->hitDetection();
-
 	if(!emoteQueue.empty())
 	{
-		std::cout << emoteQueue.front().first << std::endl;
 		if(emoteQueue.front().first == (int)((100.0f / getStartHealth()) * getHealth()))
 		{
 			std::string soundToPlay = emoteQueue.front().second;
@@ -248,7 +250,10 @@ void Enemy::process()
 			resourceHandler->getSoundByEmoteName(soundToPlay).play();
 		}
 	}
+}
 
+void Enemy::movement()
+{
 	// Start
 	sf::Vector2f length;
 	length.x = abs(this->currentPath.x - path.front().x);
@@ -327,6 +332,16 @@ void Enemy::process()
 
 	}
 
+}
+
+/// <summary>
+/// Processes this instance.
+/// </summary>
+void Enemy::process()
+{
+	this->hitDetection();
+	this->emotes();
+	this->movement();
 }
 
 

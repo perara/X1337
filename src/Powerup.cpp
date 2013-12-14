@@ -78,7 +78,7 @@ bool Powerup::hitDetection(std::shared_ptr<Player>& player)
 	if (retVal)
 	{
 		// Set status to deleted
-		resourceHandler->getSound(ResourceHandler::Sound::PICKUP_HEALTH).play();
+		resourceHandler->getSound(ResourceHandler::Sound::FX_PICKUP_HEALTH).play();
 		setDeleted(true);
 	}
 

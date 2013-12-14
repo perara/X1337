@@ -134,7 +134,6 @@ bool Script::process(sf::RenderWindow& window,
 		if (this->getInit() &&
 			enemyClock.getElapsedTime().asMilliseconds() > e.delay)
 		{
-			LOGD("Spawning Enemy#" << e1);
 
 			// Create a new enemy with the information provided by the script tick
 			std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
@@ -147,6 +146,7 @@ bool Script::process(sf::RenderWindow& window,
 				bullets,
 				resourceHandler,
 				timeStep));
+			LOGD("Spawning Enemy#" << e1);
 
 			// Push enemy to the objects list (from world)
 			objects.push_back(e1);

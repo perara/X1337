@@ -240,6 +240,14 @@ void Player::addScore(float score)
 /// <param name="event">The event.</param>
 void Player::input(sf::Event& event)
 {
+	/*
+	// IF COMMA is clicked
+	if (event.key.code == sf::Keyboard::Comma && event.type == sf::Event::KeyReleased) // Sound mute button
+	{
+		std::cout << godMode << std::endl;
+		godMode = !godMode;
+	}*/
+
 	// Player's left mouse click shoot handler
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && normalShotClock.getElapsedTime().asMilliseconds() > 150){
 
@@ -274,16 +282,6 @@ void Player::input(sf::Event& event)
 
 		// Restart the clock
 		specialShotClock.restart();
-	}
-
-	if (event.type == sf::Event::KeyReleased)
-	{
-		// IF COMMA is clicked
-		if (event.key.code == sf::Keyboard::Comma) // Sound mute button
-		{
-			std::cout << godMode << std::endl;
-			godMode = !godMode;
-		}
 	}
 
 	if (event.type == sf::Event::MouseMoved)

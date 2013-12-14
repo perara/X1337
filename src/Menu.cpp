@@ -619,7 +619,7 @@ void Menu::drawHighScore()
 	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> hScore = resourceHandler->getHighScores();
 
 	// Determine the start y and x pos
-	int xPos = window.getView().getSize().x / 8;
+	int xPos = window.getView().getSize().x / 16;
 	int yPos = window.getView().getSize().y / 4;
 
 	// Draw the score header

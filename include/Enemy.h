@@ -59,8 +59,12 @@ private:
 
 	// Shoot function
 	void shoot(int);
+	void emotes();
+	void movement();
 
 	// Variable for this enemy's type
 	Enemy::EnemyType enemyType;
 	void setEnemyType(Enemy::EnemyType);
+
+	int secondRot;
 };

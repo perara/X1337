@@ -104,7 +104,7 @@ std::unique_ptr<Bullet> BulletFactory::requestObject(Bullet::Type type)
 void BulletFactory::returnObject(std::unique_ptr<Bullet>& bullet)
 {
 	// Return a bullet
-	LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->getBulletType()].size());
+	//LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->getBulletType()].size());
 	bullet->resetObject();
 	this->objects[bullet->getBulletType()].push_back(std::move(bullet)); // O(0)
 }
