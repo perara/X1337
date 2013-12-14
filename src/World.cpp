@@ -154,7 +154,6 @@ void World::process()
 
 		// Writes to the Highscore.
 		int multiplier = (hardMode ? 2 : 1); // Hardmode multiplier.
-
 		if (currentScript != -1 && player->getPlayerScore() > 0) resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
 	}
 

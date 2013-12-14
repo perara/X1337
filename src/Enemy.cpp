@@ -218,22 +218,18 @@ void Enemy::shoot(int shoot)
 			// Circular shoot pattern
 			else
 			{
-				for (int i = 0; i < 360; i += 2)
+				for (float i = 0; i < 360; i += 2)
 				{
 					std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 					b->setOwner(this->getType());
 					b->setRotation(i + secondRot, sf::Vector2f(150, 150));
 					b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
 					getBullets().push_back(std::move(b));
-					
-				}
-				
-				// randomize 2nd degree rotation
-				if(rand() % 2 == 0)
-					secondRot += 230;
-				else
-					secondRot -= 190;
 
+				}
+
+				// randomize 2nd degree rotation
+				secondRot++;
 			}
 		}
 	}
@@ -243,7 +239,7 @@ void Enemy::emotes()
 {
 	if(!emoteQueue.empty())
 	{
-		if(emoteQueue.front().first == (int)((100.0f / getStartHealth()) * getHealth()))
+		if(emoteQueue.front().first > (int)((100.0f / getStartHealth()) * getHealth()))
 		{
 			std::string soundToPlay = emoteQueue.front().second;
 			emoteQueue.pop_front();

@@ -286,6 +286,7 @@ void Player::input(sf::Event& event)
 
 	if (event.type == sf::Event::MouseMoved)
 	{
+		// Waiting for update: https://github.com/LaurentGomila/SFML/pull/396
 		int current_x = sf::Mouse::getPosition(window).x, current_y = sf::Mouse::getPosition(window).y;
 		int elapsed_x = (window.getView().getSize().x / 2) - current_x, elapsed_y = (window.getView().getSize().y / 2) - current_y;
 
