@@ -13,10 +13,10 @@
 /// <param name="pathQueue">The path queue.</param>
 /// <param name="type">The type.</param>
 /// <param name="repeat">The repeat.</param>
-void Script::addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat)
+void Script::addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat)
 {
 	LOGD("Adding new enemy template to pool");
-	ScriptTick tick(delay, pathQueue, type, repeat);
+	ScriptTick tick(delay, pathQueue, emoteQueue, type, repeat);
 	enemyList.push(tick);
 
 
@@ -34,8 +34,10 @@ void Script::addPowerUp(int delay, sf::Vector3f spawnPoint, int type, int repeat
 	std::queue<sf::Vector3f> queue;
 	queue.push(spawnPoint);
 
+	std::list<std::pair<int, std::string>> emoteQueue;
+
 	LOGD("Adding new powerUp template to pool");
-	ScriptTick tick(delay, queue, type, repeat);
+	ScriptTick tick(delay, queue, emoteQueue, type, repeat);
 	powerupList.push(tick);
 
 }
@@ -138,6 +140,7 @@ bool Script::process(sf::RenderWindow& window,
 			std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
 				window,
 				e.pathQueue,
+				e.emoteQueue,
 				e.type,
 				e.repeat,
 				bFactory,

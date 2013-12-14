@@ -23,10 +23,12 @@ class Script
 		int repeat;
 		int type;
 		std::queue<sf::Vector3f> pathQueue;
+		std::list<std::pair<int, std::string>> emoteQueue;
 
-		ScriptTick(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat) :
+		ScriptTick(int delay, std::queue<sf::Vector3f> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat) :
 			delay(delay),
 			pathQueue(pathQueue),
+			emoteQueue(emoteQueue),
 			type(type),
 			repeat(repeat){};
 	};
@@ -41,7 +43,7 @@ class Script
 
 public:
 	Script(){};
-	void addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, int type, int repeat);
+	void addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat);
 	void addPowerUp(int delay, sf::Vector3f spawnPoint, int type, int repeat);
 
 	// Init

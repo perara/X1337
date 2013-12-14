@@ -16,13 +16,15 @@
 /// <param name="resourceHandler">The resource handler.</param>
 /// <param name="timeStep">The time step.</param>
 Enemy::Enemy(sf::RenderWindow& window,
-	std::queue<sf::Vector3f> path,
-	int type, int repeat, BulletFactory& bFactory,
-	std::list<std::unique_ptr<Bullet>>& bullets,
-	std::shared_ptr<ResourceHandler>& resourceHandler,
-	const sf::Time& timeStep
-	) :
-	pathTemplate(path), // Const, not to be changed (The template is copyed when a path is over in repeat mode)
+			 std::queue<sf::Vector3f> path,
+			 std::list<std::pair<int, std::string>> emoteQueue,
+			 int type, int repeat, BulletFactory& bFactory,
+			 std::list<std::unique_ptr<Bullet>>& bullets,
+			 std::shared_ptr<ResourceHandler>& resourceHandler,
+			 const sf::Time& timeStep
+			 ) :
+pathTemplate(path), // Const, not to be changed (The template is copyed when a path is over in repeat mode)
+	emoteQueue(emoteQueue),
 	repeat(repeat),
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
@@ -92,8 +94,6 @@ void Enemy::setInitPath()
 	this->path.pop();
 
 	this->sprite->setPosition(currentPath.x, currentPath.y);
-
-
 }
 
 /// <summary>
@@ -237,6 +237,17 @@ void Enemy::shoot(int shoot)
 void Enemy::process()
 {
 	this->hitDetection();
+
+	if(!emoteQueue.empty())
+	{
+		std::cout << emoteQueue.front().first << std::endl;
+		if(emoteQueue.front().first == (int)((100.0f / getStartHealth()) * getHealth()))
+		{
+			std::string soundToPlay = emoteQueue.front().second;
+			emoteQueue.pop_front();
+			resourceHandler->getSoundByEmoteName(soundToPlay).play();
+		}
+	}
 
 	// Start
 	sf::Vector2f length;

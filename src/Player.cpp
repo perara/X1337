@@ -80,7 +80,7 @@ void Player::process()
 	if (getHealth() <= 0)
 	{
 		setDeleted(true);
-		resourceHandler->getSound(ResourceHandler::Sound::ENEMY_DEATH).play();
+		resourceHandler->getSound(ResourceHandler::Sound::FX_ENEMY_DEATH).play();
 	}
 }
 
@@ -249,7 +249,7 @@ void Player::input(sf::Event& event)
 		b->sprite->setPosition(sprite->getPosition().x, sprite->getPosition().y - 10);
 
 		// Play shoot sound
-		resourceHandler->getSound(ResourceHandler::Sound::STANDARD_SHOT).play();
+		resourceHandler->getSound(ResourceHandler::Sound::FX_STANDARD_SHOT).play();
 
 		// Push the bullet to the bullet list
 		getBullets().push_back(std::move(b));
@@ -267,7 +267,7 @@ void Player::input(sf::Event& event)
 		b->sprite->setPosition(sprite->getPosition().x, sprite->getPosition().y - 10);
 
 		// Play shoot sound
-		resourceHandler->getSound(ResourceHandler::Sound::HEAVY_SHOT).play();
+		resourceHandler->getSound(ResourceHandler::Sound::FX_HEAVY_SHOT).play();
 
 		// Push the bullet to the bullet list
 		getBullets().push_back(std::move(b));

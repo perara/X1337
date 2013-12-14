@@ -28,7 +28,7 @@ void Menu::process(){}
 void Menu::reset()
 {
 	// Stop Menu song
-	resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG).stop();
+	resourceHandler->getSound(ResourceHandler::Sound::MUSIC_MENU_SONG).stop();
 }
 
 /// <summary>
@@ -169,7 +169,7 @@ void Menu::input(sf::Event& event)
 	// Handler for when clicking the UP key
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
 	{
-		resourceHandler->getSound(ResourceHandler::Sound::MENU_CLICK).play();
+		resourceHandler->getSound(ResourceHandler::Sound::FX_MENU_CLICK).play();
 
 		if (currentOption == option[state].begin()->first)
 		{
@@ -187,7 +187,7 @@ void Menu::input(sf::Event& event)
 	// Handler for when clicking the DOWN key
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
 	{
-		resourceHandler->getSound(ResourceHandler::Sound::MENU_CLICK).play();
+		resourceHandler->getSound(ResourceHandler::Sound::FX_MENU_CLICK).play();
 		if (currentOption == option[state].rbegin()->first)
 		{
 			currentOption = option[state].begin()->first;
@@ -206,7 +206,7 @@ void Menu::input(sf::Event& event)
 	// the mess.
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Return)
 	{
-		resourceHandler->getSound(ResourceHandler::Sound::MENU_RETURN).play();
+		resourceHandler->getSound(ResourceHandler::Sound::FX_MENU_RETURN).play();
 
 		switch (currentOption)
 		{

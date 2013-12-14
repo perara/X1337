@@ -120,7 +120,7 @@ void Shooter::hitDetection()
 				if (getHealth() <= 0 && getType() != Shooter::ShooterType::PLAYER)
 				{
 					// Play deat hsound
-					resourceHandler->getSound(ResourceHandler::Sound::ENEMY_DEATH).play();
+					resourceHandler->getSound(ResourceHandler::Sound::FX_ENEMY_DEATH).play();
 
 					// Set deleted flag
 					setDeleted(true);

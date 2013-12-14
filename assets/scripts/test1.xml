@@ -22,6 +22,14 @@
         <_12 shoot="1" x="92" y="305"/>
         <_13 shoot="1" x="-14" y="95"/>
       </Path>
+	  <Emotes>
+		<_0 percent="100" sID="deathstar_greet"/>
+		<_1 percent="90,70,50,30" sID="deathstar_periodic_1"/>
+		<_2 percent="80,60,40,20" sID="deathstar_periodic_2"/>
+		<_3 percent="50,10" sID="deathstar_periodic_3"/>
+		<_4 percent="5" sID="deathstar_periodic_4"/>
+		<_2 percent="1" sID="deathstar_death"/>
+	  </Emotes>
     </Enemy>
   </Enemies>
   <PowerUps>

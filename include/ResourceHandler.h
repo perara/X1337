@@ -67,17 +67,25 @@ public:
 	/// Sound enumerable which contains all resource "Links" its used to access the resource
 	const enum Sound
 	{
-		SONG1,
-		MENU_SONG,
-		STANDARD_SHOT,
-		HEAVY_SHOT,
-		ENEMY_DEATH,
-		COUNTDOWN,
-		INGAME,
-		DEATH_STAR_THEME,
-		PICKUP_HEALTH,
-		MENU_CLICK,
-		MENU_RETURN,
+		MUSIC_DEATH_STAR_THEME,
+		MUSIC_MENU_SONG,
+		MUSIC_COUNTDOWN,
+		MUSIC_INGAME, // The usual ingame for all stages
+
+		FX_STANDARD_SHOT,
+		FX_HEAVY_SHOT,
+		FX_ENEMY_DEATH,
+		FX_PICKUP_HEALTH,
+		FX_MENU_CLICK,
+		FX_MENU_RETURN,
+
+		EMOTE_DEATHSTAR_GREET,
+		EMOTE_DEATHSTAR_PERIODIC_1,
+		EMOTE_DEATHSTAR_PERIODIC_2,
+		EMOTE_DEATHSTAR_PERIODIC_3,
+		EMOTE_DEATHSTAR_PERIODIC_4,
+		EMOTE_DEATHSTAR_DEATH,
+
 		SOUNDCOUNT
 
 	};
@@ -119,11 +127,13 @@ public:
 	std::list<Script> getScripts();
 	sf::Font& getFont(ResourceHandler::Fonts);
 	sf::Sound& getSound(ResourceHandler::Sound);
+	sf::Sound& getSoundByEmoteName(std::string);
 	void muteSound(bool mute);
 	Script getScriptById(int iteNum);
 	std::string getUserName();
 	std::string getDateTime();
 	std::map<std::string, std::list<std::string>>  getCredits();
+
 
 private:
 	void loadTextures();
@@ -145,8 +155,11 @@ private:
 
 	// Sound
 	std::map<Sound, std::string> soundList;
-	sf::Sound sounds[Sound::SOUNDCOUNT];
+	sf::Sound sounds[ResourceHandler::SOUNDCOUNT];
 	std::list<std::shared_ptr<sf::SoundBuffer>> sBufferList;
+
+	// Emotes
+	std::map<std::string, ResourceHandler::Sound> emoteList;
 
 	// Scripts
 	std::map<Scripts, std::string> scriptList;

@@ -172,8 +172,8 @@ void GameEngine::process()
 
 			// This checks if DEATH_STAR theme is selected, and selects the corresponding music. Consider revising, Bad sctructure wise
 			(menu->getStageSelectOption() - 1 == ResourceHandler::Scripts::DEATH_STAR) ?
-			resourceHandler->getSound(ResourceHandler::Sound::DEATH_STAR_THEME) :
-			resourceHandler->getSound(ResourceHandler::Sound::INGAME)));
+			resourceHandler->getSound(ResourceHandler::Sound::MUSIC_DEATH_STAR_THEME) :
+			resourceHandler->getSound(ResourceHandler::Sound::MUSIC_INGAME)));
 	}
 
 	// Process the Main menu initialization
@@ -191,7 +191,7 @@ void GameEngine::process()
 			true,
 			-1,
 			false,
-			resourceHandler->getSound(ResourceHandler::Sound::MENU_SONG)));
+			resourceHandler->getSound(ResourceHandler::Sound::MUSIC_MENU_SONG)));
 	}
 
 	// Process the GAEMOVER STATE

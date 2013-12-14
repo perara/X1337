@@ -13,11 +13,11 @@
 /// <param name="timeStep">The time step.</param>
 /// <param name="resourceHandler">The resource handler.</param>
 BulletFactory::BulletFactory(sf::RenderWindow& window,
-	int quantity,
-	std::list<std::unique_ptr<Bullet>>& bullets,
-	const sf::Time& timeStep,
-	std::shared_ptr<ResourceHandler>& resourceHandler) :
-	initQuantity(quantity), 
+							 int quantity,
+							 std::list<std::unique_ptr<Bullet>>& bullets,
+							 const sf::Time& timeStep,
+							 std::shared_ptr<ResourceHandler>& resourceHandler) :
+initQuantity(quantity), 
 	window(window),
 	bullets(bullets), 
 	timeStep(timeStep),

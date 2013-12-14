@@ -32,6 +32,21 @@
 				<Score>5500</Score>
 				<Date>13-12-13 23:08:41</Date>
 			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>5100</Score>
+				<Date>13-12-13 23:20:07</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>5700</Score>
+				<Date>13-12-13 23:21:08</Date>
+			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>600</Score>
+				<Date>13-12-14 01:28:13</Date>
+			</Player>
 		</Stage>
 		<Stage enum="2">
 			<Player>

@@ -24,6 +24,7 @@ public:
 
 	Enemy(sf::RenderWindow& window,
 		std::queue<sf::Vector3f> path,
+		std::list<std::pair<int, std::string>> emoteQueue,
 		int type, int repeat,
 		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
@@ -42,8 +43,14 @@ private:
 	int repeat;
 	int getRepeat();
 
+	// The path and path template
 	const std::queue<sf::Vector3f> pathTemplate; // Original Path (Which is the one loaded at start)
 	std::queue<sf::Vector3f> path; // Path which is under progress
+
+	// The emote queue, and the 
+	std::list<std::pair<int, std::string>> emoteQueue;
+
+
 	void setInitPath();
 	sf::Vector3f currentPath;
 

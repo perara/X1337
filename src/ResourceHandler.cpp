@@ -7,6 +7,7 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip> // put_time
+#include <regex>
 
 
 
@@ -15,7 +16,7 @@
 /// </summary>
 /// <param name="window">The window.</param>
 ResourceHandler::ResourceHandler(sf::RenderWindow& window) :
-window(window)
+	window(window)
 {
 	this->setInit(false);
 }
@@ -61,18 +62,35 @@ void ResourceHandler::init()
 
 	// Sounds
 	{
-		soundList[Sound::SONG1] = "assets/sound/a.ogg";
-		soundList[Sound::MENU_SONG] = "assets/sound/game_menu.ogg";
-		soundList[Sound::STANDARD_SHOT] = "assets/sound/FireOneSound.ogg";
-		soundList[Sound::HEAVY_SHOT] = "assets/sound/FireOneSound.ogg";
-		soundList[Sound::ENEMY_DEATH] = "assets/sound/ExplosionSound.ogg";
-		soundList[Sound::INGAME] = "assets/sound/in-game.ogg";
-		soundList[Sound::COUNTDOWN] = "assets/sound/countdown.ogg";
-		soundList[Sound::DEATH_STAR_THEME] = "assets/sound/death_star_theme.ogg";
-		soundList[Sound::PICKUP_HEALTH] = "assets/sound/health_pickup.wav";
-		soundList[Sound::MENU_CLICK] = "assets/sound/menu_click.ogg";
-		soundList[Sound::MENU_RETURN] = "assets/sound/menu_return.ogg";
+		soundList[Sound::MUSIC_MENU_SONG] = "assets/sound/game_menu.ogg";
+		soundList[Sound::FX_STANDARD_SHOT] = "assets/sound/FireOneSound.ogg";
+		soundList[Sound::FX_HEAVY_SHOT] = "assets/sound/FireOneSound.ogg";
+		soundList[Sound::FX_ENEMY_DEATH] = "assets/sound/ExplosionSound.ogg";
+		soundList[Sound::MUSIC_INGAME] = "assets/sound/in-game.ogg";
+		soundList[Sound::MUSIC_COUNTDOWN] = "assets/sound/countdown.ogg";
+		soundList[Sound::MUSIC_DEATH_STAR_THEME] = "assets/sound/death_star_theme.ogg";
+		soundList[Sound::FX_PICKUP_HEALTH] = "assets/sound/health_pickup.wav";
+		soundList[Sound::FX_MENU_CLICK] = "assets/sound/menu_click.ogg";
+		soundList[Sound::FX_MENU_RETURN] = "assets/sound/menu_return.ogg";
+
+		soundList[Sound::EMOTE_DEATHSTAR_GREET] = "assets/sound/emote_death_star_greet.ogg";
+		soundList[Sound::EMOTE_DEATHSTAR_DEATH] = "assets/sound/emote_death_star_death.ogg";
+		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_1] = "assets/sound/emote_death_star_periodic_1.ogg";
+		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_2] = "assets/sound/emote_death_star_periodic_2.ogg";
+		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_3] = "assets/sound/emote_death_star_periodic_3.ogg";
+		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_4] = "assets/sound/emote_death_star_periodic_4.ogg";
 	}
+
+	// EMOTE MAP
+	{
+		emoteList["deathstar_greet"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_GREET;
+		emoteList["deathstar_periodic_1"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_1;
+		emoteList["deathstar_periodic_2"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_2;
+		emoteList["deathstar_periodic_3"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_3;
+		emoteList["deathstar_periodic_4"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_4;
+		emoteList["deathstar_death"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_DEATH;
+	}
+
 
 	// Scripts
 	{
@@ -331,6 +349,7 @@ void ResourceHandler::loadScripts()
 				{
 					// Create a queue for the path
 					std::queue<sf::Vector3f> pathQueue = std::queue<sf::Vector3f>();
+					std::list<std::pair<int, std::string>> emoteQueue = std::list<std::pair<int, std::string>>();
 
 					// Retrieve enemy type and delay data
 					int eType = atoi(node.child("Type").child_value());
@@ -348,8 +367,37 @@ void ResourceHandler::loadScripts()
 						pathQueue.push(sf::Vector3f(x, y, shoot));
 					}
 
+					// Retrieves each of the emotes
+					for (pugi::xml_node emotes : node.child("Emotes").children())
+					{
+						// Get the percent and the emote name string
+						std::string percent = emotes.attribute("percent").value();
+						std::string sId = emotes.attribute("sID").value(); // ID of the sound (key to the emote map in resource handler)
+
+						// Split on comma and append to the queue (percentages)
+						std::stringstream ss(percent);
+						int i;
+						while (ss >> i)
+						{
+							// Create a pair to hold the percentage --> sound
+							std::pair<int, std::string> par;
+							par.first = i;
+							par.second = sId;
+
+							// Push the pair to the queue
+							emoteQueue.push_back(par);
+
+							// Next after ,
+							if (ss.peek() == ',')
+								ss.ignore();
+						}
+					}
+
+					// Sort the emote queue
+					emoteQueue.sort([](std::pair<int, std::string> & a, std::pair<int, std::string> & b) { return a.first > b.first; });
+
 					// Add enemy to script
-					this->scripts[i.first].addEnemy(eDelay, pathQueue, eType, scriptRepeat);
+					this->scripts[i.first].addEnemy(eDelay, pathQueue, emoteQueue, eType, scriptRepeat);
 					counter++;
 				}
 				LOGD(i.first << " was successfully loaded. " << counter << "enemies was queued.");
@@ -562,6 +610,13 @@ sf::Font& ResourceHandler::getFont(ResourceHandler::Fonts query)
 sf::Sound& ResourceHandler::getSound(ResourceHandler::Sound query)
 {
 	return this->sounds[query];
+}
+
+sf::Sound& ResourceHandler::getSoundByEmoteName(std::string emote)
+{
+
+	std::cout << emote << std::endl;
+	return this->sounds[emoteList[emote]];
 }
 
 /// <summary>
