@@ -61,6 +61,7 @@ void Script::setInit(bool status)
 {
 	if (status)
 	{
+		startEnemyListSize = enemyList.size();
 		enemyClock.restart();
 		powerupClock.restart();
 	}
@@ -228,12 +229,38 @@ std::string Script::getAudioDesc()
 	return this->audioDesc;
 }
 
+/// <summary>
+/// Sets the lore string
+/// </summary>
+/// <param name="lore">Lore string</param>
 void Script::setLore(std::string lore)
 {
 	this->lore = lore;
 }
 
+/// <summary>
+/// Returns the lore string
+/// </summary>
+/// <returns>String with lore</returns>
 std::string Script::getLore()
 {
 	return this->lore;
+}
+
+/// <summary>
+/// Gets the start size of the enemy list.
+/// </summary>
+/// <returns>integer with size</returns>
+const int Script::getStartEnemyListSize()
+{
+	return startEnemyListSize;
+}
+
+/// <summary>
+/// Gets the size of the enemy list.
+/// </summary>
+/// <returns>size of enemy list</returns>
+const int Script::getEnemyListSize()
+{
+	return enemyList.size();
 }

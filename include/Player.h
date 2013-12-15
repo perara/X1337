@@ -26,16 +26,31 @@ public:
 	virtual void input(sf::Event&); // Input handler for player
 	virtual void process();
 
-	void addScore(float score); // Adds a X sum to player's score
+	// Adds a X sum to player's score
+	void addScore(float score);
+
+	// Draw the stats view
 	void drawStats(std::list<std::shared_ptr<HighScoreItem>>&);
 
+	// Retrieves the player score
 	int getPlayerScore();
 
+	// Retrieves the player kills (number of enemy kills)
+	int getPlayerKills();
+
+	// Sets a powerup for the player (Func)
 	void powerUp(Powerup::PowerUpType);
 private:
 	/// The player score
 	int playerScore;
+
+	// Enemy Kills
+	int playerKills;
+
+	// Detects window edges (basicly window hit detection)
 	void detectEdge();
+
+	// Process powerup loop
 	void processPowerUps();
 
 	/// Timers and such for power ups

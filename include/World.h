@@ -51,9 +51,13 @@ private:
 	const bool demo;
 	int gameOver;
 
-	int currentScript;
+	int currentScript; // Hold current script as a integer (convert to ResourceHandler::Scripts)
+	int stageProgress; // Displays current stage progress as a percentage
 
 	std::list<std::shared_ptr<Shooter>> objects;
 	std::list<std::unique_ptr<Bullet>> bullets;
 	std::list<std::shared_ptr<Powerup>> powerups;
+
+	void drawGameProgress();
+	void evaluateGameOver();
 };

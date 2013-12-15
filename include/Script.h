@@ -44,7 +44,8 @@ class Script
 
 public:
 	Script():
-	audioDesc("null")
+	audioDesc("null"),
+	startEnemyListSize(-1)
 	{};
 	void addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat);
 	void addPowerUp(int delay, sf::Vector3f spawnPoint, int type, int repeat);
@@ -77,10 +78,16 @@ public:
 	/// Setter and getter for the Lore string
 	void setLore(std::string);
 	std::string getLore();
+
+	///  Get for enemy list size (start and current)
+	const int getStartEnemyListSize();
+	const int getEnemyListSize();
+
 private:
 	std::string scriptTitle;
 	std::string audioDesc;
 	std::string lore;
 	int scriptEnumVal;
+	int startEnemyListSize;
 
 };

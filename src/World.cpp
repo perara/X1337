@@ -20,20 +20,21 @@
 /// <param name="hardMode">Weither its hardmode or not.</param>
 /// <param name="ingameSong">Selected ingame sound</param>
 World::World(sf::RenderWindow& window,
-	std::shared_ptr<ResourceHandler>& resourceHandler,
-	const sf::Time& timeStep,
-	const bool demo,
-	const int scriptNum,
-	const bool hardMode,
-	sf::Sound& ingameSong)
-	:
-	Scene(window, resourceHandler),
+			 std::shared_ptr<ResourceHandler>& resourceHandler,
+			 const sf::Time& timeStep,
+			 const bool demo,
+			 const int scriptNum,
+			 const bool hardMode,
+			 sf::Sound& ingameSong)
+			 :
+Scene(window, resourceHandler),
 	bg(Background(window)),
 	bFactory(BulletFactory(window, 1000, bullets, timeStep, resourceHandler)),
 	timeStep(timeStep),
 	countdownSong(resourceHandler->getSound(ResourceHandler::Sound::MUSIC_COUNTDOWN)),
 	ingameSong(ingameSong),
 	gameOver(0),
+	stageProgress(0),
 	hardMode(hardMode),
 	demo(demo),
 	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100, 250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode)))
@@ -98,94 +99,71 @@ void World::process()
 	bool scriptRunning;
 	(countdownSong.getStatus() != 0 && !demo) ?
 		scriptRunning = true :
-		scriptRunning = script.process(window, objects, powerups, bullets, bFactory, resourceHandler, timeStep);
+	scriptRunning = script.process(window, objects, powerups, bullets, bFactory, resourceHandler, timeStep);
 
 	///////////////////////////////////
 	// Object processing and cleanup //
 	///////////////////////////////////
-	if (objects.size() > 1 || scriptRunning)
+	if (!objects.empty())
 	{
-		for (std::list<std::shared_ptr<Shooter>>::iterator i = objects.begin(); i != objects.end();)
+		std::cout << objects.size() << std::endl;
+		for (std::list<std::shared_ptr<Shooter>>::iterator objectIt = objects.begin(); objectIt != objects.end();)
 		{
 			// Process the object (Player and enemy)
-			(*i)->process();
+			(*objectIt)->process();
 
 
 			///////////////////////////////////
 			////////////CLEANUP////////////////
 			///////////////////////////////////
 			// Checks if the object's delete flag is set
-			if ((*i)->getDeleted())
+			if ((*objectIt)->getDeleted())
 			{
 				// Checks if the object is a enemy
-				if ((*i)->getType() == Shooter::ShooterType::ENEMY)
+				if ((*objectIt)->getType() == Shooter::ShooterType::ENEMY)
 				{
 					// Increment the score value of the enemy
-					player->addScore((*i)->getScoreValue());
+					player->addScore((*objectIt)->getScoreValue());
 				}
-				// Checks if the object is a player
-				else if ((*i)->getType() == Shooter::ShooterType::PLAYER)
-				{
-					// Sets gameOver flag
-					gameOver = 1;
 
-					// Checks if the playerscore higher than 0 and writes to the Highscore.
-					int multiplier = ((hardMode) ? 2 : 1); // Hardmode multiplier.
-					if (player->getPlayerScore() > 0)
-					{
-						resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
-					}
-
-				}
 				// Delete the object from the list and continiue looping
-				i = objects.erase(i);
+				objectIt = objects.erase(objectIt);
 			}
 			else
 			{
-				++i;
-			}
-		}
-	}
-	// Nothing more to do, game is over.
-	else
-	{
-		// Sets gameOver flag;
-		gameOver = 2;
-
-		// Writes to the Highscore.
-		int multiplier = (hardMode ? 2 : 1); // Hardmode multiplier.
-		if (currentScript != -1 && player->getPlayerScore() > 0) resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
-	}
+				++objectIt;
+			} // -- if end
+		} // -- for end
+	} // -- if end
 
 	///////////////////////////////////
 	// Bullet processing and cleanup //
 	///////////////////////////////////
 	if (!bullets.empty())
 	{
-		for (std::list<std::unique_ptr<Bullet>>::iterator it = bullets.begin(); it != bullets.end();)
+		for (std::list<std::unique_ptr<Bullet>>::iterator bulletIt = bullets.begin(); bulletIt != bullets.end();)
 		{
 			// Process the bullets
-			(*it)->process();
+			(*bulletIt)->process();
 
 			///////////////////////////////////
 			////////////CLEANUP////////////////
 			///////////////////////////////////
 			// Checks if the delete flag is set for the bullet
-			if ((*it)->getDeleted())
+			if ((*bulletIt)->getDeleted())
 			{
 				// Return the bullet to the bullet factory
-				bFactory.returnObject(std::move(*it));
+				bFactory.returnObject(std::move(*bulletIt));
 
 				// Delete the pointer from the list and set the iterator
-				it = bullets.erase(it);
+				bulletIt = bullets.erase(bulletIt);
 			}
 			else
 			{
-				// Increment the iterator
-				++it;
-			}
-		}
-	}
+				++bulletIt;
+			} // -- if end
+		} // -- for end
+	} // -- if end
 
 	///////////////////////////////////
 	// Powerup processing and cleanup //
@@ -193,35 +171,40 @@ void World::process()
 	if (!powerups.empty())
 	{
 
-		for (std::list<std::shared_ptr<Powerup>>::iterator it = powerups.begin(); it != powerups.end();)
+		for (std::list<std::shared_ptr<Powerup>>::iterator powerupIt = powerups.begin(); powerupIt != powerups.end();)
 		{
 			// Process the power ups
-			(*it)->process();
+			(*powerupIt)->process();
 
 			// Check if player and powerup collide
-			bool collision = (*it)->hitDetection(player);
+			bool collision = (*powerupIt)->hitDetection(player);
 
 			// Collision happened, the power up was set to deleted and actions will now happen inside this if clause
 			if (collision)
 			{
-				player->powerUp((*it)->getPowerUpType());
+				player->powerUp((*powerupIt)->getPowerUpType());
 			}
 
 			///////////////////////////////////
 			////////////CLEANUP////////////////
 			///////////////////////////////////
 			// Checks if the powerups's delete flag is set
-			if ((*it)->getDeleted())
+			if ((*powerupIt)->getDeleted())
 			{
-				it = powerups.erase(it);
+				powerupIt = powerups.erase(powerupIt);
 			}
 			else
 			{
-				++it;
-			}
-		}
-	}
+				++powerupIt;
+			} // -- if end
+		} // -- for end
+	} // -- if end
 
+	// Update the stage progression
+	stageProgress = (int)(player->getPlayerKills() * ((float)100 / script.getStartEnemyListSize())); // Stage progress in percent
+
+	// Check for gameOver
+	evaluateGameOver();
 }
 
 /// <summary>
@@ -230,8 +213,6 @@ void World::process()
 void World::drawStats()
 {
 	player->drawStats(resourceHandler->getHighScores()[(ResourceHandler::Scripts)currentScript]);
-
-
 }
 
 /// <summary>
@@ -251,19 +232,22 @@ void World::draw()
 	// Draw background
 	bg.draw();
 
-	// Bullets 
+	// Draw Stage Progress
+	drawGameProgress();
+
+	// Draw Bullets 
 	for (auto &it : bullets)
 	{
 		it->draw();
 	}
 
-	// Players and enemies
+	// Draw Players and enemies
 	for (auto &it : objects)
 	{
 		it->draw();
 	}
 
-	// Power Ups
+	// Draw Power Ups
 	for (auto& it : powerups)
 	{
 		it->draw();
@@ -293,3 +277,49 @@ void World::input(sf::Event& event)
 	this->player->input(event);
 }
 
+
+/// <summary>
+/// Draws the game progress text
+/// </summary>
+void World::drawGameProgress()
+{
+	if(!demo)
+	{ 
+		sf::Text txtProgress;
+		txtProgress.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+		txtProgress.setCharacterSize(12);
+		txtProgress.setString("Stage Progress: " + std::to_string(stageProgress) + "%");
+		txtProgress.setPosition(10,window.getView().getSize().y - txtProgress.getGlobalBounds().height * 2);
+		window.draw(txtProgress);
+	}
+}
+
+/// <summary>
+/// Evaluates the gameOver state
+/// </summary>
+void World::evaluateGameOver()
+{
+	// If the stage is complete
+	if(stageProgress == 100)
+	{
+		gameOver = 2;
+	}
+	else if(player->getDeleted())
+	{
+		gameOver = 1;
+	}
+
+	// Checks if:
+	// 1. Script is set correctly
+	// 2. Playerscore is above 0
+	// 3. Game over is not false (0)
+	if (currentScript != -1 && 
+		player->getPlayerScore() > 0 &&
+		gameOver != 0
+		) 
+	{
+		// Writes to the Highscore.
+		int multiplier = (hardMode ? 2 : 1); // Hardmode multiplier.
+		resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
+	}
+}

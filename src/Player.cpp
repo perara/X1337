@@ -41,7 +41,8 @@ Player::Player(sf::RenderWindow& window,
 			   const bool hardMode
 			   )
 			   :
-	playerScore(0),
+playerScore(0),
+	playerKills(0),
 	pulsateGun(false),
 
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
@@ -239,6 +240,7 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 /// <param name="score">The score.</param>
 void Player::addScore(float score)
 {
+	playerKills++;
 	playerScore += score;
 }
 
@@ -353,4 +355,9 @@ void Player::powerUp(Powerup::PowerUpType powType)
 		pulseClock.restart();
 	}
 
+}
+
+int Player::getPlayerKills()
+{
+	return playerKills;
 }
