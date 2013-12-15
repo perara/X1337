@@ -106,7 +106,6 @@ void World::process()
 	///////////////////////////////////
 	if (!objects.empty())
 	{
-		std::cout << objects.size() << std::endl;
 		for (std::list<std::shared_ptr<Shooter>>::iterator objectIt = objects.begin(); objectIt != objects.end();)
 		{
 			// Process the object (Player and enemy)
