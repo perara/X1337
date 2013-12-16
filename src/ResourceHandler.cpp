@@ -40,6 +40,7 @@ void ResourceHandler::init()
 
 	// Textures
 	{
+		textureList[Texture::NOID] = "assets/sprites/noid.png";
 		textureList[Texture::BACKGROUND2] = "assets/sprites/bg2.jpg";
 		textureList[Texture::BACKGROUND3] = "assets/sprites/bg3.jpg";
 		textureList[Texture::HEART] = "assets/sprites/heart.png";
@@ -58,6 +59,9 @@ void ResourceHandler::init()
 		textureList[Texture::PULSE_GUN] = "assets/sprites/pulse-gun.png";
 		textureList[Texture::PLAYER_BAR] = "assets/sprites/player-bar.png";
 
+		textureList[Texture::PORTRAIT_TWINS] = "assets/sprites/stage_portraits/twins.png";
+		textureList[Texture::PORTRAIT_COUNCIL] = "assets/sprites/stage_portraits/council.png";
+		textureList[Texture::PORTRAIT_DEATHSTAR] = "assets/sprites/stage_portraits/deathstar.png";
 	}
 
 	// Sounds
@@ -109,15 +113,21 @@ void ResourceHandler::init()
 		musicStringList["deathstar_beware"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_BEWARE;
 	}
 
+	// Texture string to texture map
+	{
+		textureStringList["deathstar"] = ResourceHandler::Texture::PORTRAIT_DEATHSTAR;
+		textureStringList["council"] = ResourceHandler::Texture::PORTRAIT_COUNCIL;
+		textureStringList["twins"] = ResourceHandler::Texture::PORTRAIT_TWINS;
+
+	}
+
 
 	// Scripts
 	{
 		scriptList[Scripts::STAGE_ONE] = "assets/scripts/stage1.xml";
 		scriptList[Scripts::STAGE_TWO] = "assets/scripts/stage2.xml";
 		scriptList[Scripts::GAME_MENU] = "assets/scripts/game_menu.xml";
-
 		scriptList[Scripts::DEATH_STAR] = "assets/scripts/test1.xml";
-		scriptList[Scripts::TEST2] = "assets/scripts/test2.xml";
 	}
 
 	// Fonts
@@ -366,7 +376,7 @@ void ResourceHandler::loadScripts()
 
 				int scriptRepeat = atoi(root.child("Repeat").child_value());
 				std::string scriptName = root.child("Name").child_value();
-
+				std::string portrait = root.child("Portrait").child_value();
 
 				// Create a log counter
 				int counter = 0;
@@ -496,6 +506,7 @@ void ResourceHandler::loadScripts()
 				// Set enum and Script title, then set status to initialized
 				this->scripts[i.first].setScriptEnumVal(i.first);
 				this->scripts[i.first].setScriptTitle(scriptName);
+				this->scripts[i.first].setPortraitString(portrait);
 				this->scripts[i.first].setInit(true);
 
 
@@ -695,6 +706,16 @@ sf::Sound& ResourceHandler::getSoundByEmoteName(std::string emote)
 		LOGE("Error: Missing emote/sound");
 	}
 	return this->sounds[musicStringList[emote]];
+}
+
+/// <summary>
+/// Gets the texture by string (Via the string to resource texture map)
+/// </summary>
+/// <param name="str">The string.</param>
+/// <returns>A texture reference</returns>
+sf::Texture& ResourceHandler::getTextureByString(std::string str)
+{
+	return textures[textureStringList[str]];
 }
 
 /// <summary>

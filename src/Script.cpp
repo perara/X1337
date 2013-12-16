@@ -265,3 +265,13 @@ const int Script::getEnemyListSize()
 {
 	return enemyList.size();
 }
+
+void Script::setPortraitString(std::string portraitString)
+{
+	this->portraitString = portraitString;
+}
+
+std::string Script::getPortraitString()
+{
+	return portraitString;
+}

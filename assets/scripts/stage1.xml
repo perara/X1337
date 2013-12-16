@@ -2,6 +2,7 @@
 <Script>
   <Name encounter="1">Twins</Name>
   <Repeat>1</Repeat>
+  <Portrait>twins</Portrait>
   <Enemies>
     <Enemy>
       <Type>1</Type>

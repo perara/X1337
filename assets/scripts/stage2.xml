@@ -2,6 +2,7 @@
 <Script>
   <Name encounter="1">The Council</Name>
   <Repeat>1</Repeat>
+  <Portrait>council</Portrait>
   <Enemies>
     <Enemy>
       <Type>1</Type>

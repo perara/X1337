@@ -45,6 +45,7 @@ public:
 	/// Texture enumerable which contains all resource "Links" its used to access the resource
 	const enum Texture
 	{
+		NOID, // Just default null texture
 		BACKGROUND2,
 		BACKGROUND3,
 		HEART,
@@ -61,6 +62,10 @@ public:
 		REGULAR_BULLET_1,
 		PLAYER_BAR,
 		MONITOR_ICON,
+
+		PORTRAIT_TWINS,
+		PORTRAIT_COUNCIL,
+		PORTRAIT_DEATHSTAR,
 
 		TEXTURECOUNT
 	};
@@ -104,7 +109,6 @@ public:
 		STAGE_ONE,
 		STAGE_TWO,
 		DEATH_STAR,
-		TEST2,
 		GAME_MENU,
 
 		SCRIPTSCOUNT
@@ -130,10 +134,14 @@ public:
 	void loadHighScore();
 
 	// Getts for each of the resources
+	sf::Texture&getTextureByString(std::string str);
 	sf::Texture& getTexture(ResourceHandler::Texture);
+
 	Script getScript(ResourceHandler::Scripts);
 	std::list<Script> getScripts(bool);
+
 	sf::Font& getFont(ResourceHandler::Fonts);
+
 	sf::Sound& getSound(ResourceHandler::Sound);
 	sf::Sound& getSoundByEmoteName(std::string);
 
@@ -163,6 +171,7 @@ private:
 	sf::RenderWindow& window;
 
 	// Textures
+	std::map<std::string, ResourceHandler::Texture> textureStringList;
 	std::map<Texture, std::string> textureList;
 	sf::Texture textures[Texture::TEXTURECOUNT];
 

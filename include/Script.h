@@ -82,10 +82,15 @@ public:
 	const int getStartEnemyListSize();
 	const int getEnemyListSize();
 
+	/// Sets and Gets the protrait String
+	void setPortraitString(std::string);
+	std::string getPortraitString();
+
 private:
 	std::string scriptTitle;
 	std::string audioDesc;
 	std::string lore;
+	std::string portraitString;
 	int scriptEnumVal;
 	int startEnemyListSize;
 

@@ -4,7 +4,7 @@
 int main()
 {
 
-#if !DEBUG
+#if !_DEBUG
 	HWND hwnd_win = GetForegroundWindow();
 	ShowWindow(hwnd_win, SW_HIDE);
 #endif

@@ -546,7 +546,7 @@ void Menu::drawGameTitle()
 void Menu::drawStageSelect()
 {
 	// Finds where the first frame should be drawed,
-	sf::Vector2f frameStartPos((window.getView().getSize().x / 4) - 60, window.getView().getSize().y / 4);
+	sf::Vector2f frameStartPos((window.getView().getSize().x / 3) - 60, window.getView().getSize().y / 3);
 
 	// Counter, and y multiplier for the frames ( this is increased when an modulo X is reached)
 	int yMult = 1;
@@ -554,7 +554,6 @@ void Menu::drawStageSelect()
 	int cnt = count;
 
 	sf::FloatRect currentStageSelBounds; // Read as Current stage select bounds
-
 	// Get each of the script names
 	for (Script& i : scripts)
 	{
@@ -567,8 +566,8 @@ void Menu::drawStageSelect()
 
 		// Image display
 		sf::RectangleShape frame(sf::Vector2f(window.getView().getSize().x / 8, window.getView().getSize().y / 8));
-		frame.setFillColor(sf::Color(53, 24, 52));
-		frame.setPosition((frameStartPos.x * count), frameStartPos.y * yMult);
+		frame.setTexture(&resourceHandler->getTextureByString(i.getPortraitString()));
+		frame.setPosition((frameStartPos.x * count) - (frame.getGlobalBounds().width / 2), frameStartPos.y * yMult);
 		window.draw(frame);
 
 		// Text Under image
@@ -585,7 +584,7 @@ void Menu::drawStageSelect()
 		// This checks if the the frame width is reached (4 in a row)
 		// If it is we increment the multiplier to reach next line
 		count++;
-		if (count % 4 == 1)
+		if (count % 3 == 1)
 		{
 			count = 1;
 			yMult++;
@@ -605,7 +604,7 @@ void Menu::drawStageSelect()
 	sf::Text loreTitle;
 	loreTitle.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 	loreTitle.setStyle(sf::Text::Style::Underlined);
-	loreTitle.setPosition(frameStartPos.x + 120,frameStartPos.y + 250);
+	loreTitle.setPosition(frameStartPos.x + 50,frameStartPos.y + 200);
 	loreTitle.setString("Lore");
 	window.draw(loreTitle);
 
