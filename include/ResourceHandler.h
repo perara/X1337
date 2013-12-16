@@ -67,7 +67,7 @@ public:
 	/// Sound enumerable which contains all resource "Links" its used to access the resource
 	const enum Sound
 	{
-		MUSIC_DEATH_STAR_THEME,
+		MUSIC_DEATH_STAR_THEME = 1,
 		MUSIC_MENU_SONG,
 		MUSIC_COUNTDOWN,
 		MUSIC_INGAME, // The usual ingame for all stages

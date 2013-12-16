@@ -1,8 +1,7 @@
 #include "Powerup.h"
-#include "GameShape.h"
 #include "ResourceHandler.h"
 #include "Player.h"
-
+#include "GameShape.h"
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Powerup"/> class.
@@ -14,7 +13,7 @@
 /// <param name="timeStep">The time step.</param>
 Powerup::Powerup(
 	sf::RenderWindow& window,
-	sf::Vector3f startPoint,
+	VectorN startPoint,
 	int type,
 	std::shared_ptr<ResourceHandler>& resourceHandler,
 	const sf::Time& timeStep

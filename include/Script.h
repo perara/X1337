@@ -4,7 +4,7 @@
 #include <SFML\Graphics.hpp>
 #include <memory>
 #include "Powerup.h"
-
+#include "VectorN.h"
 
 class Shooter;
 class BulletFactory;
@@ -22,10 +22,10 @@ class Script
 		int delay;
 		int repeat;
 		int type;
-		std::queue<sf::Vector3f> pathQueue;
+		std::queue<VectorN> pathQueue;
 		std::list<std::pair<int, std::string>> emoteQueue;
 
-		ScriptTick(int delay, std::queue<sf::Vector3f> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat) :
+		ScriptTick(int delay, std::queue<VectorN> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat) :
 			delay(delay),
 			pathQueue(pathQueue),
 			emoteQueue(emoteQueue),
@@ -47,8 +47,8 @@ public:
 	audioDesc("null"),
 	startEnemyListSize(-1)
 	{};
-	void addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat);
-	void addPowerUp(int delay, sf::Vector3f spawnPoint, int type, int repeat);
+	void addEnemy(int delay, std::queue<VectorN> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat);
+	void addPowerUp(int delay, VectorN spawnPoint, int type, int repeat);
 
 	// Init
 	bool getInit();

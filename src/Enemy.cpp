@@ -3,6 +3,7 @@
 #include "BulletFactory.h"
 #include "Bullet.h"
 #include "Log.h"
+
 /// <summary>
 /// Initializes a new instance of the <see cref="Enemy"/> class.
 /// </summary>
@@ -16,17 +17,19 @@
 /// <param name="resourceHandler">The resource handler.</param>
 /// <param name="timeStep">The time step.</param>
 Enemy::Enemy(sf::RenderWindow& window,
-			 std::queue<sf::Vector3f> path,
-			 std::list<std::pair<int, std::string>> emoteQueue,
-			 int type, int repeat, BulletFactory& bFactory,
-			 std::list<std::unique_ptr<Bullet>>& bullets,
-			 std::shared_ptr<ResourceHandler>& resourceHandler,
-			 const sf::Time& timeStep
-			 ) :
-pathTemplate(path), // Const, not to be changed (The template is copyed when a path is over in repeat mode)
+	std::queue<VectorN> path,
+	std::list<std::pair<int, std::string>> emoteQueue,
+	int type, int repeat, BulletFactory& bFactory,
+	std::list<std::unique_ptr<Bullet>>& bullets,
+	std::shared_ptr<ResourceHandler>& resourceHandler,
+	const sf::Time& timeStep
+	) :
+	pathTemplate(path), // Const, not to be changed (The template is copyed when a path is over in repeat mode)
 	emoteQueue(emoteQueue),
 	repeat(repeat),
 	secondRot(0),
+	acceleration(0),
+	speed(sf::Vector2f(50, 50)),
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
 	// Start the enemy clock
@@ -236,53 +239,70 @@ void Enemy::shoot(int shoot)
 	}
 }
 
+/// <summary>
+/// Defines emotes processing for the enemy
+/// </summary>
 void Enemy::emotes()
 {
-	if(!emoteQueue.empty())
+	// Emote queue's emotes
+	if (!emoteQueue.empty())
 	{
-		if(emoteQueue.front().first > (int)((100.0f / getStartHealth()) * getHealth()))
+		if (emoteQueue.front().first > (int)((100.0f / getStartHealth()) * getHealth()))
 		{
 			std::string soundToPlay = emoteQueue.front().second;
 			emoteQueue.pop_front();
 			resourceHandler->getSoundByEmoteName(soundToPlay).play();
 		}
 	}
+
+	// Pathqueue's emotes
+	if (this->currentPath.emote != nullptr)
+	{
+		this->currentPath.emote->play();
+		this->currentPath.emote = nullptr;
+	}
+
 }
 
+/// <summary>
+/// Defines movement processing for the enemy
+/// </summary>
 void Enemy::movement()
 {
-	// Start
+	// do not process movement if sleep is in action
+	if (sleepTime < this->currentPath.sleepTime) return;
+
+	// Start point of the path
 	sf::Vector2f length;
 	length.x = abs(this->currentPath.x - path.front().x);
 	length.y = abs(this->currentPath.y - path.front().y);
 
-	// End
+	// End point of the path
 	sf::Vector2f currentPosition;
 	currentPosition.x = abs(this->currentPath.x - this->sprite->getPosition().x);
 	currentPosition.y = abs(this->currentPath.y - this->sprite->getPosition().y);
 
 
-	// The difference between the goto and the current position
+	// The difference between the goto and current position
 	float dx = this->path.front().x - this->currentPath.x;
 	float dy = this->path.front().y - this->currentPath.y;
 	float len = sqrtf(dx * dx + dy * dy);
 
-	// Dfeines the speed of the enemy
-	dx = (dx / len) * timeStep.asSeconds() * 50;
-	dy = (dy / len) * timeStep.asSeconds() * 50;
-
-	// Normal Shoot processing
-	if (this->enemyClock.getElapsedTime().asMilliseconds() > 400)
+	// Defines acceleration
+	if (this->currentPath.acceleration != 0)
 	{
-		this->shoot(this->currentPath.z);
-		this->enemyClock.restart();
+		// Accelerate
+		float accelerateTick = this->currentPath.acceleration * 0.18;
+		if (this->acceleration + accelerateTick > 0) this->acceleration += this->currentPath.acceleration * 0.18;
+	}
+	else
+	{
+		// Deaccelerate
+		if (this->acceleration >= 1) this->acceleration--;
 	}
 
-	// Special Cases shoot processing (Like deathstar lazer)
-	if (this->currentPath.z == 3) // check if its a special case (3 is special attack for deathstar)
-	{
-		this->shoot(this->currentPath.z);
-	}
+	dx = (dx / len) * timeStep.asSeconds() * (speed.x + acceleration);
+	dy = (dy / len) * timeStep.asSeconds() * (speed.y + acceleration);
 
 	// Check if the enemy has reached a path point or not ( move him if not)
 	if (
@@ -312,6 +332,9 @@ void Enemy::movement()
 		{
 			currentPath = path.front();
 			path.pop();
+
+			// Reset the sleep time
+			sleepTime = sf::milliseconds(0);
 		}
 
 		// If there is no paths to go.
@@ -332,13 +355,39 @@ void Enemy::movement()
 }
 
 /// <summary>
+/// Shoot processing. This function is basicly the processing of when the enemy should shoot
+/// </summary>
+void Enemy::shootProcess()
+{
+	// Normal Shoot processing
+	if (shootTime.asMilliseconds() > 400)
+	{
+		this->shoot(this->currentPath.shoot);
+		shootTime = sf::milliseconds(0);
+	}
+
+	// Special Cases shoot processing (Like deathstar lazer)
+	if (this->currentPath.shoot == 3) // check if its a special case (3 is special attack for deathstar)
+	{
+		this->shoot(this->currentPath.shoot);
+	}
+}
+
+
+/// <summary>
 /// Processes this instance.
 /// </summary>
 void Enemy::process()
 {
+	// Update sf::Time's in enemy
+	shootTime += enemyClock.getElapsedTime();
+	sleepTime += enemyClock.getElapsedTime();
+	enemyClock.restart();
+
 	this->hitDetection();
 	this->emotes();
 	this->movement();
+	this->shootProcess();
 }
 
 

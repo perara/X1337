@@ -112,7 +112,7 @@
 <Type>1</Type>
 <Delay>1000</Delay>
 <Path>
-<_0 shoot="0" x="-8" y="-7"/>
+<_0 shoot="0" x="-8" y="-7" acceleration="2.0"/>
 <_1 shoot="0" x="97" y="123"/>
 <_2 shoot="0" x="187" y="212"/>
 <_3 shoot="0" x="263" y="293"/>

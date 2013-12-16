@@ -1,18 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Script>
-<Name encounter="1">Placeholder 1</Name>
-<Repeat>0</Repeat>
-<Enemies>
-<Enemy>
-<Type>1</Type>
-<Delay>200</Delay>
-<Path>
-<_0 shoot="-1" x="10" y="10"/>
-<_1 shoot="1" x="490" y="10"/>
-<_2 shoot="-1" x="500" y="500"/>
-<_3 shoot="-1" x="0" y="500"/>
-<_4 shoot="-1" x="0" y="0"/>
-</Path>
-</Enemy>
-</Enemies>
+  <Name encounter="1">DEATHSTAR BETA</Name>
+  <Repeat>1</Repeat>
+  <Enemies>
+    <Enemy>
+      <Type>4</Type>
+      <Delay>200</Delay>
+      <Path>
+        <_0 shoot="0" x="400" y="-50" acceleration="0"/>
+        <_1 shoot="3" x="400" y="100" acceleration="2"/>
+		<_2 shoot="3" x="750" y="100" acceleration="2"/>
+		<_3 shoot="3" x="50" y="100" acceleration="2"/>
+        <_5 shoot="3" x="750" y="100" acceleration="2"/>
+		<_6 shoot="3" x="500" y="100" acceleration="-20"/>
+		<_7 shoot="4" x="400" y="100" acceleration="2" sleep="5000" sID="deathstar_rage"/>
+		<_7 shoot="3" x="400" y="100" acceleration="2"/>
+		
+      </Path>
+	  <Emotes>
+		<_0 percent="100" sID="deathstar_greet"/>
+		<_1 percent="90,70,50,30" sID="deathstar_periodic_1"/>
+		<_2 percent="80,60,40,20" sID="deathstar_periodic_2"/>
+		<_3 percent="50,10" sID="deathstar_periodic_3"/>
+		<_4 percent="5" sID="deathstar_periodic_4"/>
+		<_2 percent="1" sID="deathstar_death"/>
+	  </Emotes>
+    </Enemy>
+  </Enemies>
+  <PowerUps>
+    <PowerUp>
+      <Type>-11</Type>
+      <Delay>2000</Delay>
+      <Repeat>0</Repeat>
+      <Path x="450" y="0">
+    </Path>
+  </PowerUp>
+    <PowerUp>
+      <Type>-11</Type>
+      <Delay>20000</Delay>
+      <Repeat>1</Repeat>
+      <Path x="460" y="0">
+    </Path>
+  </PowerUp>
+</PowerUps>
+
+<Story>
+	<Intro>stage3_intro_story</Intro>
+	<Lore>You slayed the council and are now in the hotzone inside the enemy territory.\nYou learn that the leader sits inside the Death Star close to you.\nYou are engaged into battle with Death Star in\nan epic fighth for your life!\n\nYour Mission:\n- Kill Death Star!</Lore>
+</Story>
 </Script>
+

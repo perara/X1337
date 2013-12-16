@@ -5,7 +5,6 @@
 #include "BulletFactory.h"
 #include "Bullet.h"
 
-
 /// <summary>
 /// Adds a enemy to the script queue
 /// </summary>
@@ -14,7 +13,7 @@
 /// <param name="emoteQueue">A queue which contains emoteNames. This is a sorted list</param>
 /// <param name="type">The type.</param>
 /// <param name="repeat">The repeat.</param>
-void Script::addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat)
+void Script::addEnemy(int delay, std::queue<VectorN> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat)
 {
 	LOGD("Adding new enemy template to pool");
 	ScriptTick tick(delay, pathQueue, emoteQueue, type, repeat);
@@ -30,9 +29,9 @@ void Script::addEnemy(int delay, std::queue<sf::Vector3f> pathQueue, std::list<s
 /// <param name="spawnPoint">The spawn point.</param>
 /// <param name="type">The type.</param>
 /// <param name="repeat">The repeat.</param>
-void Script::addPowerUp(int delay, sf::Vector3f spawnPoint, int type, int repeat)
+void Script::addPowerUp(int delay, VectorN spawnPoint, int type, int repeat)
 {
-	std::queue<sf::Vector3f> queue;
+	std::queue<VectorN> queue;
 	queue.push(spawnPoint);
 
 	std::list<std::pair<int, std::string>> emoteQueue;
@@ -176,7 +175,7 @@ bool Script::process(sf::RenderWindow& window,
 		{
 
 			// Create a new powerup
-			sf::Vector3f path = pwrUp.pathQueue.front();
+			VectorN path = pwrUp.pathQueue.front();
 
 			(path.x == -1) ? path.x = rand() % window.getSize().x + 1 : path.x;
 			(path.y == -1) ? path.y = rand() % window.getSize().y + 1 : path.y;

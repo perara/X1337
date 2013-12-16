@@ -2,7 +2,7 @@
 #include "Object.h"
 #include <memory>
 #include <SFML\Graphics.hpp>
-#include "Powerup.h"
+#include "VectorN.h"
 
 class ResourceHandler;
 class Bullet;
@@ -25,7 +25,7 @@ public:
 
 	Powerup(
 		sf::RenderWindow& window,
-		sf::Vector3f startPoint,
+		VectorN startPoint,
 		int type,
 		std::shared_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep

@@ -7,7 +7,7 @@
 #include <chrono>
 #include <ctime>
 #include <iomanip> // put_time
-#include <regex>
+#include "VectorN.h"
 
 
 
@@ -16,7 +16,7 @@
 /// </summary>
 /// <param name="window">The window.</param>
 ResourceHandler::ResourceHandler(sf::RenderWindow& window) :
-	window(window)
+window(window)
 {
 	this->setInit(false);
 }
@@ -96,6 +96,7 @@ void ResourceHandler::init()
 		musicStringList["stage1_intro_story"] = ResourceHandler::Sound::STORY_TWINS_INTRO;
 
 		// EMOTES
+		musicStringList["deathstar_rage"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_GREET;
 		musicStringList["deathstar_greet"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_GREET;
 		musicStringList["deathstar_periodic_1"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_1;
 		musicStringList["deathstar_periodic_2"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_2;
@@ -372,7 +373,7 @@ void ResourceHandler::loadScripts()
 				for (pugi::xml_node node : root.child("Enemies").children("Enemy"))
 				{
 					// Create a queue for the path
-					std::queue<sf::Vector3f> pathQueue = std::queue<sf::Vector3f>();
+					std::queue<VectorN> pathQueue = std::queue<VectorN>();
 					std::list<std::pair<int, std::string>> emoteQueue = std::list<std::pair<int, std::string>>();
 
 					// Retrieve enemy type and delay data
@@ -385,10 +386,36 @@ void ResourceHandler::loadScripts()
 						// Convert string to integer
 						int x = atoi(path.attribute("x").value());
 						int y = atoi(path.attribute("y").value());
+						int acceleration = atof(path.attribute("acceleration").value());
 						int shoot = atoi(path.attribute("shoot").value());
+						int sleep = atoi(path.attribute("sleep").value());
+						std::string sId = path.attribute("sID").value();
 
+						// Add to the "vector"
+						VectorN vec;
+						vec.x = x;
+						vec.y = y;
+						vec.shoot = shoot;
+						vec.acceleration = acceleration;
+						vec.sleepTime = sf::milliseconds(sleep);
+
+						// See if the sId field is empty
+						if (!sId.empty())
+						{
+							// Then check if the actual sId EXISTS
+							if (musicStringList[sId] != 0)
+							{
+								vec.emote = std::shared_ptr<sf::Sound>(&this->getSound(musicStringList[sId]));
+							}
+							else
+							{
+								LOGE("Could not find a song record with: " << sId << " in the musicStringList!");
+							}
+						}
+			
 						// Push path into the queue
-						pathQueue.push(sf::Vector3f(x, y, shoot));
+						pathQueue.push(vec);
+
 					}
 
 					// Retrieves each of the emotes
@@ -439,7 +466,9 @@ void ResourceHandler::loadScripts()
 					int pwrRepeat = atoi(node.child("Repeat").child_value());
 					int pwrX = atoi(node.child("Path").attribute("x").value());
 					int pwrY = atoi(node.child("Path").attribute("y").value());
-					sf::Vector3f path(pwrX, pwrY, 0);
+					VectorN path;
+					path.x = pwrX;
+					path.y = pwrY;
 
 					// Add powerup to script
 					this->scripts[i.first].addPowerUp(pwrDelay, path, pwrType, pwrRepeat);
@@ -451,7 +480,7 @@ void ResourceHandler::loadScripts()
 				pugi::xml_node story = root.child("Story");
 				std::string storyIntro = "null";
 				std::string lore = "null";
-				if(!story.empty())
+				if (!story.empty())
 				{
 					storyIntro = story.child("Intro").child_value();
 					lore = story.child("Lore").child_value();
@@ -624,7 +653,7 @@ std::list<Script> ResourceHandler::getScripts(bool encounterOnly)
 	std::list<Script> ret;
 	for (Script i : scripts)
 	{
-		if(i.getScriptEnumVal() != ResourceHandler::Scripts::GAME_MENU)
+		if (i.getScriptEnumVal() != ResourceHandler::Scripts::GAME_MENU)
 			ret.push_back(i);
 	}
 	return ret;
@@ -657,7 +686,7 @@ sf::Sound& ResourceHandler::getSound(ResourceHandler::Sound query)
 /// <returns>Sound reference</returns>
 sf::Sound& ResourceHandler::getSoundByEmoteName(std::string emote)
 {
-	if(emote == "null")
+	if (emote == "null")
 	{
 		LOGE("Error: Missing emote/sound");
 	}

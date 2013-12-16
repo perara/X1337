@@ -26,6 +26,7 @@
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\Script.h" />
     <ClInclude Include="include\Shooter.h" />
+    <ClInclude Include="include\VectorN.h" />
     <ClInclude Include="include\World.h" />
   </ItemGroup>
   <ItemGroup>

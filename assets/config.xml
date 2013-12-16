@@ -7,6 +7,11 @@
 				<Score>200</Score>
 				<Date>2013-12-09 20:04:34</Date>
 			</Player>
+			<Player>
+				<Name>PerArne</Name>
+				<Score>5600</Score>
+				<Date>13-12-16 16:26:10</Date>
+			</Player>
 		</Stage>
 		<Stage enum="2">
 			<Player>

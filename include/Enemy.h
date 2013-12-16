@@ -1,7 +1,7 @@
 #pragma once
 #include "Shooter.h"
 #include <queue>
-
+#include "VectorN.h"
 
 /// <summary>
 /// Enemy is represented as a shooter. Each of the Enemy object is a unique enemy.
@@ -23,7 +23,7 @@ public:
 	};
 
 	Enemy(sf::RenderWindow& window,
-		std::queue<sf::Vector3f> path,
+		std::queue<VectorN> path,
 		std::list<std::pair<int, std::string>> emoteQueue,
 		int type, int repeat,
 		BulletFactory&,
@@ -39,28 +39,42 @@ public:
 	Enemy::EnemyType getEnemyType();
 
 private:
-	// Weither to repeat path ro not
+	// Weither to repeat path or not
 	int repeat;
 	int getRepeat();
 
+	// Acceleration and speed
+	float acceleration;
+	sf::Vector2f speed;
+
 	// The path and path template
-	const std::queue<sf::Vector3f> pathTemplate; // Original Path (Which is the one loaded at start)
-	std::queue<sf::Vector3f> path; // Path which is under progress
+	const std::queue<VectorN> pathTemplate; // Original Path (Which is the one loaded at start)
+	std::queue<VectorN> path; // Path which is under progress
 
 	// The emote queue, and the 
 	std::list<std::pair<int, std::string>> emoteQueue;
 
 
 	void setInitPath();
-	sf::Vector3f currentPath;
+	VectorN currentPath;
 
 	// Clock for enemy shoot speed
 	sf::Clock enemyClock;
 
+	sf::Time shootTime; // Time which indicates weither to shoot or not
+	sf::Time sleepTime; // Time which indicates weither to sleep or not
+
 	// Shoot function
 	void shoot(int);
+
+	// Processes emotes done by the enemy
 	void emotes();
+
+	// Movement handler for the enemy
 	void movement();
+
+	// A function which processes the underlying shooting processing (This calls shoot())
+	void shootProcess();
 
 	// Variable for this enemy's type
 	Enemy::EnemyType enemyType;

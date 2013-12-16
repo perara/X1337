@@ -99,6 +99,9 @@
     <ClInclude Include="include\Shooter.h">
       <Filter>Header\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="include\VectorN.h">
+      <Filter>Header\Other</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
