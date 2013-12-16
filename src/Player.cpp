@@ -9,12 +9,12 @@
 /// <summary>
 /// The normal shot clock
 /// </summary>
-sf::Clock normalShotClock;
+sf::Time normalShotTime;
 
 /// <summary>
 /// The special shot clock
 /// </summary>
-sf::Clock specialShotClock;
+sf::Time specialShotTime;
 
 /// <summary>
 /// The score time
@@ -33,15 +33,17 @@ float scoreTime;
 /// <param name="timeStep">The time step.</param>
 /// <param name="hardMode">The hard mode.</param>
 Player::Player(sf::RenderWindow& window,
-			   sf::Vector2f pos,
-			   int radius, BulletFactory& bFactory,
-			   std::list<std::unique_ptr<Bullet>>& bullets,
-			   std::shared_ptr<ResourceHandler>& resourceHandler,
-			   const sf::Time& timeStep,
-			   const bool hardMode
-			   )
-			   :
-playerScore(0),
+	sf::Vector2f pos,
+	int radius, BulletFactory& bFactory,
+	std::list<std::unique_ptr<Bullet>>& bullets,
+	std::shared_ptr<ResourceHandler>& resourceHandler,
+	const sf::Time& timeStep,
+	const bool hardMode,
+	std::list<std::shared_ptr<Shooter>>& objects
+	)
+	:
+	objects(objects),
+	playerScore(0),
 	playerKills(0),
 	pulsateGun(false),
 
@@ -75,6 +77,11 @@ playerScore(0),
 /// </summary>
 void Player::process()
 {
+	normalShotTime += timeStep;
+	specialShotTime += timeStep;
+	pwrUpTime += timeStep;
+	pulseTime += timeStep;
+
 	this->hitDetection();
 	this->detectEdge();
 	this->processPowerUps();
@@ -84,6 +91,19 @@ void Player::process()
 		setDeleted(true);
 		resourceHandler->getSound(ResourceHandler::Sound::FX_ENEMY_DEATH).play();
 	}
+
+	// Ship collision
+	for (auto& i : objects)
+	{
+		if (i->getType() == Shooter::ShooterType::PLAYER) continue;
+
+		if (this->sat(i->sprite, this->sprite))
+		{
+			// Kill the player, (ship collisions never end well)
+			this->setHealth(this->getHealth() - 1);
+			i->setHealth(i->getHealth() - 1);
+		}
+	}
 }
 
 /// <summary>
@@ -92,11 +112,11 @@ void Player::process()
 void Player::processPowerUps()
 {
 	// Temporary Pulsegun powerup (lasts 6 seconds)
-	if (pulsateGun && pwrUpClock.getElapsedTime().asSeconds() < 6)
+	if (pulsateGun && pwrUpTime.asSeconds() < 6)
 	{
 
 		// Check if the clock  has elapsed 1 second
-		if (pulseClock.getElapsedTime().asMilliseconds() > 1000)
+		if (pulseTime.asMilliseconds() > 1000)
 		{
 
 			// Creates a circular bullet pattern.
@@ -111,7 +131,7 @@ void Player::processPowerUps()
 				getBullets().push_back(std::move(b));
 			}
 
-			pulseClock.restart();
+			pulseTime = sf::milliseconds(0);
 		}
 	}
 	// Time is up! deactivate the pulse gun
@@ -165,7 +185,7 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	sf::RectangleShape barBg;
 	barBg.setSize(window.getView().getSize());
 	barBg.setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::PLAYER_BAR));
-	barBg.setFillColor(sf::Color(178,34,34));
+	barBg.setFillColor(sf::Color(178, 34, 34));
 	window.draw(barBg);
 
 	// Draw Health
@@ -218,7 +238,7 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	window.draw(txtHighScoreTitle);
 
 	// Draw top 1
-	if(!highScoreList.empty())
+	if (!highScoreList.empty())
 	{
 		std::shared_ptr<HighScoreItem> i = highScoreList.front();
 		sf::Text txtHighScore;
@@ -259,7 +279,7 @@ void Player::input(sf::Event& event)
 	}*/
 
 	// Player's left mouse click shoot handler
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && normalShotClock.getElapsedTime().asMilliseconds() > 150){
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && normalShotTime.asMilliseconds() > 150){
 
 		// Request a standard bullet and sets the appropriate data
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
@@ -273,11 +293,11 @@ void Player::input(sf::Event& event)
 		getBullets().push_back(std::move(b));
 
 		// Restart the clock
-		normalShotClock.restart();
+		normalShotTime = sf::milliseconds(0);
 	}
 
 	// Player's right mouse click shoot handler
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && specialShotClock.getElapsedTime().asMilliseconds() > 1000){
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && specialShotTime.asMilliseconds() > 1000){
 
 		// Request a heavy shot bullet and set the appropriate data
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::heavyShot);
@@ -291,7 +311,7 @@ void Player::input(sf::Event& event)
 		getBullets().push_back(std::move(b));
 
 		// Restart the clock
-		specialShotClock.restart();
+		specialShotTime = sf::milliseconds(0);
 	}
 
 	if (event.type == sf::Event::MouseMoved)
@@ -341,7 +361,7 @@ void Player::powerUp(Powerup::PowerUpType powType)
 	// Health Pack Powerup
 	if (powType == Powerup::PowerUpType::HEALTH_INCREMENT)
 	{
-		if(getHealth() < getStartHealth())
+		if (getHealth() < getStartHealth())
 		{
 			setHealth(getHealth() + 1);
 		}
@@ -351,8 +371,8 @@ void Player::powerUp(Powerup::PowerUpType powType)
 	else if (powType == Powerup::PowerUpType::PULSATING_GUN)
 	{
 		pulsateGun = true;
-		pwrUpClock.restart();
-		pulseClock.restart();
+		pwrUpTime = sf::milliseconds(0);
+		pulseTime = sf::milliseconds(0);
 	}
 
 }

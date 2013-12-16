@@ -20,14 +20,14 @@
 /// <param name="hardMode">Weither its hardmode or not.</param>
 /// <param name="ingameSong">Selected ingame sound</param>
 World::World(sf::RenderWindow& window,
-			 std::shared_ptr<ResourceHandler>& resourceHandler,
-			 const sf::Time& timeStep,
-			 const bool demo,
-			 const int scriptNum,
-			 const bool hardMode,
-			 sf::Sound& ingameSong)
-			 :
-Scene(window, resourceHandler),
+	std::shared_ptr<ResourceHandler>& resourceHandler,
+	const sf::Time& timeStep,
+	const bool demo,
+	const int scriptNum,
+	const bool hardMode,
+	sf::Sound& ingameSong)
+	:
+	Scene(window, resourceHandler),
 	bg(Background(window)),
 	bFactory(BulletFactory(window, 1000, bullets, timeStep, resourceHandler)),
 	timeStep(timeStep),
@@ -37,8 +37,9 @@ Scene(window, resourceHandler),
 	stageProgress(0),
 	hardMode(hardMode),
 	demo(demo),
-	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100, 250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode)))
+	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100, 250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode, objects)))
 {
+
 	if (demo)
 	{
 		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND2), false);
@@ -99,7 +100,7 @@ void World::process()
 	bool scriptRunning;
 	(countdownSong.getStatus() != 0 && !demo) ?
 		scriptRunning = true :
-	scriptRunning = script.process(window, objects, powerups, bullets, bFactory, resourceHandler, timeStep);
+		scriptRunning = script.process(window, objects, powerups, bullets, bFactory, resourceHandler, timeStep);
 
 	///////////////////////////////////
 	// Object processing and cleanup //
@@ -110,7 +111,6 @@ void World::process()
 		{
 			// Process the object (Player and enemy)
 			(*objectIt)->process();
-
 
 			///////////////////////////////////
 			////////////CLEANUP////////////////
@@ -131,6 +131,7 @@ void World::process()
 			else
 			{
 				++objectIt;
+
 			} // -- if end
 		} // -- for end
 	} // -- if end
@@ -282,13 +283,13 @@ void World::input(sf::Event& event)
 /// </summary>
 void World::drawGameProgress()
 {
-	if(!demo)
-	{ 
+	if (!demo)
+	{
 		sf::Text txtProgress;
 		txtProgress.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 		txtProgress.setCharacterSize(12);
 		txtProgress.setString("Stage Progress: " + std::to_string(stageProgress) + "%");
-		txtProgress.setPosition(10,window.getView().getSize().y - txtProgress.getGlobalBounds().height * 2);
+		txtProgress.setPosition(10, window.getView().getSize().y - txtProgress.getGlobalBounds().height * 2);
 		window.draw(txtProgress);
 	}
 }
@@ -299,11 +300,11 @@ void World::drawGameProgress()
 void World::evaluateGameOver()
 {
 	// If the stage is complete
-	if(stageProgress == 100)
+	if (stageProgress == 100)
 	{
 		gameOver = 2;
 	}
-	else if(player->getDeleted())
+	else if (player->getDeleted())
 	{
 		gameOver = 1;
 	}
@@ -312,10 +313,10 @@ void World::evaluateGameOver()
 	// 1. Script is set correctly
 	// 2. Playerscore is above 0
 	// 3. Game over is not false (0)
-	if (currentScript != -1 && 
+	if (currentScript != -1 &&
 		player->getPlayerScore() > 0 &&
 		gameOver != 0
-		) 
+		)
 	{
 		// Writes to the Highscore.
 		int multiplier = (hardMode ? 2 : 1); // Hardmode multiplier.

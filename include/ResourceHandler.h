@@ -79,8 +79,10 @@ public:
 		FX_MENU_CLICK,
 		FX_MENU_RETURN,
 		FX_ERROR,
+		FX_BOUNCE,
 
 		EMOTE_DEATHSTAR_GREET,
+		EMOTE_DEATHSTAR_BEWARE,
 		EMOTE_DEATHSTAR_PERIODIC_1,
 		EMOTE_DEATHSTAR_PERIODIC_2,
 		EMOTE_DEATHSTAR_PERIODIC_3,
@@ -133,6 +135,8 @@ public:
 	sf::Font& getFont(ResourceHandler::Fonts);
 	sf::Sound& getSound(ResourceHandler::Sound);
 	sf::Sound& getSoundByEmoteName(std::string);
+
+	void stopAllSound();
 	void muteSound(bool mute);
 	Script getScriptById(int iteNum);
 	std::string getUserName();

@@ -112,16 +112,6 @@ void Shooter::hitDetection()
 
 				// Set bullet to deleted.
 				i->setDeleted(true);
-
-				// Check if the ENEMY is dead
-				if (getHealth() <= 0 && getType() != Shooter::ShooterType::PLAYER)
-				{
-					// Play deat hsound
-					resourceHandler->getSound(ResourceHandler::Sound::FX_ENEMY_DEATH).play();
-
-					// Set deleted flag
-					setDeleted(true);
-				}
 			}
 		}
 	}

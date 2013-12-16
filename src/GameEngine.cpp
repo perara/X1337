@@ -175,7 +175,7 @@ void GameEngine::process()
 	{
 		LOGD("Initializing a new game.");
 		setState(GameState::GAME);
-		world->stopSound();
+		resourceHandler->stopAllSound();
 		world.reset(new World(
 			window,
 			resourceHandler,
@@ -206,7 +206,7 @@ void GameEngine::process()
 		setState(GameState::MAIN_MENU);
 
 		// Checks if the world exists, stops sound if so
-		if (world != nullptr) world->stopSound();
+		if (world != nullptr) resourceHandler->stopAllSound();
 
 		// Reset the world
 		world.reset(new World(window,

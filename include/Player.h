@@ -1,6 +1,7 @@
 #pragma once
 #include "Shooter.h"
 #include "Powerup.h"
+#include <memory>
 
 class BulletFactory;
 class Bullet;
@@ -19,7 +20,8 @@ public:
 		std::list<std::unique_ptr<Bullet>>&,
 		std::shared_ptr<ResourceHandler>& resourceHandler,
 		const sf::Time& timeStep,
-		const bool hardmode
+		const bool hardmode,
+		std::list<std::shared_ptr<Shooter>>&
 		);
 
 
@@ -54,10 +56,13 @@ private:
 	void processPowerUps();
 
 	/// Timers and such for power ups
-	sf::Clock pwrUpClock;
+	sf::Time pwrUpTime;
 
 	/// Pulsate
 	bool pulsateGun;
 	/// Pulsate clock
-	sf::Clock pulseClock;
+	sf::Time pulseTime;
+
+	/// The Shooter list which contains all enemies (+ player, NB!)
+	std::list<std::shared_ptr<Shooter>>& objects;
 };

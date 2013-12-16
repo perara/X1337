@@ -72,9 +72,11 @@ void ResourceHandler::init()
 		soundList[Sound::FX_MENU_CLICK] = "assets/sound/menu_click.ogg";
 		soundList[Sound::FX_MENU_RETURN] = "assets/sound/menu_return.ogg";
 		soundList[Sound::FX_ERROR] = "assets/sound/fx_error.wav";
+		soundList[Sound::FX_BOUNCE] = "assets/sound/fx_bounce.ogg";
 
 		soundList[Sound::EMOTE_DEATHSTAR_GREET] = "assets/sound/emote_death_star_greet.ogg";
-		soundList[Sound::EMOTE_DEATHSTAR_DEATH] = "assets/sound/emote_death_star_death.ogg";
+		soundList[Sound::EMOTE_DEATHSTAR_BEWARE] = "assets/sound/emote_death_star_beware_cowards.ogg";
+		soundList[Sound::EMOTE_DEATHSTAR_DEATH] = "assets/sound/emote_death_star_enough.ogg";
 		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_1] = "assets/sound/emote_death_star_periodic_1.ogg";
 		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_2] = "assets/sound/emote_death_star_periodic_2.ogg";
 		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_3] = "assets/sound/emote_death_star_periodic_3.ogg";
@@ -96,13 +98,14 @@ void ResourceHandler::init()
 		musicStringList["stage1_intro_story"] = ResourceHandler::Sound::STORY_TWINS_INTRO;
 
 		// EMOTES
-		musicStringList["deathstar_rage"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_GREET;
 		musicStringList["deathstar_greet"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_GREET;
 		musicStringList["deathstar_periodic_1"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_1;
 		musicStringList["deathstar_periodic_2"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_2;
 		musicStringList["deathstar_periodic_3"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_3;
 		musicStringList["deathstar_periodic_4"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_4;
 		musicStringList["deathstar_death"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_DEATH;
+		musicStringList["deathstar_rage"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_DEATH;
+		musicStringList["deathstar_beware"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_BEWARE;
 	}
 
 
@@ -704,6 +707,19 @@ void ResourceHandler::muteSound(bool mute)
 		(mute) ? i.setVolume(0) : i.setVolume(100);
 	}
 }
+
+/// <summary>
+/// Mutes all of the sound.
+/// </summary>
+/// <param name="mute">The mute variable (true/false)</param>
+void ResourceHandler::stopAllSound()
+{
+	for (auto& i : sounds)
+	{
+		i.stop();
+	}
+}
+
 
 
 /// <summary>

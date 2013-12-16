@@ -27,8 +27,10 @@ public:
 	void setScoreValue(float);
 	float getScoreValue();
 
+	// Getters setters for health
+	void setHealth(int value);
+	const int getHealth();
 protected:
-
 	/// Shooter Constructor which takes in required parameters for the class to work.
 	Shooter(sf::RenderWindow& window,
 		BulletFactory&,
@@ -52,8 +54,6 @@ protected:
 	virtual void hitDetection();
 
 	// Getters setters for health
-	void setHealth(int value);
-	const int getHealth();
 	const int getStartHealth();
 	void setStartHealth(int value);
 
@@ -64,7 +64,6 @@ protected:
 	int startHealth;
 
 private:
-
 	/// Integer value which describes Shooter 's current health
 	int health;
 

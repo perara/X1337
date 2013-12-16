@@ -32,9 +32,6 @@ Enemy::Enemy(sf::RenderWindow& window,
 	speed(sf::Vector2f(50, 50)),
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
-	// Start the enemy clock
-	this->enemyClock.restart();
-
 	// Sets the type of the Shooter to enemy
 	this->shooterType = Shooter::ShooterType::ENEMY;
 
@@ -95,6 +92,7 @@ void Enemy::setInitPath()
 	setDeleted(false);
 	this->path = pathTemplate;
 	this->currentPath = this->path.front();
+	this->acceleration = 0;
 	this->path.pop();
 
 	this->sprite->setPosition(currentPath.x, currentPath.y);
@@ -209,18 +207,32 @@ void Enemy::shoot(int shoot)
 		else if (getEnemyType() == Enemy::EnemyType::DEATHSTAR)
 		{
 
-			if (shoot == 3) // Special attack
+			if (shoot == 3 || shoot == 5) // Special attack
 			{
 				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
 				b->setOwner(this->getType());
-				b->setSpeed(sf::Vector2f(0.0f, 350.0f));
-				b->sprite->setFillColor(sf::Color::Green);
-				b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y - 10);
+
+				// Rotational Lazor (Lol)
+				if (shoot == 5)
+				{
+					secondRot += 0.004f * timeStep.asMilliseconds();
+					b->setRotation(secondRot, sf::Vector2f(350.f, 350.0f));
+					b->sprite->setFillColor(sf::Color::Red);
+					b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
+				}
+				else
+				{
+					b->setSpeed(sf::Vector2f(0.0f, 350.0f));
+					b->sprite->setFillColor(sf::Color::Green);
+					b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y + this->sprite->getRadius());
+				}
 				getBullets().push_back(std::move(b));
+
+
 			}
 
 			// Circular shoot pattern
-			else
+			if (shoot == 4)
 			{
 				for (float i = 0; i < 360; i += 2)
 				{
@@ -294,12 +306,17 @@ void Enemy::movement()
 		// Accelerate
 		float accelerateTick = this->currentPath.acceleration * 0.18;
 		if (this->acceleration + accelerateTick > 0) this->acceleration += this->currentPath.acceleration * 0.18;
+		else this->acceleration = 0;
 	}
 	else
 	{
 		// Deaccelerate
-		if (this->acceleration >= 1) this->acceleration--;
+		if (this->acceleration >= 1)
+		{
+			this->acceleration -= this->currentPath.acceleration * 0.18;
+		}
 	}
+
 
 	dx = (dx / len) * timeStep.asSeconds() * (speed.x + acceleration);
 	dy = (dy / len) * timeStep.asSeconds() * (speed.y + acceleration);
@@ -359,17 +376,24 @@ void Enemy::movement()
 /// </summary>
 void Enemy::shootProcess()
 {
-	// Normal Shoot processing
-	if (shootTime.asMilliseconds() > 400)
+	// Normal Shoot processing (Regular Mobs and shooters with shoot == 1)
+	if (this->currentPath.shoot == 1 && shootTime.asMilliseconds() > 400) // Normal shooting
 	{
 		this->shoot(this->currentPath.shoot);
 		shootTime = sf::milliseconds(0);
 	}
 
-	// Special Cases shoot processing (Like deathstar lazer)
-	if (this->currentPath.shoot == 3) // check if its a special case (3 is special attack for deathstar)
+	// The green Lazor (DEATHSTAR) and/or red rotational beam
+	if (this->currentPath.shoot == 3 || this->currentPath.shoot == 5) // check if its a special case (3 is special attack for deathstar)
 	{
 		this->shoot(this->currentPath.shoot);
+	}
+
+	// Circular Shooting Pattern (DEATHSTAR)
+	if (this->currentPath.shoot == 4 && shootTime.asMilliseconds() > 400)
+	{
+		this->shoot(this->currentPath.shoot);
+		shootTime = sf::milliseconds(0);
 	}
 }
 
@@ -380,14 +404,20 @@ void Enemy::shootProcess()
 void Enemy::process()
 {
 	// Update sf::Time's in enemy
-	shootTime += enemyClock.getElapsedTime();
-	sleepTime += enemyClock.getElapsedTime();
-	enemyClock.restart();
+	shootTime += timeStep;
+	sleepTime += timeStep;
 
 	this->hitDetection();
 	this->emotes();
 	this->movement();
 	this->shootProcess();
+
+	// If health is 0, play death sound and set deleted status.
+	if (getHealth() == 0){
+		// Play Death Sound
+		resourceHandler->getSound(ResourceHandler::Sound::FX_ENEMY_DEATH).play();
+		setDeleted(true);
+	}
 }
 
 

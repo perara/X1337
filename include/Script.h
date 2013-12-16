@@ -34,9 +34,8 @@ class Script
 			{};
 	};
 
-
-	sf::Clock enemyClock;
-	sf::Clock powerupClock;
+	sf::Time enemyTime;
+	sf::Time powerupTime;
 	std::queue<ScriptTick> enemyList;
 	std::queue<ScriptTick> powerupList;
 	bool inited;

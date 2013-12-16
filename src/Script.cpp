@@ -61,8 +61,8 @@ void Script::setInit(bool status)
 	if (status)
 	{
 		startEnemyListSize = enemyList.size();
-		enemyClock.restart();
-		powerupClock.restart();
+		enemyTime = sf::milliseconds(0);
+		powerupTime = sf::milliseconds(0);
 	}
 
 	inited = status;
@@ -125,6 +125,9 @@ bool Script::process(sf::RenderWindow& window,
 					 std::shared_ptr<ResourceHandler>& resourceHandler,
 					 const sf::Time& timeStep)
 {
+	enemyTime += timeStep;
+	powerupTime += timeStep;
+
 	//####################################//
 	//######Enemy script processing#######//
 	//####################################//
@@ -133,7 +136,7 @@ bool Script::process(sf::RenderWindow& window,
 		// Get enemy in front of queue
 		ScriptTick e = enemyList.front();
 		if (this->getInit() &&
-			enemyClock.getElapsedTime().asMilliseconds() > e.delay)
+			enemyTime.asMilliseconds() > e.delay)
 		{
 
 			// Create a new enemy with the information provided by the script tick
@@ -155,8 +158,7 @@ bool Script::process(sf::RenderWindow& window,
 			// Pop the garbage scripttick
 			enemyList.pop();
 
-			// Reset the clock
-			enemyClock.restart();
+			enemyTime = sf::milliseconds(0);
 		}
 	}
 
@@ -171,7 +173,7 @@ bool Script::process(sf::RenderWindow& window,
 		ScriptTick pwrUp = powerupList.front();
 		// Check weither the clock has move enough
 		if (this->getInit() &&
-			powerupClock.getElapsedTime().asMilliseconds() > pwrUp.delay)
+			powerupTime.asMilliseconds() > pwrUp.delay)
 		{
 
 			// Create a new powerup
@@ -195,7 +197,7 @@ bool Script::process(sf::RenderWindow& window,
 			}
 
 			// Reset the clock
-			powerupClock.restart();
+			powerupTime = sf::milliseconds(0);
 		}
 
 	}

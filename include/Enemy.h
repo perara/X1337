@@ -58,9 +58,6 @@ private:
 	void setInitPath();
 	VectorN currentPath;
 
-	// Clock for enemy shoot speed
-	sf::Clock enemyClock;
-
 	sf::Time shootTime; // Time which indicates weither to shoot or not
 	sf::Time sleepTime; // Time which indicates weither to sleep or not
 
@@ -80,5 +77,5 @@ private:
 	Enemy::EnemyType enemyType;
 	void setEnemyType(Enemy::EnemyType);
 
-	int secondRot;
+	float secondRot;
 };
