@@ -7,25 +7,26 @@
 /// Initializes a new instance of the <see cref="GameEngine"/> class.
 /// </summary>
 GameEngine::GameEngine() :
-	// Declare the Window
-	window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize),
-	timeStep(sf::seconds(1.0f / 240.f)), // Set timestep to 60 FPS
+// Declare the Window
+window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize),
+timeStep(sf::seconds(1.0f / 240.f)), // Set timestep to 60 FPS
 
 
 
-	// Declare all of the views
-	fullScreen(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y))),
-	mainView(sf::View(sf::FloatRect(0, 0, 800, 600))),
-	playerBar(sf::View(sf::FloatRect(0, 0, 800, 30))),
-	menuGameDemoView(sf::View(sf::FloatRect(0, 0, 800, 600))),
+// Declare all of the views
+fullView(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y))),
+mainView(sf::View(sf::FloatRect(0, 0, 800, 600))),
+playerBar(sf::View(sf::FloatRect(0, 0, 800, 30))),
+menuGameDemoView(sf::View(sf::FloatRect(0, 0, 800, 600))),
 
-	// Create a new Resource Handler (smart_ptr)
-	resourceHandler(new ResourceHandler(window)),
+// Create a new Resource Handler (smart_ptr)
+resourceHandler(new ResourceHandler(window)),
 
-	event(sf::Event()),
-	mute(false),
+event(sf::Event()),
+mute(false),
+fullscreen(false),
 
-	state(GameEngine::State::INIT_MAIN_MENU)
+state(GameEngine::State::INIT_MAIN_MENU)
 {
 	// Window configuration
 	//window.setFramerateLimit(120);
@@ -33,8 +34,8 @@ GameEngine::GameEngine() :
 	//####################################//
 	//#########View Declaration###########//
 	//####################################//
-	fullScreen.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
-	window.setView(fullScreen);
+	fullView.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
+	window.setView(fullView);
 
 	mainView.setViewport(sf::FloatRect(0, 0, 1, 0.95f));
 	playerBar.setViewport(sf::FloatRect(0, 0.95f, 1.0f, 0.05f));
@@ -95,7 +96,7 @@ void GameEngine::draw()
 	{
 		window.setView(playerBar);
 		this->world->drawStats();
-		this->drawMute();
+		this->drawOpts();
 
 		window.setView(mainView);
 		this->world->draw();
@@ -106,7 +107,7 @@ void GameEngine::draw()
 			setState(GameState::GAMEOVER);
 			menu->resetCurrentOption();
 		}
-		else if(world->isGameOver() == 2)
+		else if (world->isGameOver() == 2)
 		{
 			setState(GameState::GAMEWIN);
 			menu->resetCurrentOption();
@@ -124,7 +125,7 @@ void GameEngine::draw()
 		window.setView(mainView);
 		this->world->draw();
 
-		window.setView(fullScreen);
+		window.setView(fullView);
 		sf::RectangleShape darkOverLay(sf::Vector2f(window.getView().getSize()));
 		darkOverLay.setFillColor(sf::Color(0, 0, 0, 150));
 		darkOverLay.setPosition(0, 0);
@@ -133,9 +134,9 @@ void GameEngine::draw()
 		this->menu->draw();
 
 		// Draw the Game Over with the following offset
-		if(getState() == GameState::GAMEWIN)
+		if (getState() == GameState::GAMEWIN)
 			this->menu->drawPause((window.getView().getSize().x / 3), 100 + (window.getView().getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
-		if(getState() == GameState::PAUSE || getState() == GameState::GAMEOVER)
+		if (getState() == GameState::PAUSE || getState() == GameState::GAMEOVER)
 			this->menu->drawPause((window.getView().getSize().x / 3), (window.getView().getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
 
 	}
@@ -147,10 +148,10 @@ void GameEngine::draw()
 		getState() == GameState::CREDITS ||
 		getState() == GameState::HIGHSCORE)
 	{
-		window.setView(fullScreen);
+		window.setView(fullView);
 		this->world->draw();
 		this->menu->draw();
-		this->drawMute();
+		this->drawOpts();
 	}
 
 	window.display();
@@ -295,6 +296,23 @@ void GameEngine::input()
 				resourceHandler->muteSound(mute);
 			}
 
+
+			else if (this->event.key.code == sf::Keyboard::N) // Fullscreen Toggle
+			{
+				window.clear();
+				if (!fullscreen)
+				{
+					fullscreen = !fullscreen;
+					window.create(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize | sf::Style::Fullscreen);
+				}
+				else
+				{
+					fullscreen = !fullscreen;
+					window.create(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
+				}
+				window.setMouseCursorVisible(false);
+			}
+
 		}
 	}
 }
@@ -331,14 +349,38 @@ std::shared_ptr<ResourceHandler>& GameEngine::getResourceHandler()
 /// <summary>
 /// Draws the mute button
 /// </summary>
-void GameEngine::drawMute()
+void GameEngine::drawOpts()
 {
+
+	//##################################//
+	//######### Fullscreen #############//
+	//##################################//
+	sf::Sprite sprScreen;
+	sprScreen.setTexture(resourceHandler->getTexture(ResourceHandler::Texture::MONITOR_ICON));
+	sprScreen.setScale(0.30f, 0.30f);
+	sprScreen.setPosition(window.getView().getSize().x - 150, window.getView().getSize().y - 24);
+	window.draw(sprScreen);
+
+	sf::Text txtScreen;
+	txtScreen.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtScreen.setString("n");
+	txtScreen.setColor(sf::Color(139, 137, 137));
+	txtScreen.setCharacterSize(15);
+	txtScreen.setPosition(sprScreen.getPosition().x + (sprScreen.getGlobalBounds().width / 2) - 4, sprScreen.getPosition().y - 3);
+	window.draw(txtScreen);
+
+
+
+	//##################################//
+	//############ Mute ################//
+	//##################################//
+
 	sf::Text txtMute;
 	txtMute.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
 	txtMute.setString("m");
 	txtMute.setColor(sf::Color(139, 137, 137));
 	txtMute.setCharacterSize(15);
-	txtMute.setPosition(window.getView().getSize().x - 100, window.getView().getSize().y - 24);
+	txtMute.setPosition(sprScreen.getPosition().x + sprScreen.getGlobalBounds().width + 10, sprScreen.getPosition().y);
 	window.draw(txtMute);
 
 	sf::Sprite sprMute;
@@ -351,6 +393,9 @@ void GameEngine::drawMute()
 		sprMute.setTexture(resourceHandler->getTexture(ResourceHandler::Texture::AUDIO_ON));
 	}
 	sprMute.setScale(0.20f, 0.20f);
-	sprMute.setPosition(txtMute.getPosition().x + 25, txtMute.getPosition().y);
+	sprMute.setPosition(txtMute.getPosition().x + 15, txtMute.getPosition().y);
 	window.draw(sprMute);
+
+
+
 }

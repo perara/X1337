@@ -53,6 +53,7 @@ void ResourceHandler::init()
 
 		textureList[Texture::AUDIO_ON] = "assets/sprites/audio-on.png";
 		textureList[Texture::AUDIO_OFF] = "assets/sprites/audio-off.png";
+		textureList[Texture::MONITOR_ICON] = "assets/sprites/monitor.png";
 		textureList[Texture::HEALTH_KIT] = "assets/sprites/health-kit.jpg";
 		textureList[Texture::PULSE_GUN] = "assets/sprites/pulse-gun.png";
 		textureList[Texture::PLAYER_BAR] = "assets/sprites/player-bar.png";

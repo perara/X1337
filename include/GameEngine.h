@@ -51,7 +51,7 @@ private:
 	void draw();
 	void input();
 
-	void drawMute(); // Function which draws the mute icon
+	void drawOpts(); // Function which draws the mute icon
 
 	sf::RenderWindow window;
 
@@ -67,9 +67,10 @@ private:
 
 	// VIEWS
 	sf::View mainView;
-	sf::View fullScreen;
+	sf::View fullView;
 	sf::View menuGameDemoView;
 	sf::View playerBar;
 
 	State state;
+	bool fullscreen;
 };
