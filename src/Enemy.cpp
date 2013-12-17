@@ -413,7 +413,7 @@ void Enemy::process()
 	this->shootProcess();
 
 	// If health is 0, play death sound and set deleted status.
-	if (getHealth() == 0){
+	if (getHealth() <= 0){
 		// Play Death Sound
 		resourceHandler->getSound(ResourceHandler::Sound::FX_ENEMY_DEATH).play();
 		setDeleted(true);
