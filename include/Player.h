@@ -60,8 +60,20 @@ private:
 
 	/// Pulsate
 	bool pulsateGun;
+
 	/// Pulsate clock
 	sf::Time pulseTime;
+
+	/// <summary>
+	/// The normal shot clock
+	/// </summary>
+	sf::Time normalShotTime;
+
+	/// <summary>
+	/// The special shot clock
+	/// </summary>
+	sf::Time specialShotTime;
+
 
 	/// The Shooter list which contains all enemies (+ player, NB!)
 	std::list<std::shared_ptr<Shooter>>& objects;

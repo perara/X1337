@@ -7,21 +7,6 @@
 #include <sstream>
 
 /// <summary>
-/// The normal shot clock
-/// </summary>
-sf::Time normalShotTime;
-
-/// <summary>
-/// The special shot clock
-/// </summary>
-sf::Time specialShotTime;
-
-/// <summary>
-/// The score time
-/// </summary>
-float scoreTime;
-
-/// <summary>
 /// Initializes a new instance of the <see cref="Player"/> class.
 /// </summary>
 /// <param name="window">The window.</param>
