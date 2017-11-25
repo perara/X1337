@@ -1,4 +1,4 @@
-#include "GameEngine.h"
+#include "../include/GameEngine.h"
 #include <SFML\Audio.hpp>
 #include<windows.h>
 int main()

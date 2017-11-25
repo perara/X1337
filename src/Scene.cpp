@@ -1,6 +1,6 @@
-#include "Scene.h"
-#include "Bullet.h"
-#include "Shooter.h"
+#include "../include/Scene.h"
+#include "../include/Bullet.h"
+#include "../include/Shooter.h"
 
 
 /// <summary>

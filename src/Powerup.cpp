@@ -1,7 +1,7 @@
-#include "Powerup.h"
-#include "ResourceHandler.h"
-#include "Player.h"
-#include "GameShape.h"
+#include "../include/Powerup.h"
+#include "../include/ResourceHandler.h"
+#include "../include/Player.h"
+#include "../include/GameShape.h"
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Powerup"/> class.

@@ -92,7 +92,7 @@ private:
 	// Option lists
 	std::map<GameState, std::map<Menu::Options, std::string>> optMap;
 	std::map<GameState, std::map<Menu::Options, sf::Text>> option;
-	std::vector<const Script> scripts;
+	std::vector<Script> scripts;
 
 	bool hardmodeSelected;
 	GameState& state;

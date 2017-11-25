@@ -1,9 +1,9 @@
-#include "Bullet.h"
-#include "GameShape.h"
-#include "Log.h"
-#include "Enemy.h"
-#include "Player.h"
-#include "BulletFactory.h"
+#include "../include/Bullet.h"
+#include "../include/GameShape.h"
+#include "../include/Log.h"
+#include "../include/Enemy.h"
+#include "../include/Player.h"
+#include "../include/BulletFactory.h"
 
 
 /// <summary>

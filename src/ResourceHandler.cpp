@@ -1,14 +1,14 @@
-#include "ResourceHandler.h"
-#include "Log.h"
-#include "Enemy.h"
+#include "../include/ResourceHandler.h"
+#include "../include/Log.h"
+#include "../include/Enemy.h"
 #include <memory>
 #include <sstream>
 #include <Windows.h>
 #include <chrono>
 #include <ctime>
 #include <iomanip> // put_time
-#include "VectorN.h"
-
+#include "../include/VectorN.h"
+#include <pugixml.hpp>
 
 
 /// <summary>
@@ -521,25 +521,11 @@ void ResourceHandler::loadScripts()
 }
 
 /// <summary>
-/// Loads the name of the user. This is restricted to windows only
+/// Loads the name of the user.
 /// </summary>
 void ResourceHandler::loadUserName()
 {
-#define INFO_BUFFER_SIZE 32767
-	TCHAR  infoBuf[INFO_BUFFER_SIZE];
-	DWORD  bufCharCount = INFO_BUFFER_SIZE;
-
-	// Get and display the user name.
-	GetUserName(infoBuf, &bufCharCount);
-
-	char ch[260];
-	char DefChar = ' ';
-	WideCharToMultiByte(CP_ACP, 0, infoBuf, -1, ch, 260, &DefChar, NULL);
-
-	//A std:string  using the char* constructor.
-	std::string ss(ch);
-
-	this->userName = ch;
+	this->userName = "Player";
 }
 
 /// <summary>

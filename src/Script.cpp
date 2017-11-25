@@ -1,9 +1,9 @@
-#include "Script.h"
-#include "Log.h"
-#include "Object.h"
-#include "Enemy.h"
-#include "BulletFactory.h"
-#include "Bullet.h"
+#include "../include/Script.h"
+#include "../include/Log.h"
+#include "../include/Object.h"
+#include "../include/Enemy.h"
+#include "../include/BulletFactory.h"
+#include "../include/Bullet.h"
 
 /// <summary>
 /// Adds a enemy to the script queue

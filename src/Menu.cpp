@@ -1,5 +1,5 @@
-#include "Menu.h"
-#include "Log.h"
+#include "../include/Menu.h"
+#include "../include/Log.h"
 #include <sstream>
 #include <stdlib.h>     /* srand, rand */
 

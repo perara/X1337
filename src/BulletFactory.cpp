@@ -1,6 +1,6 @@
-#include "BulletFactory.h"
-#include "Log.h"
-#include "ResourceHandler.h";
+#include "../include/BulletFactory.h"
+#include "../include/Log.h"
+#include "../include/ResourceHandler.h";
 
 
 

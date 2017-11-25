@@ -1,7 +1,7 @@
-#include "GameEngine.h"
-#include "ResourceHandler.h"
-#include "Menu.h"
-#include "log.h"
+#include "../include/GameEngine.h"
+#include "../include/ResourceHandler.h"
+#include "../include/Menu.h"
+#include "../include/log.h"
 
 /// <summary>
 /// Initializes a new instance of the <see cref="GameEngine"/> class.

@@ -1,8 +1,8 @@
-#include "Enemy.h"
-#include "GameShape.h"
-#include "BulletFactory.h"
-#include "Bullet.h"
-#include "Log.h"
+#include "../include/Enemy.h"
+#include "../include/GameShape.h"
+#include "../include/BulletFactory.h"
+#include "../include/Bullet.h"
+#include "../include/Log.h"
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Enemy"/> class.

@@ -1,5 +1,5 @@
-#include "GameShape.h"
-#include "Log.h"
+#include "../include/GameShape.h"
+#include "../include/Log.h"
 
 // Other Default
 /// <summary>

@@ -1,11 +1,11 @@
-#include "World.h"
-#include "ResourceHandler.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "Bullet.h"
-#include "Background.h"
-#include "Log.h"
-#include "GameShape.h"
+#include "../include/World.h"
+#include "../include/ResourceHandler.h"
+#include "../include/Player.h"
+#include "../include/Enemy.h"
+#include "../include/Bullet.h"
+#include "../include/Background.h"
+#include "../include/Log.h"
+#include "../include/GameShape.h"
 
 
 

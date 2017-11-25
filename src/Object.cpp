@@ -1,6 +1,6 @@
-#include "Object.h"
-#include "Log.h"
-#include "GameShape.h"
+#include "../include/Object.h"
+#include "../include/Log.h"
+#include "../include/GameShape.h"
 
 /// <summary>
 /// Draws this Object.

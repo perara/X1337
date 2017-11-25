@@ -1,9 +1,9 @@
-#include "Player.h"
-#include "Bullet.h"
-#include "BulletFactory.h"
-#include "GameShape.h"
-#include "Log.h"
-#include "ResourceHandler.h"
+#include "../include/Player.h"
+#include "../include/Bullet.h"
+#include "../include/BulletFactory.h"
+#include "../include/GameShape.h"
+#include "../include/Log.h"
+#include "../include/ResourceHandler.h"
 #include <sstream>
 
 /// <summary>

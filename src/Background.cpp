@@ -1,5 +1,5 @@
-#include "Background.h"
-#include "Log.h"
+#include "../include/Background.h"
+#include "../include/Log.h"
 
 
 /// <summary>

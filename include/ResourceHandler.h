@@ -2,9 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#define PUGIXML_HEADER_ONLY
-#include "pugixml.hpp"
-#include "pugixml.cpp"
+
 #include <fstream>
 #include <memory>
 #include <map>

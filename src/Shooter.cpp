@@ -1,7 +1,7 @@
-#include "Shooter.h"
-#include "GameShape.h"
-#include "BulletFactory.h"
-#include "Log.h"
+#include "../include/Shooter.h"
+#include "../include/GameShape.h"
+#include "../include/BulletFactory.h"
+#include "../include/Log.h"
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Shooter"/> class.
