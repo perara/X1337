@@ -203,6 +203,7 @@ void World::process()
 	// Update the stage progression
 	stageProgress = (int)(player->getPlayerKills() * ((float)100 / script.getStartEnemyListSize())); // Stage progress in percent
 
+
 	// Check for gameOver
 	evaluateGameOver();
 }

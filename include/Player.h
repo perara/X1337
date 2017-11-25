@@ -37,12 +37,14 @@ public:
 	// Retrieves the player score
 	int getPlayerScore();
 
+
 	// Retrieves the player kills (number of enemy kills)
 	int getPlayerKills();
 
 	// Sets a powerup for the player (Func)
 	void powerUp(Powerup::PowerUpType);
 private:
+
 	/// The player score
 	int playerScore;
 

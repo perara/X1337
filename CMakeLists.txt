@@ -1,8 +1,8 @@
 
 cmake_minimum_required(VERSION 2.8.7)
 project(X1337)
+set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_CXX_STANDARD 11)
 
 add_executable(X1337
         include/Background.h
@@ -42,6 +42,8 @@ add_executable(X1337
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/cmake)
 find_package(SFML 2 REQUIRED system window graphics network audio)
+set(SFML_STATIC_LIBRARIES TRUE)
+message("lel ${SFML_STATIC_LIBRARIES}")
 if (SFML_FOUND)
     include_directories(${SFML_INCLUDE_DIR})
     target_link_libraries(X1337 ${SFML_LIBRARIES})
@@ -50,11 +52,18 @@ else()
 endif()
 
 
-
 find_package(PugiXML REQUIRED)
 if (PUGIXML_FOUND)
     include_directories(${PUGIXML_INCLUDE_DIR})
     target_link_libraries(X1337 ${PUGIXML_LIBRARIES})
 else()
-    message( FATAL_ERROR "You can not do this at all, CMake will exit. ${PUGIXML_FOUND}" )
+    message(FATAL_ERROR "You can not do this at all, CMake will exit. ${PUGIXML_FOUND}" )
 endif()
+
+
+add_custom_command(
+        TARGET X1337 POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets/
+        ${CMAKE_CURRENT_BINARY_DIR}/assets/)
+
