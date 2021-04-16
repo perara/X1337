@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
-#include "ResourceHandler.h"
+#include "Constants.h"
+#include "ResourceManager.h"
 #include <memory>
 
 class BulletFactory;
@@ -13,33 +14,30 @@ class Shooter : public Object
 {
 public:
 
-	/// An enumration which describes the ShooterType
-	const enum ShooterType
-	{
-		PLAYER,
-		ENEMY
-	};
 
 	// ShooterType getter
-	Shooter::ShooterType getType();
+    Constants::ShooterType getType();
 
 	// The Worth of this shooter getter/setter
 	void setScoreValue(float);
-	float getScoreValue();
+	float getScoreValue() const;
 
 	// Getters setters for health
 	void setHealth(int value);
-	const int getHealth();
+	int getHealth() const;
+
+    int getStartHealth() const;
+
 protected:
 	/// Shooter Constructor which takes in required parameters for the class to work.
 	Shooter(sf::RenderWindow& window,
 		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
-		std::shared_ptr<ResourceHandler>& resourceHandler,
+		std::shared_ptr<ResourceManager>& resourceHandler,
 		const sf::Time& timeStep);
 
 	/// Resource Handler reference originating from GameEngine
-	std::shared_ptr<ResourceHandler>& resourceHandler;
+	std::shared_ptr<ResourceManager>& resourceHandler;
 
 	// Bullets getter/setter
 	std::list<std::unique_ptr<Bullet>>& getBullets();
@@ -54,11 +52,10 @@ protected:
 	virtual void hitDetection();
 
 	// Getters setters for health
-	const int getStartHealth();
 	void setStartHealth(int value);
 
 	/// Shooter type (Player || Enemy)
-	ShooterType shooterType;
+    Constants::ShooterType shooterType;
 
 	/// Integer which describes startHealth and the totalHealth (since the Shooter starts with 100% health)
 	int startHealth;

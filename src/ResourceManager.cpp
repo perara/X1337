@@ -1,150 +1,154 @@
-#include "../include/ResourceHandler.h"
+#include "../include/ResourceManager.h"
 #include "../include/Log.h"
 #include "../include/Enemy.h"
 #include <memory>
 #include <sstream>
-#include <Windows.h>
 #include <chrono>
 #include <ctime>
 #include <iomanip> // put_time
-#include "../include/VectorN.h"
 #include <pugixml.hpp>
+
+#include <filesystem>
+
+#include <cmrc/cmrc.hpp>
+
+CMRC_DECLARE(xleetrc);
+
 
 
 /// <summary>
 /// Initializes a new instance of the <see cref="ResourceHandler"/> class.
 /// </summary>
 /// <param name="window">The window.</param>
-ResourceHandler::ResourceHandler(sf::RenderWindow& window) :
+ResourceManager::ResourceManager(sf::RenderWindow& window) :
+inited(false),
 window(window)
 {
-	this->setInit(false);
 }
 
 /// <summary>
 /// Finalizes an instance of the <see cref="ResourceHandler"/> class.
 /// </summary>
-ResourceHandler::~ResourceHandler()
-{
-}
+ResourceManager::~ResourceManager()
+= default;
 
 /// <summary>
 /// Initializes the resource handler.
 /// </summary>
-void ResourceHandler::init()
+void ResourceManager::init()
 {
 	// Define Resources
 	// HIGHSCORE
 	creditsFilePath = "assets/credits.xml";
-	highScoreFile = "assets/config.xml";
+	highScoreFile = "assets/state.xml";
 
 	// Textures
 	{
-		textureList[Texture::NOID] = "assets/sprites/noid.png";
-		textureList[Texture::BACKGROUND2] = "assets/sprites/bg2.jpg";
-		textureList[Texture::BACKGROUND3] = "assets/sprites/bg3.jpg";
-		textureList[Texture::HEART] = "assets/sprites/heart.png";
-		textureList[Texture::PLAYER_SHIP] = "assets/sprites/player_ship.png";
-		textureList[Texture::ENEMY_SHIP] = "assets/sprites/enemy_ship.png";
-		textureList[Texture::BOSS] = "assets/sprites/boss.png";
-		textureList[Texture::HEAVY_SHOT_TEXTURE] = "assets/sprites/heavy_shot.jpg";
-		textureList[Texture::REGULAR_BULLET_1] = "assets/sprites/regular_bullet_1.png";
-		textureList[Texture::BOSS_DEATHSTAR_TEXTURE] = "assets/sprites/deathStar.png";
-		textureList[Texture::CHUBBY_SHIP_TEXTURE] = "assets/sprites/chubby.png";
+		textureList[Constants::ResourceC::Texture::NOID] = "assets/sprites/noid.png";
+		textureList[Constants::ResourceC::Texture::BACKGROUND2] = "assets/sprites/bg2.png";
+		textureList[Constants::ResourceC::Texture::BACKGROUND3] = "assets/sprites/bg3.png";
+		textureList[Constants::ResourceC::Texture::HEART] = "assets/sprites/heart.png";
+		textureList[Constants::ResourceC::Texture::PLAYER_SHIP] = "assets/sprites/player_ship.png";
+		textureList[Constants::ResourceC::Texture::ENEMY_SHIP] = "assets/sprites/enemy_ship.png";
+		textureList[Constants::ResourceC::Texture::BOSS] = "assets/sprites/boss.png";
+		textureList[Constants::ResourceC::Texture::HEAVY_SHOT_TEXTURE] = "assets/sprites/heavy_shot.png";
+		textureList[Constants::ResourceC::Texture::REGULAR_BULLET_1] = "assets/sprites/regular_bullet_1.png";
+		textureList[Constants::ResourceC::Texture::BOSS_DEATHSTAR_TEXTURE] = "assets/sprites/deathstar.png";
+		textureList[Constants::ResourceC::Texture::CHUBBY_SHIP_TEXTURE] = "assets/sprites/chubby.png";
 
-		textureList[Texture::AUDIO_ON] = "assets/sprites/audio-on.png";
-		textureList[Texture::AUDIO_OFF] = "assets/sprites/audio-off.png";
-		textureList[Texture::MONITOR_ICON] = "assets/sprites/monitor.png";
-		textureList[Texture::HEALTH_KIT] = "assets/sprites/health-kit.jpg";
-		textureList[Texture::PULSE_GUN] = "assets/sprites/pulse-gun.png";
-		textureList[Texture::PLAYER_BAR] = "assets/sprites/player-bar.png";
+		textureList[Constants::ResourceC::Texture::AUDIO_ON] = "assets/sprites/audio-on.png";
+		textureList[Constants::ResourceC::Texture::AUDIO_OFF] = "assets/sprites/audio-off.png";
+		textureList[Constants::ResourceC::Texture::MONITOR_ICON] = "assets/sprites/monitor.png";
+		textureList[Constants::ResourceC::Texture::HEALTH_KIT] = "assets/sprites/health-kit.png";
+		textureList[Constants::ResourceC::Texture::PULSE_GUN] = "assets/sprites/pulse-gun.png";
+		textureList[Constants::ResourceC::Texture::PLAYER_BAR] = "assets/sprites/player-bar.png";
 
-		textureList[Texture::PORTRAIT_TWINS] = "assets/sprites/stage_portraits/twins.png";
-		textureList[Texture::PORTRAIT_COUNCIL] = "assets/sprites/stage_portraits/council.png";
-		textureList[Texture::PORTRAIT_DEATHSTAR] = "assets/sprites/stage_portraits/deathstar.png";
+		textureList[Constants::ResourceC::Texture::PORTRAIT_TWINS] = "assets/sprites/stage_portraits/twins.png";
+		textureList[Constants::ResourceC::Texture::PORTRAIT_COUNCIL] = "assets/sprites/stage_portraits/council.png";
+		textureList[Constants::ResourceC::Texture::PORTRAIT_DEATHSTAR] = "assets/sprites/stage_portraits/deathstar.png";
 	}
 
 	// Sounds
 	{
-		soundList[Sound::MUSIC_MENU_SONG] = "assets/sound/game_menu.ogg";
-		soundList[Sound::FX_STANDARD_SHOT] = "assets/sound/FireOneSound.ogg";
-		soundList[Sound::FX_HEAVY_SHOT] = "assets/sound/FireOneSound.ogg";
-		soundList[Sound::FX_ENEMY_DEATH] = "assets/sound/ExplosionSound.ogg";
-		soundList[Sound::MUSIC_INGAME] = "assets/sound/in-game.ogg";
-		soundList[Sound::MUSIC_COUNTDOWN] = "assets/sound/countdown.ogg";
-		soundList[Sound::MUSIC_DEATH_STAR_THEME] = "assets/sound/death_star_theme.ogg";
-		soundList[Sound::FX_PICKUP_HEALTH] = "assets/sound/health_pickup.wav";
-		soundList[Sound::FX_MENU_CLICK] = "assets/sound/menu_click.ogg";
-		soundList[Sound::FX_MENU_RETURN] = "assets/sound/menu_return.ogg";
-		soundList[Sound::FX_ERROR] = "assets/sound/fx_error.wav";
-		soundList[Sound::FX_BOUNCE] = "assets/sound/fx_bounce.ogg";
+		soundList[Constants::ResourceC::Sound::MUSIC_MENU_SONG] = "assets/sound/game_menu.ogg";
+		soundList[Constants::ResourceC::Sound::FX_STANDARD_SHOT] = "assets/sound/FireOneSound.ogg";
+		soundList[Constants::ResourceC::Sound::FX_HEAVY_SHOT] = "assets/sound/FireOneSound.ogg";
+		soundList[Constants::ResourceC::Sound::FX_ENEMY_DEATH] = "assets/sound/ExplosionSound.ogg";
+		soundList[Constants::ResourceC::Sound::MUSIC_INGAME] = "assets/sound/in-game.ogg";
+		soundList[Constants::ResourceC::Sound::MUSIC_COUNTDOWN] = "assets/sound/countdown.ogg";
+		soundList[Constants::ResourceC::Sound::MUSIC_DEATH_STAR_THEME] = "assets/sound/death_star_theme.ogg";
+		soundList[Constants::ResourceC::Sound::FX_PICKUP_HEALTH] = "assets/sound/health_pickup.wav";
+		soundList[Constants::ResourceC::Sound::FX_MENU_CLICK] = "assets/sound/menu_click.ogg";
+		soundList[Constants::ResourceC::Sound::FX_MENU_RETURN] = "assets/sound/menu_return.ogg";
+		soundList[Constants::ResourceC::Sound::FX_ERROR] = "assets/sound/fx_error.wav";
+		soundList[Constants::ResourceC::Sound::FX_BOUNCE] = "assets/sound/fx_bounce.ogg";
 
-		soundList[Sound::EMOTE_DEATHSTAR_GREET] = "assets/sound/emote_death_star_greet.ogg";
-		soundList[Sound::EMOTE_DEATHSTAR_BEWARE] = "assets/sound/emote_death_star_beware_cowards.ogg";
-		soundList[Sound::EMOTE_DEATHSTAR_DEATH] = "assets/sound/emote_death_star_enough.ogg";
-		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_1] = "assets/sound/emote_death_star_periodic_1.ogg";
-		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_2] = "assets/sound/emote_death_star_periodic_2.ogg";
-		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_3] = "assets/sound/emote_death_star_periodic_3.ogg";
-		soundList[Sound::EMOTE_DEATHSTAR_PERIODIC_4] = "assets/sound/emote_death_star_periodic_4.ogg";
+		soundList[Constants::ResourceC::Sound::EMOTE_DEATHSTAR_GREET] = "assets/sound/emote_death_star_greet.ogg";
+		soundList[Constants::ResourceC::Sound::EMOTE_DEATHSTAR_BEWARE] = "assets/sound/emote_death_star_beware_cowards.ogg";
+		soundList[Constants::ResourceC::Sound::EMOTE_DEATHSTAR_DEATH] = "assets/sound/emote_death_star_enough.ogg";
+		soundList[Constants::ResourceC::Sound::EMOTE_DEATHSTAR_PERIODIC_1] = "assets/sound/emote_death_star_periodic_1.ogg";
+		soundList[Constants::ResourceC::Sound::EMOTE_DEATHSTAR_PERIODIC_2] = "assets/sound/emote_death_star_periodic_2.ogg";
+		soundList[Constants::ResourceC::Sound::EMOTE_DEATHSTAR_PERIODIC_3] = "assets/sound/emote_death_star_periodic_3.ogg";
+		soundList[Constants::ResourceC::Sound::EMOTE_DEATHSTAR_PERIODIC_4] = "assets/sound/emote_death_star_periodic_4.ogg";
 
-		soundList[Sound::STORY_DEATHSTAR_INTRO] = "assets/sound/story_death_star_intro.ogg";
-		soundList[Sound::STORY_TWINS_INTRO] = "assets/sound/story_stage1_intro.ogg";
-		soundList[Sound::STORY_COUNCIL_INTRO] = "assets/sound/story_stage2_intro.ogg";
+		soundList[Constants::ResourceC::Sound::STORY_DEATHSTAR_INTRO] = "assets/sound/story_death_star_intro.ogg";
+		soundList[Constants::ResourceC::Sound::STORY_TWINS_INTRO] = "assets/sound/story_stage1_intro.ogg";
+		soundList[Constants::ResourceC::Sound::STORY_COUNCIL_INTRO] = "assets/sound/story_stage2_intro.ogg";
 	}
 
 	// String to Sound relation map
 	{
 		// ERROR MESSAGE
-		musicStringList["null"] = ResourceHandler::Sound::FX_ERROR;
+		musicStringList["null"] = Constants::ResourceC::Sound::FX_ERROR;
 
 		// STORY
-		musicStringList["stage3_intro_story"] = ResourceHandler::Sound::STORY_DEATHSTAR_INTRO;
-		musicStringList["stage2_intro_story"] = ResourceHandler::Sound::STORY_COUNCIL_INTRO;
-		musicStringList["stage1_intro_story"] = ResourceHandler::Sound::STORY_TWINS_INTRO;
+		musicStringList["stage3_intro_story"] = Constants::ResourceC::Sound::STORY_DEATHSTAR_INTRO;
+		musicStringList["stage2_intro_story"] = Constants::ResourceC::Sound::STORY_COUNCIL_INTRO;
+		musicStringList["stage1_intro_story"] = Constants::ResourceC::Sound::STORY_TWINS_INTRO;
 
 		// EMOTES
-		musicStringList["deathstar_greet"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_GREET;
-		musicStringList["deathstar_periodic_1"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_1;
-		musicStringList["deathstar_periodic_2"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_2;
-		musicStringList["deathstar_periodic_3"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_3;
-		musicStringList["deathstar_periodic_4"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_PERIODIC_4;
-		musicStringList["deathstar_death"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_DEATH;
-		musicStringList["deathstar_rage"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_DEATH;
-		musicStringList["deathstar_beware"] = ResourceHandler::Sound::EMOTE_DEATHSTAR_BEWARE;
+		musicStringList["deathstar_greet"] = Constants::ResourceC::Sound::EMOTE_DEATHSTAR_GREET;
+		musicStringList["deathstar_periodic_1"] = Constants::ResourceC::Sound::EMOTE_DEATHSTAR_PERIODIC_1;
+		musicStringList["deathstar_periodic_2"] = Constants::ResourceC::Sound::EMOTE_DEATHSTAR_PERIODIC_2;
+		musicStringList["deathstar_periodic_3"] = Constants::ResourceC::Sound::EMOTE_DEATHSTAR_PERIODIC_3;
+		musicStringList["deathstar_periodic_4"] = Constants::ResourceC::Sound::EMOTE_DEATHSTAR_PERIODIC_4;
+		musicStringList["deathstar_death"] = Constants::ResourceC::Sound::EMOTE_DEATHSTAR_DEATH;
+		musicStringList["deathstar_rage"] = Constants::ResourceC::Sound::EMOTE_DEATHSTAR_DEATH;
+		musicStringList["deathstar_beware"] = Constants::ResourceC::Sound::EMOTE_DEATHSTAR_BEWARE;
 	}
 
 	// Texture string to texture map
 	{
-		textureStringList["deathstar"] = ResourceHandler::Texture::PORTRAIT_DEATHSTAR;
-		textureStringList["council"] = ResourceHandler::Texture::PORTRAIT_COUNCIL;
-		textureStringList["twins"] = ResourceHandler::Texture::PORTRAIT_TWINS;
+		textureStringList["deathstar"] = Constants::ResourceC::Texture::PORTRAIT_DEATHSTAR;
+		textureStringList["council"] = Constants::ResourceC::Texture::PORTRAIT_COUNCIL;
+		textureStringList["twins"] = Constants::ResourceC::Texture::PORTRAIT_TWINS;
 
 	}
 
 
 	// Scripts
 	{
-		scriptList[Scripts::STAGE_ONE] = "assets/scripts/stage1.xml";
-		scriptList[Scripts::STAGE_TWO] = "assets/scripts/stage2.xml";
-		scriptList[Scripts::GAME_MENU] = "assets/scripts/game_menu.xml";
-		scriptList[Scripts::DEATH_STAR] = "assets/scripts/test1.xml";
+		scriptList[Constants::ResourceC::Scripts::STAGE_ONE] = "assets/scripts/stage1.xml";
+		scriptList[Constants::ResourceC::Scripts::STAGE_TWO] = "assets/scripts/stage2.xml";
+		scriptList[Constants::ResourceC::Scripts::GAME_MENU] = "assets/scripts/game_menu.xml";
+		scriptList[Constants::ResourceC::Scripts::DEATH_STAR] = "assets/scripts/test1.xml";
 	}
 
 	// Fonts
 	{
-		fontList[Fonts::COMICATE] = "assets/fonts/COMICATE.ttf";
-		fontList[Fonts::SANSATION] = "assets/fonts/sansation.ttf";
+		fontList[Constants::ResourceC::Fonts::COMICATE] = "assets/fonts/comicate.ttf";
+		fontList[Constants::ResourceC::Fonts::SANSATION] = "assets/fonts/sansation.ttf";
 	}
 
-	// Message of the day 
+	// Message of the day
 	{
-		messageOfTheDay.push_back("Its only a game!");
-		messageOfTheDay.push_back("Spacesailor 3.0!");
-		messageOfTheDay.push_back("Shooting everyday");
-		messageOfTheDay.push_back("Bullets bullets bullets");
-		messageOfTheDay.push_back("Dodging dem blue balls");
-		messageOfTheDay.push_back("Green is the color!");
-		messageOfTheDay.push_back("Dodgy dodgy!");
+		messageOfTheDay.emplace_back("Its only a game!");
+		messageOfTheDay.emplace_back("Spacesailor 3.0!");
+		messageOfTheDay.emplace_back("Shooting everyday");
+		messageOfTheDay.emplace_back("Bullets bullets bullets");
+		messageOfTheDay.emplace_back("Dodging dem blue balls");
+		messageOfTheDay.emplace_back("Green is the color!");
+		messageOfTheDay.emplace_back("Dodgy dodgy!");
 	}
 
 	// Load each of the resources
@@ -164,12 +168,16 @@ void ResourceHandler::init()
 /// <summary>
 /// Loads the fonts.
 /// </summary>
-void ResourceHandler::loadFonts()
+void ResourceManager::loadFonts()
 {
+    auto fs = cmrc::xleetrc::get_filesystem();
+
 	// Load Fonts
 	for (auto& i : fontList)
 	{
-		if (fonts[i.first].loadFromFile(i.second)){
+        auto file = fs.open(i.second);
+        auto data = std::string_view(file.begin(), file.end() - file.begin());
+		if (fonts[i.first].loadFromMemory(data.data(), data.size())){
 			LOGD("Font loaded: " << i.second);
 		}
 		else
@@ -184,13 +192,16 @@ void ResourceHandler::loadFonts()
 /// <summary>
 /// Loads the textures.
 /// </summary>
-void ResourceHandler::loadTextures()
+void ResourceManager::loadTextures()
 {
+    auto fs = cmrc::xleetrc::get_filesystem();
+
 	// Load Textures
 	for (auto& i : textureList)
 	{
-
-		if (textures[i.first].loadFromFile(i.second)){
+        auto file = fs.open(i.second);
+        auto data = std::string_view(file.begin(), file.end() - file.begin());
+		if (textures[i.first].loadFromMemory(data.data(), data.size())){
 			LOGD("Texture loaded: " << i.second);
 		}
 		else
@@ -204,15 +215,17 @@ void ResourceHandler::loadTextures()
 /// <summary>
 /// Loads the sound.
 /// </summary>
-void ResourceHandler::loadSound()
+void ResourceManager::loadSound()
 {
+    auto fs = cmrc::xleetrc::get_filesystem();
 	// Load sounds
 	for (auto& i : soundList)
 	{
-
-		std::shared_ptr<sf::SoundBuffer> buf = std::shared_ptr<sf::SoundBuffer>(new sf::SoundBuffer());
+        auto file = fs.open(i.second);
+        auto data = std::string_view(file.begin(), file.end() - file.begin());
+		std::shared_ptr<sf::SoundBuffer> buf = std::make_shared<sf::SoundBuffer>();
 		sBufferList.push_back(buf);
-		if (buf->loadFromFile(i.second)){
+		if (buf->loadFromMemory(data.data(), data.size())){
 			sounds[i.first].setBuffer(*buf);
 			LOGD("Sound loaded: " << i.second);
 		}
@@ -227,10 +240,20 @@ void ResourceHandler::loadSound()
 /// <summary>
 /// Loads the high score.
 /// </summary>
-void ResourceHandler::loadHighScore()
+void ResourceManager::loadHighScore()
 {
+    auto stateFile = std::filesystem::current_path().append("state.xml");
+
+    if(!exists(stateFile)){
+        auto fs = cmrc::xleetrc::get_filesystem();
+        auto file = fs.open(highScoreFile);
+        auto data = std::string_view(file.begin(), file.end() - file.begin());
+        std::ofstream(stateFile) << data;
+    }
+
+
 	// Read XML file raw (Create file Stream)
-	std::ifstream fileStream(highScoreFile);
+	std::ifstream fileStream(stateFile);
 
 	if (fileStream.good())
 	{
@@ -260,13 +283,13 @@ void ResourceHandler::loadHighScore()
 					std::string pName = recNode.child("Name").child_value();
 					float pScore = atof(recNode.child("Score").child_value());
 					std::string pDate = recNode.child("Date").child_value();
-					highScoreStage.push_back(std::shared_ptr<HighScoreItem>(
-						new HighScoreItem((ResourceHandler::Scripts)sEnum, pName, pScore, pDate)));
+					highScoreStage.push_back(std::make_shared<HighScoreItem>(
+                            (Constants::ResourceC::Scripts)sEnum, pName, pScore, pDate));
 				}
 
 				// Sort by score (ASC) then add to highScoreMap
 				highScoreStage.sort([](std::shared_ptr<HighScoreItem> & a, std::shared_ptr<HighScoreItem> & b) { return a->score > b->score; });
-				highScoreStages[(ResourceHandler::Scripts)sEnum] = (highScoreStage);
+				highScoreStages[(Constants::ResourceC::Scripts)sEnum] = (highScoreStage);
 			}
 		}
 		else
@@ -281,7 +304,7 @@ void ResourceHandler::loadHighScore()
 /// </summary>
 /// <param name="score">The score.</param>
 /// <param name="scriptEnum">The script enum.</param>
-void ResourceHandler::writeHighScoreScore(int score, int scriptEnum)
+void ResourceManager::writeHighScoreScore(int score, int scriptEnum)
 {
 	// Read XML file raw (Create file Stream)
 	std::ifstream fileStream(highScoreFile);
@@ -354,19 +377,25 @@ void ResourceHandler::writeHighScoreScore(int score, int scriptEnum)
 /// <summary>
 /// Loads the scripts.
 /// </summary>
-void ResourceHandler::loadScripts()
+void ResourceManager::loadScripts()
 {
+    auto fs = cmrc::xleetrc::get_filesystem();
+
+
 	// Load Scripts
 	for (auto& i : scriptList)
 	{
 		// Read XML file raw (Create file Stream)
-		std::ifstream fileStream(i.second);
+        auto file = fs.open(i.second);
 
-		if (fileStream.good())
+
+		if (file.size())
 		{
+            auto data = std::string_view(file.begin(), file.end() - file.begin());
+
 			// Load XML and parse it
 			pugi::xml_document doc;
-			pugi::xml_parse_result result = doc.load(fileStream);
+			pugi::xml_parse_result result = doc.load_string(data.data());
 
 			// If XML was parsed successfully without errors
 			if (result)
@@ -391,27 +420,27 @@ void ResourceHandler::loadScripts()
 					std::list<std::pair<int, std::string>> emoteQueue = std::list<std::pair<int, std::string>>();
 
 					// Retrieve enemy type and delay data
-					int eType = atoi(node.child("Type").child_value());
-					int eDelay = atoi(node.child("Delay").child_value());
+                    float eType = std::strtof(node.child("Type").child_value(), nullptr);
+                    float eDelay = std::strtof(node.child("Delay").child_value(), nullptr);
 
 					// Retrieve each of the Paths
 					for (pugi::xml_node path : node.child("Path").children())
 					{
 						// Convert string to integer
-						int x = atoi(path.attribute("x").value());
-						int y = atoi(path.attribute("y").value());
-						int acceleration = atof(path.attribute("acceleration").value());
-						int shoot = atoi(path.attribute("shoot").value());
-						int sleep = atoi(path.attribute("sleep").value());
+                        float x = std::strtof(path.attribute("x").value(), nullptr);
+                        float y = std::strtof(path.attribute("y").value(), nullptr);
+                        float acceleration = std::strtof(path.attribute("acceleration").value(), nullptr);
+                        float shoot = std::strtof(path.attribute("shoot").value(), nullptr);
+                        float sleep = std::strtof(path.attribute("sleep").value(), nullptr);
 						std::string sId = path.attribute("sID").value();
 
 						// Add to the "vector"
 						VectorN vec;
 						vec.x = x;
 						vec.y = y;
-						vec.shoot = shoot;
+						vec.shoot = (int)shoot;
 						vec.acceleration = acceleration;
-						vec.sleepTime = sf::milliseconds(sleep);
+						vec.sleepTime = sf::milliseconds((int)sleep);
 
 						// See if the sId field is empty
 						if (!sId.empty())
@@ -426,7 +455,7 @@ void ResourceHandler::loadScripts()
 								LOGE("Could not find a song record with: " << sId << " in the musicStringList!");
 							}
 						}
-			
+
 						// Push path into the queue
 						pathQueue.push(vec);
 
@@ -441,12 +470,12 @@ void ResourceHandler::loadScripts()
 
 						// Split on comma and append to the queue (percentages)
 						std::stringstream ss(percent);
-						int i;
-						while (ss >> i)
+						int _i;
+						while (ss >> _i)
 						{
 							// Create a pair to hold the percentage --> sound
 							std::pair<int, std::string> par;
-							par.first = i;
+							par.first = _i;
 							par.second = sId;
 
 							// Push the pair to the queue
@@ -462,7 +491,12 @@ void ResourceHandler::loadScripts()
 					emoteQueue.sort([](std::pair<int, std::string> & a, std::pair<int, std::string> & b) { return a.first > b.first; });
 
 					// Add enemy to script
-					this->scripts[i.first].addEnemy(eDelay, pathQueue, emoteQueue, eType, scriptRepeat);
+					this->scripts[i.first].addEnemy(
+                            (int)eDelay,
+					        pathQueue,
+					        emoteQueue,
+                            (int)eType,
+					        scriptRepeat);
 					counter++;
 				}
 				LOGD(i.first << " was successfully loaded. " << counter << "enemies was queued.");
@@ -475,17 +509,21 @@ void ResourceHandler::loadScripts()
 				{
 
 					// Retrieve powerup type and delay data
-					int pwrType = atoi(node.child("Type").child_value());
-					int pwrDelay = atoi(node.child("Delay").child_value());
-					int pwrRepeat = atoi(node.child("Repeat").child_value());
-					int pwrX = atoi(node.child("Path").attribute("x").value());
-					int pwrY = atoi(node.child("Path").attribute("y").value());
+					float pwrType = std::strtof(node.child("Type").child_value(), nullptr);
+                    float pwrDelay = std::strtof(node.child("Delay").child_value(), nullptr);
+                    float pwrRepeat = std::strtof(node.child("Repeat").child_value(), nullptr);
+                    float pwrX = std::strtof(node.child("Path").attribute("x").value(), nullptr);
+                    float pwrY = std::strtof(node.child("Path").attribute("y").value(), nullptr);
 					VectorN path;
 					path.x = pwrX;
 					path.y = pwrY;
 
 					// Add powerup to script
-					this->scripts[i.first].addPowerUp(pwrDelay, path, pwrType, pwrRepeat);
+					this->scripts[i.first].addPowerUp(
+                            (int)pwrDelay,
+					        path,
+                            (int)pwrType,
+                            (int)pwrRepeat);
 					counter++;
 				}
 				LOGD(i.first << " was successfully loaded. " << counter << "powerups was queued.");
@@ -523,7 +561,7 @@ void ResourceHandler::loadScripts()
 /// <summary>
 /// Loads the name of the user.
 /// </summary>
-void ResourceHandler::loadUserName()
+void ResourceManager::loadUserName()
 {
 	this->userName = "Player";
 }
@@ -531,15 +569,18 @@ void ResourceHandler::loadUserName()
 /// <summary>
 /// Loads the credits.
 /// </summary>
-void ResourceHandler::loadCredits()
+void ResourceManager::loadCredits()
 {
-	std::ifstream fileStream(creditsFilePath);
+    auto fs = cmrc::xleetrc::get_filesystem();
 
-	if (fileStream.good())
+
+	if (fs.exists(creditsFilePath))
 	{
 		// Load XML and parse it
 		pugi::xml_document doc;
-		pugi::xml_parse_result result = doc.load(fileStream);
+        auto file = fs.open(creditsFilePath);
+        auto data = std::string_view(file.begin(), file.end() - file.begin()).data();
+		pugi::xml_parse_result result = doc.load_string(data);
 
 		// If XML was parsed successfully without errors
 		if (result)
@@ -557,7 +598,7 @@ void ResourceHandler::loadCredits()
 				for (pugi::xml_node dataNode : node.children())
 				{
 					// Push credited name into list
-					credNames.push_back(dataNode.child_value());
+					credNames.emplace_back(dataNode.child_value());
 				}
 
 				// Add the list to map index.
@@ -578,7 +619,7 @@ void ResourceHandler::loadCredits()
 /// Gets the credits.
 /// </summary>
 /// <returns>Map with all credits</returns>
-std::map<std::string, std::list<std::string>> ResourceHandler::getCredits()
+std::map<std::string, std::list<std::string>> ResourceManager::getCredits()
 {
 	return creditsMap;
 }
@@ -587,12 +628,10 @@ std::map<std::string, std::list<std::string>> ResourceHandler::getCredits()
 /// Gets the date time.
 /// </summary>
 /// <returns>Returns current date</returns>
-std::string ResourceHandler::getDateTime()
+std::string ResourceManager::getDateTime()
 {
 	std::chrono::system_clock::time_point p = std::chrono::system_clock::now();
-	std::time_t t = std::chrono::system_clock::to_time_t(p);
-	char buff[32];
-	ctime_s(buff, sizeof(buff), &t);
+    std::time_t t = std::chrono::system_clock::to_time_t(p);
 
 	std::stringstream ss;
 	ss << std::put_time(std::localtime(&t), "%y-%m-%d %X");
@@ -603,7 +642,7 @@ std::string ResourceHandler::getDateTime()
 /// Returns the player username (Computer name)
 /// </summary>
 /// <returns>The player's name</returns>
-std::string ResourceHandler::getUserName()
+std::string ResourceManager::getUserName()
 {
 	return this->userName;
 }
@@ -614,7 +653,7 @@ std::string ResourceHandler::getUserName()
 /// </summary>
 /// <param name="res">The resource.</param>
 /// <returns>Returns a texure reference</returns>
-sf::Texture& ResourceHandler::getTexture(ResourceHandler::Texture res)
+sf::Texture& ResourceManager::getTexture(Constants::ResourceC::Texture res)
 {
 	return this->textures[res];
 }
@@ -624,7 +663,7 @@ sf::Texture& ResourceHandler::getTexture(ResourceHandler::Texture res)
 /// </summary>
 /// <param name="query">The query.</param>
 /// <returns>Returns a script copy</returns>
-Script ResourceHandler::getScript(ResourceHandler::Scripts query)
+Script ResourceManager::getScript(Constants::ResourceC::Scripts query)
 {
 	return this->scripts[query];
 }
@@ -634,7 +673,7 @@ Script ResourceHandler::getScript(ResourceHandler::Scripts query)
 /// </summary>
 /// <param name="iteNum">The ite number.</param>
 /// <returns>A script</returns>
-Script ResourceHandler::getScriptById(int iteNum)
+Script ResourceManager::getScriptById(int iteNum)
 {
 	// Meh method
 	int cnt = 1;
@@ -643,18 +682,20 @@ Script ResourceHandler::getScriptById(int iteNum)
 		if (cnt == iteNum) return i;
 		cnt++;
 	}
+
+    return Script();
 }
 
 /// <summary>
 /// Gets all of the scripts.
 /// </summary>
 /// <returns>A list with scripts (all scripts)</returns>
-std::list<Script> ResourceHandler::getScripts(bool encounterOnly)
+std::list<Script> ResourceManager::getScripts(bool encounterOnly)
 {
 	std::list<Script> ret;
 	for (Script i : scripts)
 	{
-		if (i.getScriptEnumVal() != ResourceHandler::Scripts::GAME_MENU)
+		if (i.getScriptEnumVal() != Constants::ResourceC::Scripts::GAME_MENU)
 			ret.push_back(i);
 	}
 	return ret;
@@ -665,7 +706,7 @@ std::list<Script> ResourceHandler::getScripts(bool encounterOnly)
 /// </summary>
 /// <param name="query">The query.</param>
 /// <returns>Font reference</returns>
-sf::Font& ResourceHandler::getFont(ResourceHandler::Fonts query)
+sf::Font& ResourceManager::getFont(Constants::ResourceC::Fonts query)
 {
 	return this->fonts[query];
 }
@@ -675,7 +716,7 @@ sf::Font& ResourceHandler::getFont(ResourceHandler::Fonts query)
 /// </summary>
 /// <param name="query">The query.</param>
 /// <returns>Sound reference</returns>
-sf::Sound& ResourceHandler::getSound(ResourceHandler::Sound query)
+sf::Sound& ResourceManager::getSound(Constants::ResourceC::Sound query)
 {
 	return this->sounds[query];
 }
@@ -685,7 +726,7 @@ sf::Sound& ResourceHandler::getSound(ResourceHandler::Sound query)
 /// </summary>
 /// <param name="emote">The emote name to use in order to retrieve the sound.</param>
 /// <returns>Sound reference</returns>
-sf::Sound& ResourceHandler::getSoundByEmoteName(std::string emote)
+sf::Sound& ResourceManager::getSoundByEmoteName(const std::string& emote)
 {
 	if (emote == "null")
 	{
@@ -699,7 +740,7 @@ sf::Sound& ResourceHandler::getSoundByEmoteName(std::string emote)
 /// </summary>
 /// <param name="str">The string.</param>
 /// <returns>A texture reference</returns>
-sf::Texture& ResourceHandler::getTextureByString(std::string str)
+sf::Texture& ResourceManager::getTextureByString(const std::string& str)
 {
 	return textures[textureStringList[str]];
 }
@@ -708,7 +749,7 @@ sf::Texture& ResourceHandler::getTextureByString(std::string str)
 /// Mutes all of the sound.
 /// </summary>
 /// <param name="mute">The mute variable (true/false)</param>
-void ResourceHandler::muteSound(bool mute)
+void ResourceManager::muteSound(bool mute)
 {
 	for (auto& i : sounds)
 	{
@@ -720,7 +761,7 @@ void ResourceHandler::muteSound(bool mute)
 /// Mutes all of the sound.
 /// </summary>
 /// <param name="mute">The mute variable (true/false)</param>
-void ResourceHandler::stopAllSound()
+void ResourceManager::stopAllSound()
 {
 	for (auto& i : sounds)
 	{
@@ -734,7 +775,7 @@ void ResourceHandler::stopAllSound()
 /// Gets the high scores.
 /// </summary>
 /// <returns>map with all highscores</returns>
-std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> ResourceHandler::getHighScores()
+std::map<Constants::ResourceC::Scripts, std::list<std::shared_ptr<HighScoreItem>>> ResourceManager::getHighScores()
 {
 	return this->highScoreStages;
 }
@@ -744,7 +785,7 @@ std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> Re
 /// Gets the init value
 /// </summary>
 /// <returns>init flag</returns>
-bool ResourceHandler::getInit()
+bool ResourceManager::getInit()
 {
 	return this->inited;
 }
@@ -753,9 +794,9 @@ bool ResourceHandler::getInit()
 /// Sets the init flag
 /// </summary>
 /// <param name="init">The init flag</param>
-void ResourceHandler::setInit(bool init)
+void ResourceManager::setInit(bool _init)
 {
-	this->inited = init;
+	this->inited = _init;
 }
 
 /// <summary>
@@ -763,7 +804,7 @@ void ResourceHandler::setInit(bool init)
 /// </summary>
 /// <param name="">Random id for message of the day</param>
 /// <returns>The message of the day</returns>
-std::string ResourceHandler::getMessageOfTheDay(int modt)
+std::string ResourceManager::getMessageOfTheDay(int modt)
 {
 	return this->messageOfTheDay[modt];
 }
@@ -772,7 +813,7 @@ std::string ResourceHandler::getMessageOfTheDay(int modt)
 /// Gets the size of the motd vector
 /// </summary>
 /// <returns>Size of the MODT vector</returns>
-int ResourceHandler::getMOTDSize()
+int ResourceManager::getMOTDSize()
 {
 	return this->messageOfTheDay.size();
 }
@@ -780,15 +821,15 @@ int ResourceHandler::getMOTDSize()
 /// <summary>
 /// Draws the resource handler (loading state).
 /// </summary>
-void ResourceHandler::draw()
+void ResourceManager::draw()
 {
 	sf::Text label;
-	label.setFont(this->getFont(ResourceHandler::COMICATE));
+	label.setFont(this->getFont(Constants::ResourceC::Fonts::COMICATE));
 	label.setString(sf::String("Loading... Please Wait!"));
 	label.setPosition(
 		window.getView().getCenter().x - (label.getGlobalBounds().width / 2),
 		window.getView().getCenter().y / 2 - (label.getGlobalBounds().height / 2));
-	label.setColor(sf::Color::White);
+	label.setFillColor(sf::Color::White);
 
 
 	window.clear(sf::Color::Black);

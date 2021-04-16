@@ -11,6 +11,7 @@ Background::Background(sf::RenderWindow& window) :
 	r(255),
 	g(0),
 	b(0),
+	scrollOffset(0),
 	slide(false){}
 
 
@@ -19,10 +20,10 @@ Background::Background(sf::RenderWindow& window) :
 /// </summary>
 /// <param name="texture">The desired texture.</param>
 /// <param name="slide">Boolean detrmining slide effect</param>
-void Background::addBackground(sf::Texture& texture, bool slide)
+void Background::addBackground(sf::Texture& texture, bool _slide)
 {
 	LOGD("Loading background...");
-	this->slide = slide;
+	this->slide = _slide;
 
 	// Create the sprite
 	sf::Sprite sprite;

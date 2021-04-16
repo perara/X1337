@@ -1,9 +1,10 @@
 #include "../include/Script.h"
+
+#include <memory>
+#include <utility>
 #include "../include/Log.h"
-#include "../include/Object.h"
 #include "../include/Enemy.h"
 #include "../include/BulletFactory.h"
-#include "../include/Bullet.h"
 
 /// <summary>
 /// Adds a enemy to the script queue
@@ -16,7 +17,9 @@
 void Script::addEnemy(int delay, std::queue<VectorN> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat)
 {
 	LOGD("Adding new enemy template to pool");
-	ScriptTick tick(delay, pathQueue, emoteQueue, type, repeat);
+	ScriptTick tick(delay,
+                 std::move(pathQueue),
+                 std::move(emoteQueue), type, repeat);
 	enemyList.push(tick);
 
 
@@ -47,7 +50,7 @@ void Script::addPowerUp(int delay, VectorN spawnPoint, int type, int repeat)
 /// Retrieve the init status
 /// </summary>
 /// <returns>init flag</returns>
-bool Script::getInit()
+bool Script::getInit() const
 {
 	return this->inited;
 
@@ -81,9 +84,9 @@ std::string Script::getScriptTitle()
 /// Sets the script title.
 /// </summary>
 /// <param name="scriptTitle">The script title.</param>
-void Script::setScriptTitle(std::string scriptTitle)
+void Script::setScriptTitle(std::string _scriptTitle)
 {
-	this->scriptTitle = scriptTitle;
+	this->scriptTitle = std::move(_scriptTitle);
 }
 
 
@@ -100,7 +103,7 @@ void Script::setScriptEnumVal(int enumVal)
 /// Gets the script enum value.
 /// </summary>
 /// <returns>The script enumeration value (defined in the xml) </returns>
-int Script::getScriptEnumVal()
+int Script::getScriptEnumVal() const
 {
 	return scriptEnumVal;
 }
@@ -122,7 +125,7 @@ bool Script::process(sf::RenderWindow& window,
 					 std::list<std::shared_ptr<Powerup>>& powerups,
 					 std::list<std::unique_ptr<Bullet>>& bullets,
 					 BulletFactory& bFactory,
-					 std::shared_ptr<ResourceHandler>& resourceHandler,
+					 std::shared_ptr<ResourceManager>& resourceHandler,
 					 const sf::Time& timeStep)
 {
 	enemyTime += timeStep;
@@ -140,7 +143,7 @@ bool Script::process(sf::RenderWindow& window,
 		{
 
 			// Create a new enemy with the information provided by the script tick
-			std::shared_ptr<Enemy> e1 = std::shared_ptr<Enemy>(new Enemy(
+			std::shared_ptr<Enemy> e1 = std::make_shared<Enemy>(
 				window,
 				e.pathQueue,
 				e.emoteQueue,
@@ -149,7 +152,7 @@ bool Script::process(sf::RenderWindow& window,
 				bFactory,
 				bullets,
 				resourceHandler,
-				timeStep));
+				timeStep);
 			LOGD("Spawning Enemy#" << e1);
 
 			// Push enemy to the objects list (from world)
@@ -182,8 +185,8 @@ bool Script::process(sf::RenderWindow& window,
 			(path.x == -1) ? path.x = rand() % window.getSize().x + 1 : path.x;
 			(path.y == -1) ? path.y = rand() % window.getSize().y + 1 : path.y;
 
-			std::shared_ptr<Powerup> p1 = std::shared_ptr<Powerup>(
-				new Powerup(window, path, pwrUp.type, resourceHandler, timeStep));
+			std::shared_ptr<Powerup> p1 = std::make_shared<Powerup>(
+				window, path, pwrUp.type, resourceHandler, timeStep);
 
 			// Push the powerup 
 			powerups.push_back(p1);
@@ -216,9 +219,9 @@ bool Script::process(sf::RenderWindow& window,
 /// Sets the audio description string
 /// </summary>
 /// <param name="audioDesc">The audio description string name (Mapped in ResourceHandler)</param>
-void Script::setAudioDesc(std::string audioDesc)
+void Script::setAudioDesc(std::string _audioDesc)
 {
-	this->audioDesc = audioDesc;
+	this->audioDesc = std::move(_audioDesc);
 }
 
 /// <summary>
@@ -234,9 +237,9 @@ std::string Script::getAudioDesc()
 /// Sets the lore string
 /// </summary>
 /// <param name="lore">Lore string</param>
-void Script::setLore(std::string lore)
+void Script::setLore(std::string _lore)
 {
-	this->lore = lore;
+	this->lore = std::move(_lore);
 }
 
 /// <summary>
@@ -252,7 +255,7 @@ std::string Script::getLore()
 /// Gets the start size of the enemy list.
 /// </summary>
 /// <returns>integer with size</returns>
-const int Script::getStartEnemyListSize()
+int Script::getStartEnemyListSize() const
 {
 	return startEnemyListSize;
 }
@@ -261,14 +264,14 @@ const int Script::getStartEnemyListSize()
 /// Gets the size of the enemy list.
 /// </summary>
 /// <returns>size of enemy list</returns>
-const int Script::getEnemyListSize()
+int Script::getEnemyListSize()
 {
 	return enemyList.size();
 }
 
-void Script::setPortraitString(std::string portraitString)
+void Script::setPortraitString(std::string _portraitString)
 {
-	this->portraitString = portraitString;
+	this->portraitString = std::move(_portraitString);
 }
 
 std::string Script::getPortraitString()

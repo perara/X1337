@@ -1,6 +1,8 @@
 #include "../include/Object.h"
 #include "../include/Log.h"
 #include "../include/GameShape.h"
+#include <cmath>
+#include <cfloat>
 
 /// <summary>
 /// Draws this Object.
@@ -29,7 +31,7 @@ void Object::process(){}
 /// Get the deleted flag
 /// </summary>
 /// <returns>Returns bool with deleted status</returns>
-bool Object::getDeleted(){
+bool Object::getDeleted() const{
 	return this->deleted;
 }
 
@@ -75,19 +77,19 @@ Object::~Object()
 /// <param name="c1">First GameShape.</param>
 /// <param name="c2">Second GameShape</param>
 /// <returns>Intersection flag (intersects or not)</returns>
-bool Object::sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2)
+bool Object::sat(const std::shared_ptr<GameShape>& c1, const std::shared_ptr<GameShape>& c2)
 {
-	int c1_tx = c1->getPosition().x;
-	int c1_ty = c1->getPosition().y;
+	float c1_tx = c1->getPosition().x;
+    float c1_ty = c1->getPosition().y;
 
-	int c2_tx = c2->getPosition().x;
-	int c2_ty = c2->getPosition().y;
+    float c2_tx = c2->getPosition().x;
+    float c2_ty = c2->getPosition().y;
 
 
 	bool ret = true;
 
-	int c1_faces = c1->getPointCount();
-	int c2_faces = c2->getPointCount();
+    unsigned long c1_faces = c1->getPointCount();
+    unsigned long  c2_faces = c2->getPointCount();
 
 	//For each of the points in c1
 	for (int i = 0; i < c1_faces; i++)
@@ -100,7 +102,7 @@ bool Object::sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2)
 		float ax = -fy, ay = fx;
 
 		// Normalize axis
-		float len_v = sqrt(ax * ax + ay * ay);
+		float len_v = std::sqrt(ax * ax + ay * ay);
 		ax /= len_v;
 		ay /= len_v;
 

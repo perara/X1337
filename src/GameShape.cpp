@@ -1,12 +1,14 @@
 #include "../include/GameShape.h"
 #include "../include/Log.h"
+#include "../include/Constants.h"
+#include <cmath>
 
 // Other Default
 /// <summary>
 /// Initializes a new instance of the <see cref="GameShape"/> class.
 /// </summary>
 /// <param name="shapeType">Type of the shape constructed</param>
-GameShape::GameShape(GameShape::ShapeType shapeType) :
+GameShape::GameShape(Constants::GameShapeC::Type shapeType) :
 shapeType(shapeType)
 {
 	// Scale value for the size, this may be moved the the constructor.
@@ -15,11 +17,11 @@ shapeType(shapeType)
 	// Defines each of the polygons for each for the shapes.
 	switch (shapeType)
 	{
-	case GameShape::ShapeType::TRIANGLE:
+	case Constants::GameShapeC::Type::TRIANGLE:
 		this->setPointCount(3);
 		setTriangleShape(20);
 		break;
-	case GameShape::ShapeType::STARSHIP:
+	case Constants::GameShapeC::Type::STARSHIP:
 		this->setPointCount(11);
 		this->setPoint(0, sf::Vector2f(-20, -10));
 		this->setPoint(1, sf::Vector2f(-30, -10));
@@ -32,7 +34,7 @@ shapeType(shapeType)
 		this->setPoint(8, sf::Vector2f(30, -10));
 		this->setPoint(9, sf::Vector2f(20, -10));
 		break;
-	case GameShape::ShapeType::PLAYER_SHIP:
+	case Constants::GameShapeC::Type::PLAYER_SHIP:
 		this->setPointCount(9);
 		this->setPoint(0, sf::Vector2f(0, -20)* scale);
 		this->setPoint(1, sf::Vector2f(-20, 5)* scale);
@@ -44,7 +46,7 @@ shapeType(shapeType)
 		this->setPoint(7, sf::Vector2f(20, 25)* scale);
 		this->setPoint(8, sf::Vector2f(20, 5)* scale);
 		break;
-	case GameShape::ShapeType::BOSS:
+	case Constants::GameShapeC::Type::BOSS:
 		this->setPointCount(8);
 		setCircleShape(80, sf::Vector2f(0, 0));
 		break;
@@ -61,12 +63,12 @@ shapeType(shapeType)
 /// </summary>
 /// <param name="shapeType">Define shape type for the shape.</param>
 /// <param name="size">Defines a size for the size (scale)</param>
-GameShape::GameShape(GameShape::ShapeType shapeType, float size) :
+GameShape::GameShape(Constants::GameShapeC::Type shapeType, float size) :
 shapeType(shapeType)
 {
 	switch (shapeType)
 	{
-	case GameShape::ShapeType::TRIANGLE:
+	case Constants::GameShapeC::Type::TRIANGLE:
 		this->setPointCount(3);
 		setTriangleShape(size);
 		break;
@@ -86,12 +88,12 @@ shapeType(shapeType)
 /// <param name="shapeType">Shape definiton, this is usually a circle for this constructor..</param>
 /// <param name="radius">The Circle radius</param>
 /// <param name="pointCount">The point count (polygon).</param>
-GameShape::GameShape(GameShape::ShapeType shapeType, int radius, int pointCount) :
+GameShape::GameShape(Constants::GameShapeC::Type shapeType, float radius, int pointCount) :
 shapeType(shapeType)
 {
 	switch (shapeType)
 	{
-	case GameShape::ShapeType::CIRCLE:
+	case Constants::GameShapeC::Type::CIRCLE:
 		this->setPointCount(pointCount);
 		this->properties["radius"] = radius;
 		setCircleShape(radius, sf::Vector2f(0, 0)); // TODO
@@ -106,7 +108,7 @@ shapeType(shapeType)
 /// Returns the shapetype for current shape.
 /// </summary>
 /// <returns>Shape yupe</returns>
-GameShape::ShapeType GameShape::getShapeType()
+Constants::GameShapeC::Type GameShape::getShapeType()
 {
 	return shapeType;
 }
@@ -129,17 +131,17 @@ void GameShape::setTriangleShape(float size)
 /// </summary>
 /// <param name="radius">Circle radius</param>
 /// <param name="center">Center of the circle.</param>
-void GameShape::setCircleShape(double radius, sf::Vector2f center)
+void GameShape::setCircleShape(float radius, sf::Vector2f center)
 {
 	float PI = 3.14159265358979323846;
-	double slice = 2 * PI / this->getPointCount();
+	float slice = 2 * PI / (float)this->getPointCount();
 
 	for (int i = 0; i < this->getPointCount(); i++)
 	{
 
-		double angle = slice * i;
-		float newX = (center.x + radius * cos(angle));
-		float newY = (center.y + radius * sin(angle));
+		float angle = slice * (float)i;
+		float newX = (center.x + radius * std::cos(angle));
+		float newY = (center.y + radius * std::sin(angle));
 
 		sf::Vector2f p = sf::Vector2f(newX, newY);
 		this->setPoint(i, p);
@@ -151,8 +153,8 @@ void GameShape::setCircleShape(double radius, sf::Vector2f center)
 /// Gets the radius.
 /// </summary>
 /// <returns>Returns radius of a shape, -1 if shape is not a circle (not valid for radius)</returns>
-int GameShape::getRadius(){
-	if (this->shapeType == GameShape::ShapeType::CIRCLE){
+float GameShape::getRadius(){
+	if (this->shapeType == Constants::GameShapeC::Type::CIRCLE){
 		return this->properties["radius"];
 	}
 	else{

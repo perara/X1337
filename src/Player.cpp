@@ -2,8 +2,7 @@
 #include "../include/Bullet.h"
 #include "../include/BulletFactory.h"
 #include "../include/GameShape.h"
-#include "../include/Log.h"
-#include "../include/ResourceHandler.h"
+#include <memory>
 #include <sstream>
 
 /// <summary>
@@ -19,9 +18,10 @@
 /// <param name="hardMode">The hard mode.</param>
 Player::Player(sf::RenderWindow& window,
 	sf::Vector2f pos,
-	int radius, BulletFactory& bFactory,
+	int radius,
+	BulletFactory& bFactory,
 	std::list<std::unique_ptr<Bullet>>& bullets,
-	std::shared_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceManager>& resourceHandler,
 	const sf::Time& timeStep,
 	const bool hardMode,
 	std::list<std::shared_ptr<Shooter>>& objects
@@ -30,6 +30,7 @@ Player::Player(sf::RenderWindow& window,
 	objects(objects),
 	playerScore(0),
 	playerKills(0),
+	radius(radius),
 	pulsateGun(false),
 
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
@@ -47,11 +48,11 @@ Player::Player(sf::RenderWindow& window,
 	}
 
 	// Set the shape type
-	this->shooterType = Shooter::ShooterType::PLAYER;
+	this->shooterType = Constants::ShooterType::PLAYER;
 
 	// Define the shape for the player
-	sprite = std::shared_ptr<GameShape>(new GameShape(GameShape::ShapeType::PLAYER_SHIP));
-	sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::PLAYER_SHIP));
+	sprite = std::make_shared<GameShape>(Constants::GameShapeC::Type::PLAYER_SHIP);
+	sprite->setTexture(&resourceHandler->getTexture(Constants::ResourceC::Texture::PLAYER_SHIP));
 	sprite->setOutlineThickness(1);
 	sprite->setOutlineColor(sf::Color::Cyan);
 	this->sprite->setPosition(pos);
@@ -74,15 +75,15 @@ void Player::process()
 	if (getHealth() <= 0)
 	{
 		setDeleted(true);
-		resourceHandler->getSound(ResourceHandler::Sound::FX_ENEMY_DEATH).play();
+		resourceHandler->getSound(Constants::ResourceC::Sound::FX_ENEMY_DEATH).play();
 	}
 
 	// Ship collision
 	for (auto& i : objects)
 	{
-		if (i->getType() == Shooter::ShooterType::PLAYER) continue;
+		if (i->getType() == Constants::ShooterType::PLAYER) continue;
 
-		if (this->sat(i->sprite, this->sprite))
+		if (Player::sat(i->sprite, this->sprite))
 		{
 			// Kill the player, (ship collisions never end well)
 			this->setHealth(this->getHealth() - 1);
@@ -109,9 +110,9 @@ void Player::processPowerUps()
 			{
 
 				// Gets a bullet, sets the owner to this, sets the bullet rotation, sets the bullet position, pushes the bullet to the bullet list.
-				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
+				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::standardShot);
 				b->setOwner(this->getType());
-				b->setRotation(i, sf::Vector2f(150, 150));
+				b->setRotation((float)i, sf::Vector2f(150, 150));
 				b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
 				getBullets().push_back(std::move(b));
 			}
@@ -169,30 +170,30 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	// Draw Background
 	sf::RectangleShape barBg;
 	barBg.setSize(window.getView().getSize());
-	barBg.setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::PLAYER_BAR));
+	barBg.setTexture(&resourceHandler->getTexture(Constants::ResourceC::Texture::PLAYER_BAR));
 	barBg.setFillColor(sf::Color(178, 34, 34));
 	window.draw(barBg);
 
 	// Draw Health
 	sf::Text txtHealth;
-	txtHealth.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtHealth.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 	std::string dead = ((getHealth() <= 0) ? "Dead" : "");
 	txtHealth.setString(sf::String(dead));
 	txtHealth.setCharacterSize(25);
 	txtHealth.setPosition(0, 0);
-	txtHealth.setColor(sf::Color::White);
+	txtHealth.setFillColor(sf::Color::White);
 
 	// Sets initial heart location
-	int heartY = 0;
-	int heartX = 5;
+	float heartY = 0;
+    float heartX = 5;
 
 	// Iterate each of the "healths", and display hearts
 	for (int i = 1; i <= getHealth(); i++)
 	{
 
 		// Draw a heart
-		std::shared_ptr<sf::Sprite> sprite = std::shared_ptr<sf::Sprite>(new sf::Sprite);
-		sprite->setTexture(resourceHandler->getTexture(ResourceHandler::Texture::HEART), true);
+		std::shared_ptr<sf::Sprite> sprite = std::make_shared<sf::Sprite>();
+		sprite->setTexture(resourceHandler->getTexture(Constants::ResourceC::Texture::HEART), true);
 		sprite->setPosition(heartX, heartY);
 		sprite->setScale(0.05f, 0.05f);
 		window.draw(*sprite);
@@ -204,22 +205,22 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 
 	// Draw Score
 	sf::Text txtScore;
-	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtScore.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 	txtScore.setString(sf::String("Score: " + std::to_string((int)playerScore)));
 	txtScore.setCharacterSize(25);
 	txtScore.setPosition(heartX + 10 + txtHealth.getGlobalBounds().width, 0);
-	txtScore.setColor(sf::Color::White);
+	txtScore.setFillColor(sf::Color::White);
 	window.draw(txtScore);
 
 
 	// Draw the stage highscore title
-	int initY = 0;
+	float initY = 0;
 	sf::Text txtHighScoreTitle;
-	txtHighScoreTitle.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtHighScoreTitle.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 	txtHighScoreTitle.setString(sf::String("HS: "));
 	txtHighScoreTitle.setCharacterSize(25);
 	txtHighScoreTitle.setPosition(txtScore.getPosition().x + txtScore.getGlobalBounds().width + 10, initY);
-	txtHighScoreTitle.setColor(sf::Color::White);
+	txtHighScoreTitle.setFillColor(sf::Color::White);
 	window.draw(txtHighScoreTitle);
 
 	// Draw top 1
@@ -227,11 +228,11 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	{
 		std::shared_ptr<HighScoreItem> i = highScoreList.front();
 		sf::Text txtHighScore;
-		txtHighScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+		txtHighScore.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 		txtHighScore.setString(sf::String(i->playerName + ": " + std::to_string((int)i->score)));
 		txtHighScore.setCharacterSize(25);
 		txtHighScore.setPosition(txtHighScoreTitle.getPosition().x + txtHighScoreTitle.getGlobalBounds().width, initY);
-		txtHighScore.setColor(sf::Color::White);
+		txtHighScore.setFillColor(sf::Color::White);
 		window.draw(txtHighScore);
 	}
 
@@ -267,12 +268,12 @@ void Player::input(sf::Event& event)
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && normalShotTime.asMilliseconds() > 150){
 
 		// Request a standard bullet and sets the appropriate data
-		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
+		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::standardShot);
 		b->setOwner(getType());
 		b->sprite->setPosition(sprite->getPosition().x, sprite->getPosition().y - 10);
 
 		// Play shoot sound
-		resourceHandler->getSound(ResourceHandler::Sound::FX_STANDARD_SHOT).play();
+		resourceHandler->getSound(Constants::ResourceC::Sound::FX_STANDARD_SHOT).play();
 
 		// Push the bullet to the bullet list
 		getBullets().push_back(std::move(b));
@@ -285,12 +286,12 @@ void Player::input(sf::Event& event)
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && specialShotTime.asMilliseconds() > 1000){
 
 		// Request a heavy shot bullet and set the appropriate data
-		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::heavyShot);
+		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::heavyShot);
 		b->setOwner(getType());
 		b->sprite->setPosition(sprite->getPosition().x, sprite->getPosition().y - 10);
 
 		// Play shoot sound
-		resourceHandler->getSound(ResourceHandler::Sound::FX_HEAVY_SHOT).play();
+		resourceHandler->getSound(Constants::ResourceC::Sound::FX_HEAVY_SHOT).play();
 
 		// Push the bullet to the bullet list
 		getBullets().push_back(std::move(b));
@@ -302,8 +303,10 @@ void Player::input(sf::Event& event)
 	if (event.type == sf::Event::MouseMoved)
 	{
 		// Waiting for update: https://github.com/LaurentGomila/SFML/pull/396
-		int current_x = sf::Mouse::getPosition(window).x, current_y = sf::Mouse::getPosition(window).y;
-		int elapsed_x = (window.getView().getSize().x / 2) - current_x, elapsed_y = (window.getView().getSize().y / 2) - current_y;
+		int current_x = sf::Mouse::getPosition(window).x;
+        int current_y = sf::Mouse::getPosition(window).y;
+		float elapsed_x = (window.getView().getSize().x / 2) - (float)current_x;
+        float elapsed_y = (window.getView().getSize().y / 2) - (float)current_y;
 
 		if (elapsed_x != 0 || elapsed_y != 0)
 		{
@@ -323,7 +326,10 @@ void Player::input(sf::Event& event)
 				sprite->move(0, -elapsed_y);
 			}
 
-			sf::Mouse::setPosition(sf::Vector2i((window.getView().getSize().x / 2), (window.getView().getSize().y / 2)), window);
+			sf::Mouse::setPosition(sf::Vector2i(
+			        (int)(window.getView().getSize().x / 2),
+                    (int)(window.getView().getSize().y / 2)
+                    ), window);
 		}
 	}
 }
@@ -332,7 +338,7 @@ void Player::input(sf::Event& event)
 /// Gets the player score.
 /// </summary>
 /// <returns>integer with the player score</returns>
-int Player::getPlayerScore()
+float Player::getPlayerScore() const
 {
 	return playerScore;
 }
@@ -341,10 +347,10 @@ int Player::getPlayerScore()
 /// Function for activating a power up
 /// </summary>
 /// <param name="powType">Type of the powwer up to activate</param>
-void Player::powerUp(Powerup::PowerUpType powType)
+void Player::powerUp(Constants::PowerUpType powType)
 {
 	// Health Pack Powerup
-	if (powType == Powerup::PowerUpType::HEALTH_INCREMENT)
+	if (powType == Constants::PowerUpType::HEALTH_INCREMENT)
 	{
 		if (getHealth() < getStartHealth())
 		{
@@ -353,7 +359,7 @@ void Player::powerUp(Powerup::PowerUpType powType)
 	}
 
 	// Pulsating gun Powerup
-	else if (powType == Powerup::PowerUpType::PULSATING_GUN)
+	else if (powType == Constants::PowerUpType::PULSATING_GUN)
 	{
 		pulsateGun = true;
 		pwrUpTime = sf::milliseconds(0);
@@ -362,7 +368,7 @@ void Player::powerUp(Powerup::PowerUpType powType)
 
 }
 
-int Player::getPlayerKills()
+int Player::getPlayerKills() const
 {
 	return playerKills;
 }

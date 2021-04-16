@@ -1,8 +1,10 @@
 #include "../include/Enemy.h"
 #include "../include/GameShape.h"
 #include "../include/BulletFactory.h"
-#include "../include/Bullet.h"
 #include "../include/Log.h"
+#include <cmath>
+#include <memory>
+#include <utility>
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Enemy"/> class.
@@ -21,11 +23,12 @@ Enemy::Enemy(sf::RenderWindow& window,
 	std::list<std::pair<int, std::string>> emoteQueue,
 	int type, int repeat, BulletFactory& bFactory,
 	std::list<std::unique_ptr<Bullet>>& bullets,
-	std::shared_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceManager>& resourceHandler,
 	const sf::Time& timeStep
 	) :
-	pathTemplate(path), // Const, not to be changed (The template is copyed when a path is over in repeat mode)
-	emoteQueue(emoteQueue),
+	pathTemplate(std::move(path)), // Const, not to be changed (The template is copyed when a path is over in repeat mode)
+	emoteQueue(std::move(emoteQueue)),
+	enemyType(Constants::EnemyC::Type::NONE),
 	repeat(repeat),
 	secondRot(0),
 	acceleration(0),
@@ -33,25 +36,25 @@ Enemy::Enemy(sf::RenderWindow& window,
 	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
 {
 	// Sets the type of the Shooter to enemy
-	this->shooterType = Shooter::ShooterType::ENEMY;
+	this->shooterType = Constants::ShooterType::ENEMY;
 
 	// Check which type the enemy is, from this we determine, health, total health , score value and textures,
 	if (type == 1) // REGULAR
 	{
 		setHealth(2);
 		setStartHealth(2);
-		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::STARSHIP));
-		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::ENEMY_SHIP));
-		this->setEnemyType(Enemy::EnemyType::REGULAR);
+		sprite = std::make_unique<GameShape>(Constants::GameShapeC::Type::STARSHIP);
+		sprite->setTexture(&resourceHandler->getTexture(Constants::ResourceC::Texture::ENEMY_SHIP));
+		this->setEnemyType(Constants::EnemyC::Type::REGULAR);
 		this->setScoreValue(100);
 	}
 	else if (type == 2) // Chubby Mob
 	{
 		setHealth(10);
 		setStartHealth(10);
-		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 40, 30));
-		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::CHUBBY_SHIP_TEXTURE));
-		this->setEnemyType(Enemy::EnemyType::CHUBBY);
+		sprite = std::make_unique<GameShape>(Constants::GameShapeC::Type::CIRCLE, 40, 30);
+		sprite->setTexture(&resourceHandler->getTexture(Constants::ResourceC::Texture::CHUBBY_SHIP_TEXTURE));
+		this->setEnemyType(Constants::EnemyC::Type::CHUBBY);
 		this->setScoreValue(250);
 
 	}
@@ -59,9 +62,9 @@ Enemy::Enemy(sf::RenderWindow& window,
 	{
 		setHealth(250);
 		setStartHealth(250);
-		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::BOSS));
-		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::BOSS));
-		this->setEnemyType(Enemy::EnemyType::BOSS);
+		sprite = std::make_unique<GameShape>(Constants::GameShapeC::Type::BOSS);
+		sprite->setTexture(&resourceHandler->getTexture(Constants::ResourceC::Texture::BOSS));
+		this->setEnemyType(Constants::EnemyC::Type::BOSS);
 		this->setScoreValue(500);
 
 	}
@@ -69,9 +72,9 @@ Enemy::Enemy(sf::RenderWindow& window,
 	{
 		setHealth(750);
 		setStartHealth(750);
-		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 80, 30));
-		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::BOSS_DEATHSTAR_TEXTURE));
-		this->setEnemyType(Enemy::EnemyType::DEATHSTAR);
+		sprite = std::make_unique<GameShape>(Constants::GameShapeC::Type::CIRCLE, 80, 30);
+		sprite->setTexture(&resourceHandler->getTexture(Constants::ResourceC::Texture::BOSS_DEATHSTAR_TEXTURE));
+		this->setEnemyType(Constants::EnemyC::Type::DEATHSTAR);
 		this->setScoreValue(12000);
 	}
 
@@ -116,8 +119,8 @@ void Enemy::draw()
 
 
 	// Calculates the health bar percentage
-	float percent = (100.0f / getStartHealth()) * getHealth();
-	float barWidth = (this->sprite->getGlobalBounds().width) / 100.0f;
+    float percent = (100.0f / (float)getStartHealth()) * (float)getHealth();
+    float barWidth = (this->sprite->getGlobalBounds().width) / 100.0f;
 
 	// Draws the health bar
 	sf::RectangleShape healthBar;
@@ -154,10 +157,10 @@ void Enemy::shoot(int shoot)
 	{
 
 		// Check if its a regular enemy
-		if (getEnemyType() == Enemy::EnemyType::REGULAR)
+		if (getEnemyType() == Constants::EnemyC::Type::REGULAR)
 		{
 			// Gets a bullet and set the appropriate data, then push to the bulletlist
-			std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
+			std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::standardShot);
 			b->setOwner(this->getType());
 			b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y - 10);
 			getBullets().push_back(std::move(b));
@@ -165,11 +168,11 @@ void Enemy::shoot(int shoot)
 		}
 
 		// Check if its a Chubby enemy
-		else if (getEnemyType() == Enemy::EnemyType::CHUBBY)
+		else if (getEnemyType() == Constants::EnemyC::Type::CHUBBY)
 		{
 			// Retrieve 3 bullets and defines a start position for the bullet.
-			std::list<std::unique_ptr<Bullet>> bat = getBulletFactory().requestBatch(3, Bullet::Type::standardShot);
-			int startX = (this->sprite->getPosition().x) - (this->sprite->getGlobalBounds().width / 2) + 10;
+			std::list<std::unique_ptr<Bullet>> bat = getBulletFactory().requestBatch(3, Constants::BulletType::standardShot);
+			auto startX = sprite->getPosition().x - (this->sprite->getGlobalBounds().width / 2) + 10;
 
 			// Iterate through the bullet request , set properties and push back to bullet list
 			for (auto& i : bat)
@@ -184,12 +187,12 @@ void Enemy::shoot(int shoot)
 		}
 
 		// Check if its a BOSS enemy
-		else if (getEnemyType() == Enemy::EnemyType::BOSS)
+		else if (getEnemyType() == Constants::EnemyC::Type::BOSS)
 		{
 
 			// Gets a bullet and set the appropriate data, then push to the bulletlist
-			std::list<std::unique_ptr<Bullet>> bat = getBulletFactory().requestBatch(10, Bullet::Type::standardShot);
-			int startX = (this->sprite->getPosition().x) - (this->sprite->getGlobalBounds().width / 2);
+			std::list<std::unique_ptr<Bullet>> bat = getBulletFactory().requestBatch(10, Constants::BulletType::standardShot);
+			float startX = (this->sprite->getPosition().x) - (this->sprite->getGlobalBounds().width / 2);
 
 			// Iterate through the bullet request , set properties and push back to bullet list
 			for (auto& i : bat)
@@ -204,18 +207,18 @@ void Enemy::shoot(int shoot)
 		}
 
 		// Check if its a DEATHSTAR enemy
-		else if (getEnemyType() == Enemy::EnemyType::DEATHSTAR)
+		else if (getEnemyType() == Constants::EnemyC::Type::DEATHSTAR)
 		{
 
 			if (shoot == 3 || shoot == 5) // Special attack
 			{
-				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
+				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::standardShot);
 				b->setOwner(this->getType());
 
 				// Rotational Lazor (Lol)
 				if (shoot == 5)
 				{
-					secondRot += 0.004f * timeStep.asMilliseconds();
+					secondRot += 0.004f * (float)timeStep.asMilliseconds();
 					b->setRotation(secondRot, sf::Vector2f(350.f, 350.0f));
 					b->sprite->setFillColor(sf::Color::Red);
 					b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
@@ -224,7 +227,7 @@ void Enemy::shoot(int shoot)
 				{
 					b->setSpeed(sf::Vector2f(0.0f, 350.0f));
 					b->sprite->setFillColor(sf::Color::Green);
-					b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y + this->sprite->getRadius());
+					b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y + (float)this->sprite->getRadius());
 				}
 				getBullets().push_back(std::move(b));
 
@@ -234,11 +237,11 @@ void Enemy::shoot(int shoot)
 			// Circular shoot pattern
 			if (shoot == 4)
 			{
-				for (float i = 0; i < 360; i += 2)
+				for (int i = 0; i < 360; i += 2)
 				{
-					std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Bullet::Type::standardShot);
+					std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::standardShot);
 					b->setOwner(this->getType());
-					b->setRotation(i + secondRot, sf::Vector2f(150, 150));
+					b->setRotation((float)i + secondRot, sf::Vector2f(150, 150));
 					b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
 					getBullets().push_back(std::move(b));
 
@@ -259,7 +262,7 @@ void Enemy::emotes()
 	// Emote queue's emotes
 	if (!emoteQueue.empty())
 	{
-		if (emoteQueue.front().first > (int)((100.0f / getStartHealth()) * getHealth()))
+		if (emoteQueue.front().first > (int)((100.0f / (float)getStartHealth()) * (float)getHealth()))
 		{
 			std::string soundToPlay = emoteQueue.front().second;
 			emoteQueue.pop_front();
@@ -286,13 +289,13 @@ void Enemy::movement()
 
 	// Start point of the path
 	sf::Vector2f length;
-	length.x = abs(this->currentPath.x - path.front().x);
-	length.y = abs(this->currentPath.y - path.front().y);
+	length.x = std::abs(this->currentPath.x - path.front().x);
+	length.y = std::abs(this->currentPath.y - path.front().y);
 
 	// End point of the path
 	sf::Vector2f currentPosition;
-	currentPosition.x = abs(this->currentPath.x - this->sprite->getPosition().x);
-	currentPosition.y = abs(this->currentPath.y - this->sprite->getPosition().y);
+	currentPosition.x = std::abs(this->currentPath.x - this->sprite->getPosition().x);
+	currentPosition.y = std::abs(this->currentPath.y - this->sprite->getPosition().y);
 
 
 	// The difference between the goto and current position
@@ -304,8 +307,10 @@ void Enemy::movement()
 	if (this->currentPath.acceleration != 0)
 	{
 		// Accelerate
-		float accelerateTick = this->currentPath.acceleration * 0.18;
-		if (this->acceleration + accelerateTick > 0) this->acceleration += this->currentPath.acceleration * 0.18;
+		float accelerateTick = this->currentPath.acceleration * 0.18f;
+		if (this->acceleration + accelerateTick > 0){
+            this->acceleration += this->currentPath.acceleration * 0.18f;
+		}
 		else this->acceleration = 0;
 	}
 	else
@@ -313,7 +318,7 @@ void Enemy::movement()
 		// Deaccelerate
 		if (this->acceleration >= 1)
 		{
-			this->acceleration -= this->currentPath.acceleration * 0.18;
+			this->acceleration -= this->currentPath.acceleration * 0.18f;
 		}
 	}
 
@@ -415,7 +420,7 @@ void Enemy::process()
 	// If health is 0, play death sound and set deleted status.
 	if (getHealth() <= 0){
 		// Play Death Sound
-		resourceHandler->getSound(ResourceHandler::Sound::FX_ENEMY_DEATH).play();
+		resourceHandler->getSound(Constants::ResourceC::Sound::FX_ENEMY_DEATH).play();
 		setDeleted(true);
 	}
 }
@@ -425,7 +430,7 @@ void Enemy::process()
 /// Gets the repeat.
 /// </summary>
 /// <returns>Repeat flag</returns>
-int Enemy::getRepeat()
+int Enemy::getRepeat() const
 {
 	return this->repeat;
 }
@@ -434,7 +439,7 @@ int Enemy::getRepeat()
 /// Sets the type of the enemy.
 /// </summary>
 /// <param name="type">The enemy type.</param>
-void Enemy::setEnemyType(Enemy::EnemyType type)
+void Enemy::setEnemyType(Constants::EnemyC::Type type)
 {
 	this->enemyType = type;
 }
@@ -443,7 +448,7 @@ void Enemy::setEnemyType(Enemy::EnemyType type)
 /// Gets the type of the enemy.
 /// </summary>
 /// <returns>Returns the enemy type</returns>
-Enemy::EnemyType Enemy::getEnemyType()
+Constants::EnemyC::Type Enemy::getEnemyType()
 {
 	return this->enemyType;
 }

@@ -14,7 +14,7 @@
 Shooter::Shooter(sf::RenderWindow& window,
 	BulletFactory& bFactory,
 	std::list<std::unique_ptr<Bullet>>& bullets,
-	std::shared_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceManager>& resourceHandler,
 	const sf::Time& timeStep) :
 	Object(window),
 	bullets(bullets),
@@ -36,7 +36,7 @@ void Shooter::setScoreValue(float value)
 /// Retrieves the score value.
 /// </summary>
 /// <returns>Score value as an float</returns>
-float Shooter::getScoreValue()
+float Shooter::getScoreValue() const
 {
 	return scoreValue;
 }
@@ -64,7 +64,7 @@ void Shooter::setStartHealth(int value)
 /// Retrieves the start health.
 /// </summary>
 /// <returns>Start health</returns>
-const int Shooter::getStartHealth()
+int Shooter::getStartHealth() const
 {
 	return startHealth;
 }
@@ -74,7 +74,7 @@ const int Shooter::getStartHealth()
 /// Retrieves the health.
 /// </summary>
 /// <returns>Current Health value</returns>
-const int Shooter::getHealth()
+int Shooter::getHealth() const
 {
 	return health;
 }
@@ -88,7 +88,7 @@ void Shooter::hitDetection()
 	if (!getBullets().empty())
 	{
 		// Set default hit bool to false
-		bool wasHit = false;
+		bool wasHit;
 
 		// Iterate through each of the bullets
 		for (auto& i : getBullets())
@@ -97,9 +97,9 @@ void Shooter::hitDetection()
 			if (getType() == i->getOwner()) continue;
 
 			// Checks if the bullet is to far away to be able to the ship
-			int distDx = abs(sprite->getPosition().x - i->sprite->getPosition().x);
-			int distDy = abs(sprite->getPosition().y - i->sprite->getPosition().y);
-			if (!(distDx + 5 < sprite->getGlobalBounds().width) || !(distDy + 5 < sprite->getGlobalBounds().width)) continue;
+			float distDx = std::abs(sprite->getPosition().x - i->sprite->getPosition().x);
+            float distDy = std::abs(sprite->getPosition().y - i->sprite->getPosition().y);
+			if (distDx + 5 >= sprite->getGlobalBounds().width || distDy + 5 >= sprite->getGlobalBounds().width) continue;
 
 			// Do collision detection
 			wasHit = sat(sprite, i->sprite);
@@ -121,7 +121,7 @@ void Shooter::hitDetection()
 /// Gets the type of the shooter
 /// </summary>
 /// <returns>THIS shooterType</returns>
-Shooter::ShooterType Shooter::getType()
+Constants::ShooterType Shooter::getType()
 {
 	return this->shooterType;
 }

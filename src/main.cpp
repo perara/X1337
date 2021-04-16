@@ -1,15 +1,16 @@
 #include "../include/GameEngine.h"
-#include <SFML\Audio.hpp>
-#include<windows.h>
+//#include <windows.h>
 int main()
 {
 
-#if !_DEBUG
-	HWND hwnd_win = GetForegroundWindow();
-	ShowWindow(hwnd_win, SW_HIDE);
-#endif
+//#if !_DEBUG
+//	HWND hwnd_win = GetForegroundWindow();
+//	ShowWindow(hwnd_win, SW_HIDE);
+//#endif
 
-	GameEngine* gaym = new GameEngine();
+	GameEngine g;
 
+    // Start Gameloop
+    g.runGame();
 	return 0;
 }

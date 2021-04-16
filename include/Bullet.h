@@ -9,32 +9,31 @@ class Bullet : public Object
 {
 public:
 
-	/// Defines the Bullet Type in an enumerable. This is all implemented bullets in the Game.
-	const enum Type {
-		standardShot = 1,
-		heavyShot = 5
-	};
 
-	Bullet(sf::RenderWindow& window, Bullet::Type, const sf::Time& timeStep, std::shared_ptr<ResourceHandler>& resourceHandler);
+
+	Bullet(
+	        sf::RenderWindow& window, Constants::BulletType,
+	        const sf::Time& timeStep, std::shared_ptr<ResourceManager>& resourceHandler
+	        );
 
 	virtual void process();
 
-	// Bullet Resetter
+	// Bullet Reset
 	void resetObject();
 
 	// Setters/Getters for properties
-	Shooter::ShooterType getOwner();
-	void setOwner(Shooter::ShooterType owner);
+    Constants::ShooterType getOwner();
+	void setOwner(Constants::ShooterType owner);
 	void setRotation(float degree, sf::Vector2f speed);
-	Bullet::Type getBulletType();
+	Constants::BulletType getBulletType();
 	void setSpeed(sf::Vector2f);
 
 private:
-	Bullet::Type bulletType;
-	Shooter::ShooterType owner;
+    Constants::BulletType bulletType;
+	Constants::ShooterType owner;
 
-	int speedX;
-	int speedY;
+    float speedX{};
+    float speedY{};
 	float deg; // Degree on bullet rotation
 
 	const sf::Time& timeStep;

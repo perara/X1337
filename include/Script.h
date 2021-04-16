@@ -1,7 +1,7 @@
 #pragma once
 #include <queue>
 #include <list>
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <memory>
 #include "Powerup.h"
 #include "VectorN.h"
@@ -9,7 +9,7 @@
 class Shooter;
 class BulletFactory;
 class Bullet;
-class ResourceHandler;
+class ResourceManager;
 
 /// <summary>
 /// The script class defines a script loaded from file. It is widely used in the ResourceHandler
@@ -50,7 +50,7 @@ public:
 	void addPowerUp(int delay, VectorN spawnPoint, int type, int repeat);
 
 	// Init
-	bool getInit();
+	bool getInit() const;
 	void setInit(bool);
 
 	// Process
@@ -59,7 +59,7 @@ public:
 		std::list<std::shared_ptr<Powerup>>& powerups,
 		std::list<std::unique_ptr<Bullet>>& bullets,
 		BulletFactory& bFactory,
-		std::shared_ptr<ResourceHandler>& resourceHandler,
+		std::shared_ptr<ResourceManager>& resourceHandler,
 		const sf::Time& timeStep);
 
 	/// Setter and getter for the title of the script (Defined in the xml file)
@@ -68,7 +68,7 @@ public:
 
 	/// Setter and getter for the enum value set in ResourceHandler
 	void setScriptEnumVal(int);
-	int getScriptEnumVal();
+	int getScriptEnumVal() const;
 
 	/// Setter and getter for Audio description of the script
 	void setAudioDesc(std::string);	
@@ -79,8 +79,8 @@ public:
 	std::string getLore();
 
 	///  Get for enemy list size (start and current)
-	const int getStartEnemyListSize();
-	const int getEnemyListSize();
+	int getStartEnemyListSize() const;
+	int getEnemyListSize();
 
 	/// Sets and Gets the protrait String
 	void setPortraitString(std::string);

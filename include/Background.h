@@ -1,9 +1,9 @@
 #pragma once
-#include <SFML\Graphics\Image.hpp>
-#include <SFML\Graphics\Texture.hpp>
-#include <SFML\Graphics\RenderWindow.hpp>
-#include <SFML\Graphics\Sprite.hpp>
-#include <SFML\Graphics\CircleShape.hpp>
+#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 #include <queue>
 #include <list>
 #include <memory>

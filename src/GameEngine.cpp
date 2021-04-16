@@ -1,7 +1,7 @@
 #include "../include/GameEngine.h"
-#include "../include/ResourceHandler.h"
 #include "../include/Menu.h"
-#include "../include/log.h"
+#include "../include/Log.h"
+#include <memory>
 
 /// <summary>
 /// Initializes a new instance of the <see cref="GameEngine"/> class.
@@ -14,19 +14,19 @@ timeStep(sf::seconds(1.0f / 240.f)), // Set timestep to 60 FPS
 
 
 // Declare all of the views
-fullView(sf::View(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y))),
+fullView(sf::View(sf::FloatRect(0, 0, static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)))),
 mainView(sf::View(sf::FloatRect(0, 0, 800, 600))),
 playerBar(sf::View(sf::FloatRect(0, 0, 800, 30))),
 menuGameDemoView(sf::View(sf::FloatRect(0, 0, 800, 600))),
 
 // Create a new Resource Handler (smart_ptr)
-resourceHandler(new ResourceHandler(window)),
+resourceHandler(new ResourceManager(window)),
 
 event(sf::Event()),
 mute(false),
 fullscreen(false),
 
-state(GameEngine::State::INIT_MAIN_MENU)
+state(GameState::INIT_MAIN_MENU)
 {
 	// Window configuration
 	//window.setFramerateLimit(120);
@@ -45,14 +45,14 @@ state(GameEngine::State::INIT_MAIN_MENU)
 	resourceHandler->init();
 
 	// Set mouse properties
-	sf::Mouse::setPosition(sf::Vector2i((window.getView().getSize().x / 2), (window.getView().getSize().y / 2)), window); // Default mouse location
+	sf::Mouse::setPosition(sf::Vector2i(
+	        (int)(window.getView().getSize().x / 2.0),
+	        (int)(window.getView().getSize().y / 2.0)),
+                        window); // Default mouse location
 	window.setMouseCursorVisible(false);
 
 	// Init Menu;
-	menu = (std::unique_ptr<Menu>(new Menu(window, state, resourceHandler)));
-
-	// Start Gameloop
-	this->runGame();
+	menu = std::make_unique<Menu>(window, state, resourceHandler);
 }
 
 /// <summary>
@@ -135,9 +135,14 @@ void GameEngine::draw()
 
 		// Draw the Game Over with the following offset
 		if (getState() == GameState::GAMEWIN)
-			this->menu->drawPause((window.getView().getSize().x / 3), 100 + (window.getView().getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
+			this->menu->drawPause(
+			        (int)(window.getView().getSize().x / 3),
+                    (int)(100 + (window.getView().getSize().y / 2) * -1)); // Small workaround so we dont have to take in offset into ->draw();
 		if (getState() == GameState::PAUSE || getState() == GameState::GAMEOVER)
-			this->menu->drawPause((window.getView().getSize().x / 3), (window.getView().getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
+
+			this->menu->drawPause(
+			        (int)(window.getView().getSize().x / 3),
+                    (int)((window.getView().getSize().y / 2) * -1)); // Small workaround so we dont have to take in offset into ->draw();
 
 	}
 
@@ -177,7 +182,7 @@ void GameEngine::process()
 		LOGD("Initializing a new game.");
 		setState(GameState::GAME);
 		resourceHandler->stopAllSound();
-		world.reset(new World(
+		world = std::make_unique<World>(
 			window,
 			resourceHandler,
 			timeStep,
@@ -186,9 +191,9 @@ void GameEngine::process()
 			menu->getHardmodeSelected(),
 
 			// This checks if DEATH_STAR theme is selected, and selects the corresponding music. Consider revising, Bad sctructure wise
-			(menu->getStageSelectOption() - 1 == ResourceHandler::Scripts::DEATH_STAR) ?
-			resourceHandler->getSound(ResourceHandler::Sound::MUSIC_DEATH_STAR_THEME) :
-			resourceHandler->getSound(ResourceHandler::Sound::MUSIC_INGAME)));
+			(menu->getStageSelectOption() - 1 == Constants::ResourceC::Scripts::DEATH_STAR) ?
+			resourceHandler->getSound(Constants::ResourceC::Sound::MUSIC_DEATH_STAR_THEME) :
+			resourceHandler->getSound(Constants::ResourceC::Sound::MUSIC_INGAME));
 	}
 	else if (getState() == GameState::INIT_NEXT_STAGE)
 	{
@@ -210,13 +215,13 @@ void GameEngine::process()
 		if (world != nullptr) resourceHandler->stopAllSound();
 
 		// Reset the world
-		world.reset(new World(window,
+		world = std::make_unique<World>(window,
 			resourceHandler,
 			timeStep,
 			true,
 			-1,
 			false,
-			resourceHandler->getSound(ResourceHandler::Sound::MUSIC_MENU_SONG)));
+			resourceHandler->getSound(Constants::ResourceC::Sound::MUSIC_MENU_SONG));
 	}
 
 	// Process the GAEMOVER STATE
@@ -322,9 +327,9 @@ void GameEngine::input()
 /// Sets the state.
 /// </summary>
 /// <param name="state">The desired state.</param>
-void GameEngine::setState(GameState state)
+void GameEngine::setState(GameState _state)
 {
-	this->state = state;
+	this->state = _state;
 }
 
 /// <summary>
@@ -341,7 +346,7 @@ GameState& GameEngine::getState()
 /// Gets the resource handler.
 /// </summary>
 /// <returns>Resource Handler reference</returns>
-std::shared_ptr<ResourceHandler>& GameEngine::getResourceHandler()
+std::shared_ptr<ResourceManager>& GameEngine::getResourceHandler()
 {
 	return this->resourceHandler;
 }
@@ -356,15 +361,15 @@ void GameEngine::drawOpts()
 	//######### Fullscreen #############//
 	//##################################//
 	sf::Sprite sprScreen;
-	sprScreen.setTexture(resourceHandler->getTexture(ResourceHandler::Texture::MONITOR_ICON));
+	sprScreen.setTexture(resourceHandler->getTexture(Constants::ResourceC::Texture::MONITOR_ICON));
 	sprScreen.setScale(0.30f, 0.30f);
 	sprScreen.setPosition(window.getView().getSize().x - 150, window.getView().getSize().y - 24);
 	window.draw(sprScreen);
 
 	sf::Text txtScreen;
-	txtScreen.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtScreen.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 	txtScreen.setString("n");
-	txtScreen.setColor(sf::Color(139, 137, 137));
+	txtScreen.setFillColor(sf::Color(139, 137, 137));
 	txtScreen.setCharacterSize(15);
 	txtScreen.setPosition(sprScreen.getPosition().x + (sprScreen.getGlobalBounds().width / 2) - 4, sprScreen.getPosition().y - 3);
 	window.draw(txtScreen);
@@ -376,9 +381,9 @@ void GameEngine::drawOpts()
 	//##################################//
 
 	sf::Text txtMute;
-	txtMute.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtMute.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 	txtMute.setString("m");
-	txtMute.setColor(sf::Color(139, 137, 137));
+	txtMute.setFillColor(sf::Color(139, 137, 137));
 	txtMute.setCharacterSize(15);
 	txtMute.setPosition(sprScreen.getPosition().x + sprScreen.getGlobalBounds().width + 10, sprScreen.getPosition().y);
 	window.draw(txtMute);
@@ -386,11 +391,11 @@ void GameEngine::drawOpts()
 	sf::Sprite sprMute;
 	if (mute)
 	{
-		sprMute.setTexture(resourceHandler->getTexture(ResourceHandler::Texture::AUDIO_OFF));
+		sprMute.setTexture(resourceHandler->getTexture(Constants::ResourceC::Texture::AUDIO_OFF));
 	}
 	else
 	{
-		sprMute.setTexture(resourceHandler->getTexture(ResourceHandler::Texture::AUDIO_ON));
+		sprMute.setTexture(resourceHandler->getTexture(Constants::ResourceC::Texture::AUDIO_ON));
 	}
 	sprMute.setScale(0.20f, 0.20f);
 	sprMute.setPosition(txtMute.getPosition().x + 15, txtMute.getPosition().y);

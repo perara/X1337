@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML\Graphics\RenderWindow.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <memory>
 
 class GameShape;
@@ -14,7 +14,7 @@ public:
 	virtual ~Object();
 
 	// Delete getter/setter
-	bool getDeleted();
+	bool getDeleted() const;
 	void setDeleted(bool);
 
 	/// GameShape pointer which defines an sprite for a object.
@@ -29,7 +29,7 @@ protected:
 	sf::RenderWindow& window;
 
 	/// Hyperplane separation theorem for hit detection
-	bool sat(std::shared_ptr<GameShape> c1, std::shared_ptr<GameShape> c2);
+	static bool sat(const std::shared_ptr<GameShape>& c1, const std::shared_ptr<GameShape>& c2);
 private:
 	/// Boolean which describes if the Object is up for/is deleted.
 	bool deleted;

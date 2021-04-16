@@ -1,6 +1,7 @@
 #pragma once
 #include "Shooter.h"
 #include "Powerup.h"
+#include "Constants.h"
 #include <memory>
 
 class BulletFactory;
@@ -18,7 +19,7 @@ public:
 		int radius,
 		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
-		std::shared_ptr<ResourceHandler>& resourceHandler,
+		std::shared_ptr<ResourceManager>& resourceHandler,
 		const sf::Time& timeStep,
 		const bool hardmode,
 		std::list<std::shared_ptr<Shooter>>&
@@ -35,21 +36,23 @@ public:
 	void drawStats(std::list<std::shared_ptr<HighScoreItem>>&);
 
 	// Retrieves the player score
-	int getPlayerScore();
+    float getPlayerScore() const;
 
 
 	// Retrieves the player kills (number of enemy kills)
-	int getPlayerKills();
+	int getPlayerKills() const;
 
 	// Sets a powerup for the player (Func)
-	void powerUp(Powerup::PowerUpType);
+	void powerUp(Constants::PowerUpType);
 private:
 
 	/// The player score
-	int playerScore;
+	float playerScore;
 
 	// Enemy Kills
 	int playerKills;
+
+	int radius;
 
 	// Detects window edges (basicly window hit detection)
 	void detectEdge();

@@ -1,5 +1,7 @@
 #include "../include/Powerup.h"
-#include "../include/ResourceHandler.h"
+
+#include <memory>
+#include "../include/ResourceManager.h"
 #include "../include/Player.h"
 #include "../include/GameShape.h"
 
@@ -13,28 +15,28 @@
 /// <param name="timeStep">The time step.</param>
 Powerup::Powerup(
 	sf::RenderWindow& window,
-	VectorN startPoint,
+	const VectorN& startPoint,
 	int type,
-	std::shared_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceManager>& resourceHandler,
 	const sf::Time& timeStep
 	) :
 	resourceHandler(resourceHandler),
-	type((Powerup::PowerUpType)type),
+	type((Constants::PowerUpType)type),
 	Object(window),
 	timeStep(timeStep),
 	speedX(0),
 	speedY(150)
 {
 	// Determine which type the poweup is, set the desired texture.
-	if (type == Powerup::PowerUpType::HEALTH_INCREMENT)
+	if (type == Constants::PowerUpType::HEALTH_INCREMENT)
 	{
-		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 10, 20));
-		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::HEALTH_KIT));
+		sprite = std::make_unique<GameShape>(Constants::GameShapeC::Type::CIRCLE, 10, 20);
+		sprite->setTexture(&resourceHandler->getTexture(Constants::ResourceC::Texture::HEALTH_KIT));
 	}
-	else if (type == Powerup::PowerUpType::PULSATING_GUN)
+	else if (type == Constants::PowerUpType::PULSATING_GUN)
 	{
-		sprite = std::unique_ptr<GameShape>(new GameShape(GameShape::ShapeType::CIRCLE, 20, 20));
-		sprite->setTexture(&resourceHandler->getTexture(ResourceHandler::Texture::PULSE_GUN));
+		sprite = std::make_unique<GameShape>(Constants::GameShapeC::Type::CIRCLE, 20, 20);
+		sprite->setTexture(&resourceHandler->getTexture(Constants::ResourceC::Texture::PULSE_GUN));
 	}
 
 	// Set the position of the sprite powerup
@@ -77,7 +79,7 @@ bool Powerup::hitDetection(std::shared_ptr<Player>& player)
 	if (retVal)
 	{
 		// Set status to deleted
-		resourceHandler->getSound(ResourceHandler::Sound::FX_PICKUP_HEALTH).play();
+		resourceHandler->getSound(Constants::ResourceC::Sound::FX_PICKUP_HEALTH).play();
 		setDeleted(true);
 	}
 
@@ -88,7 +90,7 @@ bool Powerup::hitDetection(std::shared_ptr<Player>& player)
 /// Gets the type of the power up.
 /// </summary>
 /// <returns>Returns the type of the power up</returns>
-Powerup::PowerUpType Powerup::getPowerUpType()
+Constants::PowerUpType Powerup::getPowerUpType()
 {
 	return type;
 }

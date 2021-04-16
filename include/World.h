@@ -4,9 +4,10 @@
 #include "BulletFactory.h"
 #include "Player.h"
 #include "Script.h"
-#include "ResourceHandler.h"
-#include <memory>
+#include "ResourceManager.h"
 #include "Powerup.h"
+
+#include <memory>
 
 /// <summary>
 /// World class is a construction which runs Script and Player. It has a Input, Process, and Draw Function for this purpose.
@@ -15,9 +16,8 @@ class World : public Scene{
 public:
 
 	// Constructor and Deconstructor
-	World();
 	World(sf::RenderWindow& window,
-		std::shared_ptr<ResourceHandler>& resourceHandler,
+		std::shared_ptr<ResourceManager>& resourceHandler,
 		const sf::Time& timeStep,
 		const bool demo,
 		const int scriptNum,
@@ -31,7 +31,7 @@ public:
 	virtual void input(sf::Event&);
 
 	void drawStats(); // Draw Player stats
-	int isGameOver();
+	int isGameOver() const;
 	void startSound();
 	void stopSound();
 

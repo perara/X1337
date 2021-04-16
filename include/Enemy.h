@@ -10,17 +10,6 @@ class Enemy : public Shooter
 {
 public:
 
-	/// Enumerable which contains all EnemyType 's implemented into the game.
-	const enum EnemyType
-	{
-		REGULAR = 1,
-		CHUBBY = 2,
-		BOSS = 3,
-		DEATHSTAR = 4,
-
-		POWERUP_HEALTH = -10,
-		SHOOTERTYPECOUNT
-	};
 
 	Enemy(sf::RenderWindow& window,
 		std::queue<VectorN> path,
@@ -28,7 +17,7 @@ public:
 		int type, int repeat,
 		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
-		std::shared_ptr<ResourceHandler>& resourceHandler,
+		std::shared_ptr<ResourceManager>& resourceHandler,
 		const sf::Time& timeStep);
 	~Enemy();
 
@@ -36,12 +25,12 @@ public:
 	virtual void draw();
 	virtual void process();
 
-	Enemy::EnemyType getEnemyType();
+	Constants::EnemyC::Type getEnemyType();
 
 private:
 	// Weither to repeat path or not
 	int repeat;
-	int getRepeat();
+	int getRepeat() const;
 
 	// Acceleration and speed
 	float acceleration;
@@ -74,8 +63,8 @@ private:
 	void shootProcess();
 
 	// Variable for this enemy's type
-	Enemy::EnemyType enemyType;
-	void setEnemyType(Enemy::EnemyType);
+    Constants::EnemyC::Type enemyType;
+	void setEnemyType(Constants::EnemyC::Type);
 
 	float secondRot;
 };

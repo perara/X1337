@@ -1,10 +1,11 @@
 #pragma once
 #include "Object.h"
 #include <memory>
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include "VectorN.h"
+#include "Constants.h"
 
-class ResourceHandler;
+class ResourceManager;
 class Bullet;
 class Player;
 class BulletFactory;
@@ -16,18 +17,11 @@ class Powerup : public Object
 {
 public:
 
-	/// PowerUpType is an enumerable which contains current implemented Powerup 's 
-	const enum PowerUpType
-	{
-		HEALTH_INCREMENT = -10,
-		PULSATING_GUN = -11
-	};
-
 	Powerup(
 		sf::RenderWindow& window,
-		VectorN startPoint,
+		const VectorN& startPoint,
 		int type,
-		std::shared_ptr<ResourceHandler>& resourceHandler,
+		std::shared_ptr<ResourceManager>& resourceHandler,
 		const sf::Time& timeStep
 		);
 
@@ -35,7 +29,7 @@ public:
 
 	bool hitDetection(std::shared_ptr<Player>&);
 
-	Powerup::PowerUpType getPowerUpType();
+	Constants::PowerUpType getPowerUpType();
 
 private:
 	int speedX;
@@ -45,8 +39,8 @@ private:
 
 	void doAction(std::shared_ptr<Player>& player);
 
-	Powerup::PowerUpType type;
+    Constants::PowerUpType type;
 
-	std::shared_ptr<ResourceHandler>& resourceHandler;
+	std::shared_ptr<ResourceManager>& resourceHandler;
 
 };

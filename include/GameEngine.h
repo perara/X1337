@@ -1,13 +1,12 @@
 #pragma once
-#include <SFML\Graphics\RenderWindow.hpp>
-#include <SFML\System\Time.hpp>
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Time.hpp>
+#include <SFML/Graphics.hpp>
 #include <memory>
 #include "World.h"
+#include "Menu.h"
+#include "Constants.h"
 
-class Menu;
-
-#define GameState GameEngine::State
 
 /// <summary>
 /// GameEngine runs the game. This class serves a game loop which runs until game end. All state is handler in this class.
@@ -16,36 +15,17 @@ class GameEngine{
 public:
 	GameEngine();
 
-	/// State Enumerable which contains all possible states for the GameEngine, World and Menu.
-	enum State{
-		GAME,
-		INIT_GAME,
-		INIT_MAIN_MENU,
-		STAGE_SELECT,
-		DIFFICULTY_SELECT,
-		MAIN_MENU,
-		OPTIONS,
-		CREDITS,
-		HIGHSCORE,
-		PAUSE,
-		GAMEOVER,
-
-
-		GAMEWIN,
-		INIT_NEXT_STAGE,
-
-	};
 
 	// State getter/setter
 	void setState(GameState state);
 	GameState& getState();
 
 	// Resource Handler getter/setter
-	std::shared_ptr<ResourceHandler>& GameEngine::getResourceHandler();
+	std::shared_ptr<ResourceManager>& getResourceHandler();
+
+    void runGame();
 
 private:
-	void runGame();
-	void gameLoop();
 
 	void process();
 	void draw();
@@ -57,7 +37,7 @@ private:
 
 	std::unique_ptr<World> world;
 	std::unique_ptr<Menu> menu;
-	std::shared_ptr<ResourceHandler> resourceHandler;
+	std::shared_ptr<ResourceManager> resourceHandler;
 
 	const sf::Time timeStep;
 	sf::Time elapsedTime;
@@ -71,6 +51,6 @@ private:
 	sf::View menuGameDemoView;
 	sf::View playerBar;
 
-	State state;
+	GameState state;
 	bool fullscreen;
 };

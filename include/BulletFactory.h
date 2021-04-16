@@ -1,11 +1,11 @@
 #pragma once
-#include <SFML\Graphics\RenderWindow.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <list>
 #include <map>
 #include <memory>
 #include "Bullet.h"
 
-class ResourceHandler;
+class ResourceManager;
 
 /// <summary>
 /// This is a factory which produces a set amount of bullets and then serves when requested. This class can serve multiple Bullet (s) in a batch.
@@ -15,32 +15,28 @@ public:
 
 	BulletFactory(sf::RenderWindow& window,
 		int quantity,
-		std::list<std::unique_ptr<Bullet>>& bullets,
 		const sf::Time& timeStep,
-		std::shared_ptr<ResourceHandler>& resourceHandler);
+		std::shared_ptr<ResourceManager>& resourceHandler);
 
 	// Returners
 	void returnObject(std::unique_ptr<Bullet>& bullet);
 
 	// Requesters
-	std::list<std::unique_ptr<Bullet>> requestBatch(int quantity, Bullet::Type type);
-	std::unique_ptr<Bullet> requestObject(Bullet::Type type);
+	std::list<std::unique_ptr<Bullet>> requestBatch(int quantity, Constants::BulletType type);
+	std::unique_ptr<Bullet> requestObject(Constants::BulletType type);
 
 private:
 	// Initial quantity of the Bullet Factory
 	int initQuantity;
 
 	// Producers
-	void produceObjects(Bullet::Type type, int quantity);
-
-	// Bullet list from World.cpp
-	std::list<std::unique_ptr<Bullet>>& bullets;
+	void produceObjects(Constants::BulletType type, int quantity);
 
 	// Bullet FACTORY objects
-	std::map<Bullet::Type, std::list<std::unique_ptr<Bullet>>> objects;
+	std::map<Constants::BulletType, std::list<std::unique_ptr<Bullet>>> objects;
 
 	// Dependency injected
 	sf::RenderWindow& window;
 	const sf::Time& timeStep;
-	std::shared_ptr<ResourceHandler>& resourceHandler;
+	std::shared_ptr<ResourceManager>& resourceHandler;
 };

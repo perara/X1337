@@ -1,5 +1,7 @@
 #include "../include/World.h"
-#include "../include/ResourceHandler.h"
+
+#include <memory>
+#include "../include/ResourceManager.h"
 #include "../include/Player.h"
 #include "../include/Enemy.h"
 #include "../include/Bullet.h"
@@ -20,7 +22,7 @@
 /// <param name="hardMode">Weither its hardmode or not.</param>
 /// <param name="ingameSong">Selected ingame sound</param>
 World::World(sf::RenderWindow& window,
-	std::shared_ptr<ResourceHandler>& resourceHandler,
+	std::shared_ptr<ResourceManager>& resourceHandler,
 	const sf::Time& timeStep,
 	const bool demo,
 	const int scriptNum,
@@ -29,27 +31,27 @@ World::World(sf::RenderWindow& window,
 	:
 	Scene(window, resourceHandler),
 	bg(Background(window)),
-	bFactory(BulletFactory(window, 1000, bullets, timeStep, resourceHandler)),
+	bFactory(BulletFactory(window, 1000, timeStep, resourceHandler)),
 	timeStep(timeStep),
-	countdownSong(resourceHandler->getSound(ResourceHandler::Sound::MUSIC_COUNTDOWN)),
+	countdownSong(resourceHandler->getSound(Constants::ResourceC::Sound::MUSIC_COUNTDOWN)),
 	ingameSong(ingameSong),
 	gameOver(0),
 	stageProgress(0),
 	hardMode(hardMode),
 	demo(demo),
-	player(std::shared_ptr<Player>(new Player(window, sf::Vector2f(100, 250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode, objects)))
+	player(std::make_shared<Player>(window, sf::Vector2f(100, 250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode, objects))
 {
 
 	if (demo)
 	{
-		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND2), false);
-		script = resourceHandler->getScript(ResourceHandler::Scripts::GAME_MENU);
+		bg.addBackground(resourceHandler->getTexture(Constants::ResourceC::Texture::BACKGROUND2), false);
+		script = resourceHandler->getScript(Constants::ResourceC::Scripts::GAME_MENU);
 		currentScript = scriptNum;
 		ingameSong.play();
 	}
 	else
 	{
-		bg.addBackground(resourceHandler->getTexture(ResourceHandler::Texture::BACKGROUND3), true);
+		bg.addBackground(resourceHandler->getTexture(Constants::ResourceC::Texture::BACKGROUND3), true);
 		script = resourceHandler->getScriptById(scriptNum);
 		currentScript = scriptNum;
 
@@ -119,7 +121,7 @@ void World::process()
 			if ((*objectIt)->getDeleted())
 			{
 				// Checks if the object is a enemy
-				if ((*objectIt)->getType() == Shooter::ShooterType::ENEMY)
+				if ((*objectIt)->getType() == Constants::ShooterType::ENEMY)
 				{
 					// Increment the score value of the enemy
 					player->addScore((*objectIt)->getScoreValue());
@@ -141,7 +143,7 @@ void World::process()
 	///////////////////////////////////
 	if (!bullets.empty())
 	{
-		for (std::list<std::unique_ptr<Bullet>>::iterator bulletIt = bullets.begin(); bulletIt != bullets.end();)
+		for (auto bulletIt = bullets.begin(); bulletIt != bullets.end();)
 		{
 			// Process the bullets
 			(*bulletIt)->process();
@@ -153,7 +155,7 @@ void World::process()
 			if ((*bulletIt)->getDeleted())
 			{
 				// Return the bullet to the bullet factory
-				bFactory.returnObject(std::move(*bulletIt));
+				bFactory.returnObject(*bulletIt);
 
 				// Delete the pointer from the list and set the iterator
 				bulletIt = bullets.erase(bulletIt);
@@ -171,7 +173,7 @@ void World::process()
 	if (!powerups.empty())
 	{
 
-		for (std::list<std::shared_ptr<Powerup>>::iterator powerupIt = powerups.begin(); powerupIt != powerups.end();)
+		for (auto powerupIt = powerups.begin(); powerupIt != powerups.end();)
 		{
 			// Process the power ups
 			(*powerupIt)->process();
@@ -213,14 +215,14 @@ void World::process()
 /// </summary>
 void World::drawStats()
 {
-	player->drawStats(resourceHandler->getHighScores()[(ResourceHandler::Scripts)currentScript]);
+	player->drawStats(resourceHandler->getHighScores()[(Constants::ResourceC::Scripts)currentScript]);
 }
 
 /// <summary>
 /// Determines whether [is game over]. 0= not game over, 1 = game over, 2 = game over and winning
 /// </summary>
 /// <returns></returns>
-int World::isGameOver()
+int World::isGameOver() const
 {
 	return gameOver;
 }
@@ -258,10 +260,10 @@ void World::draw()
 	if (countdownSong.getStatus() != 0 && !demo)
 	{
 		sf::Text txtPrep;
-		txtPrep.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+		txtPrep.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 		txtPrep.setCharacterSize(50);
 		txtPrep.setString("Prepare for game!");
-		txtPrep.setColor(sf::Color::White);
+		txtPrep.setFillColor(sf::Color::White);
 		txtPrep.setPosition((
 			window.getView().getSize().x / 2) - (txtPrep.getGlobalBounds().width / 2),
 			(window.getView().getSize().y / 2) - (txtPrep.getGlobalBounds().height));
@@ -287,7 +289,7 @@ void World::drawGameProgress()
 	if (!demo)
 	{
 		sf::Text txtProgress;
-		txtProgress.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+		txtProgress.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 		txtProgress.setCharacterSize(12);
 		txtProgress.setString("Stage Progress: " + std::to_string(stageProgress) + "%");
 		txtProgress.setPosition(10, window.getView().getSize().y - txtProgress.getGlobalBounds().height * 2);

@@ -1,6 +1,6 @@
 #pragma once
-#include "ResourceHandler.h"
-#include <SFML\Graphics.hpp>
+#include "ResourceManager.h"
+#include <SFML/Graphics.hpp>
 
 /// <summary>
 /// The scene class is an abstract class which is base class for all States. All state is a Scene.
@@ -9,7 +9,7 @@ class Scene
 {
 public:
 	/// Constructor for scene which take constructs the scene object. 
-	Scene(sf::RenderWindow& window, std::shared_ptr<ResourceHandler>& resourceHandler) :
+	Scene(sf::RenderWindow& window, std::shared_ptr<ResourceManager>& resourceHandler) :
 		window(window),
 		resourceHandler(resourceHandler){};
 
@@ -27,8 +27,5 @@ protected:
 	sf::RenderWindow& window;
 
 	/// ResourceHandler reference as a smart pointer which was made in GameEngine
-	std::shared_ptr<ResourceHandler>& resourceHandler;
-
-	/// This bool defines current state of the scene, weither its initialized or not.
-	bool inited;
+	std::shared_ptr<ResourceManager>& resourceHandler;
 };

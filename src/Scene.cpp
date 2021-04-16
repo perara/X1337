@@ -1,6 +1,5 @@
 #include "../include/Scene.h"
 #include "../include/Bullet.h"
-#include "../include/Shooter.h"
 
 
 /// <summary>

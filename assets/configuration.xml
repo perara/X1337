@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!-- TODO this shit -->
+<configuration>
+    <enemies>
+        <enemy>
+            <name>Grunt Ship</name>
+            <health>2</health>
+            <shape>3</shape> <!-- Constants::GameShapeC::Type::STARSHIP -->
+            <sprite>3</sprite> <!-- Constants::ResourceC::Texture::ENEMY_SHIP -->
+            <type>1</type> <!-- Constants::EnemyC::Type::REGULAR -->
+            <score_value>100</score_value>
+        </enemy>
+        <enemy>
+            <name>Chubby Ship</name>
+            <health>10</health>
+            <shape>10</shape> <!-- Constants::GameShapeC::Type::STARSHIP -->
+            <sprite>10</sprite> <!-- Constants::ResourceC::Texture::ENEMY_SHIP -->
+            <type>2</type> <!-- Constants::EnemyC::Type::REGULAR -->
+            <score_value>100</score_value>
+        </enemy>
+        <enemy>
+            <name>Boss Ship</name>
+            <health>10</health>
+            <shape>1</shape> <!-- Constants::GameShapeC::Type::STARSHIP -->
+            <sprite>10</sprite> <!-- Constants::ResourceC::Texture::ENEMY_SHIP -->
+            <type>2</type> <!-- Constants::EnemyC::Type::REGULAR -->
+            <score_value>100</score_value>
+        </enemy>
+        <enemy>
+            <name>Chubby Ship</name>
+            <health>750</health>
+            <shape>1</shape> <!-- Constants::GameShapeC::Type::STARSHIP -->
+            <sprite>9</sprite> <!-- Constants::ResourceC::Texture::ENEMY_SHIP -->
+            <type>2</type> <!-- Constants::EnemyC::Type::REGULAR -->
+            <score_value>100</score_value>
+        </enemy>
+    </enemies>
+
+
+</configuration>

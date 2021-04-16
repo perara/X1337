@@ -1,10 +1,10 @@
 #include "../include/Menu.h"
 #include "../include/Log.h"
 #include <sstream>
-#include <stdlib.h>     /* srand, rand */
 
 
-Menu::Menu(sf::RenderWindow& window, GameState& state, std::shared_ptr<ResourceHandler>& resourceHandler) :
+
+Menu::Menu(sf::RenderWindow& window, GameState& state, std::shared_ptr<ResourceManager>& resourceHandler) :
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Menu"/> class.
 	/// </summary>
@@ -33,14 +33,14 @@ void Menu::process(){}
 void Menu::reset()
 {
 	// Stop Menu song
-	resourceHandler->getSound(ResourceHandler::Sound::MUSIC_MENU_SONG).stop();
+	resourceHandler->getSound(Constants::ResourceC::Sound::MUSIC_MENU_SONG).stop();
 }
 
 /// <summary>
-/// Return the value selected on the menu weither hardmode was selected. 
+/// Return the value selected on the menu weither hardmode was selected.
 /// </summary>
 /// <returns>bool if hardmode is selected</returns>
-bool Menu::getHardmodeSelected()
+bool Menu::getHardmodeSelected() const
 {
 	return hardmodeSelected;
 }
@@ -55,55 +55,55 @@ void Menu::init()
 	for (auto&i : resourceHandler->getScripts(true)) scripts.push_back(i);
 
 	// Construct the "Main Options" map
-	std::map<Menu::Options, std::string> mainMenu;
+	std::map<Constants::MenuC::Options, std::string> mainMenu;
 	{
-		mainMenu[Menu::Options::NEW_GAME] = "New Game";
+		mainMenu[Constants::MenuC::Options::NEW_GAME] = "New Game";
 		//mainMenu[Menu::Options::LOAD_GAME] = "Load Existing Game";
-		mainMenu[Menu::Options::HIGHSCORE] = "Highscore";
-		mainMenu[Menu::Options::CREDITS] = "Credits";
-		mainMenu[Menu::Options::EXIT_GAME] = "Exit Game";
+		mainMenu[Constants::MenuC::Options::HIGHSCORE] = "Highscore";
+		mainMenu[Constants::MenuC::Options::CREDITS] = "Credits";
+		mainMenu[Constants::MenuC::Options::EXIT_GAME] = "Exit Game";
 	}
 
 	// Construct the "Stage select Options" map
-	std::map<Menu::Options, std::string> stageSelect;
+	std::map<Constants::MenuC::Options, std::string> stageSelect;
 	{
-		stageSelect[Menu::Options::BACK] = "Back";
-		stageSelect[Menu::Options::STAGE_SELECT] = "Select Stage";
+		stageSelect[Constants::MenuC::Options::BACK] = "Back";
+		stageSelect[Constants::MenuC::Options::STAGE_SELECT] = "Select Stage";
 	}
 
 	// Construct the "Difficulty Options" map
-	std::map<Menu::Options, std::string> difficultySelect;
+	std::map<Constants::MenuC::Options, std::string> difficultySelect;
 	{
-		difficultySelect[Menu::Options::NORMAL] = "Normal";
-		difficultySelect[Menu::Options::HARD] = "HARD!!";
+		difficultySelect[Constants::MenuC::Options::NORMAL] = "Normal";
+		difficultySelect[Constants::MenuC::Options::HARD] = "HARD!!";
 	}
 
 	// Construct the "High Score Options" map
-	std::map<Menu::Options, std::string> highScore;
+	std::map<Constants::MenuC::Options, std::string> highScore;
 	{
-		highScore[Menu::Options::BACK] = "Back";
+		highScore[Constants::MenuC::Options::BACK] = "Back";
 	}
 
 	// Construct the "Pause Options" map
-	std::map<Menu::Options, std::string> pause;
+	std::map<Constants::MenuC::Options, std::string> pause;
 	{
-		pause[Menu::Options::CONTINUE_GAME] = "Continue";
-		pause[Menu::Options::TO_MAIN_MENU] = "Return to Main Menu";
+		pause[Constants::MenuC::Options::CONTINUE_GAME] = "Continue";
+		pause[Constants::MenuC::Options::TO_MAIN_MENU] = "Return to Main Menu";
 	}
 
 	// Construct the "Game Over Options" map
-	std::map<Menu::Options, std::string> gameOver;
+	std::map<Constants::MenuC::Options, std::string> gameOver;
 	{
-		gameOver[Menu::Options::RESTART_STAGE] = "Restart Game";
-		gameOver[Menu::Options::TO_MAIN_MENU2] = "Return to Main Menu";
+		gameOver[Constants::MenuC::Options::RESTART_STAGE] = "Restart Game";
+		gameOver[Constants::MenuC::Options::TO_MAIN_MENU2] = "Return to Main Menu";
 	}
 
 	// Construct the "Win game Options" map
-	std::map<Menu::Options, std::string> gameWin;
+	std::map<Constants::MenuC::Options, std::string> gameWin;
 	{
-		gameWin[Menu::Options::NEXT_STAGE] = "Next Stage";
-		gameWin[Menu::Options::RESTART_STAGE_2] = "Restart Game";
-		gameWin[Menu::Options::TO_MAIN_MENU_3] = "Return to Main Menu";
+		gameWin[Constants::MenuC::Options::NEXT_STAGE] = "Next Stage";
+		gameWin[Constants::MenuC::Options::RESTART_STAGE_2] = "Restart Game";
+		gameWin[Constants::MenuC::Options::TO_MAIN_MENU_3] = "Return to Main Menu";
 	}
 
 
@@ -153,18 +153,18 @@ void Menu::loadMenuOptions()
 	for (auto &i : optMap) // Iterate through maps of options
 	{
 		int x = 20;
-		int y = window.getView().getSize().y - 50;
+		float y = window.getView().getSize().y - 50;
 
-		std::map<Menu::Options, std::string>::reverse_iterator rit;
+		std::map<Constants::MenuC::Options, std::string>::reverse_iterator rit;
 		for (rit = i.second.rbegin(); rit != i.second.rend(); ++rit)
 		{
 			sf::Text txt;
-			txt.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+			txt.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 			txt.setString(sf::String(rit->second));
 			LOGD(rit->second);
 			txt.setCharacterSize(30);
 			txt.setPosition(20, y);
-			txt.setColor(sf::Color(139, 137, 137));
+			txt.setFillColor(sf::Color(139, 137, 137));
 			option[i.first][rit->first] = (txt);
 			y -= 50;
 		}
@@ -184,7 +184,7 @@ void Menu::input(sf::Event& event)
 	// Handler for when clicking the UP key
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up)
 	{
-		resourceHandler->getSound(ResourceHandler::Sound::FX_MENU_CLICK).play();
+		resourceHandler->getSound(Constants::ResourceC::Sound::FX_MENU_CLICK).play();
 
 		if (currentOption == option[state].begin()->first)
 		{
@@ -202,7 +202,7 @@ void Menu::input(sf::Event& event)
 	// Handler for when clicking the DOWN key
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down)
 	{
-		resourceHandler->getSound(ResourceHandler::Sound::FX_MENU_CLICK).play();
+		resourceHandler->getSound(Constants::ResourceC::Sound::FX_MENU_CLICK).play();
 		if (currentOption == option[state].rbegin()->first)
 		{
 			currentOption = option[state].begin()->first;
@@ -216,44 +216,44 @@ void Menu::input(sf::Event& event)
 
 	}
 
-	// Each of the switch cases below is which action state that should be set whenever a user clicks enter on the selected 
+	// Each of the switch cases below is which action state that should be set whenever a user clicks enter on the selected
 	// menu choice. Lets say the user selects EXIT_GAME, we then want to exit the game. This is general for all menu's, hence
 	// the mess.
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Return)
 	{
-		resourceHandler->getSound(ResourceHandler::Sound::FX_MENU_RETURN).play();
+		resourceHandler->getSound(Constants::ResourceC::Sound::FX_MENU_RETURN).play();
 
 		switch (currentOption)
 		{
 			/////////////////////////////////////////////
 			/////////////////Main Menu///////////////////
 			/////////////////////////////////////////////
-		case Menu::Options::NEW_GAME:
+		case Constants::MenuC::Options::NEW_GAME:
 			state = GameState::STAGE_SELECT;
 			this->setCurrentOption(option[state].begin()->first);
 			break;
-		case Menu::Options::LOAD_GAME:
+		case Constants::MenuC::Options::LOAD_GAME:
 			break;
-		case Menu::Options::HIGHSCORE:
+		case Constants::MenuC::Options::HIGHSCORE:
 			state = GameState::HIGHSCORE;
 			this->setCurrentOption(option[state].begin()->first);
 			break;
-		case Menu::Options::CREDITS:
+		case Constants::MenuC::Options::CREDITS:
 			state = GameState::CREDITS;
 			this->setCurrentOption(option[state].begin()->first);
 			break;
-		case Menu::Options::EXIT_GAME:
+		case Constants::MenuC::Options::EXIT_GAME:
 			exit(EXIT_SUCCESS);
 			break;
 
 			/////////////////////////////////////////////
 			///////////////Stage Select//////////////////
 			/////////////////////////////////////////////
-		case Menu::Options::STAGE_SELECT:
+		case Constants::MenuC::Options::STAGE_SELECT:
 			state = GameState::DIFFICULTY_SELECT;
 			this->setCurrentOption(option[GameState::DIFFICULTY_SELECT].begin()->first);
 			break;
-		case Menu::Options::BACK:
+		case Constants::MenuC::Options::BACK:
 			state = GameState::MAIN_MENU;
 			this->setCurrentOption(option[state].begin()->first);
 			break;
@@ -261,11 +261,11 @@ void Menu::input(sf::Event& event)
 			/////////////////////////////////////////////
 			///////////Difficulty Selection//////////////
 			/////////////////////////////////////////////
-		case Menu::Options::NORMAL:
+		case Constants::MenuC::Options::NORMAL:
 			hardmodeSelected = false;
 			state = GameState::INIT_GAME;
 			break;
-		case Menu::Options::HARD:
+		case Constants::MenuC::Options::HARD:
 			hardmodeSelected = true;
 			state = GameState::INIT_GAME;
 			break;
@@ -273,10 +273,10 @@ void Menu::input(sf::Event& event)
 			/////////////////////////////////////////////
 			/////////////IN-GAME-Pause///////////////////
 			/////////////////////////////////////////////
-		case Menu::Options::CONTINUE_GAME:
+		case Constants::MenuC::Options::CONTINUE_GAME:
 			state = GameState::GAME;
 			break;
-		case Menu::Options::TO_MAIN_MENU:
+		    case Constants::MenuC::Options::TO_MAIN_MENU:
 			state = GameState::INIT_MAIN_MENU;
 			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first);
 			break;
@@ -284,10 +284,10 @@ void Menu::input(sf::Event& event)
 			/////////////////////////////////////////////
 			//////////IN-GAME- GAME OVER ////////////////
 			/////////////////////////////////////////////
-		case Menu::Options::RESTART_STAGE:
+		case Constants::MenuC::Options::RESTART_STAGE:
 			state = GameState::INIT_GAME;
 			break;
-		case Menu::Options::TO_MAIN_MENU2:
+		case Constants::MenuC::Options::TO_MAIN_MENU2:
 			state = GameState::INIT_MAIN_MENU;
 			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first);
 			break;
@@ -296,13 +296,13 @@ void Menu::input(sf::Event& event)
 			/////////////////////////////////////////////
 			//////////IN-GAME- WINNING GAME /////////////
 			/////////////////////////////////////////////
-		case Menu::Options::RESTART_STAGE_2:
+		case Constants::MenuC::Options::RESTART_STAGE_2:
 			state = GameState::INIT_GAME;
 			break;
-		case Menu::Options::NEXT_STAGE:
+		case Constants::MenuC::Options::NEXT_STAGE:
 			state = GameState::INIT_NEXT_STAGE;
 			break;
-		case Menu::Options::TO_MAIN_MENU_3:
+		case Constants::MenuC::Options::TO_MAIN_MENU_3:
 			state = GameState::INIT_MAIN_MENU;
 			this->setCurrentOption(option[GameState::MAIN_MENU].begin()->first);
 			break;
@@ -476,20 +476,20 @@ void Menu::drawMainMenu()
 /// <param name="xOffset">The x offset position</param>
 /// <param name="yOffset">The y offset position</param>
 /// <param name="color">The color on the option</param>
-void Menu::drawOptions(GameState state, int xOffset, int yOffset, sf::Color color)
+void Menu::drawOptions(GameState _state, float xOffset, float yOffset, sf::Color color)
 {
 	// Draw options
-	for (auto& i : option[state])
+	for (auto& i : option[_state])
 	{
 		i.second.move(xOffset, yOffset); // Move 'x' offset and 'y' offset
-		i.second.setColor(color);
+		i.second.setFillColor(color);
 		window.draw(i.second);
 		i.second.move(-xOffset, -yOffset); // Move back  'x' offset and 'y' offset
 
 	}
 
 	// Draw Option overlay
-	sf::FloatRect pos = option[state][(Menu::Options)currentOption].getGlobalBounds();
+	sf::FloatRect pos = option[state][(Constants::MenuC::Options)currentOption].getGlobalBounds();
 	sf::RectangleShape sh;
 	sh.setFillColor(sf::Color(255, 255, 255, 150));
 	sh.setSize(sf::Vector2f(pos.width + 20, pos.height / 2));
@@ -510,16 +510,16 @@ void Menu::drawGameTitle()
 	// Draw Game Title text
 	sf::Text gameTitle;
 	gameTitle.setString(sf::String("X1337"));
-	gameTitle.setFont(resourceHandler->getFont(ResourceHandler::Fonts::COMICATE));
-	gameTitle.setColor(sf::Color::Red);
+	gameTitle.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::COMICATE));
+	gameTitle.setFillColor(sf::Color::Red);
 	gameTitle.setCharacterSize(80);
 	gameTitle.setPosition(sf::Vector2f(window.getView().getSize().x / 2 - (gameTitle.getGlobalBounds().width / 2), window.getView().getSize().y / 8 - (gameTitle.getGlobalBounds().height / 2)));
 	window.draw(gameTitle);
 
 	sf::Text gameSlogan;
 	gameSlogan.setString(sf::String(resourceHandler->getMessageOfTheDay(messageOfTheDayId)));
-	gameSlogan.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-	gameSlogan.setColor(sf::Color(135,64,64));
+	gameSlogan.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
+	gameSlogan.setFillColor(sf::Color(135,64,64));
 	gameSlogan.rotate(1);
 	gameSlogan.setCharacterSize(20);
 	gameSlogan.setPosition(gameTitle.getPosition().x, gameTitle.getPosition().y + 80);
@@ -529,8 +529,8 @@ void Menu::drawGameTitle()
 	// Game version
 	sf::Text gameVersion;
 	gameVersion.setString(sf::String("v1.0"));
-	gameVersion.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-	gameVersion.setColor(sf::Color(139, 137, 137));
+	gameVersion.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
+	gameVersion.setFillColor(sf::Color(139, 137, 137));
 	gameVersion.setCharacterSize(15);
 	gameVersion.setPosition(sf::Vector2f(window.getView().getSize().x - gameVersion.getGlobalBounds().width - 10, window.getView().getSize().y - gameVersion.getGlobalBounds().height * 2));
 	window.draw(gameVersion);
@@ -549,16 +549,16 @@ void Menu::drawStageSelect()
 	sf::Vector2f frameStartPos((window.getView().getSize().x / 3) - 60, window.getView().getSize().y / 3);
 
 	// Counter, and y multiplier for the frames ( this is increased when an modulo X is reached)
-	int yMult = 1;
-	int count = 1;
-	int cnt = count;
+    float yMult = 1;
+	float count = 1;
+	int cnt = (int)count;
 
 	sf::FloatRect currentStageSelBounds; // Read as Current stage select bounds
 	// Get each of the script names
 	for (Script& i : scripts)
 	{
-		// Ignore Game menu script 
-		if (i.getScriptEnumVal() == ResourceHandler::Scripts::GAME_MENU)
+		// Ignore Game menu script
+		if (i.getScriptEnumVal() == Constants::ResourceC::Scripts::GAME_MENU)
 		{
 			cnt++;
 			continue;
@@ -572,10 +572,10 @@ void Menu::drawStageSelect()
 
 		// Text Under image
 		sf::Text txtName;
-		txtName.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+		txtName.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 		txtName.setString(i.getScriptTitle());
 		txtName.setCharacterSize(20);
-		txtName.setColor(sf::Color::White);
+		txtName.setFillColor(sf::Color::White);
 		txtName.setPosition(frame.getPosition().x, frame.getPosition().y + frame.getSize().y);
 		window.draw(txtName);
 
@@ -584,7 +584,7 @@ void Menu::drawStageSelect()
 		// This checks if the the frame width is reached (4 in a row)
 		// If it is we increment the multiplier to reach next line
 		count++;
-		if (count % 3 == 1)
+		if ((int)count % 3 == 1)
 		{
 			count = 1;
 			yMult++;
@@ -602,19 +602,19 @@ void Menu::drawStageSelect()
 
 	// Draw Stage Story (LORE)
 	sf::Text loreTitle;
-	loreTitle.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	loreTitle.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 	loreTitle.setStyle(sf::Text::Style::Underlined);
 	loreTitle.setPosition(frameStartPos.x + 50,frameStartPos.y + 200);
 	loreTitle.setString("Lore");
 	window.draw(loreTitle);
 
 	sf::Text loreText;
-	loreText.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	loreText.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 	loreText.setCharacterSize(15);
-	loreText.setColor(sf::Color(173,255,47));
+	loreText.setFillColor(sf::Color(173,255,47));
 	loreText.setPosition(loreTitle.getPosition().x, loreTitle.getPosition().y + loreTitle.getGlobalBounds().height + 20);
-	loreText.setString((scripts[getStageSelectOption()-1].getLore() == "null") ? 
-		"No Lore" : 
+	loreText.setString((scripts[getStageSelectOption()-1].getLore() == "null") ?
+		"No Lore" :
 	evaluateSpecialChars(scripts[getStageSelectOption()-1].getLore()));
 
 	window.draw(loreText);
@@ -635,18 +635,18 @@ void Menu::drawCredits()
 	std::map<std::string, std::list<std::string>> credMap = resourceHandler->getCredits();
 
 	// Start positions
-	int startX = window.getView().getSize().x / 2;
-	int startY = window.getView().getSize().y / 4;
+	float startX = window.getView().getSize().x / 2;
+    float startY = window.getView().getSize().y / 4;
 
 	// Iterate though all of the credits categories
 	for (auto& credCats : credMap)
 	{
 		// Draw the category
 		sf::Text txtCredCat;
-		txtCredCat.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+		txtCredCat.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 		txtCredCat.setString(credCats.first);
 		txtCredCat.setCharacterSize(30);
-		txtCredCat.setColor(sf::Color::White);
+		txtCredCat.setFillColor(sf::Color::White);
 		txtCredCat.setPosition(startX - (txtCredCat.getGlobalBounds().width / 2), startY);
 		window.draw(txtCredCat);
 		startY += 40;
@@ -656,10 +656,10 @@ void Menu::drawCredits()
 		{
 			// Draw credit text.
 			sf::Text txtCred;
-			txtCred.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+			txtCred.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 			txtCred.setString(credIt);
 			txtCred.setCharacterSize(20);
-			txtCred.setColor(sf::Color::White);
+			txtCred.setFillColor(sf::Color::White);
 			txtCred.setPosition(startX - (txtCred.getGlobalBounds().width / 2), startY);
 			window.draw(txtCred);
 			startY += 25;
@@ -677,7 +677,7 @@ void Menu::drawCredits()
 /// </summary>
 /// <param name="xOffSet">The x offset.</param>
 /// <param name="yOffset">The y offset.</param>
-void Menu::drawPause(int xOffSet, int yOffset)
+void Menu::drawPause(float xOffSet, float yOffset)
 {
 	drawOptions(state, xOffSet, yOffset, sf::Color::White);
 
@@ -693,15 +693,15 @@ void Menu::drawPause(int xOffSet, int yOffset)
 void Menu::drawHighScore()
 {
 	// Get all of the highscores (Bad practice, needs work. Should not retrieve every frame)
-	std::map<ResourceHandler::Scripts, std::list<std::shared_ptr<HighScoreItem>>> hScore = resourceHandler->getHighScores();
+	std::map<Constants::ResourceC::Scripts, std::list<std::shared_ptr<HighScoreItem>>> hScore = resourceHandler->getHighScores();
 
 	// Determine the start y and x pos
-	int xPos = window.getView().getSize().x / 16;
-	int yPos = window.getView().getSize().y / 4;
+	float xPos = window.getView().getSize().x / 16;
+    float yPos = window.getView().getSize().y / 4;
 
 	// Draw the score header
 	sf::Text txtScore;
-	txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
+	txtScore.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 	txtScore.setString(sf::String("Stage \t Playername \t Score \t Date"));
 	txtScore.setPosition(xPos, yPos);
 	window.draw(txtScore);
@@ -713,11 +713,11 @@ void Menu::drawHighScore()
 		yPos += 50;
 
 		// Draw the text
-		sf::Text txtScore;
-		txtScore.setFont(resourceHandler->getFont(ResourceHandler::Fonts::SANSATION));
-		txtScore.setString(sf::String(std::to_string((int)item->stage) + "\t\t\t\t\t" + item->playerName + "\t\t\t\t" + std::to_string((int)item->score) + "\t" + item->date));
-		txtScore.setPosition(xPos, yPos);
-		window.draw(txtScore);
+		sf::Text txtHScore;
+        txtHScore.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
+        txtHScore.setString(sf::String(std::to_string((int)item->stage) + "\t\t\t\t\t" + item->playerName + "\t\t\t\t" + std::to_string((int)item->score) + "\t" + item->date));
+        txtHScore.setPosition(xPos, yPos);
+		window.draw(txtHScore);
 	}
 
 }
