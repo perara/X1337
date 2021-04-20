@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <memory>
+#include "Renderer.h"
 
 class GameShape;
 /// <summary>
@@ -10,7 +11,7 @@ class Object
 {
 public:
 	/// Constructor for the object which sets the corresponding deleted variable to false as default
-	Object(sf::RenderWindow & window) : window(window), deleted(false){};
+	Object(Renderer & window) : renderer(window), deleted(false){};
 	virtual ~Object();
 
 	// Delete getter/setter
@@ -26,7 +27,7 @@ protected:
 	bool isOutOfBounds();
 
 	/// sf::Renderwindow reference which originate from GameEngine
-	sf::RenderWindow& window;
+	Renderer& renderer;
 
 	/// Hyperplane separation theorem for hit detection
 	static bool sat(const std::shared_ptr<GameShape>& c1, const std::shared_ptr<GameShape>& c2);

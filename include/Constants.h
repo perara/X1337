@@ -7,6 +7,29 @@
 
 namespace Constants{
 
+    enum Input{
+        VoidKey=0,
+        Key1Press=1,
+        Key1Release=2,
+        Key2Press=3,
+        Key2Release=4,
+        KeyLeftRelease=5,
+        KeyLeftPress=6,
+        KeyRightPress=7,
+        KeyRightRelease=8,
+        KeyUpPress=9,
+        KeyUpRelease=10,
+        KeyDownPress=11,
+        KeyDownRelease=12,
+        KeyMPress=13,
+        KeyMRelease=14,
+        KeyEscapePress=15,
+        KeyEscapeRelease=16,
+        KeyEnterPress=17,
+        KeyEnterRelease=18,
+        NumInputs=19
+    };
+
 
     namespace ResourceC{
 
@@ -74,12 +97,13 @@ namespace Constants{
         /// Scripts enumerable which contains all resource "Links" its used to access the resource
         enum Scripts
         {
-            STAGE_ONE,
-            STAGE_TWO,
-            DEATH_STAR,
-            GAME_MENU,
+            GAME_MENU=0,
+            STAGE_ONE=1,
+            STAGE_TWO=2,
+            DEATH_STAR=3,
 
-            SCRIPTSCOUNT
+
+            SCRIPTSCOUNT=4
         };
 
         /// Fonts enumerable which contains all resource "Links" its used to access the resource

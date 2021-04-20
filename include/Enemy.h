@@ -11,13 +11,16 @@ class Enemy : public Shooter
 public:
 
 
-	Enemy(sf::RenderWindow& window,
+	Enemy(Renderer& window,
 		std::queue<VectorN> path,
 		std::list<std::pair<int, std::string>> emoteQueue,
-		int type, int repeat,
+		int type,
+		int repeat,
+		int delay,
 		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
 		std::shared_ptr<ResourceManager>& resourceHandler,
+		std::list<std::shared_ptr<Shooter>>& objects,
 		const sf::Time& timeStep);
 	~Enemy();
 
@@ -27,12 +30,16 @@ public:
 
 	Constants::EnemyC::Type getEnemyType();
 
+    int getDelay() const;
+
 private:
 	// Weither to repeat path or not
 	int repeat;
 	int getRepeat() const;
 
-	// Acceleration and speed
+    int spawnDelay;
+
+    // Acceleration and speed
 	float acceleration;
 	sf::Vector2f speed;
 

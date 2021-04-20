@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "Constants.h"
-#include "Script.h"
+#include "ScriptTemplate.h"
 #include "HighScoreItem.h"
+#include "Renderer.h"
 
 #include <fstream>
 #include <memory>
@@ -19,23 +20,23 @@ class ResourceManager
 {
 public:
 
-	ResourceManager(sf::RenderWindow& window);
+	ResourceManager(Renderer& window);
 	~ResourceManager();
 
 	void init();
 	void draw();
 
 	// Highscore
-	std::map<Constants::ResourceC::Scripts, std::list<std::shared_ptr<HighScoreItem>>> getHighScores();
-	void writeHighScoreScore(int, int);
+	std::map<Constants::ResourceC::Scripts, std::list<HighScoreItem>> getHighScores();
+	void writeHighScoreScore(float, int);
 	void loadHighScore();
 
 	// Getts for each of the resources
 	sf::Texture&getTextureByString(const std::string& str);
 	sf::Texture& getTexture(Constants::ResourceC::Texture);
 
-	Script getScript(Constants::ResourceC::Scripts);
-	std::list<Script> getScripts(bool);
+    std::unique_ptr<ScriptTemplate> getScript(Constants::ResourceC::Scripts);
+	std::list<ScriptTemplate> getScripts(bool);
 
 	sf::Font& getFont(Constants::ResourceC::Fonts);
 
@@ -44,7 +45,7 @@ public:
 
 	void stopAllSound();
 	void muteSound(bool mute);
-	Script getScriptById(int iteNum);
+
 	std::string getUserName();
 	static std::string getDateTime();
 	std::map<std::string, std::list<std::string>>  getCredits();
@@ -65,7 +66,7 @@ private:
 	bool getInit();
 
 	bool inited;
-	sf::RenderWindow& window;
+	Renderer& window;
 
 	// Textures
 	std::map<std::string, Constants::ResourceC::Texture> textureStringList;
@@ -82,14 +83,14 @@ private:
 
 	// Scripts
 	std::map<Constants::ResourceC::Scripts, std::string> scriptList;
-	Script scripts[Constants::ResourceC::Scripts::SCRIPTSCOUNT]; //TODO
+	ScriptTemplate scripts[Constants::ResourceC::Scripts::SCRIPTSCOUNT]; //TODO
 
 	// Fonts
 	std::map<Constants::ResourceC::Fonts, std::string> fontList;
 	sf::Font fonts[Constants::ResourceC::Fonts::FONTCOUNT];
 
 	// Highscore
-	std::map<Constants::ResourceC::Scripts, std::list<std::shared_ptr<HighScoreItem>>> highScoreStages; // All stages
+	std::map<Constants::ResourceC::Scripts, std::list<HighScoreItem>> highScoreStages; // All stages
 	std::string highScoreFile;
 
 	// Username

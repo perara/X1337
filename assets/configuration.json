@@ -1,0 +1,48 @@
+{
+  "enemies": [
+    {
+      "name": "Grunt Ship",
+      "health": "2",
+      "shape": {
+        "id": "3"
+      },
+      "texture": "7",
+      "type": "1",
+      "score_value": "100"
+    },
+    {
+      "name": "Chubby Ship",
+      "health": "10",
+      "shape": {
+        "id": "1",
+        "radius": "40",
+        "points": "30"
+      },
+      "texture": "10",
+      "type": "2",
+      "score_value": "250"
+    },
+    {
+      "name": "Boss Ship",
+      "health": "10",
+      "shape": {
+        "id": "4"
+      },
+      "texture": "10",
+      "type": "2",
+      "score_value": "500"
+    },
+    {
+      "name": "Death Star",
+      "health": "750",
+      "shape": {
+        "id": "1",
+        "radius": "80",
+        "points": "30"
+      },
+      "texture": "9",
+      "type": "4",
+      "score_value": "1337"
+    }
+  ]
+}

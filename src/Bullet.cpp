@@ -11,13 +11,12 @@
 /// <param name="bulletType">Type of the bullet.</param>
 /// <param name="timeStep">The time step.</param>
 /// <param name="resourceHandler">The resource handler.</param>
-Bullet::Bullet(sf::RenderWindow& window, Constants::BulletType bulletType, const sf::Time& timeStep, std::shared_ptr<ResourceManager>& resourceHandler) :
+Bullet::Bullet(Renderer& window, Constants::BulletType bulletType, const sf::Time& timeStep, std::shared_ptr<ResourceManager>& resourceHandler) :
 Object(window),
-owner(Constants::ShooterType::NONE),
 bulletType(bulletType),
-timeStep(timeStep),
-
-deg(-1) // Set rotation as -1 while not inited.
+owner(nullptr),
+deg(-1), // Set rotation as -1 while not inited.
+timeStep(timeStep)
 {
 	setDeleted(false);
 
@@ -98,16 +97,24 @@ void Bullet::setRotation(float degree, sf::Vector2f speed)
 /// Sets the Shootertype owner of the bullet
 /// </summary>
 /// <param name="owner">The owner.</param>
-void Bullet::setOwner(Constants::ShooterType _owner)
+void Bullet::setOwner(Shooter* _owner)
 {
 
+
+    // Set the owner
+    this->owner = _owner;
+
+    if(this->owner == nullptr){
+        return;
+    }
+
+
 	// If its a player, define a negative vertical speed
-	if (_owner == Constants::ShooterType::PLAYER)
+	if (_owner->getType() == Constants::ShooterType::PLAYER)
 	{
 		this->speedX = 0;
 		this->speedY = -350;
 	}
-
 	// If its somthing else (enemy) positive vertical speed.
 	else
 	{
@@ -117,8 +124,6 @@ void Bullet::setOwner(Constants::ShooterType _owner)
 
 	}
 
-	// Set the owner
-	this->owner = _owner;
 }
 
 /// <summary>
@@ -129,6 +134,7 @@ void Bullet::resetObject()
 	this->deg = -1;
 	this->sprite->setFillColor(sf::Color::White); // Reset Color;
 	this->setDeleted(false);
+	this->setOwner(nullptr);
 }
 
 /// <summary>
@@ -144,7 +150,7 @@ Constants::BulletType Bullet::getBulletType()
 /// Retrieves the owner
 /// </summary>
 /// <returns>Retrieves the owner value</returns>
-Constants::ShooterType Bullet::getOwner()
+Shooter* Bullet::getOwner()
 {
 	return this->owner;
 }

@@ -3,13 +3,14 @@
 #include "../include/GameShape.h"
 #include <cmath>
 #include <cfloat>
+#include <spdlog/spdlog.h>
 
 /// <summary>
 /// Draws this Object.
 /// </summary>
 void Object::draw()
 {
-	this->window.draw(*this->sprite);
+	this->renderer.draw(*this->sprite);
 
 	// Bounding boxes.
 	/*sf::RectangleShape();
@@ -52,9 +53,9 @@ void Object::setDeleted(bool del)
 bool Object::isOutOfBounds()
 {
 	// Checks weither a object is out of bounds (out of screen)
-	if (this->sprite->getPosition().x > window.getView().getSize().x ||
+	if (this->sprite->getPosition().x > renderer.getView().getSize().x ||
 		this->sprite->getPosition().x < 0 ||
-		this->sprite->getPosition().y > window.getView().getSize().y ||
+        this->sprite->getPosition().y > renderer.getView().getSize().y ||
 		this->sprite->getPosition().y < 0){
 		return true;
 	}
@@ -68,7 +69,7 @@ bool Object::isOutOfBounds()
 /// </summary>
 Object::~Object()
 {
-	LOGD("Object Deconstructor called");
+    SPDLOG_INFO("Object Deconstructor called");
 }
 
 /// <summary>

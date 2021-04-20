@@ -11,16 +11,19 @@
 /// <param name="bullets">The bulletslist</param>
 /// <param name="resourceHandler">Resourcehandler</param>
 /// <param name="timeStep">The time step.</param>
-Shooter::Shooter(sf::RenderWindow& window,
+Shooter::Shooter(Renderer& window,
 	BulletFactory& bFactory,
 	std::list<std::unique_ptr<Bullet>>& bullets,
 	std::shared_ptr<ResourceManager>& resourceHandler,
+    std::list<std::shared_ptr<Shooter>>& objects,
 	const sf::Time& timeStep) :
 	Object(window),
-	bullets(bullets),
-	bFactory(bFactory),
 	resourceHandler(resourceHandler),
-	timeStep(timeStep)
+	timeStep(timeStep),
+    objects(objects),
+    bullets(bullets),
+    bFactory(bFactory),
+    totalDamageDone(0)
 {}
 
 /// <summary>
@@ -94,7 +97,7 @@ void Shooter::hitDetection()
 		for (auto& i : getBullets())
 		{
 			// Ignore collision detections if the type is same as the bullet owner type
-			if (getType() == i->getOwner()) continue;
+			if (this->getType() == i->getOwner()->getType()) continue;
 
 			// Checks if the bullet is to far away to be able to the ship
 			float distDx = std::abs(sprite->getPosition().x - i->sprite->getPosition().x);
@@ -108,7 +111,9 @@ void Shooter::hitDetection()
 			if (wasHit)
 			{
 				// Decrement health with the bullet damage
-				setHealth(getHealth() - i->getBulletType());
+				auto bulletDamage = i->getBulletType();
+				setHealth(getHealth() - bulletDamage);
+				i->getOwner()->addTotalDamageDone(bulletDamage);
 
 				// Set bullet to deleted.
 				i->setDeleted(true);
@@ -116,6 +121,23 @@ void Shooter::hitDetection()
 		}
 	}
 }
+
+void Shooter::processShipCollision(){
+    // Ship collision
+    for (auto& i : objects)
+    {
+        if (i->getType() == Constants::ShooterType::PLAYER) continue;
+
+        if (Shooter::sat(i->sprite, this->sprite))
+        {
+            // Kill the player, (ship collisions never end well)
+            this->setHealth(this->getHealth() - 1);
+            i->setHealth(i->getHealth() - 1);
+            addTotalDamageDone(1);
+            i->addTotalDamageDone(1);
+        }
+    }
+};
 
 /// <summary>
 /// Gets the type of the shooter
@@ -142,4 +164,12 @@ BulletFactory& Shooter::getBulletFactory()
 std::list<std::unique_ptr<Bullet>>& Shooter::getBullets()
 {
 	return this->bullets;
+}
+
+void Shooter::addTotalDamageDone(int damage) {
+    totalDamageDone += damage;
+}
+
+int Shooter::getTotalDamageDone() const{
+    return totalDamageDone;
 }

@@ -1,10 +1,12 @@
 #include "../include/Menu.h"
 #include "../include/Log.h"
 #include <sstream>
+#include <spdlog/spdlog.h>
+#include <effolkronium/random.hpp>
+#include <Renderer.h>
 
 
-
-Menu::Menu(sf::RenderWindow& window, GameState& state, std::shared_ptr<ResourceManager>& resourceHandler) :
+Menu::Menu(Renderer& window, GameState& state, std::shared_ptr<ResourceManager>& resourceHandler) :
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Menu"/> class.
 	/// </summary>
@@ -12,12 +14,10 @@ Menu::Menu(sf::RenderWindow& window, GameState& state, std::shared_ptr<ResourceM
 	/// <param name="state">The state.</param>
 	/// <param name="resourceHandler">The resource handler.</param>
 	Scene(window, resourceHandler),
-	state(state),
-	hardmodeSelected(false)
+	hardmodeSelected(false),
+	state(state)
 {
-	// Set a random seed and set random MODTID
-	std::srand(std::time(0));
-	messageOfTheDayId =  std::rand() % resourceHandler->getMOTDSize();
+	messageOfTheDayId =  effolkronium::random_static::get(0, resourceHandler->getMOTDSize());
 
 	this->init();
 }
@@ -153,7 +153,7 @@ void Menu::loadMenuOptions()
 	for (auto &i : optMap) // Iterate through maps of options
 	{
 		int x = 20;
-		float y = window.getView().getSize().y - 50;
+		float y = renderer.getView().getSize().y - 50;
 
 		std::map<Constants::MenuC::Options, std::string>::reverse_iterator rit;
 		for (rit = i.second.rbegin(); rit != i.second.rend(); ++rit)
@@ -161,7 +161,7 @@ void Menu::loadMenuOptions()
 			sf::Text txt;
 			txt.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 			txt.setString(sf::String(rit->second));
-			LOGD(rit->second);
+            SPDLOG_INFO(rit->second);
 			txt.setCharacterSize(30);
 			txt.setPosition(20, y);
 			txt.setFillColor(sf::Color(139, 137, 137));
@@ -189,12 +189,12 @@ void Menu::input(sf::Event& event)
 		if (currentOption == option[state].begin()->first)
 		{
 			currentOption = option[state].rbegin()->first;
-			LOGD("Pressed up, do nothing");
+            SPDLOG_INFO("Pressed up, do nothing");
 		}
 		else
 		{
 			currentOption--;
-			LOGD("Pressed up, go up");
+            SPDLOG_INFO("Pressed up, go up");
 		}
 
 	}
@@ -206,12 +206,12 @@ void Menu::input(sf::Event& event)
 		if (currentOption == option[state].rbegin()->first)
 		{
 			currentOption = option[state].begin()->first;
-			LOGD("Pressed down, do nothing");
+            SPDLOG_INFO("Pressed down, do nothing");
 		}
 		else
 		{
 			currentOption++;
-			LOGD("Pressed down, go down");
+            SPDLOG_INFO("Pressed down, go down");
 		}
 
 	}
@@ -310,7 +310,7 @@ void Menu::input(sf::Event& event)
 
 
 		default:
-			LOGD("Missing menu action!");
+            SPDLOG_INFO("Missing menu action!");
 			break;
 		}
 	}
@@ -330,7 +330,7 @@ void Menu::stageSelectInput(sf::Event& event)
 		// Handler for when clicking the LEFT key
 		if (event.key.code == sf::Keyboard::Left)
 		{
-			LOGD("Current Stage selected: " << getStageSelectOption());
+            SPDLOG_INFO("Current Stage selected: {}", getStageSelectOption());
 
 			// Stop the sound
 			resourceHandler->getSoundByEmoteName(scripts[getStageSelectOption()-1].getAudioDesc()).stop();
@@ -350,7 +350,7 @@ void Menu::stageSelectInput(sf::Event& event)
 		// Handler for when clicking the RIGHT key
 		else if (event.key.code == sf::Keyboard::Right)
 		{
-			LOGD("Current Stage selected: " << getStageSelectOption());
+            SPDLOG_INFO("Current Stage selected: {}", getStageSelectOption());
 
 			// Stop the sound
 			resourceHandler->getSoundByEmoteName(scripts[getStageSelectOption()-1].getAudioDesc()).stop();
@@ -377,7 +377,7 @@ void Menu::stageSelectInput(sf::Event& event)
 /// Gets the currently selected option.
 /// </summary>
 /// <returns>Option as INT</returns>
-int Menu::getCurrentOption()
+int Menu::getCurrentOption() const
 {
 	return this->currentOption;
 }
@@ -395,7 +395,7 @@ void Menu::setCurrentOption(int opt)
 /// Gets the stage select option.
 /// </summary>
 /// <returns>Returns the selected value on stage</returns>
-int Menu::getStageSelectOption()
+int Menu::getStageSelectOption() const
 {
 	return this->stageSelectOption;
 }
@@ -483,7 +483,7 @@ void Menu::drawOptions(GameState _state, float xOffset, float yOffset, sf::Color
 	{
 		i.second.move(xOffset, yOffset); // Move 'x' offset and 'y' offset
 		i.second.setFillColor(color);
-		window.draw(i.second);
+		renderer.draw(i.second);
 		i.second.move(-xOffset, -yOffset); // Move back  'x' offset and 'y' offset
 
 	}
@@ -494,7 +494,7 @@ void Menu::drawOptions(GameState _state, float xOffset, float yOffset, sf::Color
 	sh.setFillColor(sf::Color(255, 255, 255, 150));
 	sh.setSize(sf::Vector2f(pos.width + 20, pos.height / 2));
 	sh.setPosition(pos.left - 10 + xOffset, pos.top + (pos.height / 4) + yOffset);
-	window.draw(sh);
+	renderer.draw(sh);
 }
 
 
@@ -513,8 +513,8 @@ void Menu::drawGameTitle()
 	gameTitle.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::COMICATE));
 	gameTitle.setFillColor(sf::Color::Red);
 	gameTitle.setCharacterSize(80);
-	gameTitle.setPosition(sf::Vector2f(window.getView().getSize().x / 2 - (gameTitle.getGlobalBounds().width / 2), window.getView().getSize().y / 8 - (gameTitle.getGlobalBounds().height / 2)));
-	window.draw(gameTitle);
+	gameTitle.setPosition(sf::Vector2f(renderer.getView().getSize().x / 2 - (gameTitle.getGlobalBounds().width / 2), renderer.getView().getSize().y / 8 - (gameTitle.getGlobalBounds().height / 2)));
+	renderer.draw(gameTitle);
 
 	sf::Text gameSlogan;
 	gameSlogan.setString(sf::String(resourceHandler->getMessageOfTheDay(messageOfTheDayId)));
@@ -523,7 +523,7 @@ void Menu::drawGameTitle()
 	gameSlogan.rotate(1);
 	gameSlogan.setCharacterSize(20);
 	gameSlogan.setPosition(gameTitle.getPosition().x, gameTitle.getPosition().y + 80);
-	window.draw(gameSlogan);
+	renderer.draw(gameSlogan);
 
 
 	// Game version
@@ -532,8 +532,8 @@ void Menu::drawGameTitle()
 	gameVersion.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 	gameVersion.setFillColor(sf::Color(139, 137, 137));
 	gameVersion.setCharacterSize(15);
-	gameVersion.setPosition(sf::Vector2f(window.getView().getSize().x - gameVersion.getGlobalBounds().width - 10, window.getView().getSize().y - gameVersion.getGlobalBounds().height * 2));
-	window.draw(gameVersion);
+	gameVersion.setPosition(sf::Vector2f(renderer.getView().getSize().x - gameVersion.getGlobalBounds().width - 10, renderer.getView().getSize().y - gameVersion.getGlobalBounds().height * 2));
+	renderer.draw(gameVersion);
 
 }
 
@@ -546,7 +546,7 @@ void Menu::drawGameTitle()
 void Menu::drawStageSelect()
 {
 	// Finds where the first frame should be drawed,
-	sf::Vector2f frameStartPos((window.getView().getSize().x / 3) - 60, window.getView().getSize().y / 3);
+	sf::Vector2f frameStartPos((renderer.getView().getSize().x / 3) - 60, renderer.getView().getSize().y / 3);
 
 	// Counter, and y multiplier for the frames ( this is increased when an modulo X is reached)
     float yMult = 1;
@@ -555,7 +555,7 @@ void Menu::drawStageSelect()
 
 	sf::FloatRect currentStageSelBounds; // Read as Current stage select bounds
 	// Get each of the script names
-	for (Script& i : scripts)
+	for (ScriptTemplate& i : scripts)
 	{
 		// Ignore Game menu script
 		if (i.getScriptEnumVal() == Constants::ResourceC::Scripts::GAME_MENU)
@@ -565,10 +565,10 @@ void Menu::drawStageSelect()
 		}
 
 		// Image display
-		sf::RectangleShape frame(sf::Vector2f(window.getView().getSize().x / 8, window.getView().getSize().y / 8));
+		sf::RectangleShape frame(sf::Vector2f(renderer.getView().getSize().x / 8, renderer.getView().getSize().y / 8));
 		frame.setTexture(&resourceHandler->getTextureByString(i.getPortraitString()));
 		frame.setPosition((frameStartPos.x * count) - (frame.getGlobalBounds().width / 2), frameStartPos.y * yMult);
-		window.draw(frame);
+		renderer.draw(frame);
 
 		// Text Under image
 		sf::Text txtName;
@@ -577,7 +577,7 @@ void Menu::drawStageSelect()
 		txtName.setCharacterSize(20);
 		txtName.setFillColor(sf::Color::White);
 		txtName.setPosition(frame.getPosition().x, frame.getPosition().y + frame.getSize().y);
-		window.draw(txtName);
+		renderer.draw(txtName);
 
 		if (getStageSelectOption() == cnt) currentStageSelBounds = txtName.getGlobalBounds(); // Get current selected stage's text bounds
 
@@ -598,7 +598,7 @@ void Menu::drawStageSelect()
 	sh.setFillColor(sf::Color(255, 255, 255, 150));
 	sh.setSize(sf::Vector2f(currentStageSelBounds.width + 20, currentStageSelBounds.height / 2));
 	sh.setPosition(currentStageSelBounds.left - 10, currentStageSelBounds.top + (currentStageSelBounds.height / 4));
-	window.draw(sh);
+	renderer.draw(sh);
 
 	// Draw Stage Story (LORE)
 	sf::Text loreTitle;
@@ -606,7 +606,7 @@ void Menu::drawStageSelect()
 	loreTitle.setStyle(sf::Text::Style::Underlined);
 	loreTitle.setPosition(frameStartPos.x + 50,frameStartPos.y + 200);
 	loreTitle.setString("Lore");
-	window.draw(loreTitle);
+	renderer.draw(loreTitle);
 
 	sf::Text loreText;
 	loreText.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
@@ -617,7 +617,7 @@ void Menu::drawStageSelect()
 		"No Lore" :
 	evaluateSpecialChars(scripts[getStageSelectOption()-1].getLore()));
 
-	window.draw(loreText);
+	renderer.draw(loreText);
 
 
 
@@ -635,8 +635,8 @@ void Menu::drawCredits()
 	std::map<std::string, std::list<std::string>> credMap = resourceHandler->getCredits();
 
 	// Start positions
-	float startX = window.getView().getSize().x / 2;
-    float startY = window.getView().getSize().y / 4;
+	float startX = renderer.getView().getSize().x / 2;
+    float startY = renderer.getView().getSize().y / 4;
 
 	// Iterate though all of the credits categories
 	for (auto& credCats : credMap)
@@ -648,7 +648,7 @@ void Menu::drawCredits()
 		txtCredCat.setCharacterSize(30);
 		txtCredCat.setFillColor(sf::Color::White);
 		txtCredCat.setPosition(startX - (txtCredCat.getGlobalBounds().width / 2), startY);
-		window.draw(txtCredCat);
+		renderer.draw(txtCredCat);
 		startY += 40;
 
 		// Iterate through all of the credits for each of the categories
@@ -661,7 +661,7 @@ void Menu::drawCredits()
 			txtCred.setCharacterSize(20);
 			txtCred.setFillColor(sf::Color::White);
 			txtCred.setPosition(startX - (txtCred.getGlobalBounds().width / 2), startY);
-			window.draw(txtCred);
+			renderer.draw(txtCred);
 			startY += 25;
 		}
 
@@ -693,31 +693,31 @@ void Menu::drawPause(float xOffSet, float yOffset)
 void Menu::drawHighScore()
 {
 	// Get all of the highscores (Bad practice, needs work. Should not retrieve every frame)
-	std::map<Constants::ResourceC::Scripts, std::list<std::shared_ptr<HighScoreItem>>> hScore = resourceHandler->getHighScores();
+	std::map<Constants::ResourceC::Scripts, std::list<HighScoreItem>> hScore = resourceHandler->getHighScores();
 
 	// Determine the start y and x pos
-	float xPos = window.getView().getSize().x / 16;
-    float yPos = window.getView().getSize().y / 4;
+	float xPos = renderer.getView().getSize().x / 16;
+    float yPos = renderer.getView().getSize().y / 4;
 
 	// Draw the score header
 	sf::Text txtScore;
 	txtScore.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 	txtScore.setString(sf::String("Stage \t Playername \t Score \t Date"));
 	txtScore.setPosition(xPos, yPos);
-	window.draw(txtScore);
+	renderer.draw(txtScore);
 
 	// Draw each of top 1 highscores
-	for (auto & i : hScore)
+	for (auto& i : hScore)
 	{
-		std::shared_ptr<HighScoreItem> item = i.second.front();
+		HighScoreItem item = i.second.front();
 		yPos += 50;
 
 		// Draw the text
 		sf::Text txtHScore;
         txtHScore.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
-        txtHScore.setString(sf::String(std::to_string((int)item->stage) + "\t\t\t\t\t" + item->playerName + "\t\t\t\t" + std::to_string((int)item->score) + "\t" + item->date));
+        txtHScore.setString(sf::String(std::to_string((int)item.stage) + "\t\t\t\t\t" + item.playerName + "\t\t\t\t" + std::to_string((int)item.score) + "\t" + item.date));
         txtHScore.setPosition(xPos, yPos);
-		window.draw(txtHScore);
+		renderer.draw(txtHScore);
 	}
 
 }

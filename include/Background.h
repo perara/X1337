@@ -7,6 +7,7 @@
 #include <queue>
 #include <list>
 #include <memory>
+#include "Renderer.h"
 
 /// <summary>
 /// Background is used in World, and has it purpose to display and/or animate the background
@@ -14,14 +15,14 @@
 class Background
 {
 public:
-	Background(sf::RenderWindow& window);
+	Background(Renderer& window);
 
 	void addBackground(sf::Texture&, bool);
 	void process();
 	void draw();
 
 private:
-	sf::RenderWindow& window;
+	Renderer& window;
 
 	std::queue<sf::Sprite> images;
 	std::list<std::shared_ptr<sf::Texture>> textures;

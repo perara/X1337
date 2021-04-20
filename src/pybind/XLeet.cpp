@@ -23,6 +23,8 @@ void init_shooter(py::module &);
 void init_vectorn(py::module &);
 void init_world(py::module &);
 void init_menu(py::module &);
+void init_renderer(py::module &);
+void init_image(py::module &);
 
 void init_version(py::module &m) {
 #ifdef VERSION_INFO
@@ -49,7 +51,10 @@ init_script(m); \
 init_shooter(m); \
 init_vectorn(m); \
 init_world(m);\
-init_menu(m);
+init_menu(m);\
+init_renderer(m);\
+init_image(m);
+
 
 
 

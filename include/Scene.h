@@ -9,9 +9,9 @@ class Scene
 {
 public:
 	/// Constructor for scene which take constructs the scene object. 
-	Scene(sf::RenderWindow& window, std::shared_ptr<ResourceManager>& resourceHandler) :
-		window(window),
-		resourceHandler(resourceHandler){};
+	Scene(Renderer& window, std::shared_ptr<ResourceManager>& resourceHandler) :
+            renderer(window),
+            resourceHandler(resourceHandler){};
 
 	/// Pure virtual draw handler
 	virtual void draw() = 0;
@@ -24,7 +24,7 @@ public:
 
 protected:
 	/// This is a reference to the render window made in GameEngine
-	sf::RenderWindow& window;
+    Renderer& renderer;
 
 	/// ResourceHandler reference as a smart pointer which was made in GameEngine
 	std::shared_ptr<ResourceManager>& resourceHandler;

@@ -12,7 +12,7 @@
 class Menu : public Scene{
 public:
 
-	Menu(sf::RenderWindow& window, GameState& state, std::shared_ptr<ResourceManager>& resourceHandler);
+	Menu(Renderer& window, GameState& state, std::shared_ptr<ResourceManager>& resourceHandler);
 
 	// Scene virtuals
 	virtual void draw();
@@ -26,7 +26,7 @@ public:
 	bool getHardmodeSelected() const;
 	void resetCurrentOption();
 	void drawPause(float xOffSet, float yOffset); // Should be accessible to gameEngine
-	int getStageSelectOption();
+	int getStageSelectOption() const;
 	void setStageSelectOption(int);
 	void setMessageOfTheDayId(int);
 private:
@@ -49,7 +49,7 @@ private:
 
 
 	int currentOption; // Current selected menu option
-	int getCurrentOption();
+	int getCurrentOption() const;
 	void setCurrentOption(int);
 
 	int numStages; // This describes number of stages
@@ -59,7 +59,7 @@ private:
 	// Option lists
 	std::map<GameState, std::map<Constants::MenuC::Options, std::string>> optMap;
 	std::map<GameState, std::map<Constants::MenuC::Options, sf::Text>> option;
-	std::vector<Script> scripts;
+	std::vector<ScriptTemplate> scripts;
 
 	bool hardmodeSelected;
 	GameState& state;

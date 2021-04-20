@@ -1,18 +1,21 @@
+#include <spdlog/spdlog.h>
+#include <Renderer.h>
 #include "../include/Background.h"
-#include "../include/Log.h"
+
 
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Background"/> class.
 /// </summary>
 /// <param name="window">The window.</param>
-Background::Background(sf::RenderWindow& window) :
+Background::Background(Renderer& window) :
 	window(window),
+    scrollOffset(0),
+    slide(false),
 	r(255),
 	g(0),
-	b(0),
-	scrollOffset(0),
-	slide(false){}
+    b(0)
+	{}
 
 
 /// <summary>
@@ -22,7 +25,7 @@ Background::Background(sf::RenderWindow& window) :
 /// <param name="slide">Boolean detrmining slide effect</param>
 void Background::addBackground(sf::Texture& texture, bool _slide)
 {
-	LOGD("Loading background...");
+    SPDLOG_INFO("Loading background...");
 	this->slide = _slide;
 
 	// Create the sprite
@@ -48,7 +51,7 @@ void Background::addBackground(sf::Texture& texture, bool _slide)
 
 	// Move secondary textureSlide above primary.
 	secondary.setPosition(0, -secondary.getGlobalBounds().height);
-	LOGD("Background loaded successfully.");
+    SPDLOG_INFO("Background loaded successfully.");
 }
 
 /// <summary>

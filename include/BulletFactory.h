@@ -13,7 +13,7 @@ class ResourceManager;
 class BulletFactory{
 public:
 
-	BulletFactory(sf::RenderWindow& window,
+	BulletFactory(Renderer& window,
 		int quantity,
 		const sf::Time& timeStep,
 		std::shared_ptr<ResourceManager>& resourceHandler);
@@ -22,7 +22,7 @@ public:
 	void returnObject(std::unique_ptr<Bullet>& bullet);
 
 	// Requesters
-	std::list<std::unique_ptr<Bullet>> requestBatch(int quantity, Constants::BulletType type);
+	std::list<std::unique_ptr<Bullet>> requestBatch(size_t quantity, Constants::BulletType type);
 	std::unique_ptr<Bullet> requestObject(Constants::BulletType type);
 
 private:
@@ -36,7 +36,7 @@ private:
 	std::map<Constants::BulletType, std::list<std::unique_ptr<Bullet>>> objects;
 
 	// Dependency injected
-	sf::RenderWindow& window;
+	Renderer& window;
 	const sf::Time& timeStep;
 	std::shared_ptr<ResourceManager>& resourceHandler;
 };

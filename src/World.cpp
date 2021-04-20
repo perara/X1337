@@ -1,11 +1,8 @@
 #include "../include/World.h"
-
 #include <memory>
-#include "../include/ResourceManager.h"
-#include "../include/Player.h"
+#include <spdlog/spdlog.h>
+#include <Renderer.h>
 #include "../include/Enemy.h"
-#include "../include/Bullet.h"
-#include "../include/Background.h"
 #include "../include/Log.h"
 #include "../include/GameShape.h"
 
@@ -21,47 +18,46 @@
 /// <param name="scriptNum">Which script should be runned in this world instance</param>
 /// <param name="hardMode">Weither its hardmode or not.</param>
 /// <param name="ingameSong">Selected ingame sound</param>
-World::World(sf::RenderWindow& window,
-	std::shared_ptr<ResourceManager>& resourceHandler,
-	const sf::Time& timeStep,
-	const bool demo,
-	const int scriptNum,
-	const bool hardMode,
-	sf::Sound& ingameSong)
-	:
-	Scene(window, resourceHandler),
-	bg(Background(window)),
-	bFactory(BulletFactory(window, 1000, timeStep, resourceHandler)),
-	timeStep(timeStep),
-	countdownSong(resourceHandler->getSound(Constants::ResourceC::Sound::MUSIC_COUNTDOWN)),
-	ingameSong(ingameSong),
-	gameOver(0),
-	stageProgress(0),
-	hardMode(hardMode),
-	demo(demo),
-	player(std::make_shared<Player>(window, sf::Vector2f(100, 250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode, objects))
+World::World(Renderer& window,
+             std::shared_ptr<ResourceManager>& resourceHandler,
+             const sf::Time& timeStep,
+             const Constants::ResourceC::Scripts scriptNum,
+             const bool hardMode,
+             sf::Sound& ingameSong)
+	: Scene(window, resourceHandler)
+	, bg(Background(window))
+	, bFactory(BulletFactory(window, 1000, timeStep, resourceHandler))
+	, player(std::make_shared<Player>(window, sf::Vector2f(100, 250), 10, bFactory, bullets, resourceHandler, timeStep, hardMode, objects))
+    , ingameSong(ingameSong)
+    , countdownSong(resourceHandler->getSound(Constants::ResourceC::Sound::MUSIC_COUNTDOWN))
+    , timeStep(timeStep)
+    , hardMode(hardMode)
+    , gameOver(0)
+    , stageProgress(0)
 {
 
-	if (demo)
-	{
-		bg.addBackground(resourceHandler->getTexture(Constants::ResourceC::Texture::BACKGROUND2), false);
-		script = resourceHandler->getScript(Constants::ResourceC::Scripts::GAME_MENU);
-		currentScript = scriptNum;
-		ingameSong.play();
-	}
-	else
-	{
-		bg.addBackground(resourceHandler->getTexture(Constants::ResourceC::Texture::BACKGROUND3), true);
-		script = resourceHandler->getScriptById(scriptNum);
-		currentScript = scriptNum;
+		script = resourceHandler->getScript(scriptNum)->load(this);
 
-		// Aditionally adds the player and starts the countdown soundtrack
-		this->objects.push_back(std::shared_ptr<Player>(player));
-		countdownSong.play();
-	}
+		if(this->isGameMenu()){
+            ingameSong.play();
+            bg.addBackground(resourceHandler->getTexture(Constants::ResourceC::Texture::BACKGROUND2), false);
+		}else{
+            // Aditionally adds the player and starts the countdown soundtrack
+            bg.addBackground(resourceHandler->getTexture(Constants::ResourceC::Texture::BACKGROUND3), true);
+            this->objects.push_back(std::shared_ptr<Player>(player));
+            countdownSong.play();
+		}
 
 	// Runs the sounds (Had to be done frome seperate function for some reason, (dies in the constructor?)
 	startSound();
+}
+
+bool World::isGameMenu(){
+    return script->getScriptID() == Constants::ResourceC::Scripts::GAME_MENU;
+}
+
+bool World::hasGameScript(){
+    return script && !isGameMenu();
 }
 
 /// <summary>
@@ -69,7 +65,7 @@ World::World(sf::RenderWindow& window,
 /// </summary>
 World::~World()
 {
-	LOGD("World deconstructor called");
+    SPDLOG_INFO("World deconstructor called");
 }
 
 /// <summary>
@@ -99,17 +95,19 @@ void World::process()
 	bg.process();
 
 	// Process the loaded script IF countdown is done and its not a demo (Demo does not have countdown)
-	bool scriptRunning;
-	(countdownSong.getStatus() != 0 && !demo) ?
-		scriptRunning = true :
-		scriptRunning = script.process(window, objects, powerups, bullets, bFactory, resourceHandler, timeStep);
+
+	if (countdownSong.getStatus() == 0 || isGameMenu()){
+        script->process();
+	}
+
+
 
 	///////////////////////////////////
 	// Object processing and cleanup //
 	///////////////////////////////////
 	if (!objects.empty())
 	{
-		for (std::list<std::shared_ptr<Shooter>>::iterator objectIt = objects.begin(); objectIt != objects.end();)
+		for (auto objectIt = objects.begin(); objectIt != objects.end();)
 		{
 			// Process the object (Player and enemy)
 			(*objectIt)->process();
@@ -203,8 +201,7 @@ void World::process()
 	} // -- if end
 
 	// Update the stage progression
-	stageProgress = (int)(player->getPlayerKills() * ((float)100 / script.getStartEnemyListSize())); // Stage progress in percent
-
+	stageProgress = ((float)player->getTotalDamageDone() / (float)script->getEnemyTotalHealth()) * 100.0f; // Stage progress in percent
 
 	// Check for gameOver
 	evaluateGameOver();
@@ -215,7 +212,7 @@ void World::process()
 /// </summary>
 void World::drawStats()
 {
-	player->drawStats(resourceHandler->getHighScores()[(Constants::ResourceC::Scripts)currentScript]);
+	player->drawStats(resourceHandler->getHighScores()[(Constants::ResourceC::Scripts)script->getScriptID()]);
 }
 
 /// <summary>
@@ -257,7 +254,7 @@ void World::draw()
 	}
 
 	// Draw "Prepare Text"
-	if (countdownSong.getStatus() != 0 && !demo)
+	if (countdownSong.getStatus() != 0 && !isGameMenu())
 	{
 		sf::Text txtPrep;
 		txtPrep.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
@@ -265,9 +262,9 @@ void World::draw()
 		txtPrep.setString("Prepare for game!");
 		txtPrep.setFillColor(sf::Color::White);
 		txtPrep.setPosition((
-			window.getView().getSize().x / 2) - (txtPrep.getGlobalBounds().width / 2),
-			(window.getView().getSize().y / 2) - (txtPrep.getGlobalBounds().height));
-		window.draw(txtPrep);
+                                    renderer.getView().getSize().x / 2) - (txtPrep.getGlobalBounds().width / 2),
+                            (renderer.getView().getSize().y / 2) - (txtPrep.getGlobalBounds().height));
+		renderer.draw(txtPrep);
 	}
 }
 
@@ -286,14 +283,14 @@ void World::input(sf::Event& event)
 /// </summary>
 void World::drawGameProgress()
 {
-	if (!demo)
+	if (!isGameMenu())
 	{
 		sf::Text txtProgress;
 		txtProgress.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
 		txtProgress.setCharacterSize(12);
 		txtProgress.setString("Stage Progress: " + std::to_string(stageProgress) + "%");
-		txtProgress.setPosition(10, window.getView().getSize().y - txtProgress.getGlobalBounds().height * 2);
-		window.draw(txtProgress);
+		txtProgress.setPosition(10, renderer.getView().getSize().y - txtProgress.getGlobalBounds().height * 2);
+		renderer.draw(txtProgress);
 	}
 }
 
@@ -316,13 +313,54 @@ void World::evaluateGameOver()
 	// 1. Script is set correctly
 	// 2. Playerscore is above 0
 	// 3. Game over is not false (0)
-	if (currentScript != -1 &&
+	if (hasGameScript() &&
 		player->getPlayerScore() > 0 &&
 		gameOver != 0
 		)
+
 	{
 		// Writes to the Highscore.
-		int multiplier = (hardMode ? 2 : 1); // Hardmode multiplier.
-		resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, currentScript); // Write highscore
+		float multiplier = (hardMode ? 2.0f : 1.0f); // Hardmode multiplier.
+		resourceHandler->writeHighScoreScore(player->getPlayerScore() * multiplier, script->getScriptID()); // Write highscore
 	}
+}
+
+const sf::Time &World::getTimeStep() {
+    return timeStep;
+}
+
+BulletFactory &World::getBulletFactory() {
+    return bFactory;
+}
+
+std::list<std::unique_ptr<Bullet>> &World::getBullets() {
+    return bullets;
+}
+
+std::shared_ptr<ResourceManager> &World::getResourceHandler() {
+    return resourceHandler;
+}
+
+sf::RenderWindow &World::getWindow() {
+    return renderer.getWindow();
+}
+
+Renderer& World::getRenderer(){
+    return renderer;
+}
+
+void World::addEnemyObject(std::shared_ptr<Enemy> &enemy) {
+    objects.push_back(enemy);
+}
+
+std::list<std::shared_ptr<Shooter>>& World::getShooterObjects() {
+    return objects;
+}
+
+void World::addPowerupObject(std::shared_ptr<Powerup> &powerup) {
+    powerups.push_back(powerup);
+}
+
+std::list<std::shared_ptr<Powerup>>& World::getPowerupObjects() {
+    return powerups;
 }

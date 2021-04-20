@@ -1,6 +1,7 @@
 #include "../include/ResourceManager.h"
 #include "../include/Log.h"
 #include "../include/Enemy.h"
+#include <spdlog/spdlog.h>
 #include <memory>
 #include <sstream>
 #include <chrono>
@@ -9,8 +10,8 @@
 #include <pugixml.hpp>
 
 #include <filesystem>
-
 #include <cmrc/cmrc.hpp>
+#include <nlohmann/json.hpp>
 
 CMRC_DECLARE(xleetrc);
 
@@ -20,7 +21,7 @@ CMRC_DECLARE(xleetrc);
 /// Initializes a new instance of the <see cref="ResourceHandler"/> class.
 /// </summary>
 /// <param name="window">The window.</param>
-ResourceManager::ResourceManager(sf::RenderWindow& window) :
+ResourceManager::ResourceManager(Renderer& window) :
 inited(false),
 window(window)
 {
@@ -39,8 +40,8 @@ void ResourceManager::init()
 {
 	// Define Resources
 	// HIGHSCORE
-	creditsFilePath = "assets/credits.xml";
-	highScoreFile = "assets/state.xml";
+	creditsFilePath = "assets/credits.json";
+	highScoreFile = "assets/state.json";
 
 	// Textures
 	{
@@ -178,11 +179,11 @@ void ResourceManager::loadFonts()
         auto file = fs.open(i.second);
         auto data = std::string_view(file.begin(), file.end() - file.begin());
 		if (fonts[i.first].loadFromMemory(data.data(), data.size())){
-			LOGD("Font loaded: " << i.second);
+            SPDLOG_INFO("Font loaded: {}", i.second);
 		}
 		else
 		{
-			LOGD("Failed to load font: " << i.second);
+            SPDLOG_INFO("Failed to load font: {}", i.second);
 
 		}
 	}
@@ -202,11 +203,11 @@ void ResourceManager::loadTextures()
         auto file = fs.open(i.second);
         auto data = std::string_view(file.begin(), file.end() - file.begin());
 		if (textures[i.first].loadFromMemory(data.data(), data.size())){
-			LOGD("Texture loaded: " << i.second);
+            SPDLOG_INFO("Texture loaded: {}", i.second);
 		}
 		else
 		{
-			LOGD("Failed to load texture: " << i.second);
+            SPDLOG_INFO("Failed to load texture: {}", i.second);
 
 		}
 	}
@@ -227,11 +228,11 @@ void ResourceManager::loadSound()
 		sBufferList.push_back(buf);
 		if (buf->loadFromMemory(data.data(), data.size())){
 			sounds[i.first].setBuffer(*buf);
-			LOGD("Sound loaded: " << i.second);
+            SPDLOG_INFO("Sound loaded: {}", i.second);
 		}
 		else
 		{
-			LOGD("Failed to load sound: " << i.second);
+            SPDLOG_INFO("Failed to load sound: {}", i.second);
 		}
 
 	}
@@ -240,9 +241,12 @@ void ResourceManager::loadSound()
 /// <summary>
 /// Loads the high score.
 /// </summary>
+
+// TODO
+// /mnt/disk1/From_Nas/to_move/nextcloud_data/per/files/Documents/University of Agder/DAT-220/Project/source/Script Maker
 void ResourceManager::loadHighScore()
 {
-    auto stateFile = std::filesystem::current_path().append("state.xml");
+    auto stateFile = std::filesystem::current_path().append("state.json");
 
     if(!exists(stateFile)){
         auto fs = cmrc::xleetrc::get_filesystem();
@@ -257,44 +261,30 @@ void ResourceManager::loadHighScore()
 
 	if (fileStream.good())
 	{
-		// Load XML and parse it
-		pugi::xml_document doc;
-		pugi::xml_parse_result result = doc.load(fileStream);
+		auto data = nlohmann::json::parse(fileStream);
 
-		// If XML was parsed successfully without errors
-		if (result)
-		{
-			// Fetch the root node
-			pugi::xml_node root = doc.child("Savegame");
+		for(auto &stage : data["stages"]){
 
-			// Iterate though all stages
-			for (pugi::xml_node node : root.child("Stages").children())
-			{
-				// Highscore list for "this" (node) stage
-				std::list<std::shared_ptr<HighScoreItem>> highScoreStage;
+            // Get the stage enum from attribute
+            int stageID = stage["id"].get<int>();
 
-				// Get the stage enum from attribute
-				int sEnum = atoi(node.attribute("enum").value());
+            for(auto &playerItem : stage["players"]){
+                auto playerName = playerItem["name"].get<std::string>();
+                auto playerScore = playerItem["score"].get<float>();
+                auto playerDate = playerItem["date"].get<std::string>();
 
-				// Iterate through all players in the stage
-				for (pugi::xml_node recNode : node.children())
-				{
-					// Fetch each of the player details for the highscore record
-					std::string pName = recNode.child("Name").child_value();
-					float pScore = atof(recNode.child("Score").child_value());
-					std::string pDate = recNode.child("Date").child_value();
-					highScoreStage.push_back(std::make_shared<HighScoreItem>(
-                            (Constants::ResourceC::Scripts)sEnum, pName, pScore, pDate));
-				}
+                highScoreStages[(Constants::ResourceC::Scripts)stageID].emplace_back(
+                        (Constants::ResourceC::Scripts)stageID,
+                        playerName,
+                        playerScore,
+                        playerDate
+                );
+            }
 
-				// Sort by score (ASC) then add to highScoreMap
-				highScoreStage.sort([](std::shared_ptr<HighScoreItem> & a, std::shared_ptr<HighScoreItem> & b) { return a->score > b->score; });
-				highScoreStages[(Constants::ResourceC::Scripts)sEnum] = (highScoreStage);
-			}
-		}
-		else
-		{
-			LOGD("Error description: " << result.description() << "\n");
+            // Sort by score (ASC) then add to highScoreMap
+            highScoreStages[(Constants::ResourceC::Scripts)stageID]
+            .sort([](HighScoreItem & a, HighScoreItem & b) { return a.score > b.score; });
+
 		}
 	}
 }
@@ -304,7 +294,7 @@ void ResourceManager::loadHighScore()
 /// </summary>
 /// <param name="score">The score.</param>
 /// <param name="scriptEnum">The script enum.</param>
-void ResourceManager::writeHighScoreScore(int score, int scriptEnum)
+void ResourceManager::writeHighScoreScore(float score, int scriptEnum)
 {
 	// Read XML file raw (Create file Stream)
 	std::ifstream fileStream(highScoreFile);
@@ -368,7 +358,7 @@ void ResourceManager::writeHighScoreScore(int score, int scriptEnum)
 		}
 		else
 		{
-			LOGD("Error description: " << result.description() << "\n");
+            SPDLOG_INFO("Error description: {}\n", result.description());
 		}
 	}
 	loadHighScore(); // RELOAD  XML
@@ -499,7 +489,7 @@ void ResourceManager::loadScripts()
 					        scriptRepeat);
 					counter++;
 				}
-				LOGD(i.first << " was successfully loaded. " << counter << "enemies was queued.");
+                SPDLOG_INFO( "{} was successfully loaded. {} enemies was queued.", i.first, counter);
 
 				///////////////////////////////////////
 				// Loop through each of the power ups////
@@ -526,7 +516,7 @@ void ResourceManager::loadScripts()
                             (int)pwrRepeat);
 					counter++;
 				}
-				LOGD(i.first << " was successfully loaded. " << counter << "powerups was queued.");
+                SPDLOG_INFO("{} was successfully loaded. {} powerups was queued.", i.first, counter);
 
 				// Fetch Story
 				pugi::xml_node story = root.child("Story");
@@ -545,14 +535,13 @@ void ResourceManager::loadScripts()
 				this->scripts[i.first].setScriptEnumVal(i.first);
 				this->scripts[i.first].setScriptTitle(scriptName);
 				this->scripts[i.first].setPortraitString(portrait);
-				this->scripts[i.first].setInit(true);
 
 
 			}
 			else
 				// Handle a error message on exception
 			{
-				LOGD("Error description: " << result.description() << "\n");
+                SPDLOG_INFO("Error description:", result.description());
 			}
 		}
 	}
@@ -572,47 +561,22 @@ void ResourceManager::loadUserName()
 void ResourceManager::loadCredits()
 {
     auto fs = cmrc::xleetrc::get_filesystem();
+	if (!fs.exists(creditsFilePath)) {
+        SPDLOG_INFO("Credits file could not be found!: {}");
+    }
+    auto file = fs.open(creditsFilePath);
 
+	auto data = nlohmann::json::parse(file.begin(), file.end());
 
-	if (fs.exists(creditsFilePath))
-	{
-		// Load XML and parse it
-		pugi::xml_document doc;
-        auto file = fs.open(creditsFilePath);
-        auto data = std::string_view(file.begin(), file.end() - file.begin()).data();
-		pugi::xml_parse_result result = doc.load_string(data);
+	for(const auto& item : data.items()) {
 
-		// If XML was parsed successfully without errors
-		if (result)
-		{
-			// Get the root node
-			pugi::xml_node root = doc.child("Credits");
+        for (const auto &node : item.value()) {
 
-			// Loop through each of the credits
-			for (pugi::xml_node node : root.children())
-			{
-				// Create a empty list for names to be credited.
-				std::list<std::string> credNames;
+            // Add the list to map index.
+            creditsMap[item.key()].emplace_back(node.get<std::string>());
+        }
+    }
 
-				// Iterate through all of the names in a credit category
-				for (pugi::xml_node dataNode : node.children())
-				{
-					// Push credited name into list
-					credNames.emplace_back(dataNode.child_value());
-				}
-
-				// Add the list to map index.
-				creditsMap[node.name()] = credNames;
-			}
-
-		}
-		else
-			// Handle a error message on exception
-		{
-			LOGD("Error description: " << result.description() << "\n");
-		}
-
-	}
 }
 
 /// <summary>
@@ -663,37 +627,20 @@ sf::Texture& ResourceManager::getTexture(Constants::ResourceC::Texture res)
 /// </summary>
 /// <param name="query">The query.</param>
 /// <returns>Returns a script copy</returns>
-Script ResourceManager::getScript(Constants::ResourceC::Scripts query)
+std::unique_ptr<ScriptTemplate> ResourceManager::getScript(Constants::ResourceC::Scripts scriptID)
 {
-	return this->scripts[query];
+	return std::make_unique<ScriptTemplate>(this->scripts[scriptID]);
 }
 
-/// <summary>
-/// Gets the script by an identifier. (Enum)
-/// </summary>
-/// <param name="iteNum">The ite number.</param>
-/// <returns>A script</returns>
-Script ResourceManager::getScriptById(int iteNum)
-{
-	// Meh method
-	int cnt = 1;
-	for (Script& i : getScripts(true))
-	{
-		if (cnt == iteNum) return i;
-		cnt++;
-	}
-
-    return Script();
-}
 
 /// <summary>
 /// Gets all of the scripts.
 /// </summary>
 /// <returns>A list with scripts (all scripts)</returns>
-std::list<Script> ResourceManager::getScripts(bool encounterOnly)
+std::list<ScriptTemplate> ResourceManager::getScripts(bool encounterOnly)
 {
-	std::list<Script> ret;
-	for (Script i : scripts)
+	std::list<ScriptTemplate> ret;
+	for (ScriptTemplate i : scripts)
 	{
 		if (i.getScriptEnumVal() != Constants::ResourceC::Scripts::GAME_MENU)
 			ret.push_back(i);
@@ -775,7 +722,7 @@ void ResourceManager::stopAllSound()
 /// Gets the high scores.
 /// </summary>
 /// <returns>map with all highscores</returns>
-std::map<Constants::ResourceC::Scripts, std::list<std::shared_ptr<HighScoreItem>>> ResourceManager::getHighScores()
+std::map<Constants::ResourceC::Scripts, std::list<HighScoreItem>> ResourceManager::getHighScores()
 {
 	return this->highScoreStages;
 }

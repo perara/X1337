@@ -1,10 +1,10 @@
 #include "../include/Enemy.h"
 #include "../include/GameShape.h"
 #include "../include/BulletFactory.h"
-#include "../include/Log.h"
 #include <cmath>
 #include <memory>
 #include <utility>
+#include <spdlog/spdlog.h>
 
 /// <summary>
 /// Initializes a new instance of the <see cref="Enemy"/> class.
@@ -18,22 +18,26 @@
 /// <param name="bullets">The bullets.</param>
 /// <param name="resourceHandler">The resource handler.</param>
 /// <param name="timeStep">The time step.</param>
-Enemy::Enemy(sf::RenderWindow& window,
+Enemy::Enemy(Renderer& window,
 	std::queue<VectorN> path,
 	std::list<std::pair<int, std::string>> emoteQueue,
-	int type, int repeat, BulletFactory& bFactory,
+	int type, int repeat, int delay, BulletFactory& bFactory,
 	std::list<std::unique_ptr<Bullet>>& bullets,
 	std::shared_ptr<ResourceManager>& resourceHandler,
+	std::list<std::shared_ptr<Shooter>>& objects,
 	const sf::Time& timeStep
 	) :
-	pathTemplate(std::move(path)), // Const, not to be changed (The template is copyed when a path is over in repeat mode)
-	emoteQueue(std::move(emoteQueue)),
-	enemyType(Constants::EnemyC::Type::NONE),
-	repeat(repeat),
-	secondRot(0),
-	acceleration(0),
-	speed(sf::Vector2f(50, 50)),
-	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
+	Shooter(window, bFactory, bullets, resourceHandler, objects, timeStep),
+
+    repeat(repeat),
+    spawnDelay(delay),
+    acceleration(0),
+    speed(sf::Vector2f(50, 50)),
+    pathTemplate(std::move(path)), // Const, not to be changed (The template is copyed when a path is over in repeat mode)
+    emoteQueue(std::move(emoteQueue)),
+    enemyType(Constants::EnemyC::Type::NONE),
+    secondRot(0)
+
 {
 	// Sets the type of the Shooter to enemy
 	this->shooterType = Constants::ShooterType::ENEMY;
@@ -105,7 +109,7 @@ void Enemy::setInitPath()
 /// Finalizes an instance of the <see cref="Enemy"/> class.
 /// </summary>
 Enemy::~Enemy(){
-	LOGD("Deconstructor called for: Enemy#" << this);
+    SPDLOG_INFO("Deconstructor called for: Enemy#" , (void*)this);
 }
 
 
@@ -115,7 +119,7 @@ Enemy::~Enemy(){
 void Enemy::draw()
 {
 	// Draw Enemy
-	this->window.draw(*this->sprite);
+	this->renderer.draw(*this->sprite);
 
 
 	// Calculates the health bar percentage
@@ -129,7 +133,7 @@ void Enemy::draw()
 		this->sprite->getGlobalBounds().left + (barWidth * 25),
 		this->sprite->getGlobalBounds().top - 5);
 	healthBar.setFillColor(sf::Color::Green);
-	window.draw(healthBar);
+	renderer.draw(healthBar);
 
 	/*sf::FloatRect bounds = this->sprite->getGlobalBounds();
 	sf::RectangleShape af(sf::Vector2f(bounds.width,bounds.height));
@@ -161,7 +165,7 @@ void Enemy::shoot(int shoot)
 		{
 			// Gets a bullet and set the appropriate data, then push to the bulletlist
 			std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::standardShot);
-			b->setOwner(this->getType());
+			b->setOwner(this);
 			b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y - 10);
 			getBullets().push_back(std::move(b));
 
@@ -178,7 +182,7 @@ void Enemy::shoot(int shoot)
 			for (auto& i : bat)
 			{
 				std::unique_ptr<Bullet> bs = std::move(i);
-				bs->setOwner(this->getType());
+				bs->setOwner(this);
 				bs->sprite->setPosition(startX, this->sprite->getPosition().y - 10);
 				getBullets().push_back(std::move(bs));
 				startX += this->sprite->getGlobalBounds().width / 4;
@@ -198,7 +202,7 @@ void Enemy::shoot(int shoot)
 			for (auto& i : bat)
 			{
 				std::unique_ptr<Bullet> bs = std::move(i);
-				bs->setOwner(this->getType());
+				bs->setOwner(this);
 				bs->sprite->setPosition(startX, this->sprite->getPosition().y - 10);
 				getBullets().push_back(std::move(bs));
 				startX += this->sprite->getGlobalBounds().width / 10;
@@ -213,7 +217,7 @@ void Enemy::shoot(int shoot)
 			if (shoot == 3 || shoot == 5) // Special attack
 			{
 				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::standardShot);
-				b->setOwner(this->getType());
+				b->setOwner(this);
 
 				// Rotational Lazor (Lol)
 				if (shoot == 5)
@@ -240,7 +244,7 @@ void Enemy::shoot(int shoot)
 				for (int i = 0; i < 360; i += 2)
 				{
 					std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::standardShot);
-					b->setOwner(this->getType());
+					b->setOwner(this);
 					b->setRotation((float)i + secondRot, sf::Vector2f(150, 150));
 					b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
 					getBullets().push_back(std::move(b));
@@ -362,7 +366,7 @@ void Enemy::movement()
 		// If there is no paths to go.
 		else
 		{
-			LOGD("Enemy#" << this << " delete flag set");
+            SPDLOG_INFO("Enemy#{} delete flag set", (void*)this);
 			setDeleted(true);
 
 			// If the enemy has repeat option on, reinit it.
@@ -451,4 +455,8 @@ void Enemy::setEnemyType(Constants::EnemyC::Type type)
 Constants::EnemyC::Type Enemy::getEnemyType()
 {
 	return this->enemyType;
+}
+
+int Enemy::getDelay() const {
+    return spawnDelay;
 }

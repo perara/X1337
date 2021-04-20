@@ -14,18 +14,22 @@
 /// <param name="resourceHandler">The resource handler.</param>
 /// <param name="timeStep">The time step.</param>
 Powerup::Powerup(
-	sf::RenderWindow& window,
+	Renderer& window,
 	const VectorN& startPoint,
 	int type,
+	bool repeat,
+	int delay,
 	std::shared_ptr<ResourceManager>& resourceHandler,
 	const sf::Time& timeStep
-	) :
-	resourceHandler(resourceHandler),
-	type((Constants::PowerUpType)type),
-	Object(window),
-	timeStep(timeStep),
-	speedX(0),
-	speedY(150)
+	)
+    : Object(window)
+    , delay(delay)
+    , repeat(repeat)
+    , speedX(0)
+    , speedY(150)
+    , timeStep(timeStep)
+    , type((Constants::PowerUpType)type)
+    , resourceHandler(resourceHandler)
 {
 	// Determine which type the poweup is, set the desired texture.
 	if (type == Constants::PowerUpType::HEALTH_INCREMENT)

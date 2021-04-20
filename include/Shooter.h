@@ -28,12 +28,15 @@ public:
 
     int getStartHealth() const;
 
+    int getTotalDamageDone() const;
+
 protected:
 	/// Shooter Constructor which takes in required parameters for the class to work.
-	Shooter(sf::RenderWindow& window,
+	Shooter(Renderer& window,
 		BulletFactory&,
 		std::list<std::unique_ptr<Bullet>>&,
 		std::shared_ptr<ResourceManager>& resourceHandler,
+		std::list<std::shared_ptr<Shooter>>& objects,
 		const sf::Time& timeStep);
 
 	/// Resource Handler reference originating from GameEngine
@@ -45,7 +48,11 @@ protected:
 	/// Timestep variable originating from GameEngine 
 	const sf::Time& timeStep;
 
-	// BulletFactory Getter
+    /// The Shooter list which contains all enemies (+ player, NB!)
+    std::list<std::shared_ptr<Shooter>>& objects;
+
+
+    // BulletFactory Getter
 	BulletFactory& getBulletFactory();
 
 	// Hit Detection processor
@@ -60,6 +67,8 @@ protected:
 	/// Integer which describes startHealth and the totalHealth (since the Shooter starts with 100% health)
 	int startHealth;
 
+    void processShipCollision();
+
 private:
 	/// Integer value which describes Shooter 's current health
 	int health;
@@ -72,4 +81,10 @@ private:
 
 	/// Shooter 's score value, this value determines the point gain when an Shooter dies (ie Player kills Enemy)
 	float scoreValue;
+
+    void addTotalDamageDone(int damage);
+
+    int totalDamageDone;
+
+
 };

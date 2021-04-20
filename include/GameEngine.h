@@ -6,6 +6,7 @@
 #include "World.h"
 #include "Menu.h"
 #include "Constants.h"
+#include "Renderer.h"
 
 
 /// <summary>
@@ -20,9 +21,6 @@ public:
 	void setState(GameState state);
 	GameState& getState();
 
-	// Resource Handler getter/setter
-	std::shared_ptr<ResourceManager>& getResourceHandler();
-
     void runGame();
 
 private:
@@ -33,7 +31,8 @@ private:
 
 	void drawOpts(); // Function which draws the mute icon
 
-	sf::RenderWindow window;
+
+	Renderer renderer;
 
 	std::unique_ptr<World> world;
 	std::unique_ptr<Menu> menu;
@@ -53,4 +52,8 @@ private:
 
 	GameState state;
 	bool fullscreen;
+
+    void gameStep();
+
+    void CreateInputEvent(Constants::Input inputEnum);
 };

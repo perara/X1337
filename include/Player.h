@@ -14,7 +14,7 @@ class Bullet;
 class Player : public Shooter
 {
 public:
-	Player(sf::RenderWindow& window,
+	Player(Renderer& window,
 		sf::Vector2f pos,
 		int radius,
 		BulletFactory&,
@@ -33,7 +33,7 @@ public:
 	void addScore(float score);
 
 	// Draw the stats view
-	void drawStats(std::list<std::shared_ptr<HighScoreItem>>&);
+	void drawStats(std::list<HighScoreItem>&);
 
 	// Retrieves the player score
     float getPlayerScore() const;
@@ -79,7 +79,4 @@ private:
 	/// </summary>
 	sf::Time specialShotTime;
 
-
-	/// The Shooter list which contains all enemies (+ player, NB!)
-	std::list<std::shared_ptr<Shooter>>& objects;
 };

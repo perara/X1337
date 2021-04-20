@@ -10,7 +10,7 @@
 /// <param name="bullets">The bullets.</param>
 /// <param name="timeStep">The time step.</param>
 /// <param name="resourceHandler">The resource handler.</param>
-BulletFactory::BulletFactory(sf::RenderWindow& window,
+BulletFactory::BulletFactory(Renderer& window,
 							 int quantity,
 							 const sf::Time& timeStep,
 							 std::shared_ptr<ResourceManager>& resourceHandler) :
@@ -48,7 +48,7 @@ void BulletFactory::produceObjects(Constants::BulletType type, int quantity)
 /// <param name="quantity">Quantity of bullets.</param>
 /// <param name="type">Bullettype</param>
 /// <returns>Returns a vector with the quantity of Bullet* requested</returns>
-std::list<std::unique_ptr<Bullet>> BulletFactory::requestBatch(int quantity, Constants::BulletType type)
+std::list<std::unique_ptr<Bullet>> BulletFactory::requestBatch(size_t quantity, Constants::BulletType type)
 {
 	// Checks if there is less than "quantity" bullets left in the factory
 	if (objects[type].size() < quantity)
@@ -60,7 +60,7 @@ std::list<std::unique_ptr<Bullet>> BulletFactory::requestBatch(int quantity, Con
 	std::list<std::unique_ptr<Bullet>> retList;
 
 	// Loop through the "quantity" number of bullets requested.
-	for (int i = 0; i < quantity; i++)
+	for (size_t i = 0; i < quantity; i++)
 	{
 		// Get bullets and pop from the list
 		std::unique_ptr<Bullet> b = std::move(objects[type].back());
@@ -89,7 +89,7 @@ std::unique_ptr<Bullet> BulletFactory::requestObject(Constants::BulletType type)
 	// Get a bullet
 	std::unique_ptr<Bullet> b = std::move(objects[type].back());
 	objects[type].pop_back(); // O(0)
-	//LOGD("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[type].size());
+	//SPDLOG_INFO("DEBUG:: Bullet#" << b << " | Factory Size: " << this->objects[type].size());
 	return  b;
 }
 
@@ -100,7 +100,7 @@ std::unique_ptr<Bullet> BulletFactory::requestObject(Constants::BulletType type)
 void BulletFactory::returnObject(std::unique_ptr<Bullet>& bullet)
 {
 	// Return a bullet
-	//LOGD("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->getBulletType()].size());
+	//SPDLOG_INFO("DEBUG:: Bullet#" << bullet << " | Factory Size: " << this->objects[bullet->getBulletType()].size());
 	bullet->resetObject();
 	this->objects[bullet->getBulletType()].push_back(std::move(bullet)); // O(0)
 }

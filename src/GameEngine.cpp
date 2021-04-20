@@ -1,32 +1,27 @@
 #include "../include/GameEngine.h"
-#include "../include/Menu.h"
 #include "../include/Log.h"
+#include "effolkronium/random.hpp"
 #include <memory>
+#include <spdlog/spdlog.h>
 
 /// <summary>
 /// Initializes a new instance of the <see cref="GameEngine"/> class.
 /// </summary>
 GameEngine::GameEngine() :
 // Declare the Window
-window(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize),
+renderer(800, 600, "X1337"),
+resourceHandler(new ResourceManager(renderer)), // Create a new Resource Handler (smart_ptr)
 timeStep(sf::seconds(1.0f / 240.f)), // Set timestep to 60 FPS
-
-
-
-// Declare all of the views
-fullView(sf::View(sf::FloatRect(0, 0, static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y)))),
-mainView(sf::View(sf::FloatRect(0, 0, 800, 600))),
-playerBar(sf::View(sf::FloatRect(0, 0, 800, 30))),
-menuGameDemoView(sf::View(sf::FloatRect(0, 0, 800, 600))),
-
-// Create a new Resource Handler (smart_ptr)
-resourceHandler(new ResourceManager(window)),
-
+elapsedTime(timeStep),
 event(sf::Event()),
 mute(false),
-fullscreen(false),
+mainView(sf::View(sf::FloatRect(0, 0, 800, 600))),
+fullView(sf::View(sf::FloatRect(0, 0, static_cast<float>(renderer.getSize().x), static_cast<float>(renderer.getSize().y)))),
+menuGameDemoView(sf::View(sf::FloatRect(0, 0, 800, 600))),
+playerBar(sf::View(sf::FloatRect(0, 0, 800, 30))),
 
-state(GameState::INIT_MAIN_MENU)
+state(GameState::INIT_MAIN_MENU),
+fullscreen(false)
 {
 	// Window configuration
 	//window.setFramerateLimit(120);
@@ -35,7 +30,7 @@ state(GameState::INIT_MAIN_MENU)
 	//#########View Declaration###########//
 	//####################################//
 	fullView.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
-	window.setView(fullView);
+	renderer.setView(fullView);
 
 	mainView.setViewport(sf::FloatRect(0, 0, 1, 0.95f));
 	playerBar.setViewport(sf::FloatRect(0, 0.95f, 1.0f, 0.05f));
@@ -45,14 +40,38 @@ state(GameState::INIT_MAIN_MENU)
 	resourceHandler->init();
 
 	// Set mouse properties
-	sf::Mouse::setPosition(sf::Vector2i(
-	        (int)(window.getView().getSize().x / 2.0),
-	        (int)(window.getView().getSize().y / 2.0)),
-                        window); // Default mouse location
-	window.setMouseCursorVisible(false);
+	/*sf::Mouse::setPosition(sf::Vector2i(
+	        (int)(renderer.getView().getSize().x / 2.0),
+	        (int)(renderer.getView().getSize().y / 2.0)),
+                           renderer.getWindow()); // Default mouse location*/
+	renderer.getWindow().setMouseCursorVisible(false);
 
 	// Init Menu;
-	menu = std::make_unique<Menu>(window, state, resourceHandler);
+	menu = std::make_unique<Menu>(renderer, state, resourceHandler);
+}
+
+void GameEngine::gameStep(){
+    this->input(); // Process input
+
+    // Add elapsed time with the gameclock time between last frame.
+    this->elapsedTime += this->gameClock.restart();
+
+
+    // Game Loop
+    if (this->elapsedTime < timeStep) {
+        return;
+    }
+
+
+    // Process the game data
+    this->process();
+
+    // Subtract time of this frame.
+    this->elapsedTime -= timeStep;
+
+
+    // Draw the game
+    this->draw();
 }
 
 /// <summary>
@@ -60,27 +79,12 @@ state(GameState::INIT_MAIN_MENU)
 /// </summary>
 void GameEngine::runGame()
 {
+    this->gameClock.restart();
+
 	// While the game is open
-	while (window.isOpen())
+	while (renderer.isOpen())
 	{
-		this->input(); // Process input
-
-		// Add elapsed time with the gameclock time between last frame.
-		this->elapsedTime += this->gameClock.restart();
-
-		// Game Loop
-		while (this->elapsedTime >= timeStep)
-		{
-			// Process the game data
-			this->process();
-
-			// Subtract time of this frame.
-			this->elapsedTime -= timeStep;
-		}
-
-		// Draw the game
-		this->draw();
-
+        gameStep();
 	}
 }
 
@@ -89,16 +93,17 @@ void GameEngine::runGame()
 /// </summary>
 void GameEngine::draw()
 {
-	window.clear(sf::Color::Black);
+
+	renderer.clear(sf::Color::Black);
 
 	// Game States
 	if (getState() == GameState::GAME)
 	{
-		window.setView(playerBar);
+		renderer.setView(playerBar);
 		this->world->drawStats();
 		this->drawOpts();
 
-		window.setView(mainView);
+		renderer.setView(mainView);
 		this->world->draw();
 
 		// CHECK IF IT IS GAME OVER or GAME WIN
@@ -119,30 +124,30 @@ void GameEngine::draw()
 		getState() == GameState::GAMEOVER ||
 		getState() == GameState::GAMEWIN)
 	{
-		window.setView(playerBar);
+		renderer.setView(playerBar);
 		this->world->drawStats();
 
-		window.setView(mainView);
+		renderer.setView(mainView);
 		this->world->draw();
 
-		window.setView(fullView);
-		sf::RectangleShape darkOverLay(sf::Vector2f(window.getView().getSize()));
+		renderer.setView(fullView);
+		sf::RectangleShape darkOverLay(sf::Vector2f(renderer.getView().getSize()));
 		darkOverLay.setFillColor(sf::Color(0, 0, 0, 150));
 		darkOverLay.setPosition(0, 0);
-		window.draw(darkOverLay);
+		renderer.draw(darkOverLay);
 
 		this->menu->draw();
 
 		// Draw the Game Over with the following offset
 		if (getState() == GameState::GAMEWIN)
 			this->menu->drawPause(
-			        (int)(window.getView().getSize().x / 3),
-                    (int)(100 + (window.getView().getSize().y / 2) * -1)); // Small workaround so we dont have to take in offset into ->draw();
+                    renderer.getView().getSize().x / 3,
+                    100 + (renderer.getView().getSize().y / 2) * -1); // Small workaround so we dont have to take in offset into ->draw();
 		if (getState() == GameState::PAUSE || getState() == GameState::GAMEOVER)
 
 			this->menu->drawPause(
-			        (int)(window.getView().getSize().x / 3),
-                    (int)((window.getView().getSize().y / 2) * -1)); // Small workaround so we dont have to take in offset into ->draw();
+			        (renderer.getView().getSize().x / 3),
+                    ((renderer.getView().getSize().y / 2) * -1)); // Small workaround so we dont have to take in offset into ->draw();
 
 	}
 
@@ -153,13 +158,13 @@ void GameEngine::draw()
 		getState() == GameState::CREDITS ||
 		getState() == GameState::HIGHSCORE)
 	{
-		window.setView(fullView);
+		renderer.setView(fullView);
 		this->world->draw();
 		this->menu->draw();
 		this->drawOpts();
 	}
 
-	window.display();
+	renderer.display();
 
 }
 
@@ -171,7 +176,7 @@ void GameEngine::process()
 	// Process the Game State
 	if (getState() == GameState::GAME)
 	{
-		this->world->input(this->event);
+		this->world->input(event);
 		this->world->process();
 		return;
 	}
@@ -179,17 +184,15 @@ void GameEngine::process()
 	// Process the game initialization (This should only run once
 	else if (getState() == GameState::INIT_GAME)
 	{
-		LOGD("Initializing a new game.");
+        SPDLOG_INFO("Initializing a new game.");
 		setState(GameState::GAME);
 		resourceHandler->stopAllSound();
 		world = std::make_unique<World>(
-			window,
-			resourceHandler,
-			timeStep,
-			false,
-			menu->getStageSelectOption(),
-			menu->getHardmodeSelected(),
-
+                renderer,
+                resourceHandler,
+                timeStep,
+                (Constants::ResourceC::Scripts)menu->getStageSelectOption(),
+                menu->getHardmodeSelected(),
 			// This checks if DEATH_STAR theme is selected, and selects the corresponding music. Consider revising, Bad sctructure wise
 			(menu->getStageSelectOption() - 1 == Constants::ResourceC::Scripts::DEATH_STAR) ?
 			resourceHandler->getSound(Constants::ResourceC::Sound::MUSIC_DEATH_STAR_THEME) :
@@ -205,8 +208,9 @@ void GameEngine::process()
 	else if (getState() == GameState::INIT_MAIN_MENU)
 	{
 		// set new MOTD in the menu header
-		std::srand(std::time(0));
-		menu->setMessageOfTheDayId(std::rand() % resourceHandler->getMOTDSize());
+		menu->setMessageOfTheDayId(
+		        effolkronium::random_static::get(0, resourceHandler->getMOTDSize())
+		        );
 
 
 		setState(GameState::MAIN_MENU);
@@ -215,13 +219,12 @@ void GameEngine::process()
 		if (world != nullptr) resourceHandler->stopAllSound();
 
 		// Reset the world
-		world = std::make_unique<World>(window,
-			resourceHandler,
-			timeStep,
-			true,
-			-1,
-			false,
-			resourceHandler->getSound(Constants::ResourceC::Sound::MUSIC_MENU_SONG));
+		world = std::make_unique<World>(renderer,
+                                        resourceHandler,
+                                        timeStep,
+                                        Constants::ResourceC::Scripts::GAME_MENU,
+                                        false,
+                                        resourceHandler->getSound(Constants::ResourceC::Sound::MUSIC_MENU_SONG));
 	}
 
 	// Process the GAEMOVER STATE
@@ -243,12 +246,113 @@ void GameEngine::process()
 	}
 }
 
+void GameEngine::CreateInputEvent(Constants::Input inputEnum){
+    sf::Event e{};
+
+    switch (inputEnum) {
+
+        case(Constants::Input::Key1Press):
+            e.type = sf::Event::KeyPressed;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Numpad0};
+            break;
+
+        case(Constants::Input::Key1Release):
+            e.type = sf::Event::KeyReleased;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Numpad0};
+            break;
+
+        case(Constants::Input::Key2Press):
+            e.type = sf::Event::KeyPressed;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Numpad1};
+            break;
+
+
+        case(Constants::Input::Key2Release):
+            e.type = sf::Event::KeyReleased;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Numpad1};
+            break;
+
+        case(Constants::Input::KeyLeftPress):
+            e.type = sf::Event::KeyPressed;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Left};
+            break;
+
+        case(Constants::Input::KeyLeftRelease):
+            e.type = sf::Event::KeyReleased;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Left};
+            break;
+
+        case(Constants::Input::KeyRightPress):
+            e.type = sf::Event::KeyPressed;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Right};
+            break;
+
+        case(Constants::Input::KeyRightRelease):
+            e.type = sf::Event::KeyReleased;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Right};
+            break;
+
+
+        case(Constants::Input::KeyUpPress):
+            e.type = sf::Event::KeyPressed;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Up};
+            break;
+
+        case(Constants::Input::KeyUpRelease):
+            e.type = sf::Event::KeyReleased;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Up};
+            break;
+
+        case(Constants::Input::KeyDownPress):
+            e.type = sf::Event::KeyPressed;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Down};
+            break;
+
+        case(Constants::Input::KeyDownRelease):
+            e.type = sf::Event::KeyReleased;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Down};
+            break;
+
+        case(Constants::Input::KeyMPress):
+            e.type = sf::Event::KeyPressed;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::M};
+            break;
+
+        case(Constants::Input::KeyMRelease):
+            e.type = sf::Event::KeyReleased;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::M};
+            break;
+        case(Constants::Input::KeyEscapePress):
+            e.type = sf::Event::KeyPressed;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Escape};
+            break;
+        case(Constants::Input::KeyEscapeRelease):
+            e.type = sf::Event::KeyReleased;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Escape};
+            break;
+
+        case(Constants::Input::KeyEnterPress):
+            e.type = sf::Event::KeyPressed;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Enter};
+            break;
+
+        case(Constants::Input::KeyEnterRelease):
+            e.type = sf::Event::KeyReleased;
+            e.key = sf::Event::KeyEvent{sf::Keyboard::Enter};
+            break;
+
+    }
+
+    renderer.injectedEvents.push_back(std::make_shared<sf::Event>(e));
+}
+
+
 /// <summary>
 /// process Input loop
 /// </summary>
 void GameEngine::input()
 {
-	while (window.pollEvent(this->event))
+	while (renderer.pollEvent(this->event))
 	{
 
 		// Input event for each of the STATES
@@ -267,7 +371,7 @@ void GameEngine::input()
 		// If the window close event is fired
 		if (this->event.type == sf::Event::Closed)
 		{
-			this->window.close();
+			this->renderer.close();
 			exit(EXIT_SUCCESS);
 		}
 
@@ -304,18 +408,18 @@ void GameEngine::input()
 
 			else if (this->event.key.code == sf::Keyboard::N) // Fullscreen Toggle
 			{
-				window.clear();
+				renderer.clear();
 				if (!fullscreen)
 				{
 					fullscreen = !fullscreen;
-					window.create(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize | sf::Style::Fullscreen);
+					renderer.create(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize | sf::Style::Fullscreen);
 				}
 				else
 				{
 					fullscreen = !fullscreen;
-					window.create(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
+					renderer.create(sf::VideoMode(800, 600), "X1337", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
 				}
-				window.setMouseCursorVisible(false);
+				renderer.getWindow().setMouseCursorVisible(false);
 			}
 
 		}
@@ -341,16 +445,6 @@ GameState& GameEngine::getState()
 	return this->state;
 }
 
-
-/// <summary>
-/// Gets the resource handler.
-/// </summary>
-/// <returns>Resource Handler reference</returns>
-std::shared_ptr<ResourceManager>& GameEngine::getResourceHandler()
-{
-	return this->resourceHandler;
-}
-
 /// <summary>
 /// Draws the mute button
 /// </summary>
@@ -363,8 +457,8 @@ void GameEngine::drawOpts()
 	sf::Sprite sprScreen;
 	sprScreen.setTexture(resourceHandler->getTexture(Constants::ResourceC::Texture::MONITOR_ICON));
 	sprScreen.setScale(0.30f, 0.30f);
-	sprScreen.setPosition(window.getView().getSize().x - 150, window.getView().getSize().y - 24);
-	window.draw(sprScreen);
+	sprScreen.setPosition(renderer.getView().getSize().x - 150, renderer.getView().getSize().y - 24);
+	renderer.draw(sprScreen);
 
 	sf::Text txtScreen;
 	txtScreen.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
@@ -372,7 +466,7 @@ void GameEngine::drawOpts()
 	txtScreen.setFillColor(sf::Color(139, 137, 137));
 	txtScreen.setCharacterSize(15);
 	txtScreen.setPosition(sprScreen.getPosition().x + (sprScreen.getGlobalBounds().width / 2) - 4, sprScreen.getPosition().y - 3);
-	window.draw(txtScreen);
+	renderer.draw(txtScreen);
 
 
 
@@ -386,7 +480,7 @@ void GameEngine::drawOpts()
 	txtMute.setFillColor(sf::Color(139, 137, 137));
 	txtMute.setCharacterSize(15);
 	txtMute.setPosition(sprScreen.getPosition().x + sprScreen.getGlobalBounds().width + 10, sprScreen.getPosition().y);
-	window.draw(txtMute);
+	renderer.draw(txtMute);
 
 	sf::Sprite sprMute;
 	if (mute)
@@ -399,7 +493,7 @@ void GameEngine::drawOpts()
 	}
 	sprMute.setScale(0.20f, 0.20f);
 	sprMute.setPosition(txtMute.getPosition().x + 15, txtMute.getPosition().y);
-	window.draw(sprMute);
+	renderer.draw(sprMute);
 
 
 

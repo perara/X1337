@@ -1,0 +1,84 @@
+{
+  "stages": [
+    {
+      "id": 1,
+      "players": [
+        {
+          "name": "PerArne",
+          "score": 200,
+          "date": "2013-12-09 20:04:34"
+        },
+        {
+          "name": "PerArne",
+          "score": 5600,
+          "date": "13-12-16 16:26:10"
+        },
+        {
+          "name": "PerArne",
+          "score": 200,
+          "date": "13-12-16 21:10:47"
+        },
+        {
+          "name": "PerArne",
+          "score": 800,
+          "date": "13-12-16 21:11:00"
+        },
+        {
+          "name": "PerArne",
+          "score": 500,
+          "date": "13-12-16 21:12:10"
+        },
+        {
+          "name": "PerArne",
+          "score": 300,
+          "date": "13-12-16 21:16:37"
+        },
+        {
+          "name": "PerArne",
+          "score": 600,
+          "date": "13-12-16 21:18:12"
+        },
+        {
+          "name": "PerArne",
+          "score": 1000,
+          "date": "13-12-16 21:20:37"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "players": [
+        {
+          "name": "PerArne",
+          "score": 6500,
+          "date": "13-12-13 23:10:08"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "players": [
+        {
+          "name": "PerArne",
+          "score": 100,
+          "date": "13-12-14 22:34:27"
+        },
+        {
+          "name": "PerArne",
+          "score": 12000,
+          "date": "13-12-16 19:31:41"
+        },
+        {
+          "name": "PerArne",
+          "score": 12000,
+          "date": "13-12-16 19:31:41"
+        },
+        {
+          "name": "PerArne",
+          "score": 12000,
+          "date": "13-12-16 20:20:44"
+        }
+      ]
+    }
+  ]
+}

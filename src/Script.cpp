@@ -1,111 +1,86 @@
-#include "../include/Script.h"
+//
+// Created by per on 4/19/21.
+//
 
-#include <memory>
-#include <utility>
-#include "../include/Log.h"
-#include "../include/Enemy.h"
-#include "../include/BulletFactory.h"
+#include <Enemy.h>
+#include <effolkronium/random.hpp>
+#include <Script.h>
+#include <spdlog/spdlog.h>
 
-/// <summary>
-/// Adds a enemy to the script queue
-/// </summary>
-/// <param name="delay">The delay.</param>
-/// <param name="pathQueue">The path queue.</param>
-/// <param name="emoteQueue">A queue which contains emoteNames. This is a sorted list</param>
-/// <param name="type">The type.</param>
-/// <param name="repeat">The repeat.</param>
-void Script::addEnemy(int delay, std::queue<VectorN> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat)
+#include "World.h"
+
+Script::Script(World* world, Constants::ResourceC::Scripts scriptID):
+world(world),
+enemyTime(sf::milliseconds(0)),
+powerupTime(sf::milliseconds(0)),
+scriptID(scriptID),
+totalEnemies(0)
+
 {
-	LOGD("Adding new enemy template to pool");
-	ScriptTick tick(delay,
-                 std::move(pathQueue),
-                 std::move(emoteQueue), type, repeat);
-	enemyList.push(tick);
-
-
-}
-
-/// <summary>
-/// Adds a power up item to the powerup queue..
-/// </summary>
-/// <param name="delay">The delay.</param>
-/// <param name="spawnPoint">The spawn point.</param>
-/// <param name="type">The type.</param>
-/// <param name="repeat">The repeat.</param>
-void Script::addPowerUp(int delay, VectorN spawnPoint, int type, int repeat)
-{
-	std::queue<VectorN> queue;
-	queue.push(spawnPoint);
-
-	std::list<std::pair<int, std::string>> emoteQueue;
-
-	LOGD("Adding new powerUp template to pool");
-	ScriptTick tick(delay, queue, emoteQueue, type, repeat);
-	powerupList.push(tick);
-
 }
 
 
-/// <summary>
-/// Retrieve the init status
-/// </summary>
-/// <returns>init flag</returns>
-bool Script::getInit() const
-{
-	return this->inited;
+void Script::processEnemy(){
+
+    //####################################//
+    //######Enemy script processing#######//
+    //####################################//
+    if(enemies.empty()){
+        // Nothing to process
+        return;
+    }
+
+    // Get enemy in front of queue
+    auto& enemy = enemies.front();
+    if(enemyTime.asMilliseconds() < enemy->getDelay()){
+        // Delay is not yet met. Nothing to do.
+        return;
+    }
+
+    SPDLOG_INFO("Spawning Enemy#{}", (void*)enemy.get());
+    // Push enemy to the objects list (from world)
+    world->addEnemyObject(enemy);
+
+    // Pop enemy from script queue.
+    enemies.pop();
+
+    // Reset delay timer
+    enemyTime = sf::milliseconds(0);
 
 }
-/// <summary>
-/// Sets the initialization status
-/// </summary>
-/// <param name="status">Status flag</param>
-void Script::setInit(bool status)
-{
-	if (status)
-	{
-		startEnemyListSize = enemyList.size();
-		enemyTime = sf::milliseconds(0);
-		powerupTime = sf::milliseconds(0);
-	}
-
-	inited = status;
-}
-
-/// <summary>
-/// Returns the script title.
-/// </summary>
-/// <returns>Script status</returns>
-std::string Script::getScriptTitle()
-{
-	return scriptTitle;
-}
-
-/// <summary>
-/// Sets the script title.
-/// </summary>
-/// <param name="scriptTitle">The script title.</param>
-void Script::setScriptTitle(std::string _scriptTitle)
-{
-	this->scriptTitle = std::move(_scriptTitle);
-}
 
 
-/// <summary>
-/// Sets the script enum value.
-/// </summary>
-/// <param name="enumVal">The enum value.</param>
-void Script::setScriptEnumVal(int enumVal)
-{
-	scriptEnumVal = enumVal;
-}
+void Script::processPowerUp(){
+    //####################################//
+    //######Enemy script processing#######//
+    //####################################//
+    if (powerups.empty()) {
+        // No power ups
+        return;
+    }
 
-/// <summary>
-/// Gets the script enum value.
-/// </summary>
-/// <returns>The script enumeration value (defined in the xml) </returns>
-int Script::getScriptEnumVal() const
-{
-	return scriptEnumVal;
+    // Create a new script tick of the powerup
+    auto& pwrUp = powerups.front();
+
+    if(powerupTime.asMilliseconds() < pwrUp->delay) {
+        return;
+    }
+
+    SPDLOG_INFO("Spawning Powerup#{}", (void*)pwrUp.get());
+    // Push enemy to the objects list (from world)
+    world->addPowerupObject(pwrUp);
+
+
+    // Pop snd push from/to queue
+    powerups.pop();
+
+    if (pwrUp->repeat == 1)
+    {
+        powerups.push(pwrUp);
+    }
+
+    // Reset the clock
+    powerupTime = sf::milliseconds(0);
 }
 
 // Process
@@ -120,161 +95,75 @@ int Script::getScriptEnumVal() const
 /// <param name="resourceHandler">The resource handler.</param>
 /// <param name="timeStep">The time step.</param>
 /// <returns></returns>
-bool Script::process(sf::RenderWindow& window,
-					 std::list<std::shared_ptr<Shooter>>& objects,
-					 std::list<std::shared_ptr<Powerup>>& powerups,
-					 std::list<std::unique_ptr<Bullet>>& bullets,
-					 BulletFactory& bFactory,
-					 std::shared_ptr<ResourceManager>& resourceHandler,
-					 const sf::Time& timeStep)
+bool Script::process()
 {
-	enemyTime += timeStep;
-	powerupTime += timeStep;
+    enemyTime += world->getTimeStep();
+    powerupTime += world->getTimeStep();
 
-	//####################################//
-	//######Enemy script processing#######//
-	//####################################//
-	if (!enemyList.empty())
-	{
-		// Get enemy in front of queue
-		ScriptTick e = enemyList.front();
-		if (this->getInit() &&
-			enemyTime.asMilliseconds() > e.delay)
-		{
-
-			// Create a new enemy with the information provided by the script tick
-			std::shared_ptr<Enemy> e1 = std::make_shared<Enemy>(
-				window,
-				e.pathQueue,
-				e.emoteQueue,
-				e.type,
-				e.repeat,
-				bFactory,
-				bullets,
-				resourceHandler,
-				timeStep);
-			LOGD("Spawning Enemy#" << e1);
-
-			// Push enemy to the objects list (from world)
-			objects.push_back(e1);
-
-			// Pop the garbage scripttick
-			enemyList.pop();
-
-			enemyTime = sf::milliseconds(0);
-		}
-	}
+    processEnemy();
+    processPowerUp();
 
 
-	//####################################//
-	//######Enemy script processing#######//
-	//####################################//
-	if (!powerupList.empty())
-	{
 
-		// Create a new script tick of the powerup
-		ScriptTick pwrUp = powerupList.front();
-		// Check weither the clock has move enough
-		if (this->getInit() &&
-			powerupTime.asMilliseconds() > pwrUp.delay)
-		{
-
-			// Create a new powerup
-			VectorN path = pwrUp.pathQueue.front();
-
-			(path.x == -1) ? path.x = rand() % window.getSize().x + 1 : path.x;
-			(path.y == -1) ? path.y = rand() % window.getSize().y + 1 : path.y;
-
-			std::shared_ptr<Powerup> p1 = std::make_shared<Powerup>(
-				window, path, pwrUp.type, resourceHandler, timeStep);
-
-			// Push the powerup 
-			powerups.push_back(p1);
-
-			// Pop snd push from/to queue
-			powerupList.pop();
-
-			if (pwrUp.repeat == 1)
-			{
-				powerupList.push(pwrUp);
-			}
-
-			// Reset the clock
-			powerupTime = sf::milliseconds(0);
-		}
-
-	}
-
-	if (enemyList.empty())
-	{
-		return false; // Script is done (no enemies will spawn)
-	}
-	else
-	{
-		return true; // Script is still running
-	}
+    // Script is done (no enemies will spawn) IF EMPTY
+    // Script is still running if not empty
+    return !enemies.empty();
 }
 
-/// <summary>
-/// Sets the audio description string
-/// </summary>
-/// <param name="audioDesc">The audio description string name (Mapped in ResourceHandler)</param>
-void Script::setAudioDesc(std::string _audioDesc)
-{
-	this->audioDesc = std::move(_audioDesc);
+void Script::loadEnemies(std::list <ScriptTick> &queue) {
+
+    for(auto& st: queue){
+
+        // Create a new enemy with the information provided by the script tick
+        std::shared_ptr<Enemy> e1 = std::make_shared<Enemy>(
+                world->getRenderer(),
+                st.pathQueue,
+                st.emoteQueue,
+                st.type,
+                st.repeat,
+                st.delay,
+                world->getBulletFactory(),
+                world->getBullets(),
+                world->getResourceHandler(),
+                world->getShooterObjects(),
+                world->getTimeStep());
+
+        enemies.push(e1);
+        totalHealth = e1->getStartHealth();
+    }
+    totalEnemies = enemies.size();
 }
 
-/// <summary>
-/// Gets the audio description string
-/// </summary>
-/// <returns>The audio description string name (Mapped in ResourceHandler)</returns>
-std::string Script::getAudioDesc()
-{
-	return this->audioDesc;
+void Script::loadPowerUps(std::list<ScriptTick> &queue) {
+
+    for(auto& st: queue){
+        // Create a new powerup
+        VectorN path = st.pathQueue.front();
+
+
+        (path.x == -1) ? path.x = (float)effolkronium::random_static::get(0, (int)world->getWindow().getSize().x + 1)  : path.x;
+        (path.y == -1) ? path.y = (float)effolkronium::random_static::get(0, (int)world->getWindow().getSize().y + 1) : path.y;
+
+        std::shared_ptr<Powerup> p1 = std::make_shared<Powerup>(
+                world->getRenderer(), path, st.type, st.repeat, st.delay, world->getResourceHandler(),
+                world->getTimeStep());
+
+        // Push the powerup
+        powerups.push(p1);
+
+
+    }
+
 }
 
-/// <summary>
-/// Sets the lore string
-/// </summary>
-/// <param name="lore">Lore string</param>
-void Script::setLore(std::string _lore)
-{
-	this->lore = std::move(_lore);
+size_t Script::getTotalEnemies() const {
+    return totalEnemies;
 }
 
-/// <summary>
-/// Returns the lore string
-/// </summary>
-/// <returns>String with lore</returns>
-std::string Script::getLore()
-{
-	return this->lore;
+Constants::ResourceC::Scripts Script::getScriptID(){
+    return scriptID;
 }
 
-/// <summary>
-/// Gets the start size of the enemy list.
-/// </summary>
-/// <returns>integer with size</returns>
-int Script::getStartEnemyListSize() const
-{
-	return startEnemyListSize;
-}
-
-/// <summary>
-/// Gets the size of the enemy list.
-/// </summary>
-/// <returns>size of enemy list</returns>
-int Script::getEnemyListSize()
-{
-	return enemyList.size();
-}
-
-void Script::setPortraitString(std::string _portraitString)
-{
-	this->portraitString = std::move(_portraitString);
-}
-
-std::string Script::getPortraitString()
-{
-	return portraitString;
+int Script::getEnemyTotalHealth() const {
+    return totalHealth;
 }

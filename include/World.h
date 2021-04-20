@@ -3,9 +3,11 @@
 #include "Background.h"
 #include "BulletFactory.h"
 #include "Player.h"
-#include "Script.h"
+#include "ScriptTemplate.h"
 #include "ResourceManager.h"
 #include "Powerup.h"
+#include "Script.h"
+#include "Renderer.h"
 
 #include <memory>
 
@@ -16,13 +18,12 @@ class World : public Scene{
 public:
 
 	// Constructor and Deconstructor
-	World(sf::RenderWindow& window,
-		std::shared_ptr<ResourceManager>& resourceHandler,
-		const sf::Time& timeStep,
-		const bool demo,
-		const int scriptNum,
-		const bool hardMode,
-		sf::Sound& ingameSong);
+	World(Renderer& window,
+          std::shared_ptr<ResourceManager>& resourceHandler,
+          const sf::Time& timeStep,
+          const Constants::ResourceC::Scripts scriptNum,
+          const bool hardMode,
+          sf::Sound& ingameSong);
 	~World();
 
 	// Virtuals (Derived from Scene)
@@ -35,8 +36,23 @@ public:
 	void startSound();
 	void stopSound();
 
+	BulletFactory& getBulletFactory();
+	const sf::Time& getTimeStep();
+    std::list<std::unique_ptr<Bullet>>& getBullets();
+    std::shared_ptr<ResourceManager>& getResourceHandler();
+    sf::RenderWindow& getWindow();
+
+
+    void addEnemyObject(std::shared_ptr<Enemy> &enemy);
+
+    std::list<std::shared_ptr<Shooter>> & getShooterObjects();
+
+    Renderer &getRenderer();
+
+    void addPowerupObject(std::shared_ptr<Powerup> &powerup);
+
 private:
-	Script script;
+	std::unique_ptr<Script> script;
 	Background bg;
 	BulletFactory bFactory;
 	std::shared_ptr<Player> player;
@@ -48,11 +64,9 @@ private:
 	const sf::Time timeStep;
 
 	const bool hardMode;
-	const bool demo;
 	int gameOver;
 
-	int currentScript; // Hold current script as a integer (convert to ResourceHandler::Scripts)
-	int stageProgress; // Displays current stage progress as a percentage
+	float stageProgress; // Displays current stage progress as a percentage
 
 	std::list<std::shared_ptr<Shooter>> objects;
 	std::list<std::unique_ptr<Bullet>> bullets;
@@ -60,4 +74,10 @@ private:
 
 	void drawGameProgress();
 	void evaluateGameOver();
+
+    bool isGameMenu();
+
+    bool hasGameScript();
+
+    std::list<std::shared_ptr<Powerup>> &getPowerupObjects();
 };

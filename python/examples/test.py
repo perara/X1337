@@ -3,5 +3,8 @@ from cairl import xleet
 
 
 game = xleet.GameEngine()
+print(dir(game))
 
-print(dir(xleet))
+game.run_game()
+while True:
+    pass

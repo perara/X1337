@@ -1,97 +1,49 @@
-#pragma once
-#include <queue>
-#include <list>
-#include <SFML/Graphics.hpp>
-#include <memory>
-#include "Powerup.h"
-#include "VectorN.h"
+//
+// Created by per on 4/19/21.
+//
 
-class Shooter;
-class BulletFactory;
-class Bullet;
-class ResourceManager;
+#ifndef X1337_SCRIPT_H
+#define X1337_SCRIPT_H
 
-/// <summary>
-/// The script class defines a script loaded from file. It is widely used in the ResourceHandler
-/// </summary>
-class Script
-{
-	class ScriptTick
-	{
-	public:
-		int delay;
-		int repeat;
-		int type;
-		std::queue<VectorN> pathQueue;
-		std::list<std::pair<int, std::string>> emoteQueue;
+#include "ScriptTick.h"
 
-		ScriptTick(int delay, std::queue<VectorN> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat) :
-			delay(delay),
-			pathQueue(pathQueue),
-			emoteQueue(emoteQueue),
-			type(type),
-			repeat(repeat)
-			{};
-	};
+class World;
+class Enemy;
 
-	sf::Time enemyTime;
-	sf::Time powerupTime;
-	std::queue<ScriptTick> enemyList;
-	std::queue<ScriptTick> powerupList;
-	bool inited;
+class Script {
+private:
+    World* world;
 
+    sf::Time enemyTime;
+    sf::Time powerupTime;
+
+    std::queue<std::shared_ptr<Powerup>> powerups;
+    std::queue<std::shared_ptr<Enemy>> enemies;
+    const Constants::ResourceC::Scripts scriptID;
+
+    unsigned long totalEnemies;
 
 public:
-	Script():
-	audioDesc("null"),
-	startEnemyListSize(-1)
-	{};
-	void addEnemy(int delay, std::queue<VectorN> pathQueue, std::list<std::pair<int, std::string>> emoteQueue, int type, int repeat);
-	void addPowerUp(int delay, VectorN spawnPoint, int type, int repeat);
+    void loadEnemies(std::list<ScriptTick> &queue);
 
-	// Init
-	bool getInit() const;
-	void setInit(bool);
+    void loadPowerUps(std::list<ScriptTick> &queue);
 
-	// Process
-	bool process(sf::RenderWindow& window,
-		std::list<std::shared_ptr<Shooter>>& objects,
-		std::list<std::shared_ptr<Powerup>>& powerups,
-		std::list<std::unique_ptr<Bullet>>& bullets,
-		BulletFactory& bFactory,
-		std::shared_ptr<ResourceManager>& resourceHandler,
-		const sf::Time& timeStep);
+    Script(World* world, Constants::ResourceC::Scripts scriptID);
 
-	/// Setter and getter for the title of the script (Defined in the xml file)
-	std::string getScriptTitle();
-	void setScriptTitle(std::string);
+    // Process
+    bool process();
 
-	/// Setter and getter for the enum value set in ResourceHandler
-	void setScriptEnumVal(int);
-	int getScriptEnumVal() const;
+    size_t getTotalEnemies() const;
+    Constants::ResourceC::Scripts getScriptID();
 
-	/// Setter and getter for Audio description of the script
-	void setAudioDesc(std::string);	
-	std::string getAudioDesc();
+    int getEnemyTotalHealth() const;
 
-	/// Setter and getter for the Lore string
-	void setLore(std::string);
-	std::string getLore();
+    void processEnemy();
 
-	///  Get for enemy list size (start and current)
-	int getStartEnemyListSize() const;
-	int getEnemyListSize();
+    void processPowerUp();
 
-	/// Sets and Gets the protrait String
-	void setPortraitString(std::string);
-	std::string getPortraitString();
-
-private:
-	std::string scriptTitle;
-	std::string audioDesc;
-	std::string lore;
-	std::string portraitString;
-	int scriptEnumVal;
-	int startEnemyListSize;
-
+    int totalHealth;
 };
+
+
+#endif //X1337_SCRIPT_H

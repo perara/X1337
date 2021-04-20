@@ -18,9 +18,11 @@ class Powerup : public Object
 public:
 
 	Powerup(
-		sf::RenderWindow& window,
+		Renderer& window,
 		const VectorN& startPoint,
 		int type,
+		bool repeat,
+		int delay,
 		std::shared_ptr<ResourceManager>& resourceHandler,
 		const sf::Time& timeStep
 		);
@@ -31,13 +33,13 @@ public:
 
 	Constants::PowerUpType getPowerUpType();
 
+    int delay;
+    bool repeat;
 private:
-	int speedX;
-	int speedY;
+	float speedX;
+    float speedY;
 
-	const sf::Time& timeStep;
-
-	void doAction(std::shared_ptr<Player>& player);
+    const sf::Time& timeStep;
 
     Constants::PowerUpType type;
 

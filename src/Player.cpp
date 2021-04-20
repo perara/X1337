@@ -4,7 +4,7 @@
 #include "../include/GameShape.h"
 #include <memory>
 #include <sstream>
-
+#include <iostream>
 /// <summary>
 /// Initializes a new instance of the <see cref="Player"/> class.
 /// </summary>
@@ -16,7 +16,7 @@
 /// <param name="resourceHandler">The resource handler.</param>
 /// <param name="timeStep">The time step.</param>
 /// <param name="hardMode">The hard mode.</param>
-Player::Player(sf::RenderWindow& window,
+Player::Player(Renderer& window,
 	sf::Vector2f pos,
 	int radius,
 	BulletFactory& bFactory,
@@ -25,15 +25,12 @@ Player::Player(sf::RenderWindow& window,
 	const sf::Time& timeStep,
 	const bool hardMode,
 	std::list<std::shared_ptr<Shooter>>& objects
-	)
-	:
-	objects(objects),
+	):
+    Shooter(window, bFactory, bullets, resourceHandler, objects, timeStep),
 	playerScore(0),
 	playerKills(0),
 	radius(radius),
-	pulsateGun(false),
-
-	Shooter(window, bFactory, bullets, resourceHandler, timeStep)
+	pulsateGun(false)
 {
 	// Checks if its hardmode, sets the health correspondingly.
 	if (!hardMode)
@@ -78,19 +75,12 @@ void Player::process()
 		resourceHandler->getSound(Constants::ResourceC::Sound::FX_ENEMY_DEATH).play();
 	}
 
-	// Ship collision
-	for (auto& i : objects)
-	{
-		if (i->getType() == Constants::ShooterType::PLAYER) continue;
+	this->processShipCollision();
 
-		if (Player::sat(i->sprite, this->sprite))
-		{
-			// Kill the player, (ship collisions never end well)
-			this->setHealth(this->getHealth() - 1);
-			i->setHealth(i->getHealth() - 1);
-		}
-	}
+
 }
+
+
 
 /// <summary>
 /// This function process a activated power
@@ -111,7 +101,7 @@ void Player::processPowerUps()
 
 				// Gets a bullet, sets the owner to this, sets the bullet rotation, sets the bullet position, pushes the bullet to the bullet list.
 				std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::standardShot);
-				b->setOwner(this->getType());
+				b->setOwner(this);
 				b->setRotation((float)i, sf::Vector2f(150, 150));
 				b->sprite->setPosition(this->sprite->getPosition().x, this->sprite->getPosition().y);
 				getBullets().push_back(std::move(b));
@@ -143,9 +133,9 @@ void Player::detectEdge()
 		sprite->setPosition(sprite->getRadius(), sprite->getPosition().y);
 	}
 
-	if (sprite->getPosition().x >= window.getView().getSize().x - sprite->getRadius())
+	if (sprite->getPosition().x >= renderer.getView().getSize().x - sprite->getRadius())
 	{
-		sprite->setPosition(window.getView().getSize().x - sprite->getRadius(), sprite->getPosition().y);
+		sprite->setPosition(renderer.getView().getSize().x - sprite->getRadius(), sprite->getPosition().y);
 	}
 
 	//## Y AXIS
@@ -154,9 +144,9 @@ void Player::detectEdge()
 		sprite->setPosition(sprite->getPosition().x, sprite->getRadius());
 	}
 
-	if (sprite->getPosition().y >= window.getView().getSize().y - sprite->getRadius())
+	if (sprite->getPosition().y >= renderer.getView().getSize().y - sprite->getRadius())
 	{
-		sprite->setPosition(sprite->getPosition().x, window.getView().getSize().y - sprite->getRadius());
+		sprite->setPosition(sprite->getPosition().x, renderer.getView().getSize().y - sprite->getRadius());
 	}
 }
 
@@ -165,14 +155,14 @@ void Player::detectEdge()
 /// Draws the highscore stats, this function runs in the secondary view.
 /// </summary>
 /// <param name="highScoreList">The high score list as a reference</param>
-void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
+void Player::drawStats(std::list<HighScoreItem>& highScoreList)
 {
 	// Draw Background
 	sf::RectangleShape barBg;
-	barBg.setSize(window.getView().getSize());
+	barBg.setSize(renderer.getView().getSize());
 	barBg.setTexture(&resourceHandler->getTexture(Constants::ResourceC::Texture::PLAYER_BAR));
 	barBg.setFillColor(sf::Color(178, 34, 34));
-	window.draw(barBg);
+	renderer.draw(barBg);
 
 	// Draw Health
 	sf::Text txtHealth;
@@ -196,12 +186,12 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 		sprite->setTexture(resourceHandler->getTexture(Constants::ResourceC::Texture::HEART), true);
 		sprite->setPosition(heartX, heartY);
 		sprite->setScale(0.05f, 0.05f);
-		window.draw(*sprite);
+		renderer.draw(*sprite);
 
 		// Append the width of an haeart to the X position
 		heartX += 35;
 	}
-	window.draw(txtHealth);
+	renderer.draw(txtHealth);
 
 	// Draw Score
 	sf::Text txtScore;
@@ -210,7 +200,7 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	txtScore.setCharacterSize(25);
 	txtScore.setPosition(heartX + 10 + txtHealth.getGlobalBounds().width, 0);
 	txtScore.setFillColor(sf::Color::White);
-	window.draw(txtScore);
+	renderer.draw(txtScore);
 
 
 	// Draw the stage highscore title
@@ -221,19 +211,19 @@ void Player::drawStats(std::list<std::shared_ptr<HighScoreItem>>& highScoreList)
 	txtHighScoreTitle.setCharacterSize(25);
 	txtHighScoreTitle.setPosition(txtScore.getPosition().x + txtScore.getGlobalBounds().width + 10, initY);
 	txtHighScoreTitle.setFillColor(sf::Color::White);
-	window.draw(txtHighScoreTitle);
+	renderer.draw(txtHighScoreTitle);
 
 	// Draw top 1
 	if (!highScoreList.empty())
 	{
-		std::shared_ptr<HighScoreItem> i = highScoreList.front();
+		HighScoreItem& i = highScoreList.front();
 		sf::Text txtHighScore;
 		txtHighScore.setFont(resourceHandler->getFont(Constants::ResourceC::Fonts::SANSATION));
-		txtHighScore.setString(sf::String(i->playerName + ": " + std::to_string((int)i->score)));
+		txtHighScore.setString(sf::String(i.playerName + ": " + std::to_string((int)i.score)));
 		txtHighScore.setCharacterSize(25);
 		txtHighScore.setPosition(txtHighScoreTitle.getPosition().x + txtHighScoreTitle.getGlobalBounds().width, initY);
 		txtHighScore.setFillColor(sf::Color::White);
-		window.draw(txtHighScore);
+		renderer.draw(txtHighScore);
 	}
 
 
@@ -265,11 +255,12 @@ void Player::input(sf::Event& event)
 	}*/
 
 	// Player's left mouse click shoot handler
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && normalShotTime.asMilliseconds() > 150){
+	if (((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad0) ||
+        sf::Mouse::isButtonPressed(sf::Mouse::Left)) &&  normalShotTime.asMilliseconds() > 150){
 
 		// Request a standard bullet and sets the appropriate data
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::standardShot);
-		b->setOwner(getType());
+		b->setOwner(this);
 		b->sprite->setPosition(sprite->getPosition().x, sprite->getPosition().y - 10);
 
 		// Play shoot sound
@@ -283,11 +274,13 @@ void Player::input(sf::Event& event)
 	}
 
 	// Player's right mouse click shoot handler
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && specialShotTime.asMilliseconds() > 1000){
+	if (((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad1) ||
+	        sf::Mouse::isButtonPressed(sf::Mouse::Right)) &&
+	        specialShotTime.asMilliseconds() > 1000){
 
 		// Request a heavy shot bullet and set the appropriate data
 		std::unique_ptr<Bullet> b = getBulletFactory().requestObject(Constants::BulletType::heavyShot);
-		b->setOwner(getType());
+		b->setOwner(this);
 		b->sprite->setPosition(sprite->getPosition().x, sprite->getPosition().y - 10);
 
 		// Play shoot sound
@@ -303,10 +296,10 @@ void Player::input(sf::Event& event)
 	if (event.type == sf::Event::MouseMoved)
 	{
 		// Waiting for update: https://github.com/LaurentGomila/SFML/pull/396
-		int current_x = sf::Mouse::getPosition(window).x;
-        int current_y = sf::Mouse::getPosition(window).y;
-		float elapsed_x = (window.getView().getSize().x / 2) - (float)current_x;
-        float elapsed_y = (window.getView().getSize().y / 2) - (float)current_y;
+		int current_x = sf::Mouse::getPosition(renderer.getWindow()).x;
+        int current_y = sf::Mouse::getPosition(renderer.getWindow()).y;
+		float elapsed_x = (renderer.getView().getSize().x / 2) - (float)current_x;
+        float elapsed_y = (renderer.getView().getSize().y / 2) - (float)current_y;
 
 		if (elapsed_x != 0 || elapsed_y != 0)
 		{
@@ -315,23 +308,40 @@ void Player::input(sf::Event& event)
 			//#####Mouse Movement Handleing######//
 			//###################################//
 			//## X axis
-			if (sprite->getPosition().x > 0 && sprite->getPosition().x < window.getView().getSize().x)
+			if (sprite->getPosition().x > 0 && sprite->getPosition().x < renderer.getView().getSize().x)
 			{
 				sprite->move(-elapsed_x, 0);
 			}
 
 			// ## Y axis
-			if (sprite->getPosition().y > 0 && sprite->getPosition().y < (window.getView().getSize().y + window.getView().getSize().y))
+			if (sprite->getPosition().y > 0 && sprite->getPosition().y < (renderer.getView().getSize().y + renderer.getView().getSize().y))
 			{
 				sprite->move(0, -elapsed_y);
 			}
 
 			sf::Mouse::setPosition(sf::Vector2i(
-			        (int)(window.getView().getSize().x / 2),
-                    (int)(window.getView().getSize().y / 2)
-                    ), window);
+			        (int)(renderer.getView().getSize().x / 2),
+                    (int)(renderer.getView().getSize().y / 2)
+                    ), renderer.getWindow());
 		}
 	}
+
+	if(event.type == sf::Event::KeyPressed ){
+        if(event.key.code == sf::Keyboard::Left){
+            sprite->move(-2, 0);
+        }
+        if(event.key.code == sf::Keyboard::Right){
+            sprite->move(2, 0);
+        }
+        if(event.key.code == sf::Keyboard::Up){
+            sprite->move(0, -2);
+        }
+        if(event.key.code == sf::Keyboard::Down){
+            sprite->move(0, 2);
+        }
+	}
+
+
 }
 
 /// <summary>

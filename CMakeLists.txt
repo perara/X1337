@@ -1,10 +1,20 @@
 cmake_minimum_required(VERSION 3.17)
 project(X1337)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra") # -Werror # TODO
 include(cmake/CMakeRC.cmake)
-
+include(cmake/CPM.cmake)
+add_compile_definitions(SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_DEBUG)
+add_compile_definitions(SPDLOG_TRACE_ON)
+add_compile_definitions(SPDLOG_DEBUG_ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+
+CPMAddPackage("gh:effolkronium/random#master")
+CPMAddPackage("gh:gabime/spdlog@1.8.5")
+CPMAddPackage("gh:nlohmann/json#master")
+
+set(XLEET_LIBRARIES effolkronium_random spdlog nlohmann_json::nlohmann_json)
 
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/cmake)
@@ -24,6 +34,7 @@ find_package(PugiXML REQUIRED)
 message("${SFML_LIBRARIES}")
 
 
+
 if (SFML_FOUND)
     set(SFML_STATIC_LIBRARIES FALSE CACHE BOOL "Use static SFML librares")
     # General compiler options
@@ -31,7 +42,7 @@ if (SFML_FOUND)
         add_definitions(-DSFML_STATIC)
     endif()
 
-    set(XLEET_LIBRARIES "${SFML_LIBRARIES}")
+    set(XLEET_LIBRARIES ${XLEET_LIBRARIES} "${SFML_LIBRARIES}")
     set(XLEET_INCLUDES "${SFML_INCLUDE_DIR}")
 else()
     message( FATAL_ERROR "You can not do this at all, CMake will exit. ${SFML_FOUND}" )
@@ -60,7 +71,7 @@ SET(XLEET_INCLUDES
         include/Powerup.h
         include/ResourceManager.h
         include/Scene.h
-        include/Script.h
+        include/ScriptTemplate.h
         include/Shooter.h
         include/VectorN.h
         include/World.h
@@ -80,20 +91,27 @@ set(XLEET_SOURCES
         src/Powerup.cpp
         src/ResourceManager.cpp
         src/Scene.cpp
-        src/Script.cpp
+        src/ScriptTemplate.cpp
         src/Shooter.cpp
         src/World.cpp
-        )
+        src/Script.cpp include/Script.h include/ScriptTick.h src/Renderer.cpp include/Renderer.h)
 
 
 set(XLEET_RESOURCES
 assets/fonts/comicate.ttf
 assets/fonts/sansation.ttf
+
+assets/state.json
+assets/credits.json
+assets/configuration.json
+
 assets/scripts/game_menu.xml
 assets/scripts/stage1.xml
 assets/scripts/stage2.xml
 assets/scripts/test1.xml
 assets/scripts/test2.xml
+
+
 assets/sound/countdown.ogg
 assets/sound/death_star_theme.ogg
 assets/sound/emote_death_star_beware_cowards.ogg
@@ -137,8 +155,6 @@ assets/sprites/player-bar.png
 assets/sprites/player_ship.png
 assets/sprites/pulse-gun.png
 assets/sprites/regular_bullet_1.png
-assets/state.xml
-assets/credits.xml
 )
 
 cmrc_add_resource_library(
