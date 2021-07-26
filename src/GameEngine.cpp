@@ -10,7 +10,7 @@
 GameEngine::GameEngine() :
 // Declare the Window
 renderer(800, 600, "X1337"),
-resourceHandler(new ResourceManager(renderer)), // Create a new Resource Handler (smart_ptr)
+resourceHandler(std::make_shared<ResourceManager>(renderer)), // Create a new Resource Handler (smart_ptr)
 timeStep(sf::seconds(1.0f / 240.f)), // Set timestep to 60 FPS
 elapsedTime(timeStep),
 event(sf::Event()),
@@ -246,101 +246,39 @@ void GameEngine::process()
 	}
 }
 
-void GameEngine::CreateInputEvent(Constants::Input inputEnum){
+void GameEngine::CreateInputEvent(Constants::Input inputEnum) {
     sf::Event e{};
 
+#define CaseKey(keyPress, presstype, keyboardVal)\
+case(Constants::Input::keyPress):{\
+    e.type = sf::Event::presstype; \
+    e.key = sf::Event::KeyEvent{sf::Keyboard::keyboardVal, false, false, false, false};\
+    break;}\
+
+
     switch (inputEnum) {
-
-        case(Constants::Input::Key1Press):
-            e.type = sf::Event::KeyPressed;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Numpad0};
+        CaseKey(Key1Press, KeyPressed, Numpad0)
+        CaseKey(Key1Release,KeyReleased , Numpad0)
+        CaseKey(Key2Press,KeyPressed , Numpad1)
+        CaseKey(Key2Release, KeyReleased, Numpad1)
+        CaseKey(KeyLeftPress, KeyPressed, Left)
+        CaseKey(KeyLeftRelease, KeyReleased, Left)
+        CaseKey(KeyRightPress, KeyPressed, Right)
+        CaseKey(KeyRightRelease,KeyReleased , Right)
+        CaseKey(KeyUpPress,KeyPressed ,Up )
+        CaseKey(KeyUpRelease,KeyReleased ,Up )
+        CaseKey(KeyDownPress, KeyPressed, Down)
+        CaseKey(KeyDownRelease, KeyReleased, Down)
+        CaseKey(KeyMPress, KeyPressed, M)
+        CaseKey(KeyMRelease, KeyReleased, M)
+        CaseKey(KeyEscapePress, KeyPressed, Escape)
+        CaseKey(KeyEscapeRelease,KeyReleased , Escape)
+        CaseKey(KeyEnterPress, KeyPressed, Enter)
+        CaseKey(KeyEnterRelease, KeyReleased, Enter)
+        case(Constants::Input::VoidKey):
             break;
-
-        case(Constants::Input::Key1Release):
-            e.type = sf::Event::KeyReleased;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Numpad0};
+        case(Constants::Input::NumInputs):
             break;
-
-        case(Constants::Input::Key2Press):
-            e.type = sf::Event::KeyPressed;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Numpad1};
-            break;
-
-
-        case(Constants::Input::Key2Release):
-            e.type = sf::Event::KeyReleased;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Numpad1};
-            break;
-
-        case(Constants::Input::KeyLeftPress):
-            e.type = sf::Event::KeyPressed;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Left};
-            break;
-
-        case(Constants::Input::KeyLeftRelease):
-            e.type = sf::Event::KeyReleased;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Left};
-            break;
-
-        case(Constants::Input::KeyRightPress):
-            e.type = sf::Event::KeyPressed;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Right};
-            break;
-
-        case(Constants::Input::KeyRightRelease):
-            e.type = sf::Event::KeyReleased;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Right};
-            break;
-
-
-        case(Constants::Input::KeyUpPress):
-            e.type = sf::Event::KeyPressed;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Up};
-            break;
-
-        case(Constants::Input::KeyUpRelease):
-            e.type = sf::Event::KeyReleased;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Up};
-            break;
-
-        case(Constants::Input::KeyDownPress):
-            e.type = sf::Event::KeyPressed;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Down};
-            break;
-
-        case(Constants::Input::KeyDownRelease):
-            e.type = sf::Event::KeyReleased;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Down};
-            break;
-
-        case(Constants::Input::KeyMPress):
-            e.type = sf::Event::KeyPressed;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::M};
-            break;
-
-        case(Constants::Input::KeyMRelease):
-            e.type = sf::Event::KeyReleased;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::M};
-            break;
-        case(Constants::Input::KeyEscapePress):
-            e.type = sf::Event::KeyPressed;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Escape};
-            break;
-        case(Constants::Input::KeyEscapeRelease):
-            e.type = sf::Event::KeyReleased;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Escape};
-            break;
-
-        case(Constants::Input::KeyEnterPress):
-            e.type = sf::Event::KeyPressed;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Enter};
-            break;
-
-        case(Constants::Input::KeyEnterRelease):
-            e.type = sf::Event::KeyReleased;
-            e.key = sf::Event::KeyEvent{sf::Keyboard::Enter};
-            break;
-
     }
 
     renderer.injectedEvents.push_back(std::make_shared<sf::Event>(e));
